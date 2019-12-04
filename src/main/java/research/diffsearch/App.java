@@ -15,7 +15,7 @@ public class App {
 
         String query_input = "if(x>0): -> if(x<0):";
 
-        //Old filter (to remove)
+        //Old filter (to remove soon)
         List<String> keywords =  Arrays.asList("if", "else", "elsif", "for", "return", "try", "while", "break", "continue", "with");
         List<String> keywords_found = Indexing_Methods.query_keywords(query_input, keywords);
 
