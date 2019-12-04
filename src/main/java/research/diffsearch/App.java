@@ -15,10 +15,6 @@ public class App {
 
         String query_input = "if(x>0): -> if(x<0):";
 
-        //Old filter (to remove soon)
-        List<String> keywords =  Arrays.asList("if", "else", "elsif", "for", "return", "try", "while", "break", "continue", "with");
-        List<String> keywords_found = Indexing_Methods.query_keywords(query_input, keywords);
-
         //Creating the tree for the query string
         Python3_Tree tree_query = new Python3_Tree(query_input);
 
@@ -36,7 +32,7 @@ public class App {
         list_hash_sum.addAll(list_parent_child);
 
         //Creating all the three of changes
-        List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(keywords_found, keywords,query_input);
+        List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(query_input);
         //System.out.println("\nTree Creation done.\n");
 
         //Declaring change varibles

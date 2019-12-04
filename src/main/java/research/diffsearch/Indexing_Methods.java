@@ -16,7 +16,7 @@ import java.util.List;
 public class Indexing_Methods {
     //ArrayList<ArrayList<String>> list_parent_child = new ArrayList<ArrayList<String>>();
 
-    static List<Python3_Tree> changes_tree(List<String> keywords_found, List<String> keywords, String query_input ) {
+    static List<Python3_Tree> changes_tree( String query_input ) {
         List<Python3_Tree> changes_tree_list = new ArrayList<Python3_Tree>();
 
         NGrams ngram_query = new NGrams();
