@@ -14,6 +14,7 @@ public class Python3_Tree {
     private  ParseTree parsetree;
     private  ParserRuleContext ctx;
     public int leaves_number;
+    public int [] features;
 
     Python3_Tree(String change){
         change_string = change;
@@ -21,6 +22,7 @@ public class Python3_Tree {
         tokens = new CommonTokenStream(lexer);
         parser = new Python3Parser(tokens);
         parsetree = parser.program();
+        features = new int[Integer.MAX_VALUE/256];
       //  ctx = parser.program();
     }
 

@@ -22,7 +22,7 @@ public class TreeUtils {
     }
 
     /**
-     * Pretty print out a whole tree. {@link #getNodeText} is used on the node payloads to get the text
+     * Pretty print out a whole tree is used on the node payloads to get the text
      * for the nodes. (Derived from Trees.toStringTree(....))
      */
     public static String toPrettyTree(final Tree t, final List<String> ruleNames) {
@@ -56,21 +56,22 @@ public class TreeUtils {
         return sb.toString();
     }
 
-    static void pairs_parent_child(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child) {
+    static void pairs_parent_child(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(0), ruleNames)).hashCode());
+            features[Math.abs(Integer.MAX_VALUE/512 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(0), ruleNames)).hashCode()/512)] = 1;
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
-            pairs_parent_child(t.getChild(i), ruleNames, list_parent_child);
+            pairs_parent_child(t.getChild(i), ruleNames, list_parent_child, features);
         }
 
 
         return;
     }
 
-    static void tree_hash_sum(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum) {
+    static void tree_hash_sum(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int [] features) {
         int sum = 0;
         int i;
 
@@ -80,11 +81,12 @@ public class TreeUtils {
             sum += Trees.getNodeText(t.getChild(0), ruleNames).hashCode();
         }
 
-        if (i > 0)
+        if (i > 0) {
             list_hash_sum.add(sum);
-
+            features[Math.abs(sum/512)] = 1;
+        }
         for (i = 0; i < t.getChildCount(); i++) {
-            tree_hash_sum(t.getChild(i), ruleNames, list_hash_sum);
+            tree_hash_sum(t.getChild(i), ruleNames, list_hash_sum, features);
         }
 
 
