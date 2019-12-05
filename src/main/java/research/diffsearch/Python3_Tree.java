@@ -22,8 +22,7 @@ public class Python3_Tree {
         tokens = new CommonTokenStream(lexer);
         parser = new Python3Parser(tokens);
         parsetree = parser.program();
-        features = new int[Integer.MAX_VALUE/524288];
-      //  ctx = parser.program();
+        features = new int[Integer.MAX_VALUE/262144];
     }
 
     String get_change_string() {
@@ -99,4 +98,6 @@ public class Python3_Tree {
             }
         }
     }
+
+
 }

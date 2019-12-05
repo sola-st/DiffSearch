@@ -33,7 +33,7 @@ public class Indexing_Methods {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python1.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python3.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,9 +44,9 @@ public class Indexing_Methods {
             //Computing LSH vector for change string
             int[] change_lsh = lsh.hashSignature(ngram_change.generateHashNGrams(line,4));
 
-            if(Matching_Methods.elementWiseCompare(query_lsh,change_lsh )) {
+         //   if(Matching_Methods.elementWiseCompare(query_lsh,change_lsh )) {
                 changes_tree_list.add(new Python3_Tree(line));
-            }
+        //    }
 
         }
 

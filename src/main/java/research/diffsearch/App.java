@@ -13,7 +13,8 @@ public class App {
         //Starting time
         long startTime = System.currentTimeMillis();
 
-        String query_input = "if(x>0): -> if(x<0):";
+        String query_input = "if( ID<> OP<0> LT<>): -> if(ID<> OP<0> LT<>):";
+        //String query_input = "if(x>0): -> if(x<0):";
 
         //Creating the tree for the query string
         Python3_Tree tree_query = new Python3_Tree(query_input);
@@ -27,8 +28,8 @@ public class App {
         List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
 
         //Computing hash sum and pairs parent child
-        TreeUtils.tree_hash_sum(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-        TreeUtils.pairs_parent_child(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+        TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+        TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
         list_hash_sum.addAll(list_parent_child);
 
         //Creating all the three of changes
@@ -54,11 +55,11 @@ public class App {
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-            TreeUtils.tree_hash_sum(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+            TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
             //Computing list change parent child
             List<Integer> list_change_parent_child = new ArrayList<Integer>();
-            TreeUtils.pairs_parent_child(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+            TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
             NGram ngram = new NGram(2);
 
             //All features in one vector
@@ -73,7 +74,7 @@ public class App {
                     //  + Matching_Methods.jaccard_similarity(list_parent_child, list_change_parent_child) + ' '
                     //      + Matching_Methods.round2(1 - ngram.distance(tree_query.get_tree_string(), change.get_tree_string())) + ' '
                     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
-                    + Matching_Methods.jaccardSimilarity(tree_query.features, change.features) + ' '
+                    + Matching_Methods.cosineSimilarity(tree_query.features, change.features) + ' '
                     //      + Matching_Methods.jaccardSimilarity(lsh.hashSignature(Ints.toArray(list_hash_sum)), lsh.hashSignature(Ints.toArray(list_change_hash_sum))) + ' '
                     //     + Matching_Methods.similarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
                   //  + Matching_Methods.jaccard_similarity(list_hash_sum, list_change_hash_sum)
