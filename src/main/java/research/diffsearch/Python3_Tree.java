@@ -22,7 +22,7 @@ public class Python3_Tree {
         tokens = new CommonTokenStream(lexer);
         parser = new Python3Parser(tokens);
         parsetree = parser.program();
-        features = new int[Integer.MAX_VALUE/262144];
+        features = new int[Integer.MAX_VALUE/524288];
     }
 
     String get_change_string() {

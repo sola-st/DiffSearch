@@ -11,7 +11,7 @@ import info.debatty.java.stringsimilarity.NGram;
 public class App {
     public static void main(String[] args) {
         //Starting time
-        long startTime = System.currentTimeMillis();
+        long startTime_indexing = System.currentTimeMillis();
 
         String query_input = "if( ID<> OP<0> LT<>): -> if(ID<> OP<0> LT<>):";
         //String query_input = "if(x>0): -> if(x<0):";
@@ -35,8 +35,12 @@ public class App {
         //Creating all the three of changes
         List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(query_input);
 
+        //Time
+        long endTime_indexing = System.currentTimeMillis();
+        long duration_indexing = (endTime_indexing - startTime_indexing);
+
         //Initializing LSH parameters
-        int sizeOfVectors = Integer.MAX_VALUE/262144;
+        int sizeOfVectors = Integer.MAX_VALUE/524288;
         int numberOfBuckets = 10;
         int stages = 10;
         LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
@@ -69,9 +73,9 @@ public class App {
             //  }
         }
 
-        //Ending time
-        long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime);
-        System.out.println("\nEND in " + duration/1000 + " seconds.");
+        //Time
+        long endTime_matching = System.currentTimeMillis();
+        long duration_matching = (endTime_matching - endTime_indexing);
+        System.out.println("\nEND: Indexing duration: " + duration_indexing/1000 + " seconds,"+ " Matching duration: " + duration_matching/1000 + " seconds.");
     }
 }
