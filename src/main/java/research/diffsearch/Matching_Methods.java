@@ -22,23 +22,23 @@ public class Matching_Methods {
     }
 
 
-    public static double cosineSimilarity(int[] A, int[] B) {
-        if (A == null || B == null || A.length == 0 || B.length == 0 || A.length != B.length) {
-            return 2;
+    public static double cosineSimilarity(int[] v1, int[] v2, int length) {
+        double sum_v1v2 = 0;
+        double sum_v1 = 0;
+        double sum_v2 = 0;
+
+        for (int i = 0; i < length; i++) {
+            if(v1[i] == 1 && v2[i] == 1)
+                sum_v1v2 ++;
+
+            sum_v1 += v1[i];
+            sum_v2 += v2[i];
         }
 
-        double sumProduct = 0;
-        double sumASq = 0;
-        double sumBSq = 0;
-        for (int i = 0; i < A.length; i++) {
-            sumProduct += A[i] * B[i];
-            sumASq += A[i] * A[i];
-            sumBSq += B[i] * B[i];
-        }
-        if (sumASq == 0 && sumBSq == 0) {
+        if (sum_v1 == 0 || sum_v2 == 0) {
             return 2.0;
         }
-        return round2(sumProduct / (Math.sqrt(sumASq) * Math.sqrt(sumBSq)));
+        return round2(sum_v1v2 / (Math.sqrt(sum_v1) * Math.sqrt(sum_v2)));
     }
 
     static <T> double jaccard_similarity(List<T> list1, List<T> list2) {

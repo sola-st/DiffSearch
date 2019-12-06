@@ -41,15 +41,22 @@ public class App {
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
         //Initializing LSH parameters
-        int sizeOfVectors = Integer.MAX_VALUE / 524288;
-        int numberOfBuckets = 10;
-        int stages = 10;
-        LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
+      //  int sizeOfVectors = Integer.MAX_VALUE / 524288;
+       // int numberOfBuckets = 10;
+       // int stages = 10;
+       // LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
 
         //Computing lsh on query features
-        int[] query_lsh = lsh.hashSignature(tree_query.features);
+      //  int[] query_lsh = lsh.hashSignature(tree_query.features);
 
-        int i = 0;
+        int length = tree_query.features.length;
+    //    double sumASq = 0;
+    //    for (int i = 0; i < length; i++) {
+    //        sumASq += tree_query.features[i] * tree_query.features[i];
+     //   }
+
+     //   double query_size = Math.sqrt(sumASq);
+
         for (Python3_Tree change : tree_list) {
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
@@ -61,13 +68,13 @@ public class App {
             TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
             //lsh algorithm for change tree
-            int[] change_lsh = lsh.hashSignature(change.features);
+         //   int[] change_lsh = lsh.hashSignature(change.features);
 
             //Computation of the distance
             System.out.println(change.get_change_string() + " score: "
                     //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
-                    + Matching_Methods.cosineSimilarity(tree_query.features, change.features) + ' '
-                    + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
+                    + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' '
+                 //   + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
             );
         }
 
