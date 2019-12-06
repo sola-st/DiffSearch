@@ -34,21 +34,15 @@ public class App {
 
         //Creating all the three of changes
         List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(query_input);
-        //System.out.println("\nTree Creation done.\n");
-
-        //Declaring change varibles
-        ArrayList<int[]> list_changes_features = new ArrayList<>();
-        ArrayList<int[]> list_changes_lsh = new ArrayList<>();
 
         //Initializing LSH parameters
-        int sizeOfVectors = list_hash_sum.size();
+        int sizeOfVectors = Integer.MAX_VALUE/262144;
         int numberOfBuckets = 10;
-        int stages = 6;
+        int stages = 10;
         LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
 
         //Computing lsh on query features
-        int[] query_lsh = lsh.hashSignature(Ints.toArray(list_hash_sum));
-        list_changes_lsh.add(query_lsh);
+        int[] query_lsh = lsh.hashSignature(tree_query.features);
 
         int i = 0;
         for (Python3_Tree change : tree_list) {
@@ -60,24 +54,17 @@ public class App {
             //Computing list change parent child
             List<Integer> list_change_parent_child = new ArrayList<Integer>();
             TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-            NGram ngram = new NGram(2);
 
-            //All features in one vector
-            list_change_hash_sum.addAll(list_change_parent_child);
-            list_changes_features.add(Ints.toArray(list_change_hash_sum));
-            list_changes_lsh.add(lsh.hashSignature(Ints.toArray(list_change_hash_sum)));
+            //lsh algorithm for change tree
+            int[] change_lsh = lsh.hashSignature(change.features);
 
             //Computation of the distance between the filtered changes
             // if(!Matching_Methods.elementWiseCompare(query_lsh,lsh.hashSignature(Ints.toArray(list_change_hash_sum)) ))
             //{
             System.out.println(change.get_change_string() + " score: "
-                    //  + Matching_Methods.jaccard_similarity(list_parent_child, list_change_parent_child) + ' '
-                    //      + Matching_Methods.round2(1 - ngram.distance(tree_query.get_tree_string(), change.get_tree_string())) + ' '
                     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
                     + Matching_Methods.cosineSimilarity(tree_query.features, change.features) + ' '
-                    //      + Matching_Methods.jaccardSimilarity(lsh.hashSignature(Ints.toArray(list_hash_sum)), lsh.hashSignature(Ints.toArray(list_change_hash_sum))) + ' '
-                    //     + Matching_Methods.similarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
-                  //  + Matching_Methods.jaccard_similarity(list_hash_sum, list_change_hash_sum)
+                    + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
             );
             //  }
         }
