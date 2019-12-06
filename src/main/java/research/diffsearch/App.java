@@ -63,15 +63,12 @@ public class App {
             //lsh algorithm for change tree
             int[] change_lsh = lsh.hashSignature(change.features);
 
-            //Computation of the distance between the filtered changes
-            // if(!Matching_Methods.elementWiseCompare(query_lsh,lsh.hashSignature(Ints.toArray(list_change_hash_sum)) ))
-            //{
+            //Computation of the distance
             System.out.println(change.get_change_string() + " score: "
                     //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
                     + Matching_Methods.cosineSimilarity(tree_query.features, change.features) + ' '
                     + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
             );
-            //  }
         }
 
         //Time

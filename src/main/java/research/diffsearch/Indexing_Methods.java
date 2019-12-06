@@ -33,7 +33,7 @@ public class Indexing_Methods {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python1.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python3.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
