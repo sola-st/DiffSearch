@@ -3,6 +3,7 @@ package research.diffsearch;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import com.google.common.primitives.Ints;
 import info.debatty.java.lsh.LSHMinHash;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -40,7 +41,7 @@ public class App {
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
         //Initializing LSH parameters
-        int sizeOfVectors = Integer.MAX_VALUE/524288;
+        int sizeOfVectors = Integer.MAX_VALUE / 524288;
         int numberOfBuckets = 10;
         int stages = 10;
         LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
@@ -66,7 +67,7 @@ public class App {
             // if(!Matching_Methods.elementWiseCompare(query_lsh,lsh.hashSignature(Ints.toArray(list_change_hash_sum)) ))
             //{
             System.out.println(change.get_change_string() + " score: "
-                    + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
+                    //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
                     + Matching_Methods.cosineSimilarity(tree_query.features, change.features) + ' '
                     + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
             );
@@ -76,6 +77,6 @@ public class App {
         //Time
         long endTime_matching = System.currentTimeMillis();
         long duration_matching = (endTime_matching - endTime_indexing);
-        System.out.println("\nEND: Indexing duration: " + duration_indexing/1000 + " seconds,"+ " Matching duration: " + duration_matching/1000 + " seconds.");
+        System.out.println("\nEND: Indexing duration: " + duration_indexing / 1000 + " seconds," + " Matching duration: " + duration_matching / 1000 + " seconds.");
     }
 }
