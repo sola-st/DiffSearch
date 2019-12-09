@@ -79,8 +79,8 @@ public class Python3Parser extends Parser {
     };
 
     private static final String[] _LITERAL_NAMES = {
-            null, "'#EXPR<'", "'#EXPR'", "'#BLK<'", "'#BLK'", "'#OP'", "'#OP<'", "'#ID<'",
-            "'#ID'", "'#LT<'", "'#LT'", "'_'", null, null, null, "'def'", "'return'",
+            null, "'EXPR<'", "'EXPR'", "'BLK<'", "'BLK'", "'OP'", "'OP<'", "'ID<'",
+            "'ID'", "'LT<'", "'LT'", "'_'", null, null, null, "'def'", "'return'",
             "'raise'", "'from'", "'import'", "'as'", "'global'", "'nonlocal'", "'assert'",
             "'if'", "'elif'", "'else'", "'while'", "'for'", "'in'", "'try'", "'finally'",
             "'with'", "'except'", "'lambda'", "'or'", "'and'", "'not'", "'is'", "'None'",

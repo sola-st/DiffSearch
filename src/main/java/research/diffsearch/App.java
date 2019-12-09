@@ -14,7 +14,7 @@ public class App {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
 
-        String query_input = "if( #ID #OP<0> #LT): -> if(#ID #OP<0> #LT):";
+        String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
         //  String query_input = "_ -> ID<>(ID<>)";
 
         //Creating the tree for the query string
