@@ -7,11 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.primitives.Ints;
-import info.debatty.java.lsh.LSHMinHash;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import info.debatty.java.stringsimilarity.NGram;
 
 public class App {
     public static void main(String[] args) throws IOException {

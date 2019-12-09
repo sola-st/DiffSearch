@@ -1,15 +1,9 @@
 package research.diffsearch;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.google.common.primitives.Ints;
-import info.debatty.java.lsh.LSHMinHash;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 

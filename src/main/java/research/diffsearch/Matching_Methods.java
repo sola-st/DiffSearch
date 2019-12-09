@@ -3,11 +3,7 @@ package research.diffsearch;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import info.debatty.java.stringsimilarity.NGram;
 
 public class Matching_Methods {
 
