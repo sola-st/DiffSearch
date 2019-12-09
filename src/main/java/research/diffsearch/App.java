@@ -33,8 +33,9 @@ public class App {
         TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
         list_hash_sum.addAll(list_parent_child);
 
+
         //Creating all the three of changes
-        List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(query_input);
+        List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(Indexing_Methods.analyze_diff_file());
 
         //Time
         long endTime_indexing = System.currentTimeMillis();
