@@ -40,6 +40,7 @@ public class Indexing_Methods {
         return changes_tree_list;
     }
 
+    //Diff function reads the output of the git diff command and extract the changes in final_list in: OLD CODE -> NEW CODE
     static List<String> analyze_diff_file() {
         List<String> changes_tree_list = new ArrayList<String>();
         List<String> temporary_list = new ArrayList<String>();
@@ -72,24 +73,12 @@ public class Indexing_Methods {
         }
 
         for(List<String> l : changes_list)
-           if(l.size() == 2){
-               final_list.add(l.get(0).substring(1,l.get(0).length() - 1).replaceAll("\\s+","") + "->" + l.get(1).substring(1,l.get(0).length() - 1).replaceAll("\\s+",""));
-           }
+            if(l.size() == 2){
+                final_list.add(l.get(0).substring(1,l.get(0).length() - 1).replaceAll("\\s+","") + "->" + l.get(1).substring(1,l.get(0).length() - 1).replaceAll("\\s+",""));
+            }
 
         return changes_tree_list;
     }
 
-
-    static List<String> query_keywords(String code, List<String> keywords){
-        List<String> result = new ArrayList<>();
-
-        for(String str: keywords) {
-            if(code.contains(str)){
-                result.add(str);
-            }
-        }
-
-        return result;
-    }
 
 }

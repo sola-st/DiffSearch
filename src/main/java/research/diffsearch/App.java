@@ -14,8 +14,8 @@ public class App {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
 
-        String query_input = "if( ID<> OP<0> LT<>): -> if(ID<> OP<0> LT<>):";
-      //  String query_input = "_ -> ID<>(ID<>)";
+        String query_input = "if( #ID #OP<0> #LT): -> if(#ID #OP<0> #LT):";
+        //  String query_input = "_ -> ID<>(ID<>)";
 
         //Creating the tree for the query string
         Python3_Tree tree_query = new Python3_Tree(query_input);
@@ -58,13 +58,9 @@ public class App {
 
             features_matrix[i] = change.features;
 
-         //  if(Arrays.equals(Arrays.copyOfRange(tree_query.features, 0, 100), Arrays.copyOfRange(change.features, 0, 100)))
-                //Computation of the distance
-                System.out.println(change.get_change_string() + " score: "
-                                //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
-                                + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' '
-                        //   + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
-                );
+            System.out.println(change.get_change_string() + " score: "
+                    + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' '
+            );
 
             i++;
         }
