@@ -35,15 +35,13 @@ public class App {
 
 
         //Creating all the three of changes
-        List<Python3_Tree> tree_list = Indexing_Methods.changes_tree(Indexing_Methods.analyze_diff_file());
+        List<String> changes_list = Indexing_Methods.changes_list_from_file();
 
         //Time
         long endTime_indexing = System.currentTimeMillis();
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
         int length = tree_query.features.length;
-
-        int[][] features_matrix = new int[tree_list.size()][length];
 
         BufferedWriter bw = null;
         try {
@@ -61,8 +59,9 @@ public class App {
             e.printStackTrace();
         }
 
-        int i = 0;
-        for (Python3_Tree change : tree_list) {
+
+        for (String change_string : changes_list) {
+            Python3_Tree change =new Python3_Tree(change_string);
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -78,9 +77,8 @@ public class App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' ');
+             System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
 
-            i++;
         }
 
         //Time

@@ -9,11 +9,10 @@ import java.util.List;
 
 public class Indexing_Methods {
 
-    //Function that creates the AST of python changes
-    //In this example I don't use List<String> changes that contains the extracted changes, but
-    // I read directly the changes in the file example_python3.txt because it is easy to add new changes now.
-    static List<Python3_Tree> changes_tree(List<String> changes ) {
-        List<Python3_Tree> changes_tree_list = new ArrayList<Python3_Tree>();
+
+    // Now I read directly the changes in the file example_python3.txt because it is easy to add new changes now.
+    //The extraction is implemented by analyze_diff_file, so in the final version it will substitute this function
+    static List<String> changes_list_from_file() {
 
         //this part will be removed in the future
         List<String> allLines = null;
@@ -23,15 +22,8 @@ public class Indexing_Methods {
             e.printStackTrace();
         }
 
-        //AllLines will be replaced by changes in the future
-        try{
-            for (String line : allLines)
-                changes_tree_list.add(new Python3_Tree(line));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return changes_tree_list;
+        return allLines;
     }
 
     //Diff function reads the output of the git diff command and extract the changes in final_list in: OLD CODE -> NEW CODE
