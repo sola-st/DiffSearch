@@ -1,5 +1,9 @@
 package research.diffsearch;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +14,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import info.debatty.java.stringsimilarity.NGram;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
 
@@ -43,7 +47,23 @@ public class App {
 
         int length = tree_query.features.length;
 
-        int [][] features_matrix = new int[tree_list.size()][length];
+        int[][] features_matrix = new int[tree_list.size()][length];
+
+        BufferedWriter bw = null;
+        try {
+            //Specify the file name and path here
+            File file = new File("./src/main/resources/feature_vectors.txt");
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file);
+            bw = new BufferedWriter(fw);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         int i = 0;
         for (Python3_Tree change : tree_list) {
@@ -56,11 +76,13 @@ public class App {
             List<Integer> list_change_parent_child = new ArrayList<Integer>();
             TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
-            features_matrix[i] = change.features;
-
-            System.out.println(change.get_change_string() + " score: "
-                    + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' '
-            );
+            //Writing the feature vector in the file ./src/main/resources/feature_vectors.txt
+            try {
+                bw.write(Arrays.toString(change.features) + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' ');
 
             i++;
         }
@@ -69,5 +91,6 @@ public class App {
         long endTime_matching = System.currentTimeMillis();
         long duration_matching = (endTime_matching - endTime_indexing);
         System.out.println("\nEND: Indexing duration: " + duration_indexing / 1000 + " seconds," + " Matching duration: " + duration_matching / 1000 + " seconds.");
+
     }
 }
