@@ -161,7 +161,7 @@ simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE?;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
 expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) |
-                     ('=' (yield_expr|testlist_star_expr))*) | 'EXPR<' NUMBER '>' | 'EXPR<>'; //MOD
+                     ('=' (yield_expr|testlist_star_expr))*) | 'EXPR<' NUMBER '>' | 'EXPR'; //MOD
 annassign: ':' test ('=' test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
 augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
@@ -203,7 +203,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' suite?;
 with_item: test ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
-suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT | 'BLK<' NUMBER '>' | 'BLK<>';
+suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT | 'BLK<' NUMBER '>' | 'BLK';
 
 test: or_test ('if' or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
@@ -216,7 +216,7 @@ comparison: expr (comp_op expr)*;
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 //MOD
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP<>' | 'OP<' NUMBER* '>';
+comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP' | 'OP<' NUMBER* '>';
 star_expr: '*' expr;
 expr: xor_expr ('|' xor_expr)*;
 xor_expr: and_expr ('^' and_expr)*;
@@ -230,7 +230,7 @@ atom_expr: (AWAIT)? atom trailer* ;
 atom: ('(' (yield_expr|testlist_comp)? ')' |
        '[' (testlist_comp)? ']' |
        '{' (dictorsetmaker)? '}' |
-       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<' NUMBER* '>' | 'ID<>' | 'LT<' NUMBER* '>' | 'LT<>' | '_');//MOD
+       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<' NUMBER* '>' | 'ID' | 'LT<' NUMBER* '>' | 'LT' | '_');//MOD
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* (',')? );
 trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;
 subscriptlist: subscript (',' subscript)* (',')?;
@@ -338,7 +338,7 @@ NEWLINE
      String spaces = getText().replaceAll("[\r\n\f]+", "");
      int next = _input.LA(1);
      if (opened > 0 || next == '\r' || next == '\n' || next == '\f' || next == '#') {
-       // If we're inside a list or on a blank line, ignore all indents, 
+       // If we're inside a list or on a blank line, ignore all indents,
        // dedents and line breaks.
        skip();
      }
@@ -368,7 +368,7 @@ NEWLINE
 /// identifier   ::=  id_start id_continue*
 
 NAME
- : ID_START ID_CONTINUE* 
+ : ID_START ID_CONTINUE*
  ;
 
 /// stringliteral   ::=  [stringprefix](shortstring | longstring)
@@ -376,7 +376,7 @@ NAME
 ///                      | "fr" | "Fr" | "fR" | "FR" | "rf" | "rF" | "Rf" | "RF"
 
 STRING_LITERAL
- : ( [rR] | [uU] | [fF] | ( [fF] [rR] ) | ( [rR] [fF] ) )? ( SHORT_STRING | LONG_STRING ) 
+ : ( [rR] | [uU] | [fF] | ( [fF] [rR] ) | ( [rR] [fF] ) )? ( SHORT_STRING | LONG_STRING )
  ;
 
 /// bytesliteral   ::=  bytesprefix(shortbytes | longbytes)
@@ -473,8 +473,8 @@ UNKNOWN_CHAR
  : .
  ;
 
-/* 
- * fragments 
+/*
+ * fragments
  */
 
 /// shortstring     ::=  "'" shortstringitem* "'" | '"' shortstringitem* '"'
@@ -564,7 +564,7 @@ fragment SHORT_BYTES
  : '\'' ( SHORT_BYTES_CHAR_NO_SINGLE_QUOTE | BYTES_ESCAPE_SEQ )* '\''
  | '"' ( SHORT_BYTES_CHAR_NO_DOUBLE_QUOTE | BYTES_ESCAPE_SEQ )* '"'
  ;
-    
+
 /// longbytes      ::=  "'''" longbytesitem* "'''" | '"""' longbytesitem* '"""'
 fragment LONG_BYTES
  : '\'\'\'' LONG_BYTES_ITEM*? '\'\'\''
@@ -584,7 +584,7 @@ fragment SHORT_BYTES_CHAR_NO_SINGLE_QUOTE
  | [\u000E-\u0026]
  | [\u0028-\u005B]
  | [\u005D-\u007F]
- ; 
+ ;
 
 fragment SHORT_BYTES_CHAR_NO_DOUBLE_QUOTE
  : [\u0000-\u0009]
@@ -592,7 +592,7 @@ fragment SHORT_BYTES_CHAR_NO_DOUBLE_QUOTE
  | [\u000E-\u0021]
  | [\u0023-\u005B]
  | [\u005D-\u007F]
- ; 
+ ;
 
 /// longbyteschar  ::=  <any ASCII character except "\">
 fragment LONG_BYTES_CHAR
