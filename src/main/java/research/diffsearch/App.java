@@ -40,25 +40,9 @@ public class App {
         long endTime_indexing = System.currentTimeMillis();
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
-        //Initializing LSH parameters
-      //  int sizeOfVectors = Integer.MAX_VALUE / 524288;
-       // int numberOfBuckets = 10;
-       // int stages = 10;
-       // LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
-
-        //Computing lsh on query features
-      //  int[] query_lsh = lsh.hashSignature(tree_query.features);
-
         int length = tree_query.features.length;
-    //    double sumASq = 0;
-    //    for (int i = 0; i < length; i++) {
-    //        sumASq += tree_query.features[i] * tree_query.features[i];
-     //   }
-
-     //   double query_size = Math.sqrt(sumASq);
 
         int [][] features_matrix = new int[tree_list.size()][length];
-       // String [][] string_matrix = new int[tree_list.size()][length];
 
         int i = 0;
         for (Python3_Tree change : tree_list) {
@@ -72,12 +56,6 @@ public class App {
             TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
             features_matrix[i] = change.features;
-        //    string_matrix[i] = change.get_change_string();
-            //lsh algorithm for change tree
-         //   int[] change_lsh = lsh.hashSignature(change.features);
-
-          //  int [] x = Arrays.copyOfRange(tree_query.features, 0, 100);
-           // int [] y = Arrays.copyOfRange(change.features, 0, 100);
 
          //  if(Arrays.equals(Arrays.copyOfRange(tree_query.features, 0, 100), Arrays.copyOfRange(change.features, 0, 100)))
                 //Computation of the distance
@@ -86,7 +64,6 @@ public class App {
                                 + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' '
                         //   + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
                 );
-
 
             i++;
         }

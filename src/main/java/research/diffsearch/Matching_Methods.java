@@ -10,16 +10,6 @@ import java.util.Set;
 import info.debatty.java.stringsimilarity.NGram;
 
 public class Matching_Methods {
-    public static double similarity(int vec1[],int vec2[])
-    {
-
-        int dop=vec1[0]*vec2[0] +  vec1[1]*vec2[1];
-        double mag1 =Math.sqrt(Math.pow(vec1[0],2)+Math.pow(vec1[1],2));
-        double mag2 =Math.sqrt(Math.pow(vec2[0],2)+Math.pow(vec2[1],2));
-        double csim =dop / (mag1 * mag2);
-
-        return csim;
-    }
 
 
     public static double cosineSimilarity(int[] v1, int[] v2, int length) {
@@ -72,25 +62,6 @@ public class Matching_Methods {
 
     public static Double round2(Double val) {
         return new BigDecimal(val.toString()).setScale(2, RoundingMode.HALF_UP).doubleValue();
-    }
-
-
-    static double jaccardSimilarity(int[] a, int[] b) {
-
-        Set<Integer> s1 = new HashSet<Integer>();
-        for (int i = 0; i < a.length; i++) {
-            s1.add(a[i]);
-        }
-        Set<Integer> s2 = new HashSet<Integer>();
-        for (int i = 0; i < b.length; i++) {
-            s2.add(b[i]);
-        }
-
-        final int sa = s1.size();
-        final int sb = s2.size();
-        s1.retainAll(s2);
-        final int intersection = s1.size();
-        return round2(1d / (sa + sb - intersection) * intersection);
     }
 
     static boolean elementWiseCompare(int[] a, int [] b){

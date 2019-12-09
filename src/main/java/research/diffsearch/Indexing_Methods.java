@@ -33,7 +33,7 @@ public class Indexing_Methods {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example_python3.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,92 +86,6 @@ public class Indexing_Methods {
         return changes_tree_list;
     }
 
-    List<List<String>> scanner( List<List<String>> changes_list){
-        List<List<String>> changes_list_abstract = new ArrayList<>();
-
-        String str = "two";
-
-
-        switch(str)
-        {
-            case "one":
-                System.out.println("one");
-                break;
-            case "two":
-                System.out.println("two");
-                break;
-            case "three":
-                System.out.println("three");
-                break;
-            default:
-                System.out.println("no match");
-        }
-
-
-        return changes_list_abstract;
-    }
-
-    List<String> java_tokenizer(String code){
-        List <String> tokens = new ArrayList<>();
-
-        try {
-            Reader reader = new StringReader(code);
-            StreamTokenizer st = new StreamTokenizer(reader);
-
-            // Prepare the tokenizer for Java-style tokenizing rules
-            st.parseNumbers();
-            st.wordChars('_', '_');
-            st.eolIsSignificant(true);
-
-            // If whitespace is not to be discarded, make this call
-            st.ordinaryChars(0, ' ');
-
-            // These calls caused comments to be discarded
-            st.slashSlashComments(true);
-            st.slashStarComments(true);
-
-            // Parse the file
-            int token = st.nextToken();
-            while (token != StreamTokenizer.TT_EOF) {
-                token = st.nextToken();
-                switch (token) {
-                    case StreamTokenizer.TT_NUMBER:
-                        // A number was found; the value is in nval
-                        tokens.add(st.nval + "");
-                        double num = st.nval;
-                        break;
-                    case StreamTokenizer.TT_WORD:
-                        // A word was found; the value is in sval
-                        tokens.add(st.sval);
-                        String word = st.sval;
-                        break;
-                    case '"':
-                        // A double-quoted string was found; sval contains the contents
-                        tokens.add(st.sval);
-                        String dquoteVal = st.sval;
-                        break;
-                    case '\'':
-                        // A single-quoted string was found; sval contains the contents
-                        tokens.add(st.sval);
-                        String squoteVal = st.sval;
-                        break;
-                    case StreamTokenizer.TT_EOL:
-                        // End of line character found
-                        break;
-                    case StreamTokenizer.TT_EOF:
-                        // End of file has been reached
-                        break;
-                    default:
-                        // A regular character was found; the value is the token itself
-                        char ch = (char)st.ttype;
-                        break;
-                }
-            }
-        } catch (IOException e) {
-        }
-
-        return tokens;
-    }
 
     static List<String> query_keywords(String code, List<String> keywords){
         List<String> result = new ArrayList<>();
