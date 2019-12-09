@@ -15,7 +15,7 @@ public class App {
         long startTime_indexing = System.currentTimeMillis();
 
         String query_input = "if( ID<> OP<0> LT<>): -> if(ID<> OP<0> LT<>):";
-        //String query_input = "if(x>0): -> if(x<0):";
+      //  String query_input = "_ -> ID<>(ID<>)";
 
         //Creating the tree for the query string
         Python3_Tree tree_query = new Python3_Tree(query_input);
@@ -57,6 +57,10 @@ public class App {
 
      //   double query_size = Math.sqrt(sumASq);
 
+        int [][] features_matrix = new int[tree_list.size()][length];
+       // String [][] string_matrix = new int[tree_list.size()][length];
+
+        int i = 0;
         for (Python3_Tree change : tree_list) {
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
@@ -67,15 +71,24 @@ public class App {
             List<Integer> list_change_parent_child = new ArrayList<Integer>();
             TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
+            features_matrix[i] = change.features;
+        //    string_matrix[i] = change.get_change_string();
             //lsh algorithm for change tree
          //   int[] change_lsh = lsh.hashSignature(change.features);
 
-            //Computation of the distance
-            System.out.println(change.get_change_string() + " score: "
-                    //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
-                    + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' '
-                 //   + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
-            );
+          //  int [] x = Arrays.copyOfRange(tree_query.features, 0, 100);
+           // int [] y = Arrays.copyOfRange(change.features, 0, 100);
+
+         //  if(Arrays.equals(Arrays.copyOfRange(tree_query.features, 0, 100), Arrays.copyOfRange(change.features, 0, 100)))
+                //Computation of the distance
+                System.out.println(change.get_change_string() + " score: "
+                                //     + Matching_Methods.jaccardSimilarity(Ints.toArray(list_hash_sum), Ints.toArray(list_change_hash_sum)) + ' '
+                                + Matching_Methods.cosineSimilarity(tree_query.features, features_matrix[i], length) + ' '
+                        //   + Matching_Methods.cosineSimilarity(query_lsh, change_lsh) + ' '
+                );
+
+
+            i++;
         }
 
         //Time

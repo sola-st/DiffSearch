@@ -98,7 +98,7 @@ public class TreeUtils {
         for (int i = 0; i < t.getChildCount(); i++) {
             if(t.getChild(i).getChildCount() > 0 ) {
                 list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
-                features[Math.abs(Integer.MAX_VALUE / 1048576 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 1048576)] = 1;
+                features[Math.abs(Integer.MAX_VALUE / 2097152 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 2097152)] = 1;
             }
         }
 
@@ -124,7 +124,7 @@ public class TreeUtils {
 
         if (i > 0) {
                 list_hash_sum.add(sum);
-                features[Math.abs(sum / 1048576)] = 1;
+                features[Math.abs(sum / 2097152)] = 1;
         }
 
         for (i = 0; i < t.getChildCount(); i++) {
