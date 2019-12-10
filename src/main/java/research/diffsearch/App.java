@@ -1,14 +1,11 @@
 package research.diffsearch;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.opencsv.CSVWriter;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class App {
@@ -16,16 +13,12 @@ public class App {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
 
-        //Creating all the three of changes
-        List<String> changes_list = Indexing_Methods.changes_list_from_file();
-
-        //Time
-        long endTime_indexing = System.currentTimeMillis();
-        long duration_indexing = (endTime_indexing - startTime_indexing);
-
-        /*
+        /****************************************************************************************************************
          * ALL CHANGES TREE AND FEATURES COMPUTATION
          * */
+
+        //Extraction of the changes in a string format. One element of changes_list is a change.
+        List<String> changes_list = Indexing_Methods.changes_list_from_file();
 
         try {
             //Creation of a buffered writer
@@ -53,9 +46,6 @@ public class App {
                 s_builter.append("\n");
 
                 b_writer.write(s_builter.toString());
-
-                //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
-
             }
             b_writer.close();
 
@@ -63,7 +53,12 @@ public class App {
             e.printStackTrace();
         }
 
-        /*
+        //Time
+        long endTime_indexing = System.currentTimeMillis();
+        long duration_indexing = (endTime_indexing - startTime_indexing);
+
+
+        /***************************************************************************************************************
          * QUERY TREE AND FEATURES COMPUTATION
          * */
 
@@ -107,9 +102,17 @@ public class App {
             e.printStackTrace();
         }
 
-        /*
+        /***************************************************************************************************************
          * PYTHON STAGE
          * */
+
+
+
+        /***************************************************************************************************************
+         * FINALE MATCHING STAGE
+         * */
+        //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
+
 
         //Time
         long endTime_matching = System.currentTimeMillis();
