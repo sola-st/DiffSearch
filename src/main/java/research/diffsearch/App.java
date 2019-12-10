@@ -22,7 +22,7 @@ public class App {
 
         try {
             //Creation of a buffered writer
-            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/changes_feature_vectors.csv"));
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/changes_feature_vectors.csv"));
 
             for (String change_string : changes_list) {
 
@@ -37,17 +37,17 @@ public class App {
                 TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
-                StringBuilder s_builter = new StringBuilder();
+                StringBuilder str_builder = new StringBuilder();
 
                 for (int element : change.features) {
-                    s_builter.append(element);
-                    s_builter.append(",");
+                    str_builder.append(element);
+                    str_builder.append(",");
                 }
-                s_builter.append("\n");
+                str_builder.append("\n");
 
-                b_writer.write(s_builter.toString());
+                buff_writer.write(str_builder.toString());
             }
-            b_writer.close();
+            buff_writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,20 +83,20 @@ public class App {
 
         try {
             //Creation of a buffered writer
-            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/query_feature_vectors.csv"));
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/query_feature_vectors.csv"));
 
             // Writing the feature vector in a csv file
-            StringBuilder s_builter = new StringBuilder();
+            StringBuilder str_builder = new StringBuilder();
 
             for (int element : tree_query.features) {
-                s_builter.append(element);
-                s_builter.append(",");
+                str_builder.append(element);
+                str_builder.append(",");
             }
-            s_builter.append("\n");
+            str_builder.append("\n");
 
-            b_writer.write(s_builter.toString());
+            buff_writer.write(str_builder.toString());
 
-            b_writer.close();
+            buff_writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
