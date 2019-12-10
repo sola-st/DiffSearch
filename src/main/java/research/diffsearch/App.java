@@ -1,8 +1,6 @@
 package research.diffsearch;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,14 +103,14 @@ public class App {
         /***************************************************************************************************************
          * PYTHON STAGE
          * */
-        ProcessBuilder builder = new ProcessBuilder("python ./src/main/resources/Features_vectors/Nearest_Neighbor_Search.py");
+        ProcessBuilder builder = new ProcessBuilder("python", "./src/main/resources/Python/Nearest_Neighbor_Search.py");
         try {
             Process process = builder.start();
             process.waitFor();
-        } catch (IOException|InterruptedException ex) {
-            ex.printStackTrace();
-        }
 
+    } catch (IOException | InterruptedException ex) {
+        ex.printStackTrace();
+    }
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
          * */
