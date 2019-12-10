@@ -1,0 +1,14 @@
+-        if(y>0){
++        if(y>5){
+
+-        if(y==0){
++        if(y!=0){
+
+-        for(j=0;j>0;j++){
++        for(j=0;j<1;j++){
+
+-        for(j=0;j>0;i--){
++        for(j=0;j<1;j++){
+
+-        Area.circle(1,2);
++        Area.circle(2,1);

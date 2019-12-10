@@ -22,7 +22,7 @@ public class App {
 
         try {
             //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/changes_feature_vectors.csv"));
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
 
             for (String change_string : changes_list) {
 
@@ -83,7 +83,7 @@ public class App {
 
         try {
             //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/query_feature_vectors.csv"));
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
 
             // Writing the feature vector in a csv file
             StringBuilder str_builder = new StringBuilder();
@@ -105,11 +105,16 @@ public class App {
         /***************************************************************************************************************
          * PYTHON STAGE
          * */
-
-
+        ProcessBuilder builder = new ProcessBuilder("python ./src/main/resources/Features_vectors/Nearest_Neighbor_Search.py");
+        try {
+            Process process = builder.start();
+            process.waitFor();
+        } catch (IOException|InterruptedException ex) {
+            ex.printStackTrace();
+        }
 
         /***************************************************************************************************************
-         * FINALE MATCHING STAGE
+         * FINAL MATCHING STAGE
          * */
         //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
 

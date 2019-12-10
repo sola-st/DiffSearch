@@ -1,0 +1,17 @@
+if(x>0): -> if(x<0):
+if(x>1): -> if(x<0):
+if(x>0): -> if(x>1):
+if(a>0): -> if(a>1):
+for i in x: -> for i in y:
+for i in x: -> for j in y:
+for i in x: -> for j in x:
+foo(a) -> foo(b)
+foo(a) -> fun(a)
+_ -> fun(a)
+foo(a) -> _
+if(y>1): -> if(x<0):
+if(x == 0): -> if(x != 1):
+_ -> if(x<0):
+if(x>0): -> _
+foo(a,b) -> foo(b,a)
+foo(a) -> foo(a,b)
