@@ -12,7 +12,7 @@ public class App {
         long startTime_indexing = System.currentTimeMillis();
 
         /****************************************************************************************************************
-         * ALL CHANGES TREE AND FEATURES COMPUTATION
+         * CHANGES TREE AND FEATURES COMPUTATION
          * */
 
         //Extraction of the changes in a string format. One element of changes_list is a change.
@@ -108,14 +108,14 @@ public class App {
             Process process = builder.start();
             process.waitFor();
 
-    } catch (IOException | InterruptedException ex) {
-        ex.printStackTrace();
-    }
+        } catch (IOException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
          * */
         //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
-
 
         //Time
         long endTime_matching = System.currentTimeMillis();
