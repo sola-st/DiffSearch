@@ -13,27 +13,7 @@ public class App {
     public static void main(String[] args) throws IOException {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
-
-        String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
-        //  String query_input = "_ -> ID<>(ID<>)";
-
-        //Creating the tree for the query string
-        Python3_Tree tree_query = new Python3_Tree(query_input);
-
-        //Declaring query variables
-        List<Integer> list_parent_child = new ArrayList<Integer>();
-        List<Integer> list_hash_sum = new ArrayList<Integer>();
-        Python3BaseListener listener = new Python3BaseListener();
-        ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(listener, tree_query.get_parsetree());
-        List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
-
-        //Computing hash sum and pairs parent child
-        TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-        TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-        list_hash_sum.addAll(list_parent_child);
-
-
+        
         //Creating all the three of changes
         List<String> changes_list = Indexing_Methods.changes_list_from_file();
 
@@ -41,7 +21,7 @@ public class App {
         long endTime_indexing = System.currentTimeMillis();
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
-        int length = tree_query.features.length;
+       // int length = tree_query.features.length;
 
         BufferedWriter bw = null;
         try {
@@ -77,9 +57,28 @@ public class App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-             System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
+          //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
 
         }
+
+        //Insert a query, now for semplicity it is not asked as input
+        String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
+
+        //Creating the tree for the query string
+        Python3_Tree tree_query = new Python3_Tree(query_input);
+
+        //Declaring query variables
+        List<Integer> list_parent_child = new ArrayList<Integer>();
+        List<Integer> list_hash_sum = new ArrayList<Integer>();
+        Python3BaseListener listener = new Python3BaseListener();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(listener, tree_query.get_parsetree());
+        List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
+
+        //Computing hash sum and pairs parent child
+        TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+        TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+        list_hash_sum.addAll(list_parent_child);
 
         //Time
         long endTime_matching = System.currentTimeMillis();
