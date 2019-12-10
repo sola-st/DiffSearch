@@ -24,13 +24,12 @@ public class App {
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
         /*
-         * ALL CHANGES
+         * ALL CHANGES TREE AND FEATURES COMPUTATION
          * */
-
 
         try {
             //Creation of a buffered writer
-            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/feature_vectors.csv"));
+            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/changes_feature_vectors.csv"));
 
             for (String change_string : changes_list) {
 
@@ -65,8 +64,9 @@ public class App {
         }
 
         /*
-         * QUERY
+         * QUERY TREE AND FEATURES COMPUTATION
          * */
+
         //Insert a query, now for semplicity it is not asked as input
         String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
 
@@ -85,6 +85,31 @@ public class App {
         TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
         TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
         list_hash_sum.addAll(list_parent_child);
+
+        try {
+            //Creation of a buffered writer
+            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/query_feature_vectors.csv"));
+
+            // Writing the feature vector in a csv file
+            StringBuilder s_builter = new StringBuilder();
+
+            for (int element : tree_query.features) {
+                s_builter.append(element);
+                s_builter.append(",");
+            }
+            s_builter.append("\n");
+
+            b_writer.write(s_builter.toString());
+
+            b_writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
+         * PYTHON STAGE
+         * */
 
         //Time
         long endTime_matching = System.currentTimeMillis();
