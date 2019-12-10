@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.opencsv.CSVWriter;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class App {
     public static void main(String[] args) throws IOException {
         //Starting time
         long startTime_indexing = System.currentTimeMillis();
-        
+
         //Creating all the three of changes
         List<String> changes_list = Indexing_Methods.changes_list_from_file();
 
@@ -21,46 +23,50 @@ public class App {
         long endTime_indexing = System.currentTimeMillis();
         long duration_indexing = (endTime_indexing - startTime_indexing);
 
-       // int length = tree_query.features.length;
+        /*
+         * ALL CHANGES
+         * */
 
-        BufferedWriter bw = null;
+
         try {
-            //Specify the file name and path here
-            File file = new File("./src/main/resources/feature_vectors.txt");
+            //Creation of a buffered writer
+            BufferedWriter b_writer = new BufferedWriter(new FileWriter("./src/main/resources/feature_vectors.csv"));
 
-            if (!file.exists()) {
-                file.createNewFile();
+            for (String change_string : changes_list) {
+
+                Python3_Tree change =new Python3_Tree(change_string);
+                //Computing hash sum of changes
+                List<Integer> list_change_hash_sum = new ArrayList<Integer>();
+                List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
+                TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+
+                //Computing list change parent child
+                List<Integer> list_change_parent_child = new ArrayList<Integer>();
+                TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+
+                // Writing the feature vector in a csv file
+                StringBuilder s_builter = new StringBuilder();
+
+                for (int element : change.features) {
+                    s_builter.append(element);
+                    s_builter.append(",");
+                }
+                s_builter.append("\n");
+
+                b_writer.write(s_builter.toString());
+
+                //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
+
             }
-
-            FileWriter fw = new FileWriter(file);
-            bw = new BufferedWriter(fw);
+            b_writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-        for (String change_string : changes_list) {
-            Python3_Tree change =new Python3_Tree(change_string);
-            //Computing hash sum of changes
-            List<Integer> list_change_hash_sum = new ArrayList<Integer>();
-            List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-            TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-
-            //Computing list change parent child
-            List<Integer> list_change_parent_child = new ArrayList<Integer>();
-            TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-
-            //Writing the feature vector in the file ./src/main/resources/feature_vectors.txt
-            try {
-                bw.write(Arrays.toString(change.features) + "\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-          //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
-
-        }
-
+        /*
+         * QUERY
+         * */
         //Insert a query, now for semplicity it is not asked as input
         String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
 

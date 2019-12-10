@@ -47,9 +47,9 @@
         </dependency>
 
         <dependency>
-            <groupId>info.debatty</groupId>
-            <artifactId>java-lsh</artifactId>
-            <version>0.10</version>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.1</version>
         </dependency>
 
     </dependencies>
