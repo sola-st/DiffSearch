@@ -1,11 +1,12 @@
 package research.diffsearch;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import sun.security.util.IOUtils;
 
 public class App {
     public static void main(String[] args) throws IOException {
@@ -117,10 +118,10 @@ public class App {
             p1 = Runtime.getRuntime().exec("whereis anaconda");
             BufferedReader br = new BufferedReader(new InputStreamReader(p1.getInputStream()));
 
-         //   while ((s1 = br.readLine()) != null)
-           //     System.out.println(s1);
+            //   while ((s1 = br.readLine()) != null)
+            //     System.out.println(s1);
             p1.waitFor();
-            System.out.println ("exit: " + p1.exitValue());
+         //   System.out.println ("exit: " + p1.exitValue());
             p1.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
@@ -130,17 +131,43 @@ public class App {
             p = Runtime.getRuntime().exec(" /home/luca/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-        //    while ((s = br.readLine()) != null)
-          //      System.out.println("line: " + s);
+            //    while ((s = br.readLine()) != null)
+            //      System.out.println("line: " + s);
             p.waitFor();
-            System.out.println ("exit: " + p.exitValue());
+           // System.out.println ("exit: " + p.exitValue());
             p.destroy();
         } catch (Exception e) { e.printStackTrace();}
+
 
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
          * */
-        //   System.out.println(change.get_change_string() + " score: " + Matching_Methods.cosineSimilarity(tree_query.features, change.features, length) + ' ');
+
+        List<String> allLines = null;
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int length = tree_query.features.length;
+
+        for(String candidate : allLines){
+            Python3_Tree change =new Python3_Tree(candidate);
+            //Computing hash sum of changes
+            List<Integer> list_change_hash_sum = new ArrayList<Integer>();
+            List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
+            TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+
+            //Computing list change parent child
+            List<Integer> list_change_parent_child = new ArrayList<Integer>();
+            TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+
+            double score =  Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
+
+            if(score > 0.3)
+                System.out.println(candidate + " score: " + score);
+        }
 
         //Time
         long endTime_matching = System.currentTimeMillis();
