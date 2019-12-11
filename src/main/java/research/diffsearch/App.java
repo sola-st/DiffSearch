@@ -19,8 +19,9 @@ public class App {
         List<String> changes_list = Indexing_Methods.changes_list_from_file();
 
         try {
-            //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
+            //Creation of a buffered writer for the features and the change in a string form (for print)
+            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
+            BufferedWriter buff_writer_string = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_strings.csv"));
 
             for (String change_string : changes_list) {
 
@@ -43,9 +44,19 @@ public class App {
                 }
                 str_builder.append("\n");
 
-                buff_writer.write(str_builder.toString());
+                buff_writer_features.write(str_builder.toString());
+
+                // Writing the feature vector in a csv file
+                StringBuilder str_builder_string = new StringBuilder();
+
+                str_builder_string.append(change.get_change_string().replaceAll(","," _comma_ "));
+                str_builder_string.append(",");
+                str_builder_string.append("\n");
+
+                buff_writer_string.write(str_builder_string.toString());
             }
-            buff_writer.close();
+            buff_writer_features.close();
+            buff_writer_string.close();
 
         } catch (IOException e) {
             e.printStackTrace();
