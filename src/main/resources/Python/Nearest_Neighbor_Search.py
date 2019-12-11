@@ -1,3 +1,4 @@
+#! /home/luca/anaconda3/bin/python3.7
 import csv
 import numpy as np 
 import pandas as pd
@@ -61,5 +62,9 @@ with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
 
 for i in index_list:
   print(changes_strings[i])
+
+with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
+    for item in index_list:
+        f.write("%s" % changes_strings[item])
 
 print("END.")

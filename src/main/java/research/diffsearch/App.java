@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import sun.security.util.IOUtils;
 
 public class App {
     public static void main(String[] args) throws IOException {
@@ -110,15 +111,31 @@ public class App {
 
         /***************************************************************************************************************
          * PYTHON STAGE
-         * */
-        ProcessBuilder builder = new ProcessBuilder("python", "./src/main/resources/Python/Nearest_Neighbor_Search.py");
+         */
+        Process p1;
         try {
-            Process process = builder.start();
-            process.waitFor();
+            p1 = Runtime.getRuntime().exec("whereis anaconda");
+            BufferedReader br = new BufferedReader(new InputStreamReader(p1.getInputStream()));
 
-        } catch (IOException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
+         //   while ((s1 = br.readLine()) != null)
+           //     System.out.println(s1);
+            p1.waitFor();
+            System.out.println ("exit: " + p1.exitValue());
+            p1.destroy();
+        } catch (Exception e) { e.printStackTrace();}
+
+        Process p;
+        try {
+            //!!!!! TODO: I have to make the path not absolute !!!!!
+            p = Runtime.getRuntime().exec(" /home/luca/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+        //    while ((s = br.readLine()) != null)
+          //      System.out.println("line: " + s);
+            p.waitFor();
+            System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) { e.printStackTrace();}
 
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
