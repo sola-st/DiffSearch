@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Matching_Methods {
 
-
     public static double cosineSimilarity(int[] v1, int[] v2, int length) {
         double sum_v1v2 = 0;
         double sum_v1 = 0;

@@ -10,17 +10,17 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class App {
     public static void main(String[] args) throws IOException {
-        //Starting time
-        long startTime_indexing = System.currentTimeMillis();
 
         /****************************************************************************************************************
          * CHANGES TREE AND FEATURES COMPUTATION
          * */
-
-        //Extraction of the changes in a string format. One element of changes_list is a change.
-        List<String> changes_list = Indexing_Methods.changes_list_from_file();
+        long startTime_indexing = System.currentTimeMillis();
+        long changes_number = 0;
 
         try {
+            //Extraction of the changes in a string format. One element of changes_list is a change.
+            List<String> changes_list = Indexing_Methods.changes_list_from_file();
+            changes_number = changes_list.size();
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
@@ -63,7 +63,7 @@ public class App {
 
         //Time
         long endTime_indexing = System.currentTimeMillis();
-        long duration_indexing = (endTime_indexing - startTime_indexing);
+        long feature_extraction = (endTime_indexing - startTime_indexing);
 
 
         /***************************************************************************************************************
@@ -103,16 +103,19 @@ public class App {
             str_builder.append("\n");
 
             buff_writer.write(str_builder.toString());
-
             buff_writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
+
         /***************************************************************************************************************
          * PYTHON STAGE
          */
+        long startTime_python = System.currentTimeMillis();
+
         Process p1;
         try {
             p1 = Runtime.getRuntime().exec("whereis anaconda");
@@ -121,27 +124,30 @@ public class App {
             //   while ((s1 = br.readLine()) != null)
             //     System.out.println(s1);
             p1.waitFor();
-         //   System.out.println ("exit: " + p1.exitValue());
+            //   System.out.println ("exit: " + p1.exitValue());
             p1.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
-        Process p;
+        Process python_Nearest_Neighbor_Search;
         try {
             //!!!!! TODO: I have to make the path not absolute !!!!!
-            p = Runtime.getRuntime().exec(" /home/luca/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(" /home/luca/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
+            BufferedReader br = new BufferedReader(new InputStreamReader(python_Nearest_Neighbor_Search.getInputStream()));
 
-            //    while ((s = br.readLine()) != null)
-            //      System.out.println("line: " + s);
-            p.waitFor();
-           // System.out.println ("exit: " + p.exitValue());
-            p.destroy();
+            python_Nearest_Neighbor_Search.waitFor();
+            python_Nearest_Neighbor_Search.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
+
+        long endTime_python = System.currentTimeMillis();
+        long time_python = (endTime_python - startTime_python);
+
+        System.out.println("PYTHON STAGE DONE\n");
 
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
          * */
+        long startTime_matching = System.currentTimeMillis();
 
         List<String> allLines = null;
         try {
@@ -151,6 +157,8 @@ public class App {
         }
 
         int length = tree_query.features.length;
+        double threshold = 0.8;
+        long number_matching = 0;
 
         for(String candidate : allLines){
             Python3_Tree change =new Python3_Tree(candidate);
@@ -165,14 +173,17 @@ public class App {
 
             double score =  Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
 
-            if(score > 0.3)
+            if(score > threshold) {
+                number_matching++;
                 System.out.println(candidate + " score: " + score);
+            }
         }
 
-        //Time
+        //Statistics
         long endTime_matching = System.currentTimeMillis();
-        long duration_matching = (endTime_matching - endTime_indexing);
-        System.out.println("\nEND: Indexing duration: " + duration_indexing / 1000 + " seconds," + " Matching duration: " + duration_matching / 1000 + " seconds.");
-
+        long duration_matching = (endTime_matching - startTime_matching);
+        System.out.println("\n FINAL STATISTICS:\nNumber of changes analyzed: " + changes_number +"\nNumber of matching changes: " + number_matching
+                +"\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\nPython Search duration: " + time_python / 1000 + " seconds,"
+                + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.");
     }
 }

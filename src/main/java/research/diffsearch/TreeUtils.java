@@ -1,7 +1,6 @@
 package research.diffsearch;
 
 import java.util.List;
-
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 

@@ -45,7 +45,7 @@ print(index.ntotal)   # 200
 
 nprobe = 2  # find 2 most similar clusters
 n_query = 1  
-k = 5  # return 3 nearest neighbours
+k = 1000  # return k-nearest neighbours
 distances, indices = index.search(query_feature_vectors, k)
 
 print(distances)
