@@ -9,6 +9,10 @@ changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/cha
 #print(changes_feature_vectors)
 query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 #print(query_feature_vectors)
+with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
+    changes_strings = f.readlines()
+#print(changes_strings)
+
 
 #######################################################################
 #FAISS Installation:
@@ -40,10 +44,22 @@ print(index.ntotal)   # 200
 
 nprobe = 2  # find 2 most similar clusters
 n_query = 1  
-k = 17  # return 3 nearest neighbours
+k = 5  # return 3 nearest neighbours
 distances, indices = index.search(query_feature_vectors, k)
 
 print(distances)
 print(indices)
+
+np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
+values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
+
+index_list = [round(int(float(x))) for x in values]
+with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
+    for item in index_list:
+        f.write("%s\n" % item)
+#print(index_list)
+
+for i in index_list:
+  print(changes_strings[i])
 
 print("END.")

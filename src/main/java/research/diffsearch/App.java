@@ -21,7 +21,10 @@ public class App {
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
-            BufferedWriter buff_writer_string = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_strings.csv"));
+            // Writing the string change in a file (ONLY FOR TESTING)
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
+            BufferedWriter bw = new BufferedWriter(writer);
+
 
             for (String change_string : changes_list) {
 
@@ -46,17 +49,11 @@ public class App {
 
                 buff_writer_features.write(str_builder.toString());
 
-                // Writing the feature vector in a csv file
-                StringBuilder str_builder_string = new StringBuilder();
-
-                str_builder_string.append(change.get_change_string().replaceAll(","," _comma_ "));
-                str_builder_string.append(",");
-                str_builder_string.append("\n");
-
-                buff_writer_string.write(str_builder_string.toString());
+                // Writing the string change in a file (ONLY FOR TESTING)
+                bw.write(change.get_change_string() + "\n");
             }
             buff_writer_features.close();
-            buff_writer_string.close();
+            bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
