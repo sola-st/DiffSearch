@@ -62,48 +62,48 @@ public class Pipeline {
     }
 
     public static Python3_Tree query_feature_extraction(){
-         //Insert a query, now for semplicity it is not asked as input
-         String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
+        //Insert a query, now for semplicity it is not asked as input
+        String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
 
-         //Creating the tree for the query string
-         Python3_Tree tree_query = new Python3_Tree(query_input);
+        //Creating the tree for the query string
+        Python3_Tree tree_query = new Python3_Tree(query_input);
 
-         //Declaring query variables
-         List<Integer> list_parent_child = new ArrayList<Integer>();
-         List<Integer> list_hash_sum = new ArrayList<Integer>();
-         Python3BaseListener listener = new Python3BaseListener();
-         ParseTreeWalker walker = new ParseTreeWalker();
-         walker.walk(listener, tree_query.get_parsetree());
-         List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
+        //Declaring query variables
+        List<Integer> list_parent_child = new ArrayList<Integer>();
+        List<Integer> list_hash_sum = new ArrayList<Integer>();
+        Python3BaseListener listener = new Python3BaseListener();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(listener, tree_query.get_parsetree());
+        List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
 
-         //Computing hash sum and pairs parent child
-         TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-         TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-         list_hash_sum.addAll(list_parent_child);
+        //Computing hash sum and pairs parent child
+        TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+        TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+        list_hash_sum.addAll(list_parent_child);
 
-         try {
-             //Creation of a buffered writer
-             BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
+        try {
+            //Creation of a buffered writer
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
 
-             // Writing the feature vector in a csv file
-             StringBuilder str_builder = new StringBuilder();
+            // Writing the feature vector in a csv file
+            StringBuilder str_builder = new StringBuilder();
 
-             for (int element : tree_query.features) {
-                 str_builder.append(element);
-                 str_builder.append(",");
-             }
-             str_builder.append("\n");
+            for (int element : tree_query.features) {
+                str_builder.append(element);
+                str_builder.append(",");
+            }
+            str_builder.append("\n");
 
-             buff_writer.write(str_builder.toString());
-             buff_writer.close();
+            buff_writer.write(str_builder.toString());
+            buff_writer.close();
 
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-         System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
+        System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
 
-         return tree_query;
+        return tree_query;
     }
 
     public static void search_candidate_changes(){

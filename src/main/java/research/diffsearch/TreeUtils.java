@@ -12,13 +12,11 @@ public class TreeUtils {
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
             features[Math.abs(Integer.MAX_VALUE / 2097152 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 2097152)] = 1;
-
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
             pairs_parent_childAST(t.getChild(i), ruleNames, list_parent_child, features);
         }
-
 
         return;
     }
@@ -42,7 +40,6 @@ public class TreeUtils {
         for (i = 0; i < t.getChildCount(); i++) {
             tree_hash_sumAST(t.getChild(i), ruleNames, list_hash_sum, features);
         }
-
 
         return;
     }
