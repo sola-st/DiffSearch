@@ -15,7 +15,7 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage and final matching stage
 - src/main/java/research.diffsearch/**Python3_Tree.java** -> Python tree class 
 - src/main/java/research.diffsearch/**Python3(...).java** -> ANTLR java classes
-- src/main/java/research.diffsearch/**treeUtils.java** -> Methods to visit and work with trees
+- src/main/java/research.diffsearch/**TreeUtils.java** -> Methods to visit and work with trees
 - src/main/java/resources/Python/**Nearest_Neighbor_Search.py** -> FAISS framework wrapper
 
 **Main folders:**
