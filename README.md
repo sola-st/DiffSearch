@@ -10,7 +10,7 @@ retrieves a ranked list of changes that match the query.
 
 **Main files:**
 - src/main/java/research.diffsearch/**App.java** -> Main file
-- src/main/java/research.diffsearch/**Indexing_Methods.java** -> (old name, it has to be changed) Clone repository and extract changes
+- src/main/java/research.diffsearch/**Change_extraction.java** -> Clone repository and extract changes
 - src/main/java/research.diffsearch/**Matching_Methods.java** -> Cosine distance with minor optimizations for binary vectors
 - src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage and final matching stage
 - src/main/java/research.diffsearch/**Python3_Tree.java** -> Python tree class 
