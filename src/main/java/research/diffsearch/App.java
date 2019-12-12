@@ -161,7 +161,7 @@ public class App {
         long number_matching = 0;
 
         for(String candidate : allLines){
-            Python3_Tree change =new Python3_Tree(candidate);
+            Python3_Tree change = new Python3_Tree(candidate);
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
