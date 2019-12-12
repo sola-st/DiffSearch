@@ -52,7 +52,7 @@ public class App {
         /***************************************************************************************************************
          * STATISTICS
          * */
-        System.out.println("\n FINAL STATISTICS:\nNumber of changes analyzed: " + changes_number +"\nNumber of matching changes: " + number_matching
+        System.out.println("\nFINAL STATISTICS:\nNumber of changes analyzed: " + changes_number +"\nNumber of matching changes: " + number_matching
                 +"\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\nPython Search duration: " + time_python / 1000 + " seconds,"
                 + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.");
     }
