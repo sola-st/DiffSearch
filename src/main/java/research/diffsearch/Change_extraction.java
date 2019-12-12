@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Indexing_Methods {
+public class Change_extraction {
 
     // Now I read directly the changes in the file example_python3.txt because it is easy to add new changes now.
     //The extraction is implemented by analyze_diff_file, so in the final version it will substitute this function
@@ -62,5 +62,4 @@ public class Indexing_Methods {
 
         return changes_tree_list;
     }
-
 }

@@ -16,7 +16,7 @@ public class Pipeline {
 
         try {
             //Extraction of the changes in a string format. One element of changes_list is a change.
-            List<String> changes_list = Indexing_Methods.changes_list_from_file();
+            List<String> changes_list = Change_extraction.changes_list_from_file();
             changes_number = changes_list.size();
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
