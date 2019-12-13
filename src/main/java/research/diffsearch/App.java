@@ -1,9 +1,7 @@
 package research.diffsearch;
 
-import java.io.*;
-
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         /***************************************************************************************************************
          * CHANGES TREE AND FEATURES COMPUTATION
