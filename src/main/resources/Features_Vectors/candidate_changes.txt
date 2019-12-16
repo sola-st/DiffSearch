@@ -1,100 +1,100 @@
+x = 5 ->x=7 
+if(x>0): ->foo(x) 
 
-+              if(x<0){ ->_
-
-                self.state = 28 ->                self.state = 30 
-_->    return query_tokens, query_ngrams 
-                self.state = 28 ->                self.state = 30 
-            elif token in [SearchParser.T__17, SearchParser.T__18, SearchParser.T__19, SearchParser.T__20, SearchParser.T__21, SearchParser.T__22, SearchParser.T__23]: ->            elif token in [SearchParser.T__2, SearchParser.T__3, SearchParser.T__4, SearchParser.T__5, SearchParser.T__6, SearchParser.T__7, SearchParser.T__8]: 
-
-
-    literalNames = [ "<INVALID>", "'->'", "'_'", "'#ID<'", "'>'", "'#N<'",                        "'#ID<.>'", "'#N<.>'", "'0'", "'1'", "'2'", "'3'",                        "'4'", "'5'", "'6'", "'7'", "'8'", "'9'", "'if'", "'else'",                        "'for'", "'forEach'", "'while'", "'return'", "'NULL'",                        "'('", "')'", "'['", "']'", "'{'", "'}'", "'\"'", "'='",                        "'.'", "','", "';'", "'+'", "'\u2212'", "'*'", "'/'",                        "'=='", "'<'", "'<='", "'>='", "'!='", "'&&'", "'||'",                        "'#OP<'" ] ->    literalNames = [ "<INVALID>", "'->'", "'_'", "'if'", "'else'", "'for'",                        "'forEach'", "'while'", "'return'", "'NULL'", "'('",                        "')'", "'['", "']'", "'{'", "'}'", "'\"'", "'='", "'.'",                        "','", "';'", "'#ID<'", "'>'", "'#ID<!'", "'#ID<.>'",                        "'#OP<'", "'#OP<!'", "'#OP<.>'", "'#LT<'", "'#LT<!'",                        "'#LT<.>'", "'0'", "'1'", "'2'", "'3'", "'4'", "'5'",                        "'6'", "'7'", "'8'", "'9'" ] 
-                return self.getTypedRuleContexts(SearchParser.ExprContext) ->                return self.getTypedRuleContexts(SearchParser.CodeContext) 
+if(x>0): ->_
 
 
 
 
-+        for(j=0;j<1;j++){ ->-    while(i<1){ 
-
-            elif la_ == 12:                  self.enterOuterAlt(localctx, 12)                  self.state = 106                  self.match(SearchParser.T__44)                  pass ->        except RecognitionException as re:              localctx.exception = re              self._errHandler.reportError(self, re)              self._errHandler.recover(self, re)          finally:              self.exitRule()          return localctx  _     class LiteralContext(ParserRuleContext):  _         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):              super().__init__(parent, invokingState)              self.parser = parser  _         def digit(self, i:int=None):              if i is None:                  return self.getTypedRuleContexts(SearchParser.DigitContext)              else:                  return self.getTypedRuleContext(SearchParser.DigitContext,i)  _ _         def getRuleIndex(self):              return SearchParser.RULE_literal  _         def enterRule(self, listener:ParseTreeListener):              if hasattr( listener, "enterLiteral" ):                  listener.enterLiteral(self)  _         def exitRule(self, listener:ParseTreeListener):              if hasattr( listener, "exitLiteral" ):                  listener.exitLiteral(self) 
-            return SearchParser.RULE_expr ->            return SearchParser.RULE_code 
-
-            elif la_ == 12:                  self.enterOuterAlt(localctx, 12)                  self.state = 106                  self.match(SearchParser.T__44)                  pass ->        except RecognitionException as re:              localctx.exception = re              self._errHandler.reportError(self, re)              self._errHandler.recover(self, re)          finally:              self.exitRule()          return localctx  _     class LiteralContext(ParserRuleContext):  _         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):              super().__init__(parent, invokingState)              self.parser = parser  _         def digit(self, i:int=None):              if i is None:                  return self.getTypedRuleContexts(SearchParser.DigitContext)              else:                  return self.getTypedRuleContext(SearchParser.DigitContext,i)  _ _         def getRuleIndex(self):              return SearchParser.RULE_literal  _         def enterRule(self, listener:ParseTreeListener):              if hasattr( listener, "enterLiteral" ):                  listener.enterLiteral(self)  _         def exitRule(self, listener:ParseTreeListener):              if hasattr( listener, "exitLiteral" ):                  listener.exitLiteral(self) 
-
-
-                self.state = 64                  self.match(SearchParser.T__25) ->                self.state = 45                  self.match(SearchParser.T__10) 
-        localctx = SearchParser.ExprContext(self, self._ctx, self.state)          self.enterRule(localctx, 2, self.RULE_expr) ->        localctx = SearchParser.CodeContext(self, self._ctx, self.state)          self.enterRule(localctx, 2, self.RULE_code) 
-_->#Take second element for list sorting key  def takeSecond(elem):      return elem[1]  _
-
-
-
-_->import csv  from itertools import zip_longest 
 
 
 
 
-            elif token in [SearchParser.T__26]: ->            elif token in [SearchParser.T__11]: 
-    RULE_expr = 1 ->    RULE_code = 1 
-                self.state = 64                  self.match(SearchParser.T__25) ->                self.state = 45                  self.match(SearchParser.T__10) 
-
-+        for(j=0;j<1;j++){ ->-    while(i<1){ 
-_->        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):              super().__init__(parent, invokingState)              self.parser = parser 
-    class ExprContext(ParserRuleContext): ->    class CodeContext(ParserRuleContext): 
-_->        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):              super().__init__(parent, invokingState)              self.parser = parser 
-            elif token in [SearchParser.T__26]: ->            elif token in [SearchParser.T__11]: 
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__1) | (1 << SearchParser.T__2) | (1 << SearchParser.T__3) | (1 << SearchParser.T__4) | (1 << SearchParser.T__5) | (1 << SearchParser.T__6) | (1 << SearchParser.T__17) | (1 << SearchParser.T__18) | (1 << SearchParser.T__19) | (1 << SearchParser.T__20) | (1 << SearchParser.T__21) | (1 << SearchParser.T__22) | (1 << SearchParser.T__23) | (1 << SearchParser.T__24) | (1 << SearchParser.T__26) | (1 << SearchParser.T__28) | (1 << SearchParser.T__30) | (1 << SearchParser.T__31) | (1 << SearchParser.T__32) | (1 << SearchParser.T__33) | (1 << SearchParser.T__34) | (1 << SearchParser.T__35) | (1 << SearchParser.T__36) | (1 << SearchParser.T__37) | (1 << SearchParser.T__38) | (1 << SearchParser.T__39) | (1 << SearchParser.T__40) | (1 << SearchParser.T__41) | (1 << SearchParser.T__42) | (1 << SearchParser.T__43) | (1 << SearchParser.T__44) | (1 << SearchParser.T__45) | (1 << SearchParser.T__46))) != 0):                  self.state = 20 ->            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__1) | (1 << SearchParser.T__2) | (1 << SearchParser.T__3) | (1 << SearchParser.T__4) | (1 << SearchParser.T__5) | (1 << SearchParser.T__6) | (1 << SearchParser.T__7) | (1 << SearchParser.T__8) | (1 << SearchParser.T__9) | (1 << SearchParser.T__11) | (1 << SearchParser.T__13) | (1 << SearchParser.T__15) | (1 << SearchParser.T__16) | (1 << SearchParser.T__17) | (1 << SearchParser.T__18) | (1 << SearchParser.T__19) | (1 << SearchParser.T__20) | (1 << SearchParser.T__22) | (1 << SearchParser.T__23) | (1 << SearchParser.T__24) | (1 << SearchParser.T__25) | (1 << SearchParser.T__26) | (1 << SearchParser.T__27) | (1 << SearchParser.T__28) | (1 << SearchParser.T__29))) != 0):                  self.state = 22 
 
 
 
-    T__40=41      T__41=42      T__42=43      T__43=44      T__44=45      T__45=46      T__46=47      WS=48 ->    WS=41 
-+              if(y!=0){  _          switch(i) {              case 1: ->_
-_->_
-
-
-                self.state = 29                  self.op() ->                self.state = 31                  self.operator() 
-                self.state = 115                  self.match(SearchParser.T__3) ->                self.state = 121                  self.match(SearchParser.T__21)                  pass              elif token in [SearchParser.T__28]:                  self.enterOuterAlt(localctx, 2)                  self.state = 122                  self.match(SearchParser.T__28)                  self.state = 126                  self._errHandler.sync(self)                  _la = self._input.LA(1)                  while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__30) | (1 << SearchParser.T__31) | (1 << SearchParser.T__32) | (1 << SearchParser.T__33) | (1 << SearchParser.T__34) | (1 << SearchParser.T__35) | (1 << SearchParser.T__36) | (1 << SearchParser.T__37) | (1 << SearchParser.T__38) | (1 << SearchParser.T__39))) != 0):                      self.state = 123                      self.digit()                      self.state = 128                      self._errHandler.sync(self)                      _la = self._input.LA(1)  _                 self.state = 129                  self.match(SearchParser.T__21)                  pass              elif token in [SearchParser.T__29]:                  self.enterOuterAlt(localctx, 3)                  self.state = 130                  self.match(SearchParser.T__29) 
-
-
-                self.state = 115                  self.match(SearchParser.T__3) ->                self.state = 121                  self.match(SearchParser.T__21)                  pass              elif token in [SearchParser.T__28]:                  self.enterOuterAlt(localctx, 2)                  self.state = 122                  self.match(SearchParser.T__28)                  self.state = 126                  self._errHandler.sync(self)                  _la = self._input.LA(1)                  while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__30) | (1 << SearchParser.T__31) | (1 << SearchParser.T__32) | (1 << SearchParser.T__33) | (1 << SearchParser.T__34) | (1 << SearchParser.T__35) | (1 << SearchParser.T__36) | (1 << SearchParser.T__37) | (1 << SearchParser.T__38) | (1 << SearchParser.T__39))) != 0):                      self.state = 123                      self.digit()                      self.state = 128                      self._errHandler.sync(self)                      _la = self._input.LA(1)  _                 self.state = 129                  self.match(SearchParser.T__21)                  pass              elif token in [SearchParser.T__29]:                  self.enterOuterAlt(localctx, 3)                  self.state = 130                  self.match(SearchParser.T__29) 
-            elif token in [SearchParser.T__1]: ->            elif token in [SearchParser.T__27, SearchParser.T__28, SearchParser.T__29]: 
-                self.state = 29                  self.op() ->                self.state = 31                  self.operator() 
-
-
-            self.state = 93 ->            self.state = 74 
-            elif token in [SearchParser.T__1]: ->            elif token in [SearchParser.T__27, SearchParser.T__28, SearchParser.T__29]: 
-    def expr(self): ->    def code(self): 
-                return self.getTypedRuleContexts(SearchParser.ExprContext) ->                return self.getTypedRuleContexts(SearchParser.CodeContext) 
 
 
 
-#echo "3 * 3 - 2 + 2 * 2" | python main.py  _->_
-# insert at 1, 0 is the script path (or '' in REPL)  sys.path.insert(1, './antlr4')  _->sys.path.insert(1, './code/antlr4') 
-
-
-+              Area.circle(5,5);                break;              case 2: ->_
-
-    filename = repository + "./code/git_log.txt" ->    filename ="test-changes/git_log.txt" 
-                while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__1) | (1 << SearchParser.T__2) | (1 << SearchParser.T__3) | (1 << SearchParser.T__4) | (1 << SearchParser.T__5) | (1 << SearchParser.T__6) | (1 << SearchParser.T__17) | (1 << SearchParser.T__18) | (1 << SearchParser.T__19) | (1 << SearchParser.T__20) | (1 << SearchParser.T__21) | (1 << SearchParser.T__22) | (1 << SearchParser.T__23) | (1 << SearchParser.T__24) | (1 << SearchParser.T__26) | (1 << SearchParser.T__28) | (1 << SearchParser.T__30) | (1 << SearchParser.T__31) | (1 << SearchParser.T__32) | (1 << SearchParser.T__33) | (1 << SearchParser.T__34) | (1 << SearchParser.T__35) | (1 << SearchParser.T__36) | (1 << SearchParser.T__37) | (1 << SearchParser.T__38) | (1 << SearchParser.T__39) | (1 << SearchParser.T__40) | (1 << SearchParser.T__41) | (1 << SearchParser.T__42) | (1 << SearchParser.T__43) | (1 << SearchParser.T__44) | (1 << SearchParser.T__45) | (1 << SearchParser.T__46))) != 0):                      self.state = 58 ->                while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SearchParser.T__1) | (1 << SearchParser.T__2) | (1 << SearchParser.T__3) | (1 << SearchParser.T__4) | (1 << SearchParser.T__5) | (1 << SearchParser.T__6) | (1 << SearchParser.T__7) | (1 << SearchParser.T__8) | (1 << SearchParser.T__9) | (1 << SearchParser.T__11) | (1 << SearchParser.T__13) | (1 << SearchParser.T__15) | (1 << SearchParser.T__16) | (1 << SearchParser.T__17) | (1 << SearchParser.T__18) | (1 << SearchParser.T__19) | (1 << SearchParser.T__20) | (1 << SearchParser.T__22) | (1 << SearchParser.T__23) | (1 << SearchParser.T__24) | (1 << SearchParser.T__25) | (1 << SearchParser.T__26) | (1 << SearchParser.T__27) | (1 << SearchParser.T__28) | (1 << SearchParser.T__29))) != 0):                      self.state = 39 
-
-_->#Query digits normalization and n-grams and tokens computation 
-                self.state = 25 ->                self.state = 27 
-+++ b/Area.java  @@ -3,24 +3,23 @@ import java.util.Scanner;   public class Area { ->--- a/main.cpp 
-
-+++ b/Area.java  @@ -3,24 +3,23 @@ import java.util.Scanner;   public class Area { ->--- a/main.cpp 
-
-
-def dataset_csv(list1, list2):      d = [list1, list2]      export_data = zip_longest(*d, fillvalue = '') ->import sys  sys.path.insert(1, './code/antlr4')  from SearchLexer import SearchLexer  from SearchListener import SearchListener  from SearchParser import SearchParser 
-
-            if hasattr( listener, "enterExpr" ):                  listener.enterExpr(self) ->            if hasattr( listener, "enterCode" ):                  listener.enterCode(self) 
 
 
 
-            else:                  raise NoViableAltException(self)  _         except RecognitionException as re:              localctx.exception = re              self._errHandler.reportError(self, re)              self._errHandler.recover(self, re)          finally:              self.exitRule()          return localctx  _     class IdentifierContext(ParserRuleContext):  _         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):              super().__init__(parent, invokingState)              self.parser = parser  _         def digit(self, i:int=None):              if i is None:                  return self.getTypedRuleContexts(SearchParser.DigitContext)              else:                  return self.getTypedRuleContext(SearchParser.DigitContext,i)  _ _         def getRuleIndex(self):              return SearchParser.RULE_identifier  _         def enterRule(self, listener:ParseTreeListener):              if hasattr( listener, "enterIdentifier" ):                  listener.enterIdentifier(self)  _         def exitRule(self, listener:ParseTreeListener):              if hasattr( listener, "exitIdentifier" ):                  listener.exitIdentifier(self)  _ _ _ _     def identifier(self):  _         localctx = SearchParser.IdentifierContext(self, self._ctx, self.state)          self.enterRule(localctx, 6, self.RULE_identifier)          self._la = 0 # Token type          try:              self.state = 51              self._errHandler.sync(self)              token = self._input.LA(1)              if token in [SearchParser.T__2]:                  self.enterOuterAlt(localctx, 1) ->            elif token in [SearchParser.T__1]:                  self.enterOuterAlt(localctx, 6) 
-+              if(y>1){            }          } ->-    return 0; 
-            return SearchParser.RULE_expr ->            return SearchParser.RULE_code 
-#ID<.>.#ID<.>(#N<100>,#N<21321>)->#ID<.>.#ID<.>(#N<23222>,,#N<2312313> ->if(#ID<.>#OP<0>#LT<.>) -> if(#ID<.>#OP<!0>#LT<.>)  if(#ID<.>#OP<1>#LT<.>) -> if(#ID<.>#OP<1>#LT<.>)  if(#ID<.>#OP<1>#LT<.>){ -> if(#ID<.>#OP<1>#LT<.>){ 
 
-#ID<.>.#ID<.>(#N<100>,#N<21321>)->#ID<.>.#ID<.>(#N<23222>,,#N<2312313> ->if(#ID<.>#OP<0>#LT<.>) -> if(#ID<.>#OP<!0>#LT<.>)  if(#ID<.>#OP<1>#LT<.>) -> if(#ID<.>#OP<1>#LT<.>)  if(#ID<.>#OP<1>#LT<.>){ -> if(#ID<.>#OP<1>#LT<.>){ 
-_->_     my_functions.dataset_csv(changes_list_real, changes_list_abstract) 
-    command = "echo '' > git_changes.txt" ->    command = "echo '' > ./test_changes/git_changes.txt" 
-         System.out.println("Geometry Area:\n1)Circle\n2)Rectangle\n3)Triangle\n"); ->         System.out.println("Geometry Area:\n"); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
