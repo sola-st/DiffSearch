@@ -40,74 +40,91 @@ public class Change_extraction {
             e.printStackTrace();
         }
 
-        for (String line : allLines) {
-            line = line + "  ";
-            if ((line.substring(0,1).equals("-")) && (!line.substring(1,2).equals("-"))){
+        try {
+            for (String line : allLines) {
+                line = line + "  ";
 
-                if(flag || temporary_list_old.size() > 0){
-                    ArrayList<String> change = new ArrayList<String>();
+                //manage -old change
+                if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
 
-                    if(temporary_list_new.size() == 0) {
-                        change.add(temporary_list_old.toString());
-                        change.add("_");
-                    }else{
-                        if(temporary_list_old.size() == 0){
-                            change.add("_");
-                            change.add(temporary_list_new.toString());
-                        }else{
+                    //Manage sequential change without interruption: -old +new -old +new
+                    if (flag || temporary_list_old.size() > 0) {
+                        ArrayList<String> change = new ArrayList<String>();
+
+                        if (temporary_list_new.size() == 0) {
                             change.add(temporary_list_old.toString());
-                            change.add(temporary_list_new.toString());
+                            change.add("_");
+                        } else {
+                            if (temporary_list_old.size() == 0) {
+                                change.add("_");
+                                change.add(temporary_list_new.toString());
+                            } else {
+                                change.add(temporary_list_old.toString());
+                                change.add(temporary_list_new.toString());
+                            }
                         }
+
+                        changes_list.add(change);
+                        temporary_list_old.clear();
+                        temporary_list_new.clear();
+                        flag = false;
                     }
 
-                    changes_list.add(change);
-                    temporary_list_old.clear();
-                    temporary_list_new.clear();
-                    flag = false;
-                }
+                    //Add -old in a  temporary list
+                    temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
 
-                temporary_list_old.add(line.substring(1,line.length() - 1) + "\n");
+                } else
+                    //manage +new change
+                    if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
+                    temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
+                    flag = true;//-old +new is complete
+                } else {
+                        // merge old and new code in the same list
+                    if (flag || temporary_list_old.size() > 0) {
+                        ArrayList<String> change = new ArrayList<String>();
 
-            }else
-            if ((line.substring(0,1).equals("+")) && (!line.substring(1,2).equals("+"))){
-                temporary_list_new.add(line.substring(1,line.length()-1) + "\n");
-                flag = true;
-            }else{
-                if(flag || temporary_list_old.size() > 0){
-                    ArrayList<String> change = new ArrayList<String>();
-
-                    if(temporary_list_new.size() == 0) {
-                        change.add(temporary_list_old.toString());
-                        change.add("_");
-                    }else{
-                        if(temporary_list_old.size() == 0){
-                            change.add("_");
-                            change.add(temporary_list_new.toString());
-                        }else{
+                        //manage -old only
+                        if (temporary_list_new.size() == 0) {
                             change.add(temporary_list_old.toString());
-                            change.add(temporary_list_new.toString());
+                            change.add("_");
+                        } else {
+                            //manage +new only
+                            if (temporary_list_old.size() == 0) {
+                                change.add("_");
+                                change.add(temporary_list_new.toString());
+                            } else {
+                                change.add(temporary_list_old.toString());
+                                change.add(temporary_list_new.toString());
+                            }
                         }
-                    }
 
-                    changes_list.add(change);
-                    temporary_list_old.clear();
-                    temporary_list_new.clear();
-                    flag = false;
+                        changes_list.add(change);
+                        temporary_list_old.clear();
+                        temporary_list_new.clear();
+                        flag = false;
+                    }
                 }
             }
+
+            //Last change
+            if (flag) {
+                ArrayList<String> change = new ArrayList<String>();
+                change.add(temporary_list_old.toString());
+                change.add(temporary_list_new.toString());
+
+                changes_list.add(change);
+            }
+
+            //Convert changes in string: old code -> new code
+            for (List<String> l : changes_list)
+                final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") +
+                        "->" +
+                        l.get(1).substring(1, l.get(1).length() - 1));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if(flag){
-            ArrayList<String> change = new ArrayList<String>();
-            change.add(temporary_list_old.toString());
-            change.add(temporary_list_new.toString());
-
-            changes_list.add(change);
-        }
-
-        for(List<String> l : changes_list)
-            final_list.add(l.get(0).substring(1,l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1,l.get(1).length() - 1));
-
+        
         return changes_tree_list;
     }
 }
