@@ -1,7 +1,11 @@
 package research.diffsearch;
 
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
+
+        List<String> changes_tree_list = Change_extraction.analyze_diff_file();
 
         /***************************************************************************************************************
          * CHANGES TREE AND FEATURES COMPUTATION

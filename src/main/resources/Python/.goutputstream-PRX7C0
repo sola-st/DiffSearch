@@ -15,9 +15,8 @@ def git_setup():
 
 #Clone a repository from GitHub
 def git_clone():
-    username = input("Insert your GitHub username: ")
-    repository = input("Insert your GitHub repository name: ")
-    command = "git clone https://github.com/geekcomputers/Python ."
+    repository = input("Insert your GitHub repository link: ")
+    command = "git clone " + repository + " ./src/main/resources/GitHub/"
     os.system(command)
 
     return repository
@@ -26,9 +25,9 @@ def git_clone():
 def git_log(repository):
     commit_log = []
 
-    command = "git log > git_log.txt"
+    command = "git log > ./src/main/resources/GitHub/git_log.txt"
     os.system(command)
-    filename ="git_log.txt"
+    filename ="./src/main/resources/GitHub/git_log.txt"
 
     with open(filename) as fp:
         for line in fp:
@@ -46,11 +45,11 @@ def git_log(repository):
 #Compute the git diff
 def git_diff(commit_log, repository):
 
-    command = "echo '' > ./git_changes.txt"
+    command = "echo '' > ./src/main/resources/GitHub/git_changes.txt"
     os.system(command)
 
     for i in commit_log:
-        command = "git diff " + i + " HEAD >> git_changes.txt"
+        command = "git diff " + i + " HEAD >> ./src/main/resources/GitHub/git_changes.txt"
         os.system(command)
 
 

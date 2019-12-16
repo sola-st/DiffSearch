@@ -26,39 +26,87 @@ public class Change_extraction {
     //Diff function reads the output of the git diff command and extract the changes in final_list in: OLD CODE -> NEW CODE
     static List<String> analyze_diff_file() {
         List<String> changes_tree_list = new ArrayList<String>();
-        List<String> temporary_list = new ArrayList<String>();
         List<String> final_list = new ArrayList<String>();
         List<List<String>> changes_list = new ArrayList<>();
+        List<String> temporary_list_old = new ArrayList<String>();
+        List<String> temporary_list_new = new ArrayList<String>();
 
         boolean flag = false;
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/example.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         for (String line : allLines) {
             line = line + "  ";
-            if ((line.substring(0,2).equals("- ")) || (line.substring(0,2).equals("+ "))){
-                temporary_list.add(line);
-                flag = true;
-            }
-            else{
-                if(flag){
+            if ((line.substring(0,1).equals("-")) && (!line.substring(1,2).equals("-"))){
 
-                    changes_list.add(new ArrayList<String>(temporary_list));
-                    temporary_list.clear();
+                if(flag || temporary_list_old.size() > 0){
+                    ArrayList<String> change = new ArrayList<String>();
+
+                    if(temporary_list_new.size() == 0) {
+                        change.add(temporary_list_old.toString());
+                        change.add("_");
+                    }else{
+                        if(temporary_list_old.size() == 0){
+                            change.add("_");
+                            change.add(temporary_list_new.toString());
+                        }else{
+                            change.add(temporary_list_old.toString());
+                            change.add(temporary_list_new.toString());
+                        }
+                    }
+
+                    changes_list.add(change);
+                    temporary_list_old.clear();
+                    temporary_list_new.clear();
+                    flag = false;
+                }
+
+                temporary_list_old.add(line.substring(1,line.length() - 1) + "\n");
+
+            }else
+            if ((line.substring(0,1).equals("+")) && (!line.substring(1,2).equals("+"))){
+                temporary_list_new.add(line.substring(1,line.length()-1) + "\n");
+                flag = true;
+            }else{
+                if(flag || temporary_list_old.size() > 0){
+                    ArrayList<String> change = new ArrayList<String>();
+
+                    if(temporary_list_new.size() == 0) {
+                        change.add(temporary_list_old.toString());
+                        change.add("_");
+                    }else{
+                        if(temporary_list_old.size() == 0){
+                            change.add("_");
+                            change.add(temporary_list_new.toString());
+                        }else{
+                            change.add(temporary_list_old.toString());
+                            change.add(temporary_list_new.toString());
+                        }
+                    }
+
+                    changes_list.add(change);
+                    temporary_list_old.clear();
+                    temporary_list_new.clear();
                     flag = false;
                 }
             }
         }
 
+        if(flag){
+            ArrayList<String> change = new ArrayList<String>();
+            change.add(temporary_list_old.toString());
+            change.add(temporary_list_new.toString());
+
+            changes_list.add(change);
+        }
+
         for(List<String> l : changes_list)
-            if(l.size() == 2){
-                final_list.add(l.get(0).substring(1,l.get(0).length() - 1).replaceAll("\\s+","") + "->" + l.get(1).substring(1,l.get(0).length() - 1).replaceAll("\\s+",""));
-            }
+            final_list.add(l.get(0).substring(1,l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1,l.get(1).length() - 1));
 
         return changes_tree_list;
     }
