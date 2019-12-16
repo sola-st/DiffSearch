@@ -13,7 +13,7 @@ public class App {
 
         long startTime_indexing = System.currentTimeMillis();
 
-        long changes_number = Pipeline.feature_extraction();
+        long changes_number = Pipeline.feature_extraction(changes_tree_list);
 
         long feature_extraction = (System.currentTimeMillis() - startTime_indexing);
 

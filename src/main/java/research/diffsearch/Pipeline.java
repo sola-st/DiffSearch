@@ -11,12 +11,10 @@ import java.util.List;
 
 public class Pipeline {
 
-    public static long feature_extraction(){
+    public static long feature_extraction(List<String> changes_list){
         long changes_number = 0;
 
         try {
-            //Extraction of the changes in a string format. One element of changes_list is a change.
-            List<String> changes_list = Change_extraction.changes_list_from_file();
             changes_number = changes_list.size();
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
@@ -64,24 +62,25 @@ public class Pipeline {
     public static Python3_Tree query_feature_extraction(){
         //Insert a query, now for semplicity it is not asked as input
         String query_input = "if( ID OP<0> LT): -> if( ID OP<1> LT):";
+        Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
-        Python3_Tree tree_query = new Python3_Tree(query_input);
-
-        //Declaring query variables
-        List<Integer> list_parent_child = new ArrayList<Integer>();
-        List<Integer> list_hash_sum = new ArrayList<Integer>();
-        Python3BaseListener listener = new Python3BaseListener();
-        ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(listener, tree_query.get_parsetree());
-        List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
-
-        //Computing hash sum and pairs parent child
-        TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-        TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-        list_hash_sum.addAll(list_parent_child);
-
         try {
+            tree_query = new Python3_Tree(query_input);
+            
+            //Declaring query variables
+            List<Integer> list_parent_child = new ArrayList<Integer>();
+            List<Integer> list_hash_sum = new ArrayList<Integer>();
+            Python3BaseListener listener = new Python3BaseListener();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(listener, tree_query.get_parsetree());
+            List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
+
+            //Computing hash sum and pairs parent child
+            TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            list_hash_sum.addAll(list_parent_child);
+        
             //Creation of a buffered writer
             BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
 
@@ -144,7 +143,7 @@ public class Pipeline {
         }
 
         int length = tree_query.features.length;
-        double threshold = 0.8;
+        double threshold = 0.1;
         long number_matching = 0;
 
         for(String candidate : allLines){

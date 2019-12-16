@@ -70,14 +70,21 @@ public class Change_extraction {
                         flag = false;
                     }
 
-                    //Add -old in a  temporary list
-                    temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
+                    //Add -old in a  temporary list, managing the case: all whitespace
+                    if(line.substring(1, line.length() - 1) .trim().length() > 0)
+                        temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
+                    else
+                        temporary_list_old.add("_\n");
 
                 } else
-                    //manage +new change
+                    //manage +new change, managing the case: all whitespace
                     if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
-                    temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
-                    flag = true;//-old +new is complete
+                        if(line.substring(1, line.length() - 1) .trim().length() > 0)
+                            temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
+                        else
+                            temporary_list_new.add("_\n");
+
+                        flag = true;//-old +new is complete
                 } else {
                         // merge old and new code in the same list
                     if (flag || temporary_list_old.size() > 0) {
@@ -118,12 +125,12 @@ public class Change_extraction {
             //Convert changes in string: old code -> new code
             for (List<String> l : changes_list) {
                 if(l.get(0).equals("_\n")){
-                    final_list.add(l.get(0).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n"));
+                    final_list.add(l.get(0).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "") + "\n");
                 }else
                     if(l.get(1).equals("_\n")){
-                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).replace("\n,", "\n"));
+                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).replace("\n,", "").replace("\n", "")+ "\n");
                     }else {
-                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n"));
+                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "")+ "\n");
                     }
             }
         } catch (Exception e) {
