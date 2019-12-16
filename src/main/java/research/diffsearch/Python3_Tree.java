@@ -6,6 +6,11 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+
+/* Antlr4 command to create java classes:
+java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java Python3.g4
+*/
+
 public class Python3_Tree {
     public String change_string;
     private  Python3Lexer lexer;

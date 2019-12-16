@@ -35,7 +35,7 @@ public class Change_extraction {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,15 +48,15 @@ public class Change_extraction {
                 if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
 
                     //Manage sequential change without interruption: -old +new -old +new
-                    if (flag || temporary_list_old.size() > 0) {
+                    if (flag && temporary_list_old.size() > 0) {
                         ArrayList<String> change = new ArrayList<String>();
 
                         if (temporary_list_new.size() == 0) {
                             change.add(temporary_list_old.toString());
-                            change.add("_");
+                            change.add("_\n");
                         } else {
                             if (temporary_list_old.size() == 0) {
-                                change.add("_");
+                                change.add("_\n");
                                 change.add(temporary_list_new.toString());
                             } else {
                                 change.add(temporary_list_old.toString());
@@ -86,11 +86,11 @@ public class Change_extraction {
                         //manage -old only
                         if (temporary_list_new.size() == 0) {
                             change.add(temporary_list_old.toString());
-                            change.add("_");
+                            change.add("_\n");
                         } else {
                             //manage +new only
                             if (temporary_list_old.size() == 0) {
-                                change.add("_");
+                                change.add("_\n");
                                 change.add(temporary_list_new.toString());
                             } else {
                                 change.add(temporary_list_old.toString());
@@ -116,15 +116,20 @@ public class Change_extraction {
             }
 
             //Convert changes in string: old code -> new code
-            for (List<String> l : changes_list)
-                final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") +
-                        "->" +
-                        l.get(1).substring(1, l.get(1).length() - 1));
-
+            for (List<String> l : changes_list) {
+                if(l.get(0).equals("_\n")){
+                    final_list.add(l.get(0).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n"));
+                }else
+                    if(l.get(1).equals("_\n")){
+                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).replace("\n,", "\n"));
+                    }else {
+                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n"));
+                    }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return changes_tree_list;
+
+        return final_list;
     }
 }

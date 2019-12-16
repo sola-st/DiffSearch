@@ -129,8 +129,8 @@ tokens { INDENT, DEDENT }
  * parser rules
  */
 
-program: single_input '->'? single_input? EOF?;
-single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE?;
+program: file_input ('PASS' file_input)? '->'? file_input ('PASS' file_input)?;
+single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE?;
 file_input: (NEWLINE | stmt)* EOF?;
 eval_input: testlist NEWLINE* EOF?;
 

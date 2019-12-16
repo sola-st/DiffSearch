@@ -63,7 +63,7 @@ public class Pipeline {
 
     public static Python3_Tree query_feature_extraction(){
         //Insert a query, now for semplicity it is not asked as input
-        String query_input = "if( ID OP<0> LT): -> if( ID OP<0> LT):";
+        String query_input = "if( ID OP<0> LT): -> if( ID OP<1> LT):";
 
         //Creating the tree for the query string
         Python3_Tree tree_query = new Python3_Tree(query_input);
