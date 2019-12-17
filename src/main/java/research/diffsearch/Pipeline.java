@@ -11,6 +11,14 @@ import java.util.List;
 
 public class Pipeline {
 
+    /**
+     * Extraction of the features from changes in the form: old -> new. The features vectors are written in the file
+     * changes_feature_vectors.csv and the change in the string format in the file changes_strings.txt to have
+     * an index of features vectors and changes.
+     *
+     * @param changes_list : list of the changes in a string format: old -> new
+     * @return Number of changes
+     */
     public static long feature_extraction(List<String> changes_list){
         long changes_number = 0;
 
