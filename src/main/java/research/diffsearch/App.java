@@ -5,7 +5,15 @@ import java.util.List;
 public class App {
     public static void main(String[] args) {
 
+        /***************************************************************************************************************
+         * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
+         * */
+
+        long startTime_gitdiff = System.currentTimeMillis();
+
         List<String> changes_tree_list = Change_extraction.analyze_diff_file();
+        
+        long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
         /***************************************************************************************************************
          * CHANGES TREE AND FEATURES COMPUTATION
