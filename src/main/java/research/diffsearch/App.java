@@ -12,7 +12,7 @@ public class App {
         long startTime_gitdiff = System.currentTimeMillis();
 
         List<String> changes_tree_list = Change_extraction.analyze_diff_file();
-        
+
         long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
         /***************************************************************************************************************

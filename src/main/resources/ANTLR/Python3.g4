@@ -161,7 +161,7 @@ simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE?;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
 expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) |
-                     ('=' (yield_expr|testlist_star_expr))*) | 'EXPR<' NUMBER '>' | 'EXPR'; //MOD
+                     ('=' (yield_expr|testlist_star_expr))*); //MOD
 annassign: ':' test ('=' test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
 augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
@@ -216,9 +216,9 @@ comparison: expr (comp_op expr)*;
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 //MOD
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP' | 'OP<' NUMBER* '>';
+comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>';
 star_expr: '*' expr;
-expr: xor_expr ('|' xor_expr)*;
+expr: xor_expr ('|' xor_expr)* | 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR'; //MOD
 xor_expr: and_expr ('^' and_expr)*;
 and_expr: shift_expr ('&' shift_expr)*;
 shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
@@ -230,7 +230,7 @@ atom_expr: (AWAIT)? atom trailer* ;
 atom: ('(' (yield_expr|testlist_comp)? ')' |
        '[' (testlist_comp)? ']' |
        '{' (dictorsetmaker)? '}' |
-       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<' NUMBER* '>' | 'ID' | 'LT<' NUMBER* '>' | 'LT' | '_');//MOD
+       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<0>' |'ID<1>' |'ID<2>' |'ID<3>' | 'ID' | 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>'| 'LT' | '_');//MOD
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* (',')? );
 trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;
 subscriptlist: subscript (',' subscript)* (',')?;

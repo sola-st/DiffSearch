@@ -47,7 +47,7 @@ public class Pipeline {
                 buff_writer_features.write(str_builder.toString());
 
                 // Writing the string change in a file (ONLY FOR TESTING)
-                bw.write(change.get_change_string() + "\n");
+                bw.write(change.get_change_string());
             }
             buff_writer_features.close();
             bw.close();
@@ -62,6 +62,7 @@ public class Pipeline {
     public static Python3_Tree query_feature_extraction(){
         //Insert a query, now for semplicity it is not asked as input
         String query_input = "if( ID OP<0> LT): -> if( ID OP<1> LT):";
+       // String query_input = "import ID -> _";
         Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
@@ -143,7 +144,7 @@ public class Pipeline {
         }
 
         int length = tree_query.features.length;
-        double threshold = 0.1;
+        double threshold = 0.5;
         long number_matching = 0;
 
         for(String candidate : allLines){

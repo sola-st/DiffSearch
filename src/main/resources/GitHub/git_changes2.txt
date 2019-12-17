@@ -12,7 +12,7 @@ index 83c9aae..1d55af1 100644
 +x=7
 
 -if(x>0):
-
++if(y<0):
 
 +x=7
  
@@ -38,3 +38,6 @@ index 67e329b..9b25953 100644
 -    export_data = zip_longest(*d, fillvalue = '')
 +import sys
 +sys.path.insert(1, './code/antlr4')
+
+-if(x>0):
++if(z<0):
