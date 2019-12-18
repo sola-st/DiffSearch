@@ -18,7 +18,6 @@ public class TreeUtils {
             pairs_parent_childAST(t.getChild(i), ruleNames, list_parent_child, features);
         }
 
-        return;
     }
 
     //Hash sum feature computation
@@ -41,6 +40,49 @@ public class TreeUtils {
             tree_hash_sumAST(t.getChild(i), ruleNames, list_hash_sum, features);
         }
 
-        return;
+    }
+
+    //Hash sum feature computation
+    static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames) {
+        int i;
+
+        if(!Trees.getNodeText(change_tree, query_ruleNames).equals(Trees.getNodeText(change_tree, query_ruleNames)))
+            return false;
+
+        for (i = 0; i < change_tree.getChildCount(); i++) {
+             if(!Trees.getNodeText(change_tree.getChild(i), query_ruleNames).equals(Trees.getNodeText(change_tree.getChild(i), query_ruleNames)))
+                 return false;
+        }
+
+        if (i > 0) {
+            //list_hash_sum.add(sum);
+        }
+
+        for (i = 0; i < change_tree.getChildCount(); i++) {
+            if(!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param ruleNames: rule names of the query AST
+     * @param list_query_nodes: list of all the AST query nodes
+     * @return
+     */
+    static void query_extraction_nodes(final Tree query_tree, final List<String> ruleNames, List<String> list_query_nodes) {
+
+        for (int i = 0; i < query_tree.getChildCount(); i++) {
+            list_query_nodes.add(Trees.getNodeText(query_tree.getChild(i), ruleNames));
+        }
+
+        for (int i = 0; i < query_tree.getChildCount(); i++) {
+            query_extraction_nodes(query_tree.getChild(i), ruleNames, list_query_nodes);
+        }
+
     }
 }

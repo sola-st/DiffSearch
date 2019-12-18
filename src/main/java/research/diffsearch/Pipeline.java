@@ -1,7 +1,6 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -173,6 +172,38 @@ public class Pipeline {
                 System.out.println(candidate + " score: " + score);
             }
         }
+        return number_matching;
+    }
+
+
+    public static long deep_tree_comparison(Python3_Tree tree_query){
+
+        List<String> allLines = null;
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        long number_matching = 0;
+
+        for(String candidate : allLines){
+            Python3_Tree change = new Python3_Tree(candidate);
+
+            List<String> list_query_nodes = new ArrayList<String>();
+            TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
+
+            List<String> list_change_nodes = new ArrayList<String>();
+            TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
+
+            boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()));
+
+            if(equal) {
+                number_matching++;
+                System.out.println(candidate + "equal: " + equal);
+            }
+        }
+
         return number_matching;
     }
 }

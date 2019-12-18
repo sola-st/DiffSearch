@@ -46,7 +46,10 @@ public class App {
         /***************************************************************************************************************
          * FINAL MATCHING STAGE
          * */
+
         long startTime_matching = System.currentTimeMillis();
+
+        Pipeline.deep_tree_comparison(tree_query);
 
         long number_matching = Pipeline.final_matching(tree_query);
 
