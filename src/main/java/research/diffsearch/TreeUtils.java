@@ -46,21 +46,27 @@ public class TreeUtils {
     static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames) {
         int i;
 
-        if(!Trees.getNodeText(change_tree, query_ruleNames).equals(Trees.getNodeText(change_tree, query_ruleNames)))
-            return false;
+        try {
 
-        for (i = 0; i < change_tree.getChildCount(); i++) {
-             if(!Trees.getNodeText(change_tree.getChild(i), query_ruleNames).equals(Trees.getNodeText(change_tree.getChild(i), query_ruleNames)))
-                 return false;
-        }
-
-        if (i > 0) {
-            //list_hash_sum.add(sum);
-        }
-
-        for (i = 0; i < change_tree.getChildCount(); i++) {
-            if(!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
+            if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames)))
                 return false;
+
+            for (i = 0; i < change_tree.getChildCount(); i++) {
+                if (change_tree.getChild(i).getChildCount() > 0)
+                    if (!Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals(Trees.getNodeText(query_tree.getChild(i), query_ruleNames)))
+                        return false;
+            }
+
+            for (i = 0; i < change_tree.getChildCount(); i++) {
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") && !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
+                    if (query_tree.getChild(i).getChildCount() > 0)
+                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
+                            return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
         return true;
@@ -83,6 +89,24 @@ public class TreeUtils {
         for (int i = 0; i < query_tree.getChildCount(); i++) {
             query_extraction_nodes(query_tree.getChild(i), ruleNames, list_query_nodes);
         }
+
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param tree : AST of the query
+     * @param ruleNames: rule names of the query AST
+     * @param list_leaves: list of all the AST query nodes
+     * @return
+     */
+    static void tree_leaves_extraction(final Tree tree, final List<String> ruleNames, List<String> list_leaves) {
+
+        for (int i = 0; i < tree.getChildCount(); i++)
+            tree_leaves_extraction(tree.getChild(i), ruleNames, list_leaves);
+
+        if(tree.getChildCount() == 0)
+            list_leaves.add(Trees.getNodeText(tree, ruleNames));
 
     }
 }

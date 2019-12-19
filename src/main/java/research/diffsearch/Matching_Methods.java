@@ -60,12 +60,141 @@ public class Matching_Methods {
     }
 
     static boolean elementWiseCompare(int[] a, int [] b){
-
         for(int i = 0; i < a.length; i++){
             if (a[i] == b[i]){
                 return true;
             }
         }
         return false;
+    }
+
+    static boolean leaves_final_matching(String[] array_query_old_nodes, String[] array_query_new_nodes, String[] array_change_old_nodes, String[] array_change_new_nodes){
+        for(int i = 0; i < array_query_new_nodes.length; i++){
+            switch(array_query_old_nodes[i]) {
+
+                case "ID<0>":
+                    if(!array_query_new_nodes[i].equals("ID<0>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "ID<1>":
+                    if(!array_query_new_nodes[i].equals("ID<1>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "ID<2>":
+                    if(!array_query_new_nodes[i].equals("ID<2>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "OP<0>":
+                    if(!array_query_new_nodes[i].equals("OP<0>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "OP<1>":
+                    if(!array_query_new_nodes[i].equals("OP<1>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "OP<2>":
+                    if(!array_query_new_nodes[i].equals("OP<2>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "LT<0>":
+                    if(!array_query_new_nodes[i].equals("LT<0>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "LT<1>":
+                    if(!array_query_new_nodes[i].equals("LT<1>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "LT<2>":
+                    if(!array_query_new_nodes[i].equals("LT<2>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
+                case "EXPR": case "EXPR<0>": case "EXPR<1>": case "EXPR<2>":
+                    return true;
+
+                default:
+            }
+        }
+        return true;
     }
 }

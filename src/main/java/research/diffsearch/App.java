@@ -15,6 +15,7 @@ public class App {
 
         long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
+
         /***************************************************************************************************************
          * CHANGES TREE AND FEATURES COMPUTATION
          * */
@@ -49,16 +50,16 @@ public class App {
 
         long startTime_matching = System.currentTimeMillis();
 
-        Pipeline.deep_tree_comparison(tree_query);
+        long number_matching = Pipeline.deep_tree_comparison(tree_query);
 
-        long number_matching = Pipeline.final_matching(tree_query);
+      //  number_matching = Pipeline.final_matching(tree_query);
 
         long duration_matching = (System.currentTimeMillis() - startTime_matching);
 
 
         /***************************************************************************************************************
          * STATISTICS
-         * */
+         **/
         System.out.println("\nFINAL STATISTICS:\nNumber of changes analyzed: " + changes_number +"\nNumber of matching changes: " + number_matching
                 +"\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\nPython Search duration: " + time_python / 1000 + " seconds,"
                 + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.");

@@ -67,8 +67,8 @@ public class Pipeline {
     }
 
     public static Python3_Tree query_feature_extraction(){
-        //Insert a query, now for semplicity it is not asked as input
-        String query_input = "if( ID OP<0> LT): -> if( ID OP<1> LT):";
+        //Insert a query, now for simplicity it is not asked as input
+        String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
         // String query_input = "import ID -> _";
         Python3_Tree tree_query = null;
 
@@ -136,9 +136,6 @@ public class Pipeline {
             python_Nearest_Neighbor_Search.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
-
-
-
         System.out.println("PYTHON STAGE DONE\n");
     }
 
@@ -175,7 +172,6 @@ public class Pipeline {
         return number_matching;
     }
 
-
     public static long deep_tree_comparison(Python3_Tree tree_query){
 
         List<String> allLines = null;
@@ -187,20 +183,73 @@ public class Pipeline {
 
         long number_matching = 0;
 
+        List<String> list_query_nodes = new ArrayList<>();
+        TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
+
+        List<String> list_query_old_leaves = new ArrayList<>();
+        List<String> list_query_new_leaves = new ArrayList<>();
+
+        TreeUtils.tree_leaves_extraction(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_old_leaves);
+
+        boolean new_code = false;
+
+        for(String str: list_query_old_leaves){
+            if(str.equals("->") || str.equals("<EOF>")){
+                new_code = true;
+            }else{
+                if(new_code){
+                   list_query_new_leaves.add(str);
+                }
+            }
+        }
+
+        String[] array_query_old_nodes = new String[list_query_old_leaves.size()];
+        array_query_old_nodes = list_query_old_leaves.toArray(array_query_old_nodes);
+
+        String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
+        array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
+
+        assert allLines != null;
         for(String candidate : allLines){
             Python3_Tree change = new Python3_Tree(candidate);
 
-            List<String> list_query_nodes = new ArrayList<String>();
-            TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
-
-            List<String> list_change_nodes = new ArrayList<String>();
+            List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
             boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()));
 
             if(equal) {
-                number_matching++;
-                System.out.println(candidate + "equal: " + equal);
+                List<String> list_change_old_leaves = new ArrayList<>();
+                List<String> list_change_new_leaves = new ArrayList<>();
+
+                TreeUtils.tree_leaves_extraction(change.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_change_old_leaves);
+
+
+
+                new_code = false;
+
+                for(String str: list_change_old_leaves){
+                    if(str.equals("->") || str.equals("<EOF>")){
+                        new_code = true;
+                    }else{
+                        if(new_code){
+                            list_change_new_leaves.add(str);
+                        }
+                    }
+                }
+
+                String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
+                array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
+
+                String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
+                array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
+
+                boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes,array_change_old_nodes, array_change_new_nodes);
+
+                if(final_matching){
+                    number_matching++;
+                    System.out.println(candidate);
+                }
             }
         }
 
