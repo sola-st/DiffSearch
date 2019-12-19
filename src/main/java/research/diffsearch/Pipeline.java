@@ -69,13 +69,13 @@ public class Pipeline {
     public static Python3_Tree query_feature_extraction(){
         //Insert a query, now for semplicity it is not asked as input
         String query_input = "if( ID OP<0> LT): -> if( ID OP<1> LT):";
-       // String query_input = "import ID -> _";
+        // String query_input = "import ID -> _";
         Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
         try {
             tree_query = new Python3_Tree(query_input);
-            
+
             //Declaring query variables
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();
@@ -88,7 +88,7 @@ public class Pipeline {
             TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
             TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
             list_hash_sum.addAll(list_parent_child);
-        
+
             //Creation of a buffered writer
             BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
 
