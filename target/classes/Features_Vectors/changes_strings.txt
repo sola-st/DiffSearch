@@ -1,8 +1,0 @@
-if(x>0): ->foo(x) 
-x = 5 ->x=7 
-if(x>0): ->if(y<0): 
-_->x=7 
-_->#Query digits normalization and n-grams and tokens computation 
-import csv  from itertools import zip_longest ->import antlr4  
-def dataset_csv(list1, list2):      d = [list1, list2]      export_data = zip_longest(*d, fillvalue = '') ->import sys  sys.path.insert(1, './code/antlr4') 
-if(x>0): ->if(z<0): 
