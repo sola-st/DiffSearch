@@ -8,24 +8,14 @@ import java.util.List;
 
 public class Change_extraction {
 
-    // Now I read directly the changes in the file example_python3.txt because it is easy to add new changes now.
-    //The extraction is implemented by analyze_diff_file, so in the final version it will substitute this function
-    static List<String> changes_list_from_file() {
-
-        //this part will be removed in the future
-        List<String> allLines = null;
-        try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/example_python3.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return allLines;
-    }
-
-    //Diff function reads the output of the git diff command and extract the changes in final_list in: OLD CODE -> NEW CODE
+    /**
+     * Extraction of the changes from a git diff file. Each change is transformed in the form:
+     * old code -> new code
+     *
+     * @param
+     * @return A list of changes in the form: old code -> new code
+     */
     static List<String> analyze_diff_file() {
-        List<String> changes_tree_list = new ArrayList<String>();
         List<String> final_list = new ArrayList<String>();
         List<List<String>> changes_list = new ArrayList<>();
         List<String> temporary_list_old = new ArrayList<String>();
@@ -139,4 +129,5 @@ public class Change_extraction {
 
         return final_list;
     }
+
 }

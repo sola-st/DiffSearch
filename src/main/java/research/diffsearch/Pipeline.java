@@ -66,9 +66,13 @@ public class Pipeline {
         return changes_number;
     }
 
-    public static Python3_Tree query_feature_extraction(){
-        //Insert a query, now for simplicity it is not asked as input
-        String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
+    /**
+     * Creation of the query tree and extraction of its features.
+     *
+     * @param query_input: String of the query
+     * @return AST of the query
+     */
+    public static Python3_Tree query_feature_extraction(String query_input){
         // String query_input = "import ID -> _";
         Python3_Tree tree_query = null;
 
@@ -113,6 +117,12 @@ public class Pipeline {
         return tree_query;
     }
 
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework
+     *
+     * @param
+     * @return
+     */
     public static void search_candidate_changes(){
         Process p1;
         try {
@@ -139,6 +149,12 @@ public class Pipeline {
         System.out.println("PYTHON STAGE DONE\n");
     }
 
+    /**
+     * Method that compute the cosine distanc ebetween query feature vector and change feature vectors.
+     *
+     * @param tree_query: query Tree
+     * @return number of matching changes found
+     */
     public static long final_matching(Python3_Tree tree_query){
         List<String> allLines = null;
         try {
@@ -172,6 +188,13 @@ public class Pipeline {
         return number_matching;
     }
 
+    /**
+     * Method that implements a deep recursive comparison between query tree and change trees to find
+     * matching changes.
+     *
+     * @param tree_query: query Tree
+     * @return number of matching changes found
+     */
     public static long deep_tree_comparison(Python3_Tree tree_query){
 
         List<String> allLines = null;

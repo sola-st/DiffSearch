@@ -31,7 +31,10 @@ public class App {
          * QUERY TREE AND FEATURES COMPUTATION
          * */
 
-        Python3_Tree tree_query = Pipeline.query_feature_extraction();
+        //Insert a query, now for simplicity it is not asked as input. In the final version there will be a loop that asks for new queries.
+        String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
+
+        Python3_Tree tree_query = Pipeline.query_feature_extraction(query_input);
 
 
         /***************************************************************************************************************

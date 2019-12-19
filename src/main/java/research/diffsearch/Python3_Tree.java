@@ -18,7 +18,6 @@ public class Python3_Tree {
     private  Python3Parser parser;
     private  ParseTree parsetree;
     private  ParserRuleContext ctx;
-    public int leaves_number;
     public int [] features;
 
     Python3_Tree(String change){
@@ -55,7 +54,6 @@ public class Python3_Tree {
     }
 
     ParserRuleContext get_ast() {return ctx;}
-
 
     void printAST(RuleContext ctx, boolean verbose, int indentation) {
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;
