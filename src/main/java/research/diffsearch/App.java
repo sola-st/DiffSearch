@@ -45,7 +45,7 @@ public class App {
          * */
 
         //Insert a query, now for simplicity it is not asked as input. In the final version there will be a loop that asks for new queries.
-      //  String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
+       //String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
 
         while (true) {
             Python3_Tree tree_query = null;
@@ -85,15 +85,17 @@ public class App {
             
             long number_matching = -1;
             try {
-
+                System.out.println("Changes found with the deep tree comparison:\n");
                 number_matching = Pipeline.final_comparison(tree_query);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            //  number_matching = Pipeline.final_matching(tree_query);
             if(number_matching == 0)
-                System.out.println("No changes found that match the query. \n");
+                System.out.println("No changes found that match the query with deep comparison. \n");
+
+            System.out.println("\nChanges found with the cosine distance:\n");
+            number_matching = Pipeline.final_matching(tree_query);
 
             long duration_matching = (System.currentTimeMillis() - startTime_matching);
 

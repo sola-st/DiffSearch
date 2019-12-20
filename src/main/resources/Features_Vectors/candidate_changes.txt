@@ -1,9 +1,9 @@
-while(i<10): ->while(i<9): 
-if(x==0): ->if(x!=0): 
-if(x>0): ->if(y<0): 
-if(x>0): ->if(z<0): 
-if((x-1)==0): ->if((x-1)!=0): 
-if(x>0): ->foo(x) 
+_->x=7 
+_->#Query digits normalization and n-grams and tokens computation 
+x = 5 ->x=7 
+for(i=0;i<10;i++): ->for(i=0;i<9;i++): 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import csv  from itertools import zip_longest ->import antlr4  
             match = match[13:][:-2] ->            match = match[13:][:-3] 
             match = match[13:][:-2] ->            match = match[13:][:-3] 
             match = match[13:][:-2] ->            match = match[13:][:-3] 
