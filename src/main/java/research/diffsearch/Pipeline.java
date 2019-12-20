@@ -150,7 +150,7 @@ public class Pipeline {
     }
 
     /**
-     * Method that compute the cosine distanc ebetween query feature vector and change feature vectors.
+     * Method that compute the cosine distance between query feature vector and change feature vectors.
      *
      * @param tree_query: query Tree
      * @return number of matching changes found
@@ -195,7 +195,7 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long deep_tree_comparison(Python3_Tree tree_query){
+    public static long final_comparison(Python3_Tree tree_query){
 
         List<String> allLines = null;
         try {
@@ -212,7 +212,7 @@ public class Pipeline {
         List<String> list_query_old_leaves = new ArrayList<>();
         List<String> list_query_new_leaves = new ArrayList<>();
 
-        TreeUtils.tree_leaves_extraction(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_old_leaves);
+        TreeUtils.query_leaves_extraction(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_old_leaves);
 
         boolean new_code = false;
 
@@ -245,7 +245,7 @@ public class Pipeline {
                 List<String> list_change_old_leaves = new ArrayList<>();
                 List<String> list_change_new_leaves = new ArrayList<>();
 
-                TreeUtils.tree_leaves_extraction(change.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_change_old_leaves);
+                TreeUtils.query_leaves_extraction( change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
 
 
 

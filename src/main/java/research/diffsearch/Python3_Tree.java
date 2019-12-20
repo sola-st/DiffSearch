@@ -1,9 +1,6 @@
 package research.diffsearch;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 
@@ -18,13 +15,35 @@ public class Python3_Tree {
     private  Python3Parser parser;
     private  ParseTree parsetree;
     private  ParserRuleContext ctx;
+    boolean error;
     public int [] features;
 
     Python3_Tree(String change){
+        error = false;
         change_string = change;
         lexer = new Python3Lexer(CharStreams.fromString(change));
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                error = true;
+            }
+        });
+
         tokens = new CommonTokenStream(lexer);
         parser = new Python3Parser(tokens);
+
+        parser.removeErrorListeners();
+        parser.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                error = true;
+            }
+        });
+
+        if(parser.getNumberOfSyntaxErrors() > 0)
+            error = true;
+
         parsetree = parser.program();
         features = new int[Integer.MAX_VALUE/1048576];
     }
@@ -54,6 +73,10 @@ public class Python3_Tree {
     }
 
     ParserRuleContext get_ast() {return ctx;}
+
+    public boolean isError() {
+        return error;
+    }
 
     void printAST(RuleContext ctx, boolean verbose, int indentation) {
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;

@@ -78,7 +78,6 @@ public class TreeUtils {
      * @param query_tree : AST of the query
      * @param ruleNames: rule names of the query AST
      * @param list_query_nodes: list of all the AST query nodes
-     * @return
      */
     static void query_extraction_nodes(final Tree query_tree, final List<String> ruleNames, List<String> list_query_nodes) {
 
@@ -98,15 +97,38 @@ public class TreeUtils {
      * @param tree : AST of the query
      * @param ruleNames: rule names of the query AST
      * @param list_leaves: list of all the AST query nodes
-     * @return
      */
-    static void tree_leaves_extraction(final Tree tree, final List<String> ruleNames, List<String> list_leaves) {
+    static void query_leaves_extraction(final Tree tree, final List<String> ruleNames, List<String> list_leaves) {
 
-        for (int i = 0; i < tree.getChildCount(); i++)
-            tree_leaves_extraction(tree.getChild(i), ruleNames, list_leaves);
+        for (int i = 0; i < tree.getChildCount(); i++) {
+            query_leaves_extraction(tree.getChild(i), ruleNames, list_leaves);
+        }
 
         if(tree.getChildCount() == 0)
             list_leaves.add(Trees.getNodeText(tree, ruleNames));
+
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param query_ruleNames: rule names of the query AST
+     * @param list_leaves: list of all the AST query nodes
+     */
+    static void tree_leaves_extraction(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, List<String> list_leaves) {
+
+        for (int i = 0; i < change_tree.getChildCount(); i++) {
+            if ((!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR")       ||
+                    !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR<0>") ||
+                    !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR<1>") ||
+                    !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR<2>"))&&
+                    !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
+                tree_leaves_extraction(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, list_leaves);
+        }
+
+        if(change_tree.getChildCount() == 0)
+            list_leaves.add(Trees.getNodeText(change_tree, change_ruleNames));
 
     }
 }

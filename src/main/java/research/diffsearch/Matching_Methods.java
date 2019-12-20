@@ -139,7 +139,10 @@ public class Matching_Methods {
                     break;
 
                 case "EXPR": case "EXPR<0>": case "EXPR<1>": case "EXPR<2>":
-                    return true;
+//                    if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+  //                      return false;
+    //                }
+
 
                 default:
             }

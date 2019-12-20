@@ -1092,5 +1092,5 @@ index 6a5f0db..3509d0c 100644
  numpy
  seaborn
  matplotlib
--if(x>0):
-+if(x<0):
+-if(z>0):
++if(z<0):
