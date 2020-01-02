@@ -164,7 +164,7 @@ public class Pipeline {
         }
 
         int length = tree_query.features.length;
-        double threshold = 0.5;
+        double threshold = 0.9;
         long number_matching = 0;
 
         for(String candidate : allLines){
@@ -180,7 +180,7 @@ public class Pipeline {
 
             double score =  Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
 
-            if(score > threshold) {
+            if(score >= threshold) {
                 number_matching++;
                 System.out.println(candidate + " score: " + score);
             }

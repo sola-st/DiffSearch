@@ -60,8 +60,9 @@ public class TreeUtils {
             for (i = 0; i < change_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") && !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
                     if (query_tree.getChild(i).getChildCount() > 0)
-                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
-                            return false;
+                     //   if(query_tree.getChild(i)!= null && change_tree.getChild(i) != null)
+                            if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
+                                return false;
             }
 
         } catch (Exception e) {
