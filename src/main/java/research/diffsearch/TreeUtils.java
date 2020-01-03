@@ -60,7 +60,6 @@ public class TreeUtils {
             for (i = 0; i < change_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") && !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
                     if (query_tree.getChild(i).getChildCount() > 0)
-                     //   if(query_tree.getChild(i)!= null && change_tree.getChild(i) != null)
                             if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
                                 return false;
             }
@@ -132,4 +131,23 @@ public class TreeUtils {
             list_leaves.add(Trees.getNodeText(change_tree, change_ruleNames));
 
     }
+
+    //Hash sum feature computation
+    static int node_count(final Tree query_tree, final List<String> query_ruleNames, int n) {
+        n++;
+
+        try {
+
+            for (int i = 0; i < query_tree.getChildCount(); i++) {
+                        n = node_count(query_tree.getChild(i), query_ruleNames, n);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return n;
+        }
+
+        return n;
+    }
+
 }

@@ -80,6 +80,11 @@ public class Pipeline {
         try {
             tree_query = new Python3_Tree(query_input);
 
+            if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
+                    tree_query.isError() ||
+                    tree_query.error)
+                return null;
+
             //Declaring query variables
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();

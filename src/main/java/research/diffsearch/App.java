@@ -62,6 +62,10 @@ public class App {
                 e.printStackTrace();
             }
 
+            if(tree_query == null) {
+                System.out.print("The query is not correct, please try again.\n");
+                continue;
+            }
             /***************************************************************************************************************
              * PYTHON STAGE
              */

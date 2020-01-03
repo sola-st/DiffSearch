@@ -6,7 +6,6 @@ _->#Query digits normalization and n-grams and tokens computation
 import csv  from itertools import zip_longest ->import antlr4  
 def dataset_csv(list1, list2):      d = [list1, list2]      export_data = zip_longest(*d, fillvalue = '') ->import sys  sys.path.insert(1, './code/antlr4') 
 if(x>0): ->if(z<0): 
-for(i=0;i<10;i++): ->for(i=0;i<9;i++): 
 while(i<10): ->while(i<9): 
 if(x==0): ->if(x!=0): 
 if((x-1)==0): ->if((x-1)!=0): 

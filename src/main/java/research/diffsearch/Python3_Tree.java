@@ -45,6 +45,7 @@ public class Python3_Tree {
             error = true;
 
         parsetree = parser.program();
+
         features = new int[Integer.MAX_VALUE/1048576];
     }
 
