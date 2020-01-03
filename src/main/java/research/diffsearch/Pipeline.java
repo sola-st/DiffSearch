@@ -129,22 +129,31 @@ public class Pipeline {
      * @return
      */
     public static void search_candidate_changes(){
-        Process p1;
+        Process which_python;
+        String python_path = null;
         try {
-            p1 = Runtime.getRuntime().exec("whereis anaconda");
-            BufferedReader br = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+            which_python = Runtime.getRuntime().exec("which python3");
+            BufferedReader br = new BufferedReader(new InputStreamReader(which_python.getInputStream()));
 
-            //   while ((s1 = br.readLine()) != null)
-            //     System.out.println(s1);
-            p1.waitFor();
-            //   System.out.println ("exit: " + p1.exitValue());
-            p1.destroy();
-        } catch (Exception e) { e.printStackTrace();}
+            which_python.waitFor();
+            String s1;
+
+            while ((s1 = br.readLine()) != null){
+                python_path = s1;
+                System.out.println(s1);
+                break;
+                }
+            which_python.destroy();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         Process python_Nearest_Neighbor_Search;
         try {
             //!!!!! TODO: I have to make the path not absolute !!!!!
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(" /home/luca/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(python_path + " ./src/main/resources/Python/Nearest_Neighbor_Search.py");
             BufferedReader br = new BufferedReader(new InputStreamReader(python_Nearest_Neighbor_Search.getInputStream()));
 
             python_Nearest_Neighbor_Search.waitFor();
