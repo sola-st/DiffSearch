@@ -17,8 +17,13 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/research.diffsearch/**Python3(...).java** -> ANTLR java classes
 - src/main/java/research.diffsearch/**TreeUtils.java** -> Methods to visit and work with trees
 - src/main/java/resources/Python/**Nearest_Neighbor_Search.py** -> FAISS framework wrapper
+- src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff. It has to be run first, because it has not been linked yet with the Java project.
 
 **Main folders:**
 - src/main/java/resources/**ANTLR** -> ANTLR modified grammar(s)
 - src/main/java/resources/**Features_Vectors** -> Folder where the feature vectors are saved
 - src/main/java/resources/**GitHub** -> There are the toy test files with changes
+
+**Requirements**
+- [ANTLR](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md)
+- [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md)
