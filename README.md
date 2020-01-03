@@ -25,5 +25,5 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/resources/**GitHub** -> There are the toy test files with changes
 
 **Requirements**
-- [ANTLR](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md)
-- [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md)
+- [ANTLR](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr   
+- [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> pip3 install faiss
