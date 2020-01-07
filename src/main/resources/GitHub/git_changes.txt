@@ -1057,8 +1057,8 @@ index 7d91bd3..29fbcb9 100644
 @@ -89,9 +87,7 @@ class Visualization:
          print('Generating Word Cloud.....')
 
--if(x>0)
-+if(x<0)
+-if(x>0):
++if(x<0):
 
          unique_string = (" ").join(searchClean)
          bg = np.array(Image.open(logo))
@@ -1094,3 +1094,7 @@ index 6a5f0db..3509d0c 100644
  matplotlib
 -if(z>0):
 +if(z<0):
+- x = 4
++ x > 6
+- y == 4
++ y != 4

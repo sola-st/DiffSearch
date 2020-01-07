@@ -44,7 +44,11 @@ public class Python3_Tree {
         if(parser.getNumberOfSyntaxErrors() > 0)
             error = true;
 
-        parsetree = parser.program();
+        try {
+            parsetree = parser.program();
+        } catch (RecognitionException e) {
+            error = true;
+        }
 
         features = new int[Integer.MAX_VALUE/1048576];
     }

@@ -33,6 +33,9 @@ public class Pipeline {
             for (String change_string : changes_list) {
 
                 Python3_Tree change =new Python3_Tree(change_string);
+                if(change.error)
+                    continue;
+
                 //Computing hash sum of changes
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -130,17 +133,16 @@ public class Pipeline {
      */
     public static void search_candidate_changes(){
         Process which_python;
-        String python_path = null;
+        String username = null;
         try {
-            which_python = Runtime.getRuntime().exec("which python3");
+            which_python = Runtime.getRuntime().exec("whoami");
             BufferedReader br = new BufferedReader(new InputStreamReader(which_python.getInputStream()));
 
             which_python.waitFor();
             String s1;
 
             while ((s1 = br.readLine()) != null){
-                python_path = s1;
-                System.out.println(s1);
+                username = s1;
                 break;
                 }
             which_python.destroy();
@@ -152,8 +154,7 @@ public class Pipeline {
 
         Process python_Nearest_Neighbor_Search;
         try {
-            //!!!!! TODO: I have to make the path not absolute !!!!!
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(python_path + " ./src/main/resources/Python/Nearest_Neighbor_Search.py");
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec("/home/" + username + "/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
             BufferedReader br = new BufferedReader(new InputStreamReader(python_Nearest_Neighbor_Search.getInputStream()));
 
             python_Nearest_Neighbor_Search.waitFor();

@@ -1,12 +1,100 @@
-if(x>0): ->foo(x) 
-x = 5 ->x=7 
-if(x>0): ->if(y<0): 
-_->x=7 
-_->#Query digits normalization and n-grams and tokens computation 
-import csv  from itertools import zip_longest ->import antlr4  
-def dataset_csv(list1, list2):      d = [list1, list2]      export_data = zip_longest(*d, fillvalue = '') ->import sys  sys.path.insert(1, './code/antlr4') 
-if(x>0): ->if(z<0): 
-while(i<10): ->while(i<9): 
-if(x==0): ->if(x!=0): 
-if((x-1)==0): ->if((x-1)!=0): 
             match = match[13:][:-2] ->            match = match[13:][:-3] 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+!Images/red.png ->!Images/red.png 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial" ->        font = "arial" if sys.platform == "win32" else "Arial" 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial" ->        font = "arial" if sys.platform == "win32" else "Arial" 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial" ->        font = "arial" if sys.platform == "win32" else "Arial" 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}') ->        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST') 
+_->_
+            if time[0].isalpha():                  if time[6] != ",":                      time = time[:4] + "0" + time[4:]                                 dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')                  time = time[:6] + time[7:]                  dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")                  times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek) ->            if len(time) == 24:                  time = str(0) + time                  # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+                if len(time) == 24:                      time = str(0) + time                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek)                  else:                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek) ->                # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+_->import sys  _
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial" ->        font = "arial" if sys.platform == "win32" else "Arial" 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+    try:          htmlComment = open(commentHistory, 'r', encoding='utf-8').read()      except: pass ->    htmlComment = open(commentHistory, 'r', encoding='utf-8').read() 
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}') ->        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST') 
+_->_
+            if time[0].isalpha():                  if time[6] != ",":                      time = time[:4] + "0" + time[4:]                                 dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')                  time = time[:6] + time[7:]                  dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")                  times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek) ->            if len(time) == 24:                  time = str(0) + time                  # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+                if len(time) == 24:                      time = str(0) + time                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek)                  else:                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek) ->                # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+        try:              pattern = re.compile(r'<a href=".*?">')              matchList = pattern.findall(str(HTML.htmlComment))              link = matchList[-1][9:][:-2]              return link, matchList          except:              pass ->        pattern = re.compile(r'<a href=".*?">')          matchList = pattern.findall(str(HTML.htmlComment))          link = matchList[-1][9:][:-2]          return link, matchList 
+import sys ->_
+_->import sys  _
+_ try:      link, allLinks = HTML().commentHistory()  except TypeError:      link = allLinks = ''  _ try:      like, allLikes = HTML().likeHistory()  except FileNotFoundError:      like = allLikes = '' ->link, allLinks = HTML().commentHistory()  like, allLikes = HTML().likeHistory() 
+        font = "arial" if sys.platform == "win32" else "DejaVuSansMono" if sys.platform == "linux" else  "Arial" ->        font = "arial" if sys.platform == "win32" else "Arial" 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}') ->        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST') 
+_->_
+            if time[0].isalpha():                  if time[6] != ",":                      time = time[:4] + "0" + time[4:]                                 dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')                  time = time[:6] + time[7:]                  dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")                  times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek) ->            if len(time) == 24:                  time = str(0) + time                  # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+                if len(time) == 24:                      time = str(0) + time                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek)                  else:                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek) ->                # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+import sys ->_
+import subprocess ->_
+        if sys.platform == "win32":              os.startfile("YouTube_Report.pdf")          else:              opener = "open" if sys.platform == "darwin" else "xdg-open"              subprocess.call([opener, "YouTube_Report.pdf"])  _->        os.startfile("YouTube_Report.pdf") 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}') ->        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST') 
+_->_
+            if time[0].isalpha():                  if time[6] != ",":                      time = time[:4] + "0" + time[4:]                                 dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')                  time = time[:6] + time[7:]                  dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")                  times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek) ->            if len(time) == 24:                  time = str(0) + time                  # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+                if len(time) == 24:                      time = str(0) + time                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek)                  else:                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek) ->                # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+        try:              pattern = re.compile(r'<a href=".*?">')              matchList = pattern.findall(str(HTML.htmlComment))              link = matchList[-1][9:][:-2]              return link, matchList          except:              pass ->        pattern = re.compile(r'<a href=".*?">')          matchList = pattern.findall(str(HTML.htmlComment))          link = matchList[-1][9:][:-2]          return link, matchList 
+import sys ->_
+import subprocess ->_
+        if sys.platform == "win32":              os.startfile("YouTube_Report.pdf")          else:              opener = "open" if sys.platform == "darwin" else "xdg-open"              subprocess.call([opener, "YouTube_Report.pdf"])  _->        os.startfile("YouTube_Report.pdf") 
+_->pylab 
+.pyre/  _ # Self data  Images/  YouTube_Report.pdf  !Images/LOGO.png  !Images/red.png ->.pyre/ 
+    try:          htmlComment = open(commentHistory, 'r', encoding='utf-8').read()      except: pass ->    htmlComment = open(commentHistory, 'r', encoding='utf-8').read() 
+        pattern = re.compile(r'(?:[A-Za-z]{3}\s\d{1,2}\,\s[0-9]{4}\,|\d{1,2}\s.{9})\s\d?\d:\d\d:\d\d\s(?:PM\s|AM\s)?[A-Z]{3,4}') ->        pattern = re.compile(r'\d{1,2}\s.{9}\s\d\d:\d\d:\d\d\sEST') 
+_->_
+            if time[0].isalpha():                  if time[6] != ",":                      time = time[:4] + "0" + time[4:]                                 dayOfWeek = datetime.datetime.strptime(time[0:12], '%b %d, %Y').strftime('%a')                  time = time[:6] + time[7:]                  dt = datetime.datetime.strptime(time[12:24].strip(), "%I:%M:%S %p")                  times.append(time[:13] + dt.strftime("%H:%M:%S") + ' ' + time[-3:] + ' ' + dayOfWeek) ->            if len(time) == 24:                  time = str(0) + time                  # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+                if len(time) == 24:                      time = str(0) + time                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek)                  else:                      # add the day of week to the end of strings                      dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                      times.append(time + ' ' + dayOfWeek) ->                # add the day of week to the end of strings                  dayOfWeek = datetime.datetime.strptime(time[0:11], '%d %b %Y').strftime('%a')                  times.append(time + ' ' + dayOfWeek) 
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+        try:              pattern = re.compile(r'<a href=".*?">')              matchList = pattern.findall(str(HTML.htmlComment))              link = matchList[-1][9:][:-2]              return link, matchList          except:              pass ->        pattern = re.compile(r'<a href=".*?">')          matchList = pattern.findall(str(HTML.htmlComment))          link = matchList[-1][9:][:-2]          return link, matchList 
+import sys ->_
+import subprocess ->_
+if(x>0): ->if(x<0): 
+        if sys.platform == "win32":              os.startfile("YouTube_Report.pdf")          else:              opener = "open" if sys.platform == "darwin" else "xdg-open"              subprocess.call([opener, "YouTube_Report.pdf"])  _->        os.startfile("YouTube_Report.pdf") 
+_->pylab 
+if(z>0): ->if(z<0): 
+ x = 4 -> x > 6 
+ y == 4 -> y != 4 

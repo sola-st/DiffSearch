@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+//import sun.jvm.hotspot.runtime.solaris_sparc.SolarisSPARCJavaThreadPDAccess;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -7,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Change_extraction {
+    static void git_diff(){
+
+    }
 
     /**
      * Extraction of the changes from a git diff file. Each change is transformed in the form:
@@ -25,7 +30,7 @@ public class Change_extraction {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
+            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }

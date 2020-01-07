@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
+        /***************************************************************************************************************
+         * EXTRACT CHANGES FROM A GIT REPOSITORY
+         * */
+
 
         /***************************************************************************************************************
          * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
