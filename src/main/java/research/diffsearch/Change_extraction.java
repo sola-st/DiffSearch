@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Change_extraction {
+
+    /**
+     * Cloning and git diff computation of a git repository (not complete)
+     *
+     * @param
+     * @return A list of changes in the form: old code -> new code
+     */
     static void git_diff(){
         Process git_diff_python;
         try {
@@ -17,7 +24,7 @@ public class Change_extraction {
             git_diff_python.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
-        System.out.println("PYTHON STAGE DONE\n");
+        System.out.println("PYTHON GIT DIFF STAGE DONE\n");
     }
 
     /**

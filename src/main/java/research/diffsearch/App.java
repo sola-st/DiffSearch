@@ -10,6 +10,8 @@ public class App {
          * EXTRACT CHANGES FROM A GIT REPOSITORY
          * */
 
+        //not linked yet
+
 
         /***************************************************************************************************************
          * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
@@ -49,8 +51,7 @@ public class App {
          * QUERY TREE AND FEATURES COMPUTATION
          * */
 
-        //Insert a query, now for simplicity it is not asked as input. In the final version there will be a loop that asks for new queries.
-       //String query_input = "if( EXPR OP<0> LT): -> if( EXPR OP<1> LT):";
+        //Temporary code, In the future I will implement a graphic interface
 
         while (true) {
             Python3_Tree tree_query = null;
@@ -65,8 +66,10 @@ public class App {
                 while (input.hasNextLine()) {
                     lineNew = input.nextLine();
 
-                    if(lineNew.equals("END"))
+                    if(lineNew.equals("END")) {
+                        System.out.println("\n================================\nProgram finished successfully.");
                         return;
+                    }
                     if (lineNew.isEmpty()) {
                         break;
                     }
@@ -83,8 +86,10 @@ public class App {
                 while (input2.hasNextLine()) {
                     lineNew2 = input2.nextLine();
 
-                    if(lineNew2.equals("END"))
+                    if(lineNew2.equals("END")) {
+                        System.out.println("\n================================\nProgram finished successfully.");
                         return;
+                    }
 
                     if (lineNew2.isEmpty()) {
                         break;
@@ -99,14 +104,13 @@ public class App {
                 e.printStackTrace();
             }
 
-            String s = tree_query.get_tree_string();
-
             if(tree_query == null) {
                 System.out.print("The query is not correct, please try again.\n");
                 continue;
             }
+
             /***************************************************************************************************************
-             * PYTHON STAGE
+             * PYTHON STAGE (FAISS)
              */
             long startTime_python = System.currentTimeMillis();
 
@@ -121,7 +125,8 @@ public class App {
 
 
             /***************************************************************************************************************
-             * FINAL MATCHING STAGE
+             * FINAL MATCHING STAGE:  now i run deep recursive + cosine distance comparison to compare the results, but
+             * then cosine distance will be the filter and deep comparison the final matching
              * */
 
             long startTime_matching = System.currentTimeMillis();
@@ -129,6 +134,7 @@ public class App {
             long number_matching = -1;
             try {
                 System.out.println("Changes found with the deep tree comparison:\n");
+                //Deep recursive tree comparison
                 number_matching = Pipeline.final_comparison(tree_query);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -138,6 +144,7 @@ public class App {
                 System.out.println("No changes found that match the query with deep comparison. \n");
 
             System.out.println("\nChanges found with the cosine distance:\n");
+            //cosine distance comparison
             number_matching = Pipeline.final_matching(tree_query);
 
             long duration_matching = (System.currentTimeMillis() - startTime_matching);
@@ -151,6 +158,5 @@ public class App {
                     + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.\n");
         }
 
-      //  System.out.println("\n================================\nProgram ended successfully.");
     }
 }

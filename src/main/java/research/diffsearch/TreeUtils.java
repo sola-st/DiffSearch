@@ -6,7 +6,14 @@ import org.antlr.v4.runtime.tree.Trees;
 
 public class TreeUtils {
 
-    //Parent child feature computation
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param t : AST of a change or query
+     * @param ruleNames: rule names of the AST
+     * @param list_parent_child: list of the couple parent-child found
+     * @param features: binary feature vector ("it is the return value of the function")
+     */
     static void pairs_parent_childAST(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
@@ -20,7 +27,14 @@ public class TreeUtils {
 
     }
 
-    //Hash sum feature computation
+    /**
+     * Extraction of the sum between an hash of the node and the hash of its children.
+     *
+     * @param t : AST of a change or query
+     * @param ruleNames: rule names of the AST
+     * @param list_hash_sum: list of the hash of nodes
+     * @param features: binary feature vector ("it is the return value of the function")
+     */
     static void tree_hash_sumAST(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int [] features) {
         int sum = 0;
         int i;
@@ -42,7 +56,15 @@ public class TreeUtils {
 
     }
 
-    //Hash sum feature computation
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param query_ruleNames: rule names of the query AST
+     * @param change_tree : AST of the change
+     * @param change_ruleNames: rule names of the change AST
+     * @return two trees are equal or not
+     */
     static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames) {
         int i;
 
@@ -132,7 +154,7 @@ public class TreeUtils {
 
     }
 
-    //Hash sum feature computation
+    //Node count method
     static int node_count(final Tree query_tree, final List<String> query_ruleNames, int n) {
         n++;
 
