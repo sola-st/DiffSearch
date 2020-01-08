@@ -18,6 +18,7 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/research.diffsearch/**TreeUtils.java** -> Methods to visit and work with trees
 - src/main/java/resources/Python/**Nearest_Neighbor_Search.py** -> FAISS framework wrapper
 - src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff. It has to be run first, because it has not been linked yet with the Java project.
+- src/main/java/resources/MainPage/**main.html** -> Graphic interface using HTML and Javascript (only a draft, not complete)
 
 **Main folders:**
 - src/main/java/resources/**ANTLR** -> ANTLR modified grammar(s)
@@ -25,6 +26,36 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/resources/**GitHub** -> There are the toy test files with changes
 
 **Requirements**
+- JAVA 8 and PYTHON 3.7
 - [ANTLR](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr  
 - [ANACONDA](https://docs.anaconda.com/anaconda/install/linux/) -> preferably in /home/username/anaconda3 
 - [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> conda install faiss
+
+
+extra: I use IntelliJ IDEA for this maven project
+
+**How to use**
+- Run the file src/main/java/research.diffsearch/**App.java**
+- Insert old code query, then a blank line (no arrow)
+- Insert new code query, then a blank line (no arrow)
+- Check the results
+
+- Type END instead of the query to end the program
+
+Additional:
+- You can change the "change datasbase" modifying the input in the file src/main/java/research.diffsearch/**Change_extraction.java** , line 40. The inputs available are git_changes.txt, git_changes2.txt and git_changes3.txt
+
+**Example of queries**
+Tested Keywords: _ (FOR INSERTION OR REMOVAL), ID, OP, LT, EXPR, ID<1>, etc.
+ID<N> is a specific identifier that changes, ID without number means: I don't care
+
+Examples:
+
+- if(ID OP LT): -> if(ID OP LT):
+
+- if(EXPR<0>): -> if(EXPR<1>):
+
+- if(EXPR<0>): ID OP LT \n if(EXPR<1>): \n ID OP LT (you have not to insert manually newline symbol )
+      
+- ID OP LT -> _  (THIS LINE IS REMOVED)
+
