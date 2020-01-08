@@ -1,5 +1,6 @@
 package research.diffsearch;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -53,18 +54,52 @@ public class App {
 
         while (true) {
             Python3_Tree tree_query = null;
+            String query_input = null;
             try {
-                System.out.print("Enter a query (or BREAK to end the program): ");
-                Scanner scanner = new Scanner(System.in);
-                String query_input = scanner.nextLine();
+                System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program): ");
 
-                if (query_input.equals("BREAK"))
-                    break;
+                Scanner input = new Scanner(System.in);
+                List<String> old_code = new ArrayList<String>();
+                String lineNew;
+
+                while (input.hasNextLine()) {
+                    lineNew = input.nextLine();
+
+                    if(lineNew.equals("END"))
+                        return;
+                    if (lineNew.isEmpty()) {
+                        break;
+                    }
+
+                    old_code.add(lineNew);
+                }
+
+                System.out.print("Enter ONLY the new code (blank line for next step or END to end the program): ");
+
+                Scanner input2 = new Scanner(System.in);
+                List<String> new_code = new ArrayList<String>();
+                String lineNew2;
+
+                while (input2.hasNextLine()) {
+                    lineNew2 = input2.nextLine();
+
+                    if(lineNew2.equals("END"))
+                        return;
+
+                    if (lineNew2.isEmpty()) {
+                        break;
+                    }
+                    new_code.add(lineNew2);
+                }
+
+                query_input = String.join(System.lineSeparator(), old_code) + "->" + String.join(System.lineSeparator(), new_code);
 
                 tree_query = Pipeline.query_feature_extraction(query_input);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            String s = tree_query.get_tree_string();
 
             if(tree_query == null) {
                 System.out.print("The query is not correct, please try again.\n");
@@ -116,6 +151,6 @@ public class App {
                     + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.\n");
         }
 
-        System.out.println("\n================================\nProgram ended successfully.");
+      //  System.out.println("\n================================\nProgram ended successfully.");
     }
 }

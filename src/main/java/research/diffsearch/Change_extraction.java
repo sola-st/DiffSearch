@@ -1,7 +1,5 @@
 package research.diffsearch;
 
-//import sun.jvm.hotspot.runtime.solaris_sparc.SolarisSPARCJavaThreadPDAccess;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,7 +8,16 @@ import java.util.List;
 
 public class Change_extraction {
     static void git_diff(){
+        Process git_diff_python;
+        try {
+            git_diff_python = Runtime.getRuntime().exec("python ./src/main/resources/Python/git_functions.py");
+            BufferedReader br = new BufferedReader(new InputStreamReader(git_diff_python.getInputStream()));
 
+            git_diff_python.waitFor();
+            git_diff_python.destroy();
+        } catch (Exception e) { e.printStackTrace();}
+
+        System.out.println("PYTHON STAGE DONE\n");
     }
 
     /**

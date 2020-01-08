@@ -126,7 +126,7 @@ public class Pipeline {
     }
 
     /**
-     * Method that creates a new process that launches Python script containing the FAISS Framework
+     * Method that creates a new process that launches Python script containing the FAISS Framework.
      *
      * @param
      * @return

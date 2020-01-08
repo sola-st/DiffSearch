@@ -129,7 +129,7 @@ tokens { INDENT, DEDENT }
  * parser rules
  */
 
-program: file_input ('PASS' file_input)? '->'? file_input ('PASS' file_input)?;
+program: file_input (NEWLINE file_input)? '->'? file_input (NEWLINE file_input)?;
 single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE?;
 file_input: (NEWLINE | stmt)* EOF?;
 eval_input: testlist NEWLINE* EOF?;
@@ -184,7 +184,7 @@ import_as_name: NAME ('as' NAME)?;
 dotted_as_name: dotted_name ('as' NAME)?;
 import_as_names: import_as_name (',' import_as_name)* (',')?;
 dotted_as_names: dotted_as_name (',' dotted_as_name)*;
-dotted_name: NAME ('.' NAME)*;
+dotted_name: NAME ('.' NAME)* | 'ID' | 'ID<0>' | 'ID<1>' |'ID<2>' |'ID<3>';
 global_stmt: 'global' NAME (',' NAME)*;
 nonlocal_stmt: 'nonlocal' NAME (',' NAME)*;
 assert_stmt: 'assert' test (',' test)?;
