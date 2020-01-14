@@ -133,28 +133,9 @@ public class Pipeline {
      */
     public static void search_candidate_changes(){
         Process which_python;
-        String username = null;
-        try {
-            which_python = Runtime.getRuntime().exec("whoami");
-            BufferedReader br = new BufferedReader(new InputStreamReader(which_python.getInputStream()));
-
-            which_python.waitFor();
-            String s1;
-
-            while ((s1 = br.readLine()) != null){
-                username = s1;
-                break;
-                }
-            which_python.destroy();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
         Process python_Nearest_Neighbor_Search;
         try {
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec("/home/" + username + "/anaconda3/bin/python3.7 ./src/main/resources/Python/Nearest_Neighbor_Search.py");
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/Nearest_Neighbor_Search.py");
             BufferedReader br = new BufferedReader(new InputStreamReader(python_Nearest_Neighbor_Search.getInputStream()));
 
             python_Nearest_Neighbor_Search.waitFor();

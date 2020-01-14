@@ -43,10 +43,10 @@ extra: I use IntelliJ IDEA for this maven project
 - Type END instead of the query to end the program
 
 Additional:
-- You can change the "change datasbase" modifying the input in the file src/main/java/research.diffsearch/**Change_extraction.java** , line 40. The inputs available are git_changes.txt, git_changes2.txt and git_changes3.txt
+- You can change the "change database" modifying the input in the file src/main/java/research.diffsearch/**Change_extraction.java** , line 40. The inputs available are git_changes.txt, git_changes2.txt and git_changes3.txt
 
 **Example of queries**
-Tested Keywords: _ (FOR INSERTION OR REMOVAL), ID, OP, LT, EXPR, ID<1>, etc.
+Tested Keywords: _ (for insertion of removal), ID, OP, LT, EXPR, ID<1>, etc.
 ID<N> is a specific identifier that changes, ID without number means: I don't care
 
 Examples:
@@ -55,7 +55,7 @@ Examples:
 
 - if(EXPR<0>): -> if(EXPR<1>):
 
-- if(EXPR<0>): ID OP LT \n if(EXPR<1>): \n ID OP LT (you have not to insert manually newline symbol )
+- if(EXPR<0>): ID OP LT \n if(EXPR<1>): \n ID OP LT (you don't have to manually insert the newline symbol)
       
 - ID OP LT -> _  (THIS LINE IS REMOVED)
 
