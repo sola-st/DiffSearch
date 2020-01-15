@@ -1,0 +1,6 @@
+0---file_input  Q: file_input
+2---file_input  Q: file_input
+next---file_input  Q: file_input
+0---stmt  Q: stmt
+next---stmt  Q: stmt
+0---simple_stmt  Q: compound_stmt

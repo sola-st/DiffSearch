@@ -4,6 +4,9 @@ index 01e2818..d3c3eef 100644
 +++ b/parse.py
 @@ -72,7 +72,7 @@ class HTML:
  
+- if(binary):
++ if(bin):
+
          # save links into list
          for match in matchList:
 -            match = match[13:][:-2]
@@ -1098,3 +1101,6 @@ index 6a5f0db..3509d0c 100644
 + x > 6
 - y == 4
 + y != 4
+
+- if(binary):
++ if(bin):

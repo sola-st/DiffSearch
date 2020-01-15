@@ -132,7 +132,6 @@ public class Pipeline {
      * @return
      */
     public static void search_candidate_changes(){
-        Process which_python;
         Process python_Nearest_Neighbor_Search;
         try {
             python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/Nearest_Neighbor_Search.py");
@@ -235,7 +234,20 @@ public class Pipeline {
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
-            boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()));
+            String s1 = change.get_tree_string();
+            String s2 = tree_query.get_tree_string();
+
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/log_file.txt", "UTF-8");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+
+            writer.close();
 
             if(equal) {
                 List<String> list_change_old_leaves = new ArrayList<>();

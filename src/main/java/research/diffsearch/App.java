@@ -131,7 +131,12 @@ public class App {
 
             long startTime_matching = System.currentTimeMillis();
 
-            long number_matching = -1;
+            System.out.println("\nChanges found with the cosine distance:\n");
+            //cosine distance comparison
+            long  number_matching;
+            number_matching = Pipeline.final_matching(tree_query);
+
+            number_matching = -1;
             try {
                 System.out.println("Changes found with the deep tree comparison:\n");
                 //Deep recursive tree comparison
@@ -142,10 +147,6 @@ public class App {
 
             if(number_matching == 0)
                 System.out.println("No changes found that match the query with deep comparison. \n");
-
-            System.out.println("\nChanges found with the cosine distance:\n");
-            //cosine distance comparison
-            number_matching = Pipeline.final_matching(tree_query);
 
             long duration_matching = (System.currentTimeMillis() - startTime_matching);
 

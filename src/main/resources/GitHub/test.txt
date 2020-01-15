@@ -1,0 +1,16 @@
+-if(z>0):
++if(z<0):
+- if(binary):
++ if(bin):
+-if(z>0):
++if(z<0):
+- if(binary):
++ if(bin):
+-if(z>0):
++if(z<0):
+- if(binary):
++ if(bin):
+-if(z>0):
++if(z<0):
+- if(binary):
++ if(bin):

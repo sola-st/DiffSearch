@@ -1,5 +1,6 @@
 package research.diffsearch;
 
+import java.io.PrintWriter;
 import java.util.List;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
@@ -65,7 +66,7 @@ public class TreeUtils {
      * @param change_ruleNames: rule names of the change AST
      * @return two trees are equal or not
      */
-    static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames) {
+    static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
         int i;
 
         try {
@@ -73,17 +74,23 @@ public class TreeUtils {
             if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames)))
                 return false;
 
+
+
             for (i = 0; i < change_tree.getChildCount(); i++) {
-                if (change_tree.getChild(i).getChildCount() > 0)
+                if (change_tree.getChild(i).getChildCount() > 0) {
+                        writer.println(i + "---" + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
                     if (!Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals(Trees.getNodeText(query_tree.getChild(i), query_ruleNames)))
                         return false;
+                }
             }
 
             for (i = 0; i < change_tree.getChildCount(); i++) {
-                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") && !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
-                    if (query_tree.getChild(i).getChildCount() > 0)
-                            if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames))
-                                return false;
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") || !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
+                    if (change_tree.getChild(i).getChildCount() > 0) {
+                        writer.println("next---" + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer))
+                            return false;
+                    }
             }
 
         } catch (Exception e) {
