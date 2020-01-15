@@ -22,7 +22,7 @@ public class App {
         List<String> changes_tree_list = null;
 
         try {
-             changes_tree_list = Change_extraction.analyze_diff_file();
+            changes_tree_list = Change_extraction.analyze_diff_file();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,7 +120,7 @@ public class App {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             long time_python = (System.currentTimeMillis() - startTime_python);
 
 
@@ -130,7 +130,7 @@ public class App {
              * */
 
             long startTime_matching = System.currentTimeMillis();
-            
+
             long number_matching = -1;
             try {
                 System.out.println("Changes found with the deep tree comparison:\n");
