@@ -53,3 +53,124 @@ index 67e329b..9b25953 100644
 
 -            match = match[13:][:-2]
 +            match = match[13:][:-3]
+
+-if(binary):
++if(bin):
+
+diff --git a/code/my_functions.py b/code/my_functions.py
+index 83c9aae..1d55af1 100644
+--- a/code/my_functions.py
++++ b/code/my_functions.py
+@@ -274,7 +274,7 @@ def similarity(query_tokens, query_ngrams, change, position, ngram, thresholds,
+ 
+         ranked_list.append(temporary_list)
+
+-if(x>0):
++foo(x)
+-x = 5
++x=7
+
+-if(x>0):
++if(y<0):
+
++x=7
+ 
+-
++#Query digits normalization and n-grams and tokens computation
+ def query_normalization(query, ngrams):
+     query_normalize = []
+ 
+diff --git a/code/tests.py b/code/tests.py
+index 67e329b..9b25953 100644
+--- a/code/tests.py
++++ b/code/tests.py
+@@ -6,15 +6,27 @@
+     #walker.walk(printer, tree)
+   #  print(tree.toStringTree())
+     
+-import csv
+-from itertools import zip_longest
++import antlr4 
+ 
+-def dataset_csv(list1, list2):
+-    d = [list1, list2]
+-    export_data = zip_longest(*d, fillvalue = '')
++import sys
++sys.path.insert(1, './code/antlr4')
+
+-if(x>0):
++if(z<0):
+
+-while(i<10):
++while(i<9):
+
+-if(x==0):
++if(x!=0):
+
+-if((x-1)==0):
++if((x-1)!=0):
+
+-            match = match[13:][:-2]
++            match = match[13:][:-3]
+
+-if(binary):
++if(bin):
+
+diff --git a/code/my_functions.py b/code/my_functions.py
+index 83c9aae..1d55af1 100644
+--- a/code/my_functions.py
++++ b/code/my_functions.py
+@@ -274,7 +274,7 @@ def similarity(query_tokens, query_ngrams, change, position, ngram, thresholds,
+ 
+         ranked_list.append(temporary_list)
+
+-if(x>0):
++foo(x)
+-x = 5
++x=7
+
+-if(x>0):
++if(y<0):
+
++x=7
+ 
+-
++#Query digits normalization and n-grams and tokens computation
+ def query_normalization(query, ngrams):
+     query_normalize = []
+ 
+diff --git a/code/tests.py b/code/tests.py
+index 67e329b..9b25953 100644
+--- a/code/tests.py
++++ b/code/tests.py
+@@ -6,15 +6,27 @@
+     #walker.walk(printer, tree)
+   #  print(tree.toStringTree())
+     
+-import csv
+-from itertools import zip_longest
++import antlr4 
+ 
+-def dataset_csv(list1, list2):
+-    d = [list1, list2]
+-    export_data = zip_longest(*d, fillvalue = '')
++import sys
++sys.path.insert(1, './code/antlr4')
+
+-if(x>0):
++if(z<0):
+
+-while(i<10):
++while(i<9):
+
+-if(x==0):
++if(x!=0):
+
+-if((x-1)==0):
++if((x-1)!=0):
+
+-            match = match[13:][:-2]
++            match = match[13:][:-3]
+
+-if(binary):
++if(bin):

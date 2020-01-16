@@ -71,30 +71,51 @@ public class TreeUtils {
 
         try {
 
-            if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames)))
+            if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames))) {
+                writer.println("FALSE0---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                 return false;
+            }
 
-
+            String s1;
+            String s2;
 
             for (i = 0; i < change_tree.getChildCount(); i++) {
-                if (change_tree.getChild(i).getChildCount() > 0) {
-                        writer.println(i + "---" + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
-                    if (!Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals(Trees.getNodeText(query_tree.getChild(i), query_ruleNames)))
-                        return false;
+                if (change_tree.getChild(i).getChildCount() > 0 && query_tree.getChild(i).getChildCount() > 0 ) {
+                        writer.println(i + "---" + change_tree.getChild(i).getChildCount() + query_tree.getChild(i).getChildCount() + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
+                        s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
+                        if (!(s1.equals(s2))) {
+                            writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                            return false;
+                    }
                 }
             }
 
+        } catch (Exception e) {
+            // e.printStackTrace();
+            writer.println("EXCEPTION1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+            return false;
+        }
+
+        try{
             for (i = 0; i < change_tree.getChildCount(); i++) {
-                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("EXPR") || !Trees.getNodeText(change_tree, change_ruleNames).equals("expr"))
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                     if (change_tree.getChild(i).getChildCount() > 0) {
-                        writer.println("next---" + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
-                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer))
+                        writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
+                            writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                             return false;
+                        }
                     }
+                }else{
+                    writer.println("EXPR---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                    break;
+                }
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            writer.println("EXCEPTION2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
             return false;
         }
 

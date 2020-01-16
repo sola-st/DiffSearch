@@ -212,13 +212,13 @@ lambdef_nocond: 'lambda' (varargslist)? ':' test_nocond;
 or_test: and_test ('or' and_test)*;
 and_test: not_test ('and' not_test)*;
 not_test: 'not' not_test | comparison;
-comparison: expr (comp_op expr)*;
+comparison: expr (comp_op expr)* | 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR'; //MOD
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 //MOD
 comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>';
 star_expr: '*' expr;
-expr: xor_expr ('|' xor_expr)* | 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR'; //MOD
+expr: xor_expr ('|' xor_expr)* ;
 xor_expr: and_expr ('^' and_expr)*;
 and_expr: shift_expr ('&' shift_expr)*;
 shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
@@ -232,7 +232,7 @@ atom: ('(' (yield_expr|testlist_comp)? ')' |
        '{' (dictorsetmaker)? '}' |
        NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<0>' |'ID<1>' |'ID<2>' |'ID<3>' | 'ID' | 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>'| 'LT' | '_');//MOD
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* (',')? );
-trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;
+trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME | '.' 'ID<0>' | '.' 'ID<1>' | '.' 'ID<2>' |'.' 'ID<3>' | '.' 'ID' ;
 subscriptlist: subscript (',' subscript)* (',')?;
 subscript: test | (test)? ':' (test)? (sliceop)?;
 sliceop: ':' (test)?;

@@ -159,7 +159,7 @@ public class Pipeline {
         }
 
         int length = tree_query.features.length;
-        double threshold = 0.9;
+        double threshold = 0.8;
         long number_matching = 0;
 
         for(String candidate : allLines){
