@@ -99,4 +99,4 @@ next---and_test  Q: and_test
 next---not_test  Q: not_test
 0---not_test  Q: not_test
 next---comparison  Q: comparison
-EXPR---comparison  Q: EXPR<1>
+EXPR---comparison  Q: EXPR<0>

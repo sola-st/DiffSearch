@@ -1,6 +1,8 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.Trees;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -162,6 +164,15 @@ public class Pipeline {
         double threshold = 0.8;
         long number_matching = 0;
 
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/candidate_changes_filtered.txt", "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         for(String candidate : allLines){
             Python3_Tree change = new Python3_Tree(candidate);
             //Computing hash sum of changes
@@ -177,9 +188,13 @@ public class Pipeline {
 
             if(score >= threshold) {
                 number_matching++;
+                writer.println(candidate);
                 System.out.println(candidate + " score: " + score);
             }
         }
+
+        writer.close();
+
         return number_matching;
     }
 
@@ -194,7 +209,7 @@ public class Pipeline {
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes_filtered.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
