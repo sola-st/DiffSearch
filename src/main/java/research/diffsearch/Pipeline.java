@@ -239,7 +239,7 @@ public class Pipeline {
 
             PrintWriter writer = null;
             try {
-                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/log_file.txt", "UTF-8");
+                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {
