@@ -79,15 +79,19 @@ public class TreeUtils {
             String s1;
             String s2;
 
-            for (i = 0; i < change_tree.getChildCount(); i++) {
-                if (change_tree.getChild(i).getChildCount() > 0 && query_tree.getChild(i).getChildCount() > 0 ) {
-                        writer.println(i + "---" + change_tree.getChild(i).getChildCount() + query_tree.getChild(i).getChildCount() + Trees.getNodeText( change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+            for (i = 0; i < query_tree.getChildCount(); i++) {
+
+                if (query_tree.getChild(i).getChildCount() > 0) {
+                        writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                         s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                         s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
-                        if (!(s1.equals(s2))) {
-                            writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
-                            return false;
-                    }
+                        if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                            if (!(s1.equals(s2))) {
+                                writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                                return false;
+                            }
+                        }else
+                            return true;
                 }
             }
 
@@ -98,9 +102,9 @@ public class TreeUtils {
         }
 
         try{
-            for (i = 0; i < change_tree.getChildCount(); i++) {
+            for (i = 0; i < query_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
-                    if (change_tree.getChild(i).getChildCount() > 0) {
+                    if (query_tree.getChild(i).getChildCount() > 0) {
                         writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
                         if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
                             writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
