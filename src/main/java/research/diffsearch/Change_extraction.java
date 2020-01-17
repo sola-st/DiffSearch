@@ -131,6 +131,7 @@ public class Change_extraction {
                 changes_list.add(change);
             }
 
+/*
             //Convert changes in string: old code -> new code
             for (List<String> l : changes_list) {
                 if(l.get(0).equals("_\n")){
@@ -141,6 +142,18 @@ public class Change_extraction {
                     }else {
                         final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "")+ "\n");
                     }
+            }
+*/
+            //Convert changes in string: old code -> new code
+            for (List<String> l : changes_list) {
+                if(l.get(0).equals("_\n")){
+                    final_list.add((l.get(0).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                }else
+                if(l.get(1).equals("_\n")){
+                    final_list.add((l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).replace("\n,", "\n")).replace("\n->","->"));
+                }else {
+                    final_list.add((l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

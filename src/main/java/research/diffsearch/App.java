@@ -138,7 +138,7 @@ public class App {
 
             number_matching = -1;
             try {
-                System.out.println("Changes found with the deep tree comparison:\n");
+                System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                 //Deep recursive tree comparison
                 number_matching = Pipeline.final_comparison(tree_query);
             } catch (Exception e) {

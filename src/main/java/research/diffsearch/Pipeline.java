@@ -1,8 +1,6 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.Trees;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -58,8 +56,8 @@ public class Pipeline {
 
                 buff_writer_features.write(str_builder.toString());
 
-                // Writing the string change in a file (ONLY FOR TESTING)
-                bw.write(change.get_change_string());
+                // Writing the string change in a file
+                bw.write(change.get_change_string().replace("\n", "$$") + "\n");
             }
             buff_writer_features.close();
             bw.close();
@@ -174,7 +172,7 @@ public class Pipeline {
         }
 
         for(String candidate : allLines){
-            Python3_Tree change = new Python3_Tree(candidate);
+            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -188,8 +186,8 @@ public class Pipeline {
 
             if(score >= threshold) {
                 number_matching++;
-                writer.println(candidate);
-                System.out.println(candidate + " score: " + score);
+                writer.println(candidate.replace("\n", "$$") + "\n");
+                System.out.println(candidate.replace("$$", "\n") + " score: " + score);
             }
         }
 
@@ -244,7 +242,7 @@ public class Pipeline {
 
         assert allLines != null;
         for(String candidate : allLines){
-            Python3_Tree change = new Python3_Tree(candidate);
+            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
 
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
@@ -294,7 +292,7 @@ public class Pipeline {
 
                 if(final_matching){
                     number_matching++;
-                    System.out.println(candidate);
+                    System.out.println(candidate.replace("$$", "\n"));
                 }
             }
         }
