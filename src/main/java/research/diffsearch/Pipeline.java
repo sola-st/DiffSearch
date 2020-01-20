@@ -292,7 +292,9 @@ public class Pipeline {
 
                 if(final_matching){
                     number_matching++;
-                    System.out.println(candidate.replace("$$", "\n"));
+
+                    List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
+                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1));
                 }
             }
         }

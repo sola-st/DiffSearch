@@ -57,7 +57,7 @@ public class App {
             Python3_Tree tree_query = null;
             String query_input = null;
             try {
-                System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program): ");
+                System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
 
                 Scanner input = new Scanner(System.in);
                 List<String> old_code = new ArrayList<String>();
@@ -77,7 +77,7 @@ public class App {
                     old_code.add(lineNew);
                 }
 
-                System.out.print("Enter ONLY the new code (blank line for next step or END to end the program): ");
+                System.out.print("Enter ONLY the new code (blank line for next step or END to end the program):\n");
 
                 Scanner input2 = new Scanner(System.in);
                 List<String> new_code = new ArrayList<String>();

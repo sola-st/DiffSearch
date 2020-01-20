@@ -1,2 +1,12 @@
-_->#Query digits normalization and n-grams and tokens computation $$
+if(x==0): ->if(x!=0): $$
+
+if(x>0): ->if(y<0): $$
+
+if(x>0): ->if(z<0): $$
+
+if((x-1)==0): ->if((x-1)!=0): $$
+
+if(binary): ->if(bin): $$
+
+while(i<10): ->while(i<9): $$
 
