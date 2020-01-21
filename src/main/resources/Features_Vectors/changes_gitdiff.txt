@@ -1,0 +1,48 @@
+if(x>0): ->foo(x) 
+$$$
+x = 5 ->x=7 
+$$$
+if(x>0): ->if(y<0): 
+$$$
+_->x=7 
+$$$
+_->#Query digits normalization and n-grams and tokens computation 
+$$$
+import csv 
+ from itertools import zip_longest ->import antlr4  
+$$$
+def dataset_csv(list1, list2): 
+     d = [list1, list2] 
+     export_data = zip_longest(*d, fillvalue = '') ->import sys 
+ sys.path.insert(1, './code/antlr4') 
+$$$
+if(x>0): ->if(z<0): 
+$$$
+while(i<10): ->while(i<9): 
+$$$
+if(x==0): ->if(x!=0): 
+$$$
+if((x-1)==0): ->if((x-1)!=0): 
+$$$
+            match = match[13:][:-2] ->            match = match[13:][:-3] 
+$$$
+if(binary): ->if(bin): 
+$$$
+foo.method1(var) ->foo.method2(var) 
+$$$
+foo.method1(var) ->foo.method2(var2) 
+$$$
+foo.method(var) ->foo.method(var2) 
+$$$
+foo.method() ->foo.method2() 
+$$$
+method() ->method2() 
+$$$
+if(x>0): 
+  x = 5 ->if(x<0): 
+  y = 5 
+$$$
+ y = 5 -> y = 50 
+$$$
+ while(x<0): -> while (x <= 0): 
+$$$

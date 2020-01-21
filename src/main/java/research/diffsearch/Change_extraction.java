@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+import org.antlr.v4.runtime.tree.Trees;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,14 +33,21 @@ public class Change_extraction {
      * Extraction of the changes from a git diff file. Each change is transformed in the form:
      * old code -> new code
      *
-     * @param
      * @return A list of changes in the form: old code -> new code
      */
-    static List<String> analyze_diff_file() {
-        List<String> final_list = new ArrayList<String>();
-        List<List<String>> changes_list = new ArrayList<>();
+    static long analyze_diff_file() {
+       // List<String> final_list = new ArrayList<String>();
+       // List<List<String>> changes_list = new ArrayList<>();
         List<String> temporary_list_old = new ArrayList<String>();
         List<String> temporary_list_new = new ArrayList<String>();
+        long change_number = 0;
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         boolean flag = false;
 
@@ -73,7 +82,21 @@ public class Change_extraction {
                             }
                         }
 
-                        changes_list.add(change);
+                        //changes_list.add(change);
+
+                        if(change.get(0).equals("_\n")){
+                       //     final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
+                        }else
+                        if(change.get(1).equals("_\n")){
+                        //    final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                        }else {
+                       //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
+                        }
+                        change_number++;
+
                         temporary_list_old.clear();
                         temporary_list_new.clear();
                         flag = false;
@@ -114,7 +137,20 @@ public class Change_extraction {
                             }
                         }
 
-                        changes_list.add(change);
+                        //changes_list.add(change);
+                        if(change.get(0).equals("_\n")){
+                    //        final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                        }else
+                        if(change.get(1).equals("_\n")){
+                    //        final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                        }else {
+                     //       final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                        }
+
+                        change_number++;
                         temporary_list_old.clear();
                         temporary_list_new.clear();
                         flag = false;
@@ -128,10 +164,27 @@ public class Change_extraction {
                 change.add(temporary_list_old.toString());
                 change.add(temporary_list_new.toString());
 
-                changes_list.add(change);
+                //changes_list.add(change);
+
+                if(change.get(0).equals("_\n")){
+               //     final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                }else
+                if(change.get(1).equals("_\n")){
+               //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
+                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                }else {
+               //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
+                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                }
+
+                change_number++;
             }
 
+            writer.close();
 /*
+            System.out.println("CHANGES EXTRACTED FROM A GIT DIFF OUTPUT (FIRST STEP) \n");
+
             //Convert changes in string: old code -> new code
             for (List<String> l : changes_list) {
                 if(l.get(0).equals("_\n")){
@@ -143,7 +196,7 @@ public class Change_extraction {
                         final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "")+ "\n");
                     }
             }
-*/
+
             //Convert changes in string: old code -> new code
             for (List<String> l : changes_list) {
                 if(l.get(0).equals("_\n")){
@@ -154,12 +207,13 @@ public class Change_extraction {
                 }else {
                     final_list.add((l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                 }
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return final_list;
+        //return final_list;
+        return change_number;
     }
 
 }

@@ -12,7 +12,6 @@ public class App {
 
         //not linked yet
 
-
         /***************************************************************************************************************
          * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
          * */
@@ -20,14 +19,18 @@ public class App {
         long startTime_gitdiff = System.currentTimeMillis();
 
         List<String> changes_tree_list = null;
+        long change_number = 0;
 
         try {
-            changes_tree_list = Change_extraction.analyze_diff_file();
+            //changes_tree_list = Change_extraction.analyze_diff_file();
+            change_number = Change_extraction.analyze_diff_file();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+
+        System.out.println("CHANGES EXTRACTED FROM A GIT DIFF OUTPUT DONE \n");
 
 
         /***************************************************************************************************************
@@ -36,10 +39,11 @@ public class App {
 
         long startTime_indexing = System.currentTimeMillis();
 
-        long changes_number = -1;
+       // long changes_number = -1;
 
         try {
-            changes_number = Pipeline.feature_extraction(changes_tree_list);
+           // changes_number = Pipeline.feature_extraction(changes_tree_list);
+            Pipeline.feature_extraction(change_number);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +158,7 @@ public class App {
             /***************************************************************************************************************
              * STATISTICS
              **/
-            System.out.println("\nFINAL STATISTICS:\nNumber of changes analyzed: " + changes_number + "\nNumber of matching changes: " + number_matching
+            System.out.println("\nFINAL STATISTICS:\nNumber of changes analyzed: " + change_number + "\nNumber of matching changes: " + number_matching
                     + "\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\nPython Search duration: " + time_python / 1000 + " seconds,"
                     + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.\n");
         }

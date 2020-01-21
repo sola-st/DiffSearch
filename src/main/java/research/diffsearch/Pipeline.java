@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Pipeline {
 
@@ -15,22 +16,37 @@ public class Pipeline {
      * changes_feature_vectors.csv and the change in the string format in the file changes_strings.txt to have
      * an index of features vectors and changes.
      *
-     * @param changes_list : list of the changes in a string format: old -> new
+     * @param change_number : number of the changes found
      * @return Number of changes
      */
-    public static long feature_extraction(List<String> changes_list){
-        long changes_number = 0;
+    public static void feature_extraction(long change_number){
+      //  long changes_number = 0;
 
         try {
-            changes_number = changes_list.size();
+           // changes_number = changes_list.size();
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
             FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
             BufferedWriter bw = new BufferedWriter(writer);
 
+            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/changes_gitdiff.txt"));
+         //   scanner.useDelimiter("$$$");
             //For each change: creation of AST, feature extraction and file write of the feature vector
-            for (String change_string : changes_list) {
+          //  for (String change_string : changes_list) {
+            for (int i = 0; i < change_number; i++) {
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                String str = "test";
+
+                while(!str.equals("$$$")){
+                    str = scanner.next();
+                    stringBuilder.append(str);
+                }
+
+
+                String change_string = stringBuilder.toString().replace("$$$", "");
 
                 Python3_Tree change =new Python3_Tree(change_string);
                 if(change.error)
@@ -66,7 +82,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-        return changes_number;
+        return;
     }
 
     /**
@@ -294,7 +310,7 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1));
+                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }
