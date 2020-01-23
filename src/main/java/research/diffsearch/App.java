@@ -18,11 +18,9 @@ public class App {
 
         long startTime_gitdiff = System.currentTimeMillis();
 
-        List<String> changes_tree_list = null;
         long change_number = 0;
 
         try {
-            //changes_tree_list = Change_extraction.analyze_diff_file();
             change_number = Change_extraction.analyze_diff_file();
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,7 +28,7 @@ public class App {
 
         long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
-        System.out.println("CHANGES EXTRACTED FROM A GIT DIFF OUTPUT DONE \n");
+        System.out.println(change_number + " CHANGES EXTRACTED FROM A GIT DIFF OUTPUT.\n");
 
 
         /***************************************************************************************************************
@@ -39,10 +37,7 @@ public class App {
 
         long startTime_indexing = System.currentTimeMillis();
 
-       // long changes_number = -1;
-
         try {
-           // changes_number = Pipeline.feature_extraction(changes_tree_list);
             Pipeline.feature_extraction(change_number);
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,12 +45,26 @@ public class App {
 
         long feature_extraction = (System.currentTimeMillis() - startTime_indexing);
 
+        /***************************************************************************************************************
+         * SEARCH PYTHON STAGE (FAISS)
+         */
+        long startTime_python = System.currentTimeMillis();
+
+        try {
+            Pipeline.indexing_candidate_changes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long time_python = (System.currentTimeMillis() - startTime_python);
+
 
         /***************************************************************************************************************
          * QUERY TREE AND FEATURES COMPUTATION
          * */
 
-        //Temporary code, In the future I will implement a graphic interface
+        //Temporary code, in the future I will implement a graphic interface
 
         while (true) {
             Python3_Tree tree_query = null;
@@ -114,9 +123,9 @@ public class App {
             }
 
             /***************************************************************************************************************
-             * PYTHON STAGE (FAISS)
+             * SEARCH PYTHON STAGE (FAISS)
              */
-            long startTime_python = System.currentTimeMillis();
+            long startTime_python2 = System.currentTimeMillis();
 
             try {
 
@@ -125,22 +134,21 @@ public class App {
                 e.printStackTrace();
             }
 
-            long time_python = (System.currentTimeMillis() - startTime_python);
+            long time_python2 = (System.currentTimeMillis() - startTime_python2);
 
 
             /***************************************************************************************************************
-             * FINAL MATCHING STAGE:  now i run deep recursive + cosine distance comparison to compare the results, but
-             * then cosine distance will be the filter and deep comparison the final matching
+             * FINAL MATCHING STAGE:  Cosine distance as filter + Deep tree comparison as final matching.
              * */
 
             long startTime_matching = System.currentTimeMillis();
 
-            System.out.println("\nChanges found with the cosine distance:\n");
             //cosine distance comparison
-            long  number_matching;
-            number_matching = Pipeline.final_matching(tree_query);
+            System.out.println("\nChanges found with the cosine distance:\n");
 
-            number_matching = -1;
+            long number_matching_cosine = Pipeline.final_matching(tree_query);
+
+            long number_matching = -1;
             try {
                 System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                 //Deep recursive tree comparison
@@ -158,10 +166,15 @@ public class App {
             /***************************************************************************************************************
              * STATISTICS
              **/
-            System.out.println("\nFINAL STATISTICS:\nNumber of changes analyzed: " + change_number + "\nNumber of matching changes: " + number_matching
-                    + "\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\nPython Search duration: " + time_python / 1000 + " seconds,"
+            System.out.println("\nFINAL STATISTICS:"
+                    + "\nNumber of changes analyzed: " + change_number
+                    + "\nNumber of matching changes with cosine filter: " + number_matching_cosine
+                    + "\nNumber of final matching changes: " + number_matching
+                    + "\nExtraction from Git diff: " + gitdiff_extraction / 1000 + " seconds\n"
+                    + "\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds\n"
+                    + "Indexing Python Search duration: " + time_python / 1000 + " seconds\n"
+                    + "Python Search duration: " + time_python2 / 1000 + " seconds\n"
                     + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.\n");
         }
-
     }
 }

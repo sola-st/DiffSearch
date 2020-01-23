@@ -17,13 +17,10 @@ public class Pipeline {
      * an index of features vectors and changes.
      *
      * @param change_number : number of the changes found
-     * @return Number of changes
      */
     public static void feature_extraction(long change_number){
-      //  long changes_number = 0;
 
         try {
-           // changes_number = changes_list.size();
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
@@ -31,9 +28,7 @@ public class Pipeline {
             BufferedWriter bw = new BufferedWriter(writer);
 
             Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/changes_gitdiff.txt"));
-         //   scanner.useDelimiter("$$$");
-            //For each change: creation of AST, feature extraction and file write of the feature vector
-          //  for (String change_string : changes_list) {
+
             for (int i = 0; i < change_number; i++) {
 
                 StringBuilder stringBuilder = new StringBuilder();
@@ -44,7 +39,6 @@ public class Pipeline {
                     str = scanner.next();
                     stringBuilder.append(str);
                 }
-
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
@@ -83,6 +77,22 @@ public class Pipeline {
         }
 
         return;
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
+     *
+     */
+    public static void indexing_candidate_changes(){
+        Process python_indexing;
+        try {
+            python_indexing = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/FAISS_indexing.py");
+
+            python_indexing.waitFor();
+            python_indexing.destroy();
+        } catch (Exception e) { e.printStackTrace();}
+
+        System.out.println("FAISS INDEXING STAGE DONE.\n");
     }
 
     /**
@@ -142,22 +152,19 @@ public class Pipeline {
     }
 
     /**
-     * Method that creates a new process that launches Python script containing the FAISS Framework.
+     * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      *
-     * @param
-     * @return
      */
     public static void search_candidate_changes(){
         Process python_Nearest_Neighbor_Search;
         try {
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/Nearest_Neighbor_Search.py");
-            BufferedReader br = new BufferedReader(new InputStreamReader(python_Nearest_Neighbor_Search.getInputStream()));
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
             python_Nearest_Neighbor_Search.waitFor();
             python_Nearest_Neighbor_Search.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
-        System.out.println("PYTHON STAGE DONE\n");
+        System.out.println("FAISS SEARCHING STAGE DONE.\n");
     }
 
     /**
@@ -181,9 +188,7 @@ public class Pipeline {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/candidate_changes_filtered.txt", "UTF-8");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 

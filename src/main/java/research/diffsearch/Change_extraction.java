@@ -1,20 +1,19 @@
 package research.diffsearch;
 
-import org.antlr.v4.runtime.tree.Trees;
+//import org.antlr.v4.runtime.tree.Trees;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Change_extraction {
 
     /**
      * Cloning and git diff computation of a git repository (not complete)
      *
-     * @param
-     * @return A list of changes in the form: old code -> new code
      */
     static void git_diff(){
         Process git_diff_python;
@@ -36,8 +35,6 @@ public class Change_extraction {
      * @return A list of changes in the form: old code -> new code
      */
     static long analyze_diff_file() {
-       // List<String> final_list = new ArrayList<String>();
-       // List<List<String>> changes_list = new ArrayList<>();
         List<String> temporary_list_old = new ArrayList<String>();
         List<String> temporary_list_new = new ArrayList<String>();
         long change_number = 0;
@@ -51,16 +48,18 @@ public class Change_extraction {
 
         boolean flag = false;
 
-        List<String> allLines = null;
+        //List<String> allLines = null;
+        Scanner scanner = null;
         try {
-            allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
+            // allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
+            scanner = new Scanner(new File(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes9000.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            for (String line : allLines) {
-                line = line + "  ";
+            while (scanner.hasNext()) {
+                String line = scanner.next() + "  ";
 
                 //manage -old change
                 if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
@@ -85,14 +84,11 @@ public class Change_extraction {
                         //changes_list.add(change);
 
                         if(change.get(0).equals("_\n")){
-                       //     final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                             writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }else
                         if(change.get(1).equals("_\n")){
-                        //    final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                         }else {
-                       //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }
                         change_number++;
@@ -117,45 +113,42 @@ public class Change_extraction {
                             temporary_list_new.add("_\n");
 
                         flag = true;//-old +new is complete
-                } else {
+                    } else {
                         // merge old and new code in the same list
-                    if (flag || temporary_list_old.size() > 0) {
-                        ArrayList<String> change = new ArrayList<String>();
+                        if (flag || temporary_list_old.size() > 0) {
+                            ArrayList<String> change = new ArrayList<String>();
 
-                        //manage -old only
-                        if (temporary_list_new.size() == 0) {
-                            change.add(temporary_list_old.toString());
-                            change.add("_\n");
-                        } else {
-                            //manage +new only
-                            if (temporary_list_old.size() == 0) {
-                                change.add("_\n");
-                                change.add(temporary_list_new.toString());
-                            } else {
+                            //manage -old only
+                            if (temporary_list_new.size() == 0) {
                                 change.add(temporary_list_old.toString());
-                                change.add(temporary_list_new.toString());
+                                change.add("_\n");
+                            } else {
+                                //manage +new only
+                                if (temporary_list_old.size() == 0) {
+                                    change.add("_\n");
+                                    change.add(temporary_list_new.toString());
+                                } else {
+                                    change.add(temporary_list_old.toString());
+                                    change.add(temporary_list_new.toString());
+                                }
                             }
-                        }
 
-                        //changes_list.add(change);
-                        if(change.get(0).equals("_\n")){
-                    //        final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
-                            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                        }else
-                        if(change.get(1).equals("_\n")){
-                    //        final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                        }else {
-                     //       final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                        }
+                            //changes_list.add(change);
+                            if(change.get(0).equals("_\n")){
+                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                            }else
+                            if(change.get(1).equals("_\n")){
+                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                            }else {
+                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                            }
 
-                        change_number++;
-                        temporary_list_old.clear();
-                        temporary_list_new.clear();
-                        flag = false;
+                            change_number++;
+                            temporary_list_old.clear();
+                            temporary_list_new.clear();
+                            flag = false;
+                        }
                     }
-                }
             }
 
             //Last change
@@ -164,55 +157,26 @@ public class Change_extraction {
                 change.add(temporary_list_old.toString());
                 change.add(temporary_list_new.toString());
 
-                //changes_list.add(change);
 
                 if(change.get(0).equals("_\n")){
-               //     final_list.add((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                     writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }else
                 if(change.get(1).equals("_\n")){
-               //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->"));
                     writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }else {
-               //     final_list.add((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                     writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }
 
                 change_number++;
             }
 
+            //assert writer != null;
             writer.close();
-/*
-            System.out.println("CHANGES EXTRACTED FROM A GIT DIFF OUTPUT (FIRST STEP) \n");
 
-            //Convert changes in string: old code -> new code
-            for (List<String> l : changes_list) {
-                if(l.get(0).equals("_\n")){
-                    final_list.add(l.get(0).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "") + "\n");
-                }else
-                    if(l.get(1).equals("_\n")){
-                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).replace("\n,", "").replace("\n", "")+ "\n");
-                    }else {
-                        final_list.add(l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "").replace("\n", "") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "").replace("\n", "")+ "\n");
-                    }
-            }
-
-            //Convert changes in string: old code -> new code
-            for (List<String> l : changes_list) {
-                if(l.get(0).equals("_\n")){
-                    final_list.add((l.get(0).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
-                }else
-                if(l.get(1).equals("_\n")){
-                    final_list.add((l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).replace("\n,", "\n")).replace("\n->","->"));
-                }else {
-                    final_list.add((l.get(0).substring(1, l.get(0).length() - 1).replace("\n,", "\n") + "->" + l.get(1).substring(1, l.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
-                }
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //return final_list;
         return change_number;
     }
 
