@@ -49,8 +49,6 @@ public class App {
                 e.printStackTrace();
             }
 
-            //comment
-
             feature_extraction = (System.currentTimeMillis() - startTime_indexing);
 
             System.out.println("FEATURE EXTRACTION DONE.\n");
@@ -171,6 +169,8 @@ public class App {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                //COMMENT
 
                 if (number_matching == 0)
                     System.out.println("No changes found that match the query with deep comparison. \n");

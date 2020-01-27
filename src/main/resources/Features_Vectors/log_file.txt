@@ -1,3 +1,0 @@
-0---program  Q: program
-2---program  Q: program
-EXCEPTION1---program  Q: program

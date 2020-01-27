@@ -57,6 +57,7 @@ public class Change_extraction {
         }
 
         try {
+            assert scanner != null;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine() + "  ";
 
@@ -83,11 +84,14 @@ public class Change_extraction {
                         //changes_list.add(change);
 
                         if(change.get(0).equals("_\n")){
+                            assert writer != null;
                             writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }else
                         if(change.get(1).equals("_\n")){
+                            assert writer != null;
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                         }else {
+                            assert writer != null;
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }
                         change_number++;
@@ -134,11 +138,14 @@ public class Change_extraction {
 
                             //changes_list.add(change);
                             if(change.get(0).equals("_\n")){
+                                assert writer != null;
                                 writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                             }else
                             if(change.get(1).equals("_\n")){
+                                assert writer != null;
                                 writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                             }else {
+                                assert writer != null;
                                 writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                             }
 
@@ -158,18 +165,21 @@ public class Change_extraction {
 
 
                 if(change.get(0).equals("_\n")){
+                    assert writer != null;
                     writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }else
                 if(change.get(1).equals("_\n")){
+                    assert writer != null;
                     writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }else {
+                    assert writer != null;
                     writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
                 }
 
                 change_number++;
             }
 
-            //assert writer != null;
+            assert writer != null;
             writer.close();
 
         } catch (Exception e) {

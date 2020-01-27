@@ -199,6 +199,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
+        assert allLines != null;
         for(String candidate : allLines){
             Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
             //Computing hash sum of changes
@@ -214,11 +215,13 @@ public class Pipeline {
 
             if(score >= threshold) {
                 number_matching++;
+                assert writer != null;
                 writer.println(candidate.replace("\n", "$$") + "\n");
                 System.out.println(candidate.replace("$$", "\n") + " score: " + score);
             }
         }
 
+        assert writer != null;
         writer.close();
 
         return number_matching;
@@ -281,13 +284,12 @@ public class Pipeline {
             PrintWriter writer = null;
             try {
                 writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
+            assert writer != null;
             writer.close();
 
             if(equal) {
