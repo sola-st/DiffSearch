@@ -51,15 +51,14 @@ public class Change_extraction {
         //List<String> allLines = null;
         Scanner scanner = null;
         try {
-            // allLines = Files.readAllLines(Paths.get(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes2.txt"));
-            scanner = new Scanner(new File(System.getProperty("user.dir") + "/src/main/resources/GitHub/git_changes9000.txt"));
+            scanner = new Scanner(new File(System.getProperty("user.dir") + "/src/main/resources/GitHub/" + Config.GITDIFF_FILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
             while (scanner.hasNext()) {
-                String line = scanner.next() + "  ";
+                String line = scanner.nextLine() + "  ";
 
                 //manage -old change
                 if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {

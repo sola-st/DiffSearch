@@ -50,7 +50,7 @@ public class Python3_Tree {
             error = true;
         }
 
-        features = new int[Integer.MAX_VALUE/1048576];
+        features = new int[Integer.MAX_VALUE/1048576]; //4096
     }
 
     String get_change_string() {

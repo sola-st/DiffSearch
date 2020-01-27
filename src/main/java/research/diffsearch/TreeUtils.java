@@ -72,7 +72,8 @@ public class TreeUtils {
         try {
 
             if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames))) {
-                writer.println("FALSE0---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                if(Config.LOG_FILE)
+                    writer.println("FALSE0---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                 return false;
             }
 
@@ -82,12 +83,15 @@ public class TreeUtils {
             for (i = 0; i < query_tree.getChildCount(); i++) {
 
                 if (query_tree.getChild(i).getChildCount() > 0) {
-                        writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                        if(Config.LOG_FILE)
+                            writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+
                         s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                         s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
                         if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                             if (!(s1.equals(s2))) {
-                                writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                                if(Config.LOG_FILE)
+                                    writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                                 return false;
                             }
                         }else
@@ -97,7 +101,8 @@ public class TreeUtils {
 
         } catch (Exception e) {
             // e.printStackTrace();
-            writer.println("EXCEPTION1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+            if(Config.LOG_FILE)
+                writer.println("EXCEPTION1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
             return false;
         }
 
@@ -105,21 +110,25 @@ public class TreeUtils {
             for (i = 0; i < query_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
-                        writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        if(Config.LOG_FILE)
+                            writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
                         if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
-                            writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                            if(Config.LOG_FILE)
+                                writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                             return false;
                         }
                     }
                 }else{
-                    writer.println("EXPR---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                    if(Config.LOG_FILE)
+                        writer.println("EXPR---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
                     break;
                 }
             }
 
         } catch (Exception e) {
            // e.printStackTrace();
-            writer.println("EXCEPTION2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+            if(Config.LOG_FILE)
+                writer.println("EXCEPTION2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
             return false;
         }
 

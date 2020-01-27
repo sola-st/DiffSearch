@@ -86,9 +86,12 @@ public class Pipeline {
     public static void indexing_candidate_changes(){
         Process python_indexing;
         try {
-            python_indexing = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/FAISS_indexing.py");
+            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py");
 
-            python_indexing.waitFor();
+            int exitCode = python_indexing.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
+            }
             python_indexing.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
@@ -158,9 +161,13 @@ public class Pipeline {
     public static void search_candidate_changes(){
         Process python_Nearest_Neighbor_Search;
         try {
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.pythonCmd + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
-            python_Nearest_Neighbor_Search.waitFor();
+            int exitCode = python_Nearest_Neighbor_Search.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+            }
+
             python_Nearest_Neighbor_Search.destroy();
         } catch (Exception e) { e.printStackTrace();}
 
@@ -321,5 +328,39 @@ public class Pipeline {
         }
 
         return number_matching;
+    }
+
+    /**
+     * Method that removes useless files at the end of the program in order to have a clean state each time.
+     *
+     */
+    public static void files_cleanup(){
+
+        File file = new File("./src/main/resources/Features_Vectors/candidate_changes_filtered.txt");
+        file.delete();
+
+        /*
+        file = new File("./src/main/resources/Features_Vectors/candidate_changes.txt");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/changes_gitdiff.txt");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/changes_strings.txt");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/changes_feature_vectors.csv");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/query_feature_vectors.csv");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/faiss.index");
+        file.delete();
+
+        file = new File("./src/main/resources/Features_Vectors/vector.txt");
+        file.delete();
+
+        */
     }
 }

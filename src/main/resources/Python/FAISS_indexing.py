@@ -8,7 +8,7 @@ import pandas as pd
 #Reading csv feature vectors files
 changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/changes_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 #print(changes_feature_vectors)
-query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
+#query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 #print(query_feature_vectors)
 with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
     changes_strings = f.readlines()
