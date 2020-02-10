@@ -3,9 +3,7 @@ package research.diffsearch;
 import java.io.*;
 //import java.nio.file.Files;
 //import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Change_extraction {
 
@@ -186,5 +184,86 @@ public class Change_extraction {
 
         return change_number;
     }
+
+
+    /**
+     * Extraction of the changes from a git diff file. Each change is transformed in the form:
+     * old code -> new code
+     *
+     * @return A list of changes in the form: old code -> new code
+     */
+    static long read_HTML_dataset() {
+        List<String> temporary_list_old = new ArrayList<String>();
+        List<String> temporary_list_new = new ArrayList<String>();
+        long change_number = 0;
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/HTML_changes.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        List<File> list_files =  listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
+
+        for(File f: list_files) {
+            boolean flag = false;
+
+            //List<String> allLines = null;
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String old = null, neo = null;
+
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine() + "  ";
+                // if(line.contains("<h3>After Change</h3>"))
+
+                if (line.contains("id=\"change\"") && !flag) {
+                    old = line.replace("<a id=\"change\">", "").replace("</a>", "");
+                    flag = true;
+                } else {
+                    if (line.contains("id=\"change\"") && flag) {
+                        neo = line.replace("<a id=\"change\">", "").replace("</a>", "");
+                        ;
+                        flag = false;
+                    }
+                }
+
+
+            }
+
+            assert writer != null;
+            writer.println(old + "->" + neo);
+
+        }
+
+        writer.close();
+
+        return list_files.size();
+    }
+
+    public static List<File> listf(String directoryName) {
+        List<File> allFiles = new ArrayList<File>();
+        Queue<File> dirs = new LinkedList<File>();
+        dirs.add(new File(directoryName));
+        while (!dirs.isEmpty()) {
+            for (File f : dirs.poll().listFiles()) {
+                if (f.isDirectory()) {
+                    dirs.add(f);
+                } else if (f.isFile() && f.toString().contains("sampleChange.html")) {
+                    allFiles.add(f);
+                }
+            }
+        }
+        //System.out.println(fList);
+        return allFiles;
+    }
+
+
 
 }

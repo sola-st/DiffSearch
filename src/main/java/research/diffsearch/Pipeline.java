@@ -48,8 +48,6 @@ public class Pipeline {
                 //Python3_Tree change =new Python3_Tree(change_string);
                 Java_Tree change =new Java_Tree(change_string);
 
-
-
                 if(change.error)
                     continue;
 

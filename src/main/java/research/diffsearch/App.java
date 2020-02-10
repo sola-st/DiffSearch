@@ -17,6 +17,7 @@ public class App {
              * */
 
             //not linked yet
+            Change_extraction.read_HTML_dataset();
 
             /***************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT

@@ -11,9 +11,10 @@ src/main/resources/Features_Vectors/changes_gitdiff.txt
 src/main/resources/Features_Vectors/changes_feature_vectors.csv
 src/main/resources/Features_Vectors/query_feature_vectors.csv
 src/main/resources/Features_Vectors/changes_gitdiff.txt
+src/main/resources/Features_Vectors/HTML_changes.txt
 src/main/resources/Features_Vectors/faiss.index
 src/main/resources/GitHub/git_changes9000.txt
-
+src/main/resources/Depth_Corpus/*
 
 # User-specific stuff
 .idea/**/workspace.xml
