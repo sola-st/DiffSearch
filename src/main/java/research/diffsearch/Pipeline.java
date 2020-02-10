@@ -1,5 +1,6 @@
 package research.diffsearch;
 
+import grammar.Python3BaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.*;
 import java.nio.file.Files;
@@ -42,7 +43,13 @@ public class Pipeline {
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
-                Python3_Tree change =new Python3_Tree(change_string);
+               // Object[] program_language = new Object[2];
+
+                //Python3_Tree change =new Python3_Tree(change_string);
+                Java_Tree change =new Java_Tree(change_string);
+
+
+
                 if(change.error)
                     continue;
 
@@ -104,13 +111,13 @@ public class Pipeline {
      * @param query_input: String of the query
      * @return AST of the query
      */
-    public static Python3_Tree query_feature_extraction(String query_input){
+    public static Java_Tree query_feature_extraction(String query_input){
         // String query_input = "import ID -> _";
-        Python3_Tree tree_query = null;
+        Java_Tree tree_query = null;
 
         //Creating the tree for the query string
         try {
-            tree_query = new Python3_Tree(query_input);
+            tree_query = new Java_Tree(query_input);
 
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
                     tree_query.isError() ||
@@ -180,7 +187,7 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long final_matching(Python3_Tree tree_query){
+    public static long final_matching(Java_Tree tree_query){
         List<String> allLines = null;
         try {
             allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
@@ -189,7 +196,7 @@ public class Pipeline {
         }
 
         int length = tree_query.features.length;
-        double threshold = 0.8;
+        double threshold = 0.2;
         long number_matching = 0;
 
         PrintWriter writer = null;
@@ -201,7 +208,7 @@ public class Pipeline {
 
         assert allLines != null;
         for(String candidate : allLines){
-            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -234,7 +241,7 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long final_comparison(Python3_Tree tree_query){
+    public static long final_comparison(Java_Tree tree_query){
 
         List<String> allLines = null;
         try {
@@ -273,7 +280,7 @@ public class Pipeline {
 
         assert allLines != null;
         for(String candidate : allLines){
-            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
 
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);

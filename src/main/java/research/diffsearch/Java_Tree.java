@@ -1,29 +1,24 @@
 package research.diffsearch;
 
-import grammar.Python3Lexer;
-import grammar.Python3Parser;
+import grammar.JavaLexer;
+import grammar.JavaParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-/* Antlr4 command to create java classes using the terminal with Linux:
-java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java Python3.g4
-*/
-
-/* Python3 AST class with some useful methods.*/
-public class Python3_Tree{
+public class Java_Tree{
     public String change_string;
-    private Python3Lexer lexer;
-    private  CommonTokenStream tokens;
-    private Python3Parser parser;
-    private  ParseTree parsetree;
-    private  ParserRuleContext ctx;
+    private JavaLexer lexer;
+    private CommonTokenStream tokens;
+    private JavaParser parser;
+    private ParseTree parsetree;
+    private ParserRuleContext ctx;
     boolean error;
     public int [] features;
 
-    Python3_Tree(String change){
+    Java_Tree(String change){
         error = false;
         change_string = change;
-        lexer = new Python3Lexer(CharStreams.fromString(change));
+        lexer = new JavaLexer(CharStreams.fromString(change));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
@@ -33,7 +28,7 @@ public class Python3_Tree{
         });
 
         tokens = new CommonTokenStream(lexer);
-        parser = new Python3Parser(tokens);
+        parser = new JavaParser(tokens);
 
         parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
@@ -63,7 +58,7 @@ public class Python3_Tree{
         return parsetree.toStringTree(parser);
     }
 
-    Python3Lexer get_lexer() {
+    JavaLexer get_lexer() {
         return lexer;
     }
 
@@ -71,7 +66,7 @@ public class Python3_Tree{
         return tokens;
     }
 
-    Python3Parser get_parser() {
+    JavaParser get_parser() {
         return parser;
     }
 
@@ -89,7 +84,7 @@ public class Python3_Tree{
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;
 
         if (!toBeIgnored) {
-            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }
@@ -118,7 +113,7 @@ public class Python3_Tree{
                 && ctx.getChildCount() == 1
                 && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
-            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }

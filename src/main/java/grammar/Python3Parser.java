@@ -1,14 +1,11 @@
-package research.diffsearch;
+package grammar;
 
 // Generated from Python3.g4 by ANTLR 4.7.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Python3Parser extends Parser {
@@ -182,7 +179,7 @@ public class Python3Parser extends Parser {
         @Override public int getRuleIndex() { return RULE_program; }
         @Override
         public void enterRule(ParseTreeListener listener) {
-            if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterProgram(this);
+            if ( listener instanceof Python3Listener) ((Python3Listener)listener).enterProgram(this);
         }
         @Override
         public void exitRule(ParseTreeListener listener) {

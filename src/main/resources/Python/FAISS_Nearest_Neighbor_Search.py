@@ -29,7 +29,7 @@ index2 = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
 
 nprobe = 2  # find 2 most similar clusters
 n_query = 1
-k = 1000  # return k-nearest neighbours
+k = 5  # return k-nearest neighbours
 
 
 distances, indices = index2.search(query_feature_vectors, k)

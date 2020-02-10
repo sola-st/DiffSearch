@@ -24,8 +24,6 @@ public class App {
 
             long startTime_gitdiff = System.currentTimeMillis();
 
-
-
             try {
                 change_number = Change_extraction.analyze_diff_file();
             } catch (Exception e) {
@@ -76,7 +74,8 @@ public class App {
 
         if(Config.SEARCHING) {
             while (true) {
-                Python3_Tree tree_query = null;
+                //Python3_Tree tree_query = null;
+                Java_Tree tree_query = null;
                 String query_input = null;
                 try {
                     System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
@@ -169,8 +168,6 @@ public class App {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //COMMENT
 
                 if (number_matching == 0)
                     System.out.println("No changes found that match the query with deep comparison. \n");
