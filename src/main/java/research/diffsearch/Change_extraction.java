@@ -162,7 +162,7 @@ public class Change_extraction {
 
                 if(change.get(0).equals("_\n")){
                     assert writer != null;
-                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
                 }else
                 if(change.get(1).equals("_\n")){
                     assert writer != null;
@@ -199,12 +199,12 @@ public class Change_extraction {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/HTML_changes.txt", "UTF-8");
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        List<File> list_files =  listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
+        List<File> list_files =  listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
 
         for(File f: list_files) {
             boolean flag = false;
@@ -224,12 +224,12 @@ public class Change_extraction {
                 // if(line.contains("<h3>After Change</h3>"))
 
                 if (line.contains("id=\"change\"") && !flag) {
-                    old = line.replace("<a id=\"change\">", "").replace("</a>", "");
+                    old = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ") + "$$$";
                     flag = true;
                 } else {
                     if (line.contains("id=\"change\"") && flag) {
-                        neo = line.replace("<a id=\"change\">", "").replace("</a>", "");
-                        ;
+                        neo = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ")+ "$$$";
+
                         flag = false;
                     }
                 }

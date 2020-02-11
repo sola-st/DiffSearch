@@ -17,7 +17,7 @@ public class App {
              * */
 
             //not linked yet
-            Change_extraction.read_HTML_dataset();
+
 
             /***************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
@@ -26,7 +26,12 @@ public class App {
             long startTime_gitdiff = System.currentTimeMillis();
 
             try {
-                change_number = Change_extraction.analyze_diff_file();
+                switch(Config.PROGRAMMING_LANGUAGE) {
+                    case "PYTHON3": change_number = Change_extraction.analyze_diff_file();
+                    case "JAVA":
+                    default: change_number = Change_extraction.read_HTML_dataset();
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -140,11 +145,13 @@ public class App {
                  */
                 long startTime_python2 = System.currentTimeMillis();
 
-                try {
-
-                    Pipeline.search_candidate_changes();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                //Skip FAISS stage if the dataset is small
+                if(change_number > 1000000){
+                    try {
+                        Pipeline.search_candidate_changes();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 long time_python2 = (System.currentTimeMillis() - startTime_python2);
@@ -159,13 +166,13 @@ public class App {
                 //cosine distance comparison
                 System.out.println("\nChanges found with the cosine distance:\n");
 
-                long number_matching_cosine = Pipeline.final_matching(tree_query);
+           //     long number_matching_cosine = Pipeline.final_matching(tree_query);
 
                 long number_matching = -1;
                 try {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                    number_matching = Pipeline.final_comparison(tree_query);
+                    number_matching = Pipeline.final_comparison(tree_query, change_number);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -181,13 +188,13 @@ public class App {
                  **/
                 System.out.println("\nFINAL STATISTICS:"
                         + "\nNumber of changes analyzed: " + change_number
-                        + "\nNumber of matching changes with cosine filter: " + number_matching_cosine
+                    //    + "\nNumber of matching changes with cosine filter: " + number_matching_cosine
                         + "\nNumber of final matching changes: " + number_matching
-                        + "\nExtraction from Git diff: " +  gitdiff_extraction / 1000 + " seconds"
-                        + "\nFeature Extraction duration: " + feature_extraction / 1000 + " seconds"
-                        + "\nIndexing Python Search duration: " + time_python / 1000 + " seconds"
-                        + "\nPython Search duration: " + time_python2 / 1000 + " seconds"
-                        + "\nFinal Matching duration: " + duration_matching / 1000 + " seconds.\n");
+                        + "\nExtraction from Git diff: " +  gitdiff_extraction / 1000.0 + " seconds"
+                        + "\nFeature Extraction duration: " + feature_extraction / 1000.0 + " seconds"
+                        + "\nIndexing Python Search duration: " + time_python / 1000.0 + " seconds"
+                        + "\nPython Search duration: " + time_python2 / 1000.0 + " seconds"
+                        + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
             }
         }
 

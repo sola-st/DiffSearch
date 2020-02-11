@@ -38,7 +38,7 @@ public class Pipeline {
 
                 while(!str.equals("$$$")){
                     str = scanner.next();
-                    stringBuilder.append(str);
+                    stringBuilder.append(str + ' ');
                 }
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
@@ -239,11 +239,15 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long final_comparison(Java_Tree tree_query){
+    public static long final_comparison(Java_Tree tree_query, long change_number){
 
         List<String> allLines = null;
         try {
-            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes_filtered.txt"));
+            //Skip FAISS stage if the dataset is small
+            if(change_number > 1000000)
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+            else
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/changes_strings.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -329,11 +333,12 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
+                    //System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }
 
+        System.out.println("Total changes: " + allLines.size() + "\n");
         return number_matching;
     }
 
