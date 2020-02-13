@@ -19,7 +19,8 @@ public class Pipeline {
      *
      * @param change_number : number of the changes found
      */
-    public static void feature_extraction(long change_number){
+    public static long feature_extraction(long change_number){
+        long real_changes = 0;
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
@@ -32,9 +33,14 @@ public class Pipeline {
 
             for (int i = 0; i < change_number; i++) {
 
+                if(!scanner.hasNext())
+                    continue;
+
+
                 StringBuilder stringBuilder = new StringBuilder();
 
                 String str = "test";
+
 
                 while(!str.equals("$$$")){
                     str = scanner.next();
@@ -73,6 +79,7 @@ public class Pipeline {
 
                 // Writing the string change in a file
                 bw.write(change.get_change_string().replace("\n", "$$") + "\n");
+                real_changes++;
             }
             buff_writer_features.close();
             bw.close();
@@ -81,7 +88,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-        return;
+        return real_changes;
     }
 
     /**
@@ -244,7 +251,7 @@ public class Pipeline {
         List<String> allLines = null;
         try {
             //Skip FAISS stage if the dataset is small
-            if(change_number > 1000000)
+            if(change_number > 10)
                 allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
             else
                 allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/changes_strings.txt"));
@@ -307,8 +314,6 @@ public class Pipeline {
 
                 TreeUtils.query_leaves_extraction( change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
 
-
-
                 new_code = false;
 
                 for(String str: list_change_old_leaves){
@@ -333,7 +338,7 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    //System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
+                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }

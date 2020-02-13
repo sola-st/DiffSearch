@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         long change_number = 0;
+        long real_changes = 0;
         long gitdiff_extraction = 0;
         long feature_extraction = 0;
         long time_python = 0;
@@ -38,8 +39,6 @@ public class App {
 
             gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
-            System.out.println(change_number + " CHANGES EXTRACTED FROM A GIT DIFF OUTPUT.\n");
-
 
             /***************************************************************************************************************
              * CHANGES TREE AND FEATURES COMPUTATION
@@ -48,14 +47,14 @@ public class App {
             long startTime_indexing = System.currentTimeMillis();
 
             try {
-                Pipeline.feature_extraction(change_number);
+                real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             feature_extraction = (System.currentTimeMillis() - startTime_indexing);
 
-            System.out.println("FEATURE EXTRACTION DONE.\n");
+            System.out.println("FEATURE EXTRACTION DONE WITH " + real_changes + " CHANGES.\n");
 
             /***************************************************************************************************************
              * SEARCH PYTHON STAGE (FAISS)
@@ -146,7 +145,7 @@ public class App {
                 long startTime_python2 = System.currentTimeMillis();
 
                 //Skip FAISS stage if the dataset is small
-                if(change_number > 1000000){
+                if(change_number > 10){
                     try {
                         Pipeline.search_candidate_changes();
                     } catch (Exception e) {
@@ -187,7 +186,7 @@ public class App {
                  * STATISTICS
                  **/
                 System.out.println("\nFINAL STATISTICS:"
-                        + "\nNumber of changes analyzed: " + change_number
+                        + "\nNumber of changes analyzed: " + real_changes
                     //    + "\nNumber of matching changes with cosine filter: " + number_matching_cosine
                         + "\nNumber of final matching changes: " + number_matching
                         + "\nExtraction from Git diff: " +  gitdiff_extraction / 1000.0 + " seconds"

@@ -1,12 +1,9 @@
 package research.diffsearch;
 
 import java.io.*;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
 import java.util.*;
 
 public class Change_extraction {
-
     /**
      * Cloning and git diff computation of a git repository (not complete)
      *
@@ -196,53 +193,58 @@ public class Change_extraction {
         List<String> temporary_list_old = new ArrayList<String>();
         List<String> temporary_list_new = new ArrayList<String>();
         long change_number = 0;
+        long number = 0;
 
-        PrintWriter writer = null;
+
+    PrintWriter writer = null;
+    try {
+        writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
+    } catch (FileNotFoundException | UnsupportedEncodingException e) {
+        e.printStackTrace();
+    }
+
+   // for(int w = 0; w < 1994; w++) {
+    List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
+
+    for (File f : list_files) {
+        boolean flag = false;
+
+        //List<String> allLines = null;
+        Scanner scanner = null;
         try {
-            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            scanner = new Scanner(f);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        List<File> list_files =  listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
+        String old = null, neo = null;
 
-        for(File f: list_files) {
-            boolean flag = false;
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine() + "  ";
+            // if(line.contains("<h3>After Change</h3>"))
 
-            //List<String> allLines = null;
-            Scanner scanner = null;
-            try {
-                scanner = new Scanner(f);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (line.contains("id=\"change\"") && !flag) {
+                old = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ") + "$$$";
+                flag = true;
+            } else {
+                if (line.contains("id=\"change\"") && flag) {
+                    neo = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ") + "$$$";
 
-            String old = null, neo = null;
-
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine() + "  ";
-                // if(line.contains("<h3>After Change</h3>"))
-
-                if (line.contains("id=\"change\"") && !flag) {
-                    old = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ") + "$$$";
-                    flag = true;
-                } else {
-                    if (line.contains("id=\"change\"") && flag) {
-                        neo = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ")+ "$$$";
-
-                        flag = false;
-                    }
+                    flag = false;
                 }
-
-
             }
 
-            assert writer != null;
-            writer.println(old + "->" + neo);
 
         }
 
-        writer.close();
+        assert writer != null;
+        writer.println(old + "->" + neo);
+
+    //}number += list_files.size();
+    }
+    writer.close();
+
+
 
         return list_files.size();
     }
