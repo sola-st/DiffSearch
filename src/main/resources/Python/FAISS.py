@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import faiss 
 import time
+import logging
 
 #######################################################################
 #FAISS Installation:
@@ -19,6 +20,7 @@ import time
 #INDEXING
 #################################################################################
 
+logging.basicConfig(filename="./src/main/resources/Python/logfilename.log", level=logging.INFO)
 
 #Reading csv feature vectors files
 changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/changes_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
@@ -28,6 +30,8 @@ changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/cha
 with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
     changes_strings = f.readlines()
 #print(changes_strings)
+
+logging.info('Read csv feature vectors files')
 
                                   # make faiss available
 dimension = len(changes_feature_vectors[0])    # dimensions of each vector                         
@@ -47,8 +51,10 @@ index.add(np.ascontiguousarray(changes_feature_vectors))   # add the vectors and
 print(index.is_trained)  # True
 print(index.ntotal)   # 200
 
-#print("indexing ended")
+query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 
+#print("indexing ended")
+logging.info('indexing ended')
 #faiss.write_index(index, "./src/main/resources/Features_Vectors/faiss.index")
 go = False
 
@@ -78,9 +84,10 @@ while(True):
 #SEARCHING
 #################################################################################
    # print("SEARCHING START")
+    logging.info('SEARCHING STARTED')
     start = time.time()
     #Reading csv feature vectors files
-    query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
+    
     #print(query_feature_vectors)
     with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
         changes_strings = f.readlines()
@@ -94,12 +101,12 @@ while(True):
     #print(end - start)
     #nprobe = 2  # find 2 most similar clusters
     #n_query = 1
-    k = 100  # return k-nearest neighbours
+    k = 500  # return k-nearest neighbours
 
 
     distances, indices = index.search(query_feature_vectors, k)
 
-
+    logging.info('SEARCHING FINISHED')
 
 
     #print(distances)
