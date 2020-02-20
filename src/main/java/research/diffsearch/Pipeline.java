@@ -32,6 +32,9 @@ public class Pipeline {
             Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/changes_gitdiff.txt"));
 
             for (int i = 0; i < change_number; i++) {
+                //scalability test
+                if(real_changes > 1000000)
+                    break;
 
                 if(!scanner.hasNext())
                     continue;
@@ -51,10 +54,10 @@ public class Pipeline {
 
                // Object[] program_language = new Object[2];
 
-                //Python3_Tree change =new Python3_Tree(change_string);
-                Java_Tree change =new Java_Tree(change_string);
+                Python3_Tree change =new Python3_Tree(change_string);
+               // Java_Tree change =new Java_Tree(change_string);
 
-                if(change.error)
+                 if(change.error)
                     continue;
 
                 //Computing hash sum of changes
@@ -97,6 +100,7 @@ public class Pipeline {
      */
     public static void indexing_candidate_changes(){
         Process python_indexing;
+
         try {
             python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py");
 
@@ -108,6 +112,38 @@ public class Pipeline {
         } catch (Exception e) { e.printStackTrace();}
 
         System.out.println("FAISS INDEXING STAGE DONE.\n");
+
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
+     *
+     */
+    public static void indexing_searching_python(){
+        Process python;
+
+        //I use the file lock.txt to lock the python process until the query is not acquired.
+        File fnew=new File("./src/main/resources/Python/lock.txt");
+        try {
+            FileWriter f2 = new FileWriter(fnew, false);
+            f2.write("JAVA");
+            f2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            python = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS.py");
+
+            int exitCode = python.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
+            }
+            python.destroy();
+        } catch (Exception e) { e.printStackTrace();}
+
+        System.out.println("FAISS STAGE DONE.\n");
+
     }
 
     /**
@@ -116,14 +152,14 @@ public class Pipeline {
      * @param query_input: String of the query
      * @return AST of the query
      */
-    public static Java_Tree query_feature_extraction(String query_input){
+    public static Python3_Tree query_feature_extraction(String query_input){
         // String query_input = "import ID -> _";
-        Java_Tree tree_query = null;
-
+        //Java_Tree tree_query = null;
+        Python3_Tree tree_query = null;
         //Creating the tree for the query string
         try {
-            tree_query = new Java_Tree(query_input);
-
+            //tree_query = new Java_Tree(query_input);
+            tree_query = new Python3_Tree(query_input);
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
                     tree_query.isError() ||
                     tree_query.error)
@@ -170,20 +206,34 @@ public class Pipeline {
      * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      *
      */
-    public static void search_candidate_changes(){
+    public static double search_candidate_changes(){
         Process python_Nearest_Neighbor_Search;
+        String line = null;
+        double ret = -1;
+
         try {
             python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
             int exitCode = python_Nearest_Neighbor_Search.waitFor();
             if (exitCode != 0) {
                 throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+            }else{
+                java.io.InputStream is = python_Nearest_Neighbor_Search.getInputStream();
+                java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+
+                if (s.hasNext()) {
+                    ret = Double.parseDouble(s.next().substring(0, 5));
+                }
             }
 
             python_Nearest_Neighbor_Search.destroy();
-        } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         System.out.println("FAISS SEARCHING STAGE DONE.\n");
+
+        return ret;
     }
 
     /**
@@ -192,7 +242,7 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long final_matching(Java_Tree tree_query){
+    public static long final_matching(Python3_Tree tree_query){
         List<String> allLines = null;
         try {
             allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
@@ -213,7 +263,8 @@ public class Pipeline {
 
         assert allLines != null;
         for(String candidate : allLines){
-            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            //Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -246,7 +297,7 @@ public class Pipeline {
      * @param tree_query: query Tree
      * @return number of matching changes found
      */
-    public static long final_comparison(Java_Tree tree_query, long change_number){
+    public static long final_comparison(Python3_Tree tree_query, long change_number){
 
         List<String> allLines = null;
         try {
@@ -289,7 +340,7 @@ public class Pipeline {
 
         assert allLines != null;
         for(String candidate : allLines){
-            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
 
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
@@ -343,7 +394,7 @@ public class Pipeline {
             }
         }
 
-        System.out.println("Total changes: " + allLines.size() + "\n");
+        System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
         return number_matching;
     }
 

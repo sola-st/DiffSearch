@@ -38,7 +38,7 @@ def git_log(repository):
                 line = line.replace('\n','')
                 commit_log.append(line)
 
-    fp.close();
+    fp.close()
     
     return commit_log
 

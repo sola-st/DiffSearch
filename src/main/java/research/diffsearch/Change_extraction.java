@@ -50,7 +50,7 @@ public class Change_extraction {
         }
 
         try {
-            assert scanner != null;
+           // assert scanner != null;
             while (scanner.hasNext()) {
                 String line = scanner.nextLine() + "  ";
 
@@ -88,6 +88,9 @@ public class Change_extraction {
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }
                         change_number++;
+                        System.out.println(change_number + "\n");
+                        if(change_number > 2000000)
+                            break;
 
                         temporary_list_old.clear();
                         temporary_list_new.clear();
@@ -143,6 +146,9 @@ public class Change_extraction {
                             }
 
                             change_number++;
+                            if(change_number > 2000000)
+                                break;
+                            System.out.println(change_number + "\n");
                             temporary_list_old.clear();
                             temporary_list_new.clear();
                             flag = false;
@@ -170,6 +176,8 @@ public class Change_extraction {
                 }
 
                 change_number++;
+
+                System.out.println(change_number + "\n");
             }
 
             assert writer != null;
@@ -203,7 +211,7 @@ public class Change_extraction {
         e.printStackTrace();
     }
 
-   // for(int w = 0; w < 1994; w++) {
+    for(int w = 0; w < 194; w++) {
     List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
 
     for (File f : list_files) {
@@ -221,7 +229,6 @@ public class Change_extraction {
 
         while (scanner.hasNext()) {
             String line = scanner.nextLine() + "  ";
-            // if(line.contains("<h3>After Change</h3>"))
 
             if (line.contains("id=\"change\"") && !flag) {
                 old = line.replace("<a id=\"change\">", "").replace("</a>", "").replace("\t", "").replace("  ", " ") + "$$$";
@@ -233,20 +240,16 @@ public class Change_extraction {
                     flag = false;
                 }
             }
-
-
         }
 
         assert writer != null;
         writer.println(old + "->" + neo);
 
-    //}number += list_files.size();
+    }number += list_files.size();
     }
     writer.close();
 
-
-
-        return list_files.size();
+        return number;//list_files.size();
     }
 
     public static List<File> listf(String directoryName) {
@@ -265,7 +268,5 @@ public class Change_extraction {
         //System.out.println(fList);
         return allFiles;
     }
-
-
-
+    
 }

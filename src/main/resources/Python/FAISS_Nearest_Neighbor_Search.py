@@ -2,6 +2,7 @@
 import csv
 import numpy as np 
 import pandas as pd
+import time
 
 
 
@@ -24,18 +25,23 @@ with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
 #conda install faiss-gpu cudatoolkit=10.0 -c pytorch # For CUDA10
 
 import faiss                                   # make faiss available
-
+start = time.time()
 index2 = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
+end = time.time()
 
-nprobe = 2  # find 2 most similar clusters
-n_query = 1
-k = 5  # return k-nearest neighbours
+print(end - start)
+#nprobe = 2  # find 2 most similar clusters
+#n_query = 1
+k = 500  # return k-nearest neighbours
 
 
 distances, indices = index2.search(query_feature_vectors, k)
 
-print(distances)
-print(indices)
+
+
+
+#print(distances)
+#print(indices)
 
 np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
 values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
@@ -46,11 +52,11 @@ with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
         f.write("%s\n" % item)
 #print(index_list)
 
-for i in index_list:
-  print(changes_strings[i])
+#for i in index_list:
+#  print(changes_strings[i])
 
 with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
     for item in index_list:
         f.write("%s" % changes_strings[item])
 
-print("END.")
+#print("END.")
