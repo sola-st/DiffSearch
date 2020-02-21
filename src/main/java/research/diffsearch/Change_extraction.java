@@ -211,7 +211,7 @@ public class Change_extraction {
         e.printStackTrace();
     }
 
-    for(int w = 0; w < 1994; w++) {
+    for(int w = 0; w < 1; w++) {
     List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
 
     for (File f : list_files) {

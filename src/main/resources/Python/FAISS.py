@@ -29,7 +29,7 @@ changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/cha
 #print(query_feature_vectors)
 with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
     changes_strings = f.readlines()
-#print(changes_strings)
+print('Read csv feature vectors files')
 
 logging.info('Read csv feature vectors files')
 
@@ -44,17 +44,16 @@ quantiser = faiss.IndexFlatL2(dimension)
 #quantiser = faiss.IndexIVFFlat(dimension)
 index = faiss.IndexIVFFlat(quantiser, dimension, nlist,   faiss.METRIC_L2)
 
-print(index.is_trained)   # False
+#print(index.is_trained)   # False
 index.train(np.ascontiguousarray(changes_feature_vectors))  # train on the database vectors
-print(index.ntotal)   # 0
+#print(index.ntotal)   # 0
 index.add(np.ascontiguousarray(changes_feature_vectors))   # add the vectors and update the index
-print(index.is_trained)  # True
-print(index.ntotal)   # 200
-
-query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
+#print(index.is_trained)  # True
+#print(index.ntotal)   # 200
 
 #print("indexing ended")
 logging.info('indexing ended')
+print('indexing ended')
 #faiss.write_index(index, "./src/main/resources/Features_Vectors/faiss.index")
 go = False
 
@@ -65,10 +64,12 @@ go = False
 
 while(True):
     #less frequency to keep less busy cpu
-    #time.sleep(1)
+    time.sleep(1)
+    logging.info('WAITING')
+    print('waiting')
     while(go == False):
         #less frequency to keep less busy cpu
-        time.sleep(0.5)
+        time.sleep(0.1)
         with open("./src/main/resources/Python/lock.txt", "r+") as fp:
       #      print("GO")
             if("PYTHON" in fp.readline()):
@@ -85,9 +86,10 @@ while(True):
 #################################################################################
    # print("SEARCHING START")
     logging.info('SEARCHING STARTED')
+    print('searching started')
     start = time.time()
     #Reading csv feature vectors files
-    
+    query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
     #print(query_feature_vectors)
     with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
         changes_strings = f.readlines()
@@ -107,7 +109,7 @@ while(True):
     distances, indices = index.search(query_feature_vectors, k)
 
     logging.info('SEARCHING FINISHED')
-
+    print('searching finished')
 
     #print(distances)
     #print(indices)
@@ -123,20 +125,25 @@ while(True):
 
     #for i in index_list:
     #  print(changes_strings[i])
+    logging.info('vector.txt WRITTEN')
 
     with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
         for item in index_list:
             f.write("%s" % changes_strings[item])
 
+    logging.info('candidate_changes.txt WRITTEN')
     with open("./src/main/resources/Features_Vectors/searching_time.txt", "r+") as fp:
         fp.seek(0)
         fp.write(str(time.time() - start) + "")
         fp.truncate()
-    fp.close() 
+    fp.close()
 
+    logging.info('TIME WRITTEN')
     #print("END.")
     with open("./src/main/resources/Python/lock.txt", "r+") as fp:
         fp.seek(0)
         fp.write("JAVA")
         fp.truncate()
-    fp.close() 
+    fp.close()
+
+    logging.info('JAVA LOCK')

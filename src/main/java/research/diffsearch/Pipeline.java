@@ -137,7 +137,7 @@ public class Pipeline {
 
             int exitCode = python.waitFor();
             if (exitCode != 0) {
-                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
+                throw new IOException("FAISS.py exited with error " + exitCode + ".\n");
             }
             python.destroy();
         } catch (Exception e) { e.printStackTrace();}
@@ -389,7 +389,7 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
+               //     System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }

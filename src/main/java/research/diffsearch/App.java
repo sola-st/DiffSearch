@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class App {
     public static void main(String[] args) {
@@ -30,9 +31,9 @@ public class App {
 
             try {
                 switch(Config.PROGRAMMING_LANGUAGE) {
-                    case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
+       //             case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
                   //  case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
-                    default: change_number = Change_extraction.read_HTML_dataset();
+      //              default: change_number = Change_extraction.read_HTML_dataset();
                 }
 
             } catch (Exception e) {
@@ -51,7 +52,7 @@ public class App {
             long startTime_indexing = System.currentTimeMillis();
 
             try {
-                real_changes = Pipeline.feature_extraction(change_number);
+         //       real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,8 +161,15 @@ public class App {
                 }
 
                 String lock = "PYTHON";
-
+                int hh = 0;
                 while (!lock.contains("JAVA")){
+                    try {
+                        System.out.print("Waiting." + hh++ +"\n");
+                        //Reduce the frequency
+                        TimeUnit.MILLISECONDS.sleep(30000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     BufferedReader brTest = null;
                     try {
                         brTest = new BufferedReader(new FileReader("./src/main/resources/Python/lock.txt"));
@@ -173,6 +181,13 @@ public class App {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    try {
+                        brTest.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
                 //Read Searching time
@@ -193,7 +208,7 @@ public class App {
                 /***************************************************************************************************************
                  * SEARCH PYTHON STAGE (FAISS)
                  */
-       //         long startTime_python2 = System.currentTimeMillis();
+                long startTime_python2 = System.currentTimeMillis();
 /*
                 //Skip FAISS stage if the dataset is small
                 if(change_number > 10){
@@ -204,7 +219,7 @@ public class App {
                     }
                 }
 */
-            //    long time_python2 = (System.currentTimeMillis() - startTime_python2);
+           //     long time_python2 = (System.currentTimeMillis() - startTime_python2);
 
 
                 /***************************************************************************************************************
@@ -214,7 +229,7 @@ public class App {
                 long startTime_matching = System.currentTimeMillis();
 
                 //cosine distance comparison
-                System.out.println("\nChanges found with the cosine distance:\n");
+             //   System.out.println("\nChanges found with the cosine distance:\n");
 
                 //     long number_matching_cosine = Pipeline.final_matching(tree_query);
 
