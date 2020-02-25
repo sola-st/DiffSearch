@@ -31,9 +31,9 @@ public class App {
 
             try {
                 switch(Config.PROGRAMMING_LANGUAGE) {
-       //             case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
-                  //  case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
-      //              default: change_number = Change_extraction.read_HTML_dataset();
+                    case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
+                 //   case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
+                    default: change_number = Change_extraction.read_HTML_dataset2();
                 }
 
             } catch (Exception e) {
@@ -52,7 +52,7 @@ public class App {
             long startTime_indexing = System.currentTimeMillis();
 
             try {
-         //       real_changes = Pipeline.feature_extraction(change_number);
+                real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -89,8 +89,8 @@ public class App {
 
         if(Config.SEARCHING) {
             while (true) {
-                Python3_Tree tree_query = null;
-              //  Java_Tree tree_query = null;
+                //Python3_Tree tree_query = null;
+                Java_Tree tree_query = null;
                 String query_input = null;
 
                 try {
@@ -163,13 +163,6 @@ public class App {
                 String lock = "PYTHON";
                 int hh = 0;
                 while (!lock.contains("JAVA")){
-                    try {
-                        System.out.print("Waiting." + hh++ +"\n");
-                        //Reduce the frequency
-                        TimeUnit.MILLISECONDS.sleep(30000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     BufferedReader brTest = null;
                     try {
                         brTest = new BufferedReader(new FileReader("./src/main/resources/Python/lock.txt"));
@@ -178,6 +171,7 @@ public class App {
                     }
                     try {
                         lock = brTest.readLine();
+                    //    System.out.println(lock + "\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

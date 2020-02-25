@@ -1,7 +1,15 @@
 package research.diffsearch;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
+
 
 public class Change_extraction {
     /**
@@ -212,7 +220,7 @@ public class Change_extraction {
     }
 
     for(int w = 0; w < 1; w++) {
-    List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3");
+    List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
 
     for (File f : list_files) {
         boolean flag = false;
@@ -268,5 +276,63 @@ public class Change_extraction {
         //System.out.println(fList);
         return allFiles;
     }
+
+    /**
+     * Extraction of the changes from a git diff file. Each change is transformed in the form:
+     * old code -> new code
+     *
+     * @return A list of changes in the form: old code -> new code
+     */
+    static long read_HTML_dataset2() {
+        List<String> temporary_list_old = new ArrayList<String>();
+        List<String> temporary_list_new = new ArrayList<String>();
+        long change_number = 0;
+        long number = 0;
+
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        for(int w = 0; w < 1; w++) {
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
+
+            for (File f : list_files) {
+                boolean flag = false;
+
+                //List<String> allLines = null;
+                Scanner scanner = null;
+                String html = null;
+                Document doc = null;
+                try {
+                    scanner = new Scanner(f);
+                    html = scanner.useDelimiter("\\A").next();
+                    scanner.close();
+                    if(html != null)
+                        doc = Jsoup.parse(html);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                String old = null, neo = null;
+
+                Element before = doc.select("code").first();
+                Element after = doc.select("code").last();
+
+                System.out.println(before.text() + "\n\n" + after.text());
+                assert writer != null;
+                writer.println(old + "->" + neo);
+
+            }number += list_files.size();
+        }
+        writer.close();
+
+        return number;//list_files.size();
+    }
     
 }
+
