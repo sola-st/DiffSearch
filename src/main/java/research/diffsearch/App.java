@@ -33,7 +33,8 @@ public class App {
                 switch(Config.PROGRAMMING_LANGUAGE) {
                     case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
                  //   case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
-                    default: change_number = Change_extraction.read_HTML_dataset2();
+                    default: change_number = Change_extraction.read_HTML_dataset3();
+                    change_number =Change_extraction.analyze_diff_file();
                 }
 
             } catch (Exception e) {

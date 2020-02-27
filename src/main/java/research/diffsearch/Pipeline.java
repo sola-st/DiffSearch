@@ -341,6 +341,7 @@ public class Pipeline {
         assert allLines != null;
         for(String candidate : allLines){
         //    Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+
             Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
 
             List<String> list_change_nodes = new ArrayList<>();

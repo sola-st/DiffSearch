@@ -1,5 +1,8 @@
 package research.diffsearch;
 
+import difflib.*;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -96,7 +99,7 @@ public class Change_extraction {
                             writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
                         }
                         change_number++;
-                        System.out.println(change_number + "\n");
+                      //  System.out.println(change_number + "\n");
                         if(change_number > 2000000)
                             break;
 
@@ -214,13 +217,13 @@ public class Change_extraction {
 
     PrintWriter writer = null;
     try {
-        writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
+        writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/GitHub/htmldiff.txt", "UTF-8");
     } catch (FileNotFoundException | UnsupportedEncodingException e) {
         e.printStackTrace();
     }
 
     for(int w = 0; w < 1; w++) {
-    List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
+    List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "sampleChange.html");
 
     for (File f : list_files) {
         boolean flag = false;
@@ -260,7 +263,7 @@ public class Change_extraction {
         return number;//list_files.size();
     }
 
-    public static List<File> listf(String directoryName) {
+    public static List<File> listf(String directoryName, String filename) {
         List<File> allFiles = new ArrayList<File>();
         Queue<File> dirs = new LinkedList<File>();
         dirs.add(new File(directoryName));
@@ -268,7 +271,7 @@ public class Change_extraction {
             for (File f : dirs.poll().listFiles()) {
                 if (f.isDirectory()) {
                     dirs.add(f);
-                } else if (f.isFile() && f.toString().contains("sampleChange.html")) {
+                } else if (f.isFile() && f.toString().contains(filename)) {
                     allFiles.add(f);
                 }
             }
@@ -292,13 +295,13 @@ public class Change_extraction {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/GitHub/htmldiff.txt", "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
         for(int w = 0; w < 1; w++) {
-            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns");
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "sampleChange.html");
 
             for (File f : list_files) {
                 boolean flag = false;
@@ -309,7 +312,10 @@ public class Change_extraction {
                 Document doc = null;
                 try {
                     scanner = new Scanner(f);
-                    html = scanner.useDelimiter("\\A").next();
+                    if (scanner.hasNext())
+                        html = scanner.useDelimiter("\\A").next();
+                    else
+                        continue;
                     scanner.close();
                     if(html != null)
                         doc = Jsoup.parse(html);
@@ -321,13 +327,110 @@ public class Change_extraction {
                 String old = null, neo = null;
 
                 Element before = doc.select("code").first();
+                List<String> beforeList = new ArrayList<String>(Arrays.asList(before.text().split("\n")));
                 Element after = doc.select("code").last();
+                List<String> afterList = new ArrayList<String>(Arrays.asList(after.text().split("\n")));
 
-                System.out.println(before.text() + "\n\n" + after.text());
+
+                Patch patch = DiffUtils.diff(beforeList, afterList);
+
+                List<String> pp;
+
+                pp = DiffUtils.generateUnifiedDiff("Before", "After", beforeList, patch, 0);
+
                 assert writer != null;
-                writer.println(old + "->" + neo);
+                for(String str: pp)
+                    writer.println(str);
 
-            }number += list_files.size();
+            }
+
+            number += list_files.size();
+        }
+        writer.close();
+
+        return number;//list_files.size();
+    }
+
+    /**
+     * Extraction of the changes from a git diff file. Each change is transformed in the form:
+     * old code -> new code
+     *
+     * @return A list of changes in the form: old code -> new code
+     */
+    static long read_HTML_dataset3() {
+        long change_number = 0;
+        long number = 0;
+
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/GitHub/htmldiff.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        for(int w = 0; w < 1; w++) {
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "details.html");
+
+            for (File f : list_files) {
+                boolean flag = false;
+
+                //List<String> allLines = null;
+                Scanner scanner = null;
+                String html = null;
+                Document doc = null;
+                try {
+                    scanner = new Scanner(f);
+                    if (scanner.hasNext())
+                        html = scanner.useDelimiter("\\A").next();
+                    else
+                        continue;
+                    scanner.close();
+                    if(html != null)
+                        doc = Jsoup.parse(html);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                String old = null, neo = null;
+
+                assert doc != null;
+              //  Element before = doc.select("code").first();
+              //  List<String> beforeList = new ArrayList<String>(Arrays.asList(before.text().split("\n")));
+               // Element after = doc.select("code").last();
+                //List<String> afterList = new ArrayList<String>(Arrays.asList(after.text().split("\n")));
+
+                Elements links = doc.select("a");
+
+                for(Element el : links){
+                    String url = el.attr("href");
+                    if(!url.equals("sampleChange.html")) {
+                        try {
+                            Git git = Git.cloneRepository()
+                                    .setURI(url)
+                                    .setDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/Cloning"))
+                                    .call();
+                        } catch (GitAPIException ex) {
+                            ex.printStackTrace();
+                        }/*
+                        Process gitclone;
+                        try {
+                            gitclone = Runtime.getRuntime().exec("git clone " + url + " " + System.getProperty("user.dir") + "/src/main/resources/Cloning");
+
+                            int exitCode = gitclone.waitFor();
+                            if (exitCode != 0) {
+                                throw new IOException("git clone exited with error " + exitCode + ".\n");
+                            }
+                            gitclone.destroy();
+                        } catch (Exception e) { e.printStackTrace();}*/
+                    }
+                }
+
+                number += list_files.size();
+            }
+
+
         }
         writer.close();
 

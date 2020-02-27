@@ -4,7 +4,7 @@ public class Config {
 
     public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
     //public static String pythonCmd = "python3";
-    public static String GITDIFF_FILE = "git_changesSCIKIT.txt";
+    public static String GITDIFF_FILE = "htmldiff.txt";
 
     //Programming language supported: PYTHON3, JAVA
     public static String PROGRAMMING_LANGUAGE = "JAVA";
