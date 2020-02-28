@@ -9,6 +9,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 
@@ -368,15 +370,14 @@ public class Change_extraction {
         }
         int zz = 0;
         for(int w = 0; w < 1; w++) {
-            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3", "details.html");
-
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "details.html");
+            int n_files = list_files.size();
 
             for (File f : list_files) {
-                if(f.toString().contains("10819"))
-                    continue;;
+                zz++;
 
                 boolean flag = false;
-                System.out.println(f.toString() + "n= " + zz++ +"/1000");
+                System.out.println(f.toString() + "n= " + zz +"/"+ n_files);
                 //List<String> allLines = null;
                 Scanner scanner = null;
                 String html = null;
@@ -402,9 +403,16 @@ public class Change_extraction {
 
                 for(Element el : links){
                     String url = el.attr("href");
+
                     System.out.println(url);
+                    int kkk = 0;
+                    if(url.equals("https://github.com/apache/ofbiz/commit/f6c31f10fabea49984923b091a091cca2466368c#diff-05e53b1de07b7a73dcd8553f38036ee6L100"))
+                        kkk++;
+
                     List<String> repository = new ArrayList<String>(Arrays.asList(url.split("/commit/")));
+
                     if(!url.equals("sampleChange.html")) {
+                        /*
                         if(!repository.get(0).equals(previuos_repo)) {
                             try {
                                 FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/Cloning/"));
@@ -426,10 +434,65 @@ public class Change_extraction {
                             }
                         }else{
                             System.out.println("Cloning skipped.");
-                        }
+                        }*/
 
-                        List<String> commit = new ArrayList<String>(Arrays.asList(repository.get(1).split("#diff-")));
                         List<String> line_number = new ArrayList<String>(Arrays.asList(repository.get(1).split("L")));
+                        URL url_download;
+                        InputStream is = null;
+                        BufferedReader br;
+                        String s = null;
+                        List<String> str, range;
+                        List<String> patch = new ArrayList<String>(Arrays.asList(url.split("#diff-")));
+
+                        try {
+                            url_download = new URL(patch.get(0) + ".patch");
+                            is = url_download.openStream();  // throws an IOException
+                            br = new BufferedReader(new InputStreamReader(is));
+
+                            mainLoop:
+                            while ((s = br.readLine()) != null) {
+                   //             System.out.println(s);
+                                if(s.length() >= 4 && s.substring(0,4).equals("@@ -")) {
+                                    //System.out.println("Correct line found");
+                                    str = new ArrayList<String>(Arrays.asList(s.split("\\+")));
+                                    range = new ArrayList<String>(Arrays.asList(str.get(0).split(",")));
+
+                                    if(range.size()<2)
+                                        continue ;
+
+                                    int line = Integer.parseInt(range.get(0).replaceAll("[^0-9]", ""));
+                                    int q = Integer.parseInt(range.get(1).replaceAll("[^0-9]", ""));
+
+                                    int i = Integer.parseInt(line_number.get(line_number.size()-1)) - line;
+                                    if(Integer.parseInt(line_number.get(line_number.size()-1)) > line && Integer.parseInt(line_number.get(line_number.size()-1))< line + q) {
+                                        while ((s = br.readLine()) != null) {
+                                            if (i-- > 0)
+                                                continue;
+
+                                            if (s.length() >= 4 && s.substring(0, 4).equals("@@ -")) {
+                                                break mainLoop;
+                                            } else {
+                                                //    System.out.println(s);
+                                                assert writer != null;
+                                                writer.println(s);
+                                            }
+                                        }//System.out.println("Writing change done");
+                                    }
+                                }
+                            }
+                        } catch (IOException mue) {
+                            mue.printStackTrace();
+                        } finally {
+                            try {
+                                if (is != null) is.close();
+                            } catch (IOException ioe) {
+                                writer.close();
+                                ioe.printStackTrace();
+                            }
+                        }
+/*
+                        List<String> commit = new ArrayList<String>(Arrays.asList(repository.get(1).split("#diff-")));
+
                         Process gitshow;
                         try {
                             gitshow = Runtime.getRuntime().exec("git --git-dir "
@@ -449,6 +512,7 @@ public class Change_extraction {
                                 }
                                 throw new IOException("git clone exited with error " + exitCode + ".\n");
                             }else{
+                                System.out.println("git show ok!");
                                 String s = null;
                                 List<String> str, range;
 
@@ -457,6 +521,7 @@ public class Change_extraction {
                                   //  if(s.contains("988"))
                                    //     System.out.println(s);
                                     if(s.length() >= 4 && s.substring(0,4).equals("@@ -")) {
+                                        System.out.println("Correct line found");
                                         str = new ArrayList<String>(Arrays.asList(s.split("\\+")));
                                         range = new ArrayList<String>(Arrays.asList(str.get(0).split(",")));
 
@@ -464,47 +529,29 @@ public class Change_extraction {
                                         int q = Integer.parseInt(range.get(1).replaceAll("[^0-9]", ""));
 
                                         int i = Integer.parseInt(line_number.get(line_number.size()-1)) - line;
-                                        if(Integer.parseInt(line_number.get(line_number.size()-1)) > line && Integer.parseInt(line_number.get(line_number.size()-1))< line + q)
+                                        if(Integer.parseInt(line_number.get(line_number.size()-1)) > line && Integer.parseInt(line_number.get(line_number.size()-1))< line + q) {
                                             while ((s = stdInput.readLine()) != null) {
-                                                if(i-->0)
+                                                if (i-- > 0)
                                                     continue;
 
-                                                if(s.length() >= 4 && s.substring(0,4).equals("@@ -")){
+                                                if (s.length() >= 4 && s.substring(0, 4).equals("@@ -")) {
                                                     break mainLoop;
-                                                }
-                                                else{
-                                                //    System.out.println(s);
+                                                } else {
+                                                    //    System.out.println(s);
                                                     writer.println(s);
                                                 }
-                                            }
+                                            }System.out.println("CWriting change done");
+                                        }
                                     }
                                 }
                             }
                             gitshow.destroy();
-                            /*
-                                PrintWriter pathwriter = null;
-                               try {
-                                    pathwriter = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Cloning/mypatch.patch", "UTF-8");
-                                } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
 
-                                String s = null;
-                                while ((s = stdInput.readLine()) != null) {
-                                    pathwriter.println(s);
-                                }
-
-                                pathwriter.close();
-                                */
                             }
-                            catch (Exception e) { e.printStackTrace();}
+                            catch (Exception e) { e.printStackTrace();}*/
 
                         }
-                    if(number++ > 1000){
-                        writer.close();
-                        System.out.println("File close finished!!" + number);
-                        return number;
-                    }
+
 
 
                 }

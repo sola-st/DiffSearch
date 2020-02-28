@@ -11,7 +11,7 @@ public class Config {
 
     //Constants that enable/disable part of the tool
     public static boolean INDEXING  = true;
-    public static boolean SEARCHING = true;
+    public static boolean SEARCHING = false;
     public static boolean CLEANUP   = false;
     public static boolean LOG_FILE  = false;
 

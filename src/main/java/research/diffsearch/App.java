@@ -1,6 +1,9 @@
 package research.diffsearch;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,6 +29,7 @@ public class App {
             /***************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
              * */
+
 
             long startTime_gitdiff = System.currentTimeMillis();
 
@@ -66,19 +70,19 @@ public class App {
              * SEARCH PYTHON STAGE (FAISS)
              */
             long startTime_python = System.currentTimeMillis();
-/*
+
             try {
                 Pipeline.indexing_candidate_changes();
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
-
+            }
+/*
             Thread t1 = new Thread(() -> {
                 Pipeline.indexing_searching_python();
             });
             t1.start();
-
+*/
             time_python = (System.currentTimeMillis() - startTime_python);
         }
 
@@ -89,6 +93,113 @@ public class App {
         //Temporary code, in the future I will implement a graphic interface
 
         if(Config.SEARCHING) {
+            String fromclient = null;
+
+            ServerSocket Server = null;
+            try {
+                Server = new ServerSocket(5000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println ("TCPServer Waiting for client on port 5000");
+
+            while(true)
+            {
+                Socket connected = null;
+                try {
+                    assert Server != null;
+                    connected = Server.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                assert connected != null;
+                System.out.println( " THE CLIENT"+" "+ connected.getInetAddress() +":"+connected.getPort()+" IS CONNECTED ");
+
+                BufferedReader inFromClient = null;
+                try {
+                    inFromClient = new BufferedReader(new InputStreamReader(connected.getInputStream()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                while ( true )
+                {
+                    try {
+                        fromclient = inFromClient.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if ( fromclient.equals("q") || fromclient.equals("Q") )
+                    {
+                        try {
+                        connected.close();
+                    } catch (IOException e) {
+                            e.printStackTrace();
+                }
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println( "RECIEVED:" + fromclient );
+                    }
+                }
+
+            
+            
+            
+            Socket socket = null;
+            Thread sent;
+            Thread receive;
+            try {
+                socket = new Socket("localhost",5000);
+            } catch (UnknownHostException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            Socket finalSocket = socket;
+            sent = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        BufferedReader stdIn =new BufferedReader(new InputStreamReader(finalSocket.getInputStream()));
+                        PrintWriter out = new PrintWriter(finalSocket.getOutputStream(), true);
+                        while(true){
+                            System.out.println("Trying to read...");
+                            String in = stdIn.readLine();
+                            System.out.println(in);
+                            out.print("Try"+"\r\n");
+                            out.flush();
+                            System.out.println("Message sent");
+                        }
+
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+            
+            sent.start();
+            try {
+                sent.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+    }
+        //////////////////////////////////////////////////////////////////////////////////////
+
+
             while (true) {
                 //Python3_Tree tree_query = null;
                 Java_Tree tree_query = null;
@@ -258,6 +369,4 @@ public class App {
             }
         }
 
-
     }
-}
