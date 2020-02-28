@@ -3,14 +3,12 @@ package research.diffsearch;
 import difflib.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
 
 
@@ -364,17 +362,21 @@ public class Change_extraction {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/GitHub/htmldiff.txt", "UTF-8");
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/htmldiff.txt", "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        int zz = 0;
         for(int w = 0; w < 1; w++) {
-            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "details.html");
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns/3", "details.html");
+
 
             for (File f : list_files) {
-                boolean flag = false;
+                if(f.toString().contains("10819"))
+                    continue;;
 
+                boolean flag = false;
+                System.out.println(f.toString() + "n= " + zz++ +"/1000");
                 //List<String> allLines = null;
                 Scanner scanner = null;
                 String html = null;
@@ -393,46 +395,126 @@ public class Change_extraction {
                     continue;
                 }
 
-                String old = null, neo = null;
-
                 assert doc != null;
-              //  Element before = doc.select("code").first();
-              //  List<String> beforeList = new ArrayList<String>(Arrays.asList(before.text().split("\n")));
-               // Element after = doc.select("code").last();
-                //List<String> afterList = new ArrayList<String>(Arrays.asList(after.text().split("\n")));
 
                 Elements links = doc.select("a");
+                String previuos_repo = "";
 
                 for(Element el : links){
                     String url = el.attr("href");
+                    System.out.println(url);
+                    List<String> repository = new ArrayList<String>(Arrays.asList(url.split("/commit/")));
                     if(!url.equals("sampleChange.html")) {
-                        try {
-                            Git git = Git.cloneRepository()
-                                    .setURI(url)
-                                    .setDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/Cloning"))
-                                    .call();
-                        } catch (GitAPIException ex) {
-                            ex.printStackTrace();
-                        }/*
-                        Process gitclone;
-                        try {
-                            gitclone = Runtime.getRuntime().exec("git clone " + url + " " + System.getProperty("user.dir") + "/src/main/resources/Cloning");
-
-                            int exitCode = gitclone.waitFor();
-                            if (exitCode != 0) {
-                                throw new IOException("git clone exited with error " + exitCode + ".\n");
+                        if(!repository.get(0).equals(previuos_repo)) {
+                            try {
+                                FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/Cloning/"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            gitclone.destroy();
-                        } catch (Exception e) { e.printStackTrace();}*/
+
+                            previuos_repo = repository.get(0);
+
+                            try {
+                                Git git = Git.cloneRepository()
+                                        .setURI(repository.get(0))
+                                        .setDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/Cloning"))
+                                        .call();
+
+                                System.out.println("cloned!");
+                            } catch (GitAPIException ex) {
+                                ex.printStackTrace();
+                            }
+                        }else{
+                            System.out.println("Cloning skipped.");
+                        }
+
+                        List<String> commit = new ArrayList<String>(Arrays.asList(repository.get(1).split("#diff-")));
+                        List<String> line_number = new ArrayList<String>(Arrays.asList(repository.get(1).split("L")));
+                        Process gitshow;
+                        try {
+                            gitshow = Runtime.getRuntime().exec("git --git-dir "
+                                    + System.getProperty("user.dir") + "/src/main/resources/Cloning/.git show " + commit.get(0));
+
+                            BufferedReader stdInput = new BufferedReader(new InputStreamReader(gitshow.getInputStream()));
+
+                            BufferedReader stdError = new BufferedReader(new InputStreamReader(gitshow.getErrorStream()));
+                            int exitCode = gitshow.waitFor();
+                            Boolean flag2 = false;
+                            if (exitCode != 0) {
+                                // Read any errors from the attempted command
+                                System.out.println("Here is the standard error of the command:\n");
+                                String s = null;
+                                while ((s = stdError.readLine()) != null) {
+                                    System.out.println(s);
+                                }
+                                throw new IOException("git clone exited with error " + exitCode + ".\n");
+                            }else{
+                                String s = null;
+                                List<String> str, range;
+
+                                mainLoop:
+                                while ((s = stdInput.readLine()) != null) {
+                                  //  if(s.contains("988"))
+                                   //     System.out.println(s);
+                                    if(s.length() >= 4 && s.substring(0,4).equals("@@ -")) {
+                                        str = new ArrayList<String>(Arrays.asList(s.split("\\+")));
+                                        range = new ArrayList<String>(Arrays.asList(str.get(0).split(",")));
+
+                                        int line = Integer.parseInt(range.get(0).replaceAll("[^0-9]", ""));
+                                        int q = Integer.parseInt(range.get(1).replaceAll("[^0-9]", ""));
+
+                                        int i = Integer.parseInt(line_number.get(line_number.size()-1)) - line;
+                                        if(Integer.parseInt(line_number.get(line_number.size()-1)) > line && Integer.parseInt(line_number.get(line_number.size()-1))< line + q)
+                                            while ((s = stdInput.readLine()) != null) {
+                                                if(i-->0)
+                                                    continue;
+
+                                                if(s.length() >= 4 && s.substring(0,4).equals("@@ -")){
+                                                    break mainLoop;
+                                                }
+                                                else{
+                                                //    System.out.println(s);
+                                                    writer.println(s);
+                                                }
+                                            }
+                                    }
+                                }
+                            }
+                            gitshow.destroy();
+                            /*
+                                PrintWriter pathwriter = null;
+                               try {
+                                    pathwriter = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Cloning/mypatch.patch", "UTF-8");
+                                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+
+                                String s = null;
+                                while ((s = stdInput.readLine()) != null) {
+                                    pathwriter.println(s);
+                                }
+
+                                pathwriter.close();
+                                */
+                            }
+                            catch (Exception e) { e.printStackTrace();}
+
+                        }
+                    if(number++ > 1000){
+                        writer.close();
+                        System.out.println("File close finished!!" + number);
+                        return number;
                     }
+
+
                 }
 
-                number += list_files.size();
+
             }
-
-
+            writer.close();
+            System.out.println("File close finished!!" + number);
         }
-        writer.close();
+
 
         return number;//list_files.size();
     }
