@@ -24,7 +24,7 @@ end = time.time()
 print("Index read time: ")# + end - start)
 #nprobe = 2  # find 2 most similar clusters
 #n_query = 1
-k = 500  # return k-nearest neighbours
+k = 100  # return k-nearest neighbours
 
 ######server#####
 import socket
@@ -39,45 +39,50 @@ serversocket.bind((host, port))
 
 serversocket.listen(5)
 print ('server started and listening')
-(clientsocket, address) = serversocket.accept()
-print ("connection found!")
 while 1:
-    print ('WAITING A MESSAGE.. ')
-    data = clientsocket.recv(1024).decode().replace("\r\n", "")
-    print (data)
-    
-    if(data == "PYTHON"):
-        print('searching started')
-        start = time.time()
-    
-        #Reading csv feature vectors files
-        query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
+    print ('WAITING A NEW CONNECTION.. ')
+    (clientsocket, address) = serversocket.accept()
+    print ("CONNECTED WITH ", address)
 
-        with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
-            changes_strings = f.readlines()
+    while 1:
+        
+        print ('WAITING A MESSAGE FROM ', address)
+        data = clientsocket.recv(1024).decode().replace("\r\n", "")
+        
+        if not data: 
+            print ('CONNECTION WITH ', address, ' CLOSED!')
+            break
 
-        distances, indices = index.search(query_feature_vectors, k)
+        print (data)
+        
+        if(data == "PYTHON"):
+            print('searching started')
+            start = time.time()
+        
+            #Reading csv feature vectors files
+            query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 
-        print('searching finished')
+            with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
+                changes_strings = f.readlines()
 
-        np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
-        values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
+            distances, indices = index.search(query_feature_vectors, k)
 
-        index_list = [round(int(float(x))) for x in values]
-        with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
-            for item in index_list:
-                f.write("%s\n" % item)
-        #print(index_list)
+            print('searching finished')
 
-        #for i in index_list:
-        #  print(changes_strings[i])
+            np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
+            values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
 
-        with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
-            for item in index_list:
-                f.write("%s" % changes_strings[item])
+            index_list = [round(int(float(x))) for x in values]
+            with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
+                for item in index_list:
+                    f.write("%s\n" % item)
+
+            with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
+                for item in index_list:
+                    f.write("%s" % changes_strings[item])
 
 
-        clientsocket.send(bytes(str(time.time() - start) +"\r\n",'UTF-8'))
+            clientsocket.send(bytes(str(time.time() - start) +"\r\n",'UTF-8'))
 
-        clientsocket.send(bytes("JAVA"+"\r\n",'UTF-8'))
-        print('Message sent.')
+            clientsocket.send(bytes("JAVA"+"\r\n",'UTF-8'))
+            print('Message sent.')

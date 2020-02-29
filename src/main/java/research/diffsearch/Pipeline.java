@@ -356,8 +356,8 @@ public class Pipeline {
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
-            String s1 = change.get_tree_string();
-            String s2 = tree_query.get_tree_string();
+            //String s1 = change.get_tree_string();
+            //String s2 = tree_query.get_tree_string();
 
             PrintWriter writer = null;
             try {
@@ -400,7 +400,7 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                 //   System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
+                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }

@@ -210,8 +210,8 @@ public class App {
                  * STATISTICS
                  **/
                 System.out.println("\nFINAL STATISTICS:"
-                        + "\nNumber of changes analyzed: 92070" //+ real_changes
-                        + "\nNumber of final matching changes: " + number_matching
+                        + "\nNumber of changes analysed: 92070" //+ real_changes
+                        + "\nNumber of final matched changes: " + number_matching
                         + "\nPython Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
                         + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
             }
