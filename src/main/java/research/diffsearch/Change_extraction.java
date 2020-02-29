@@ -159,7 +159,7 @@ public class Change_extraction {
                             change_number++;
                             if(change_number > 2000000)
                                 break;
-                            System.out.println(change_number + "\n");
+                          //  System.out.println(change_number + "\n");
                             temporary_list_old.clear();
                             temporary_list_new.clear();
                             flag = false;

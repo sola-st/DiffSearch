@@ -32,8 +32,8 @@ n = len(changes_feature_vectors)               # number of vectors
 #print(dimension, n)
 
 nlist = 3  # number of clusters
-#quantiser = faiss.IndexFlatL2(dimension)
-quantiser = faiss.IndexIVFFlat(dimension)
+quantiser = faiss.IndexFlatL2(dimension)
+#quantiser = faiss.IndexIVFFlat(dimension)
 index = faiss.IndexIVFFlat(quantiser, dimension, nlist,   faiss.METRIC_L2)
 
 print(index.is_trained)   # False

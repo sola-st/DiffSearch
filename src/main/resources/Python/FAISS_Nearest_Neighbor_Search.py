@@ -6,14 +6,6 @@ import time
 
 
 
-#Reading csv feature vectors files
-query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
-#print(query_feature_vectors)
-with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
-    changes_strings = f.readlines()
-#print(changes_strings)
-
-
 #######################################################################
 #FAISS Installation:
 # CPU version only
@@ -26,37 +18,66 @@ with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
 
 import faiss                                   # make faiss available
 start = time.time()
-index2 = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
+index = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
 end = time.time()
 
-print(end - start)
+print("Index read time: ")# + end - start)
 #nprobe = 2  # find 2 most similar clusters
 #n_query = 1
 k = 500  # return k-nearest neighbours
 
-
-distances, indices = index2.search(query_feature_vectors, k)
-
-
+######server#####
+import socket
 
 
-#print(distances)
-#print(indices)
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+host = "localhost"
+port = 5002
+print (host)
+print (port)
+serversocket.bind((host, port))
 
-np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
-values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
+serversocket.listen(5)
+print ('server started and listening')
+(clientsocket, address) = serversocket.accept()
+print ("connection found!")
+while 1:
+    print ('WAITING A MESSAGE.. ')
+    data = clientsocket.recv(1024).decode().replace("\r\n", "")
+    print (data)
+    
+    if(data == "PYTHON"):
+        print('searching started')
+        start = time.time()
+    
+        #Reading csv feature vectors files
+        query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 
-index_list = [round(int(float(x))) for x in values]
-with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
-    for item in index_list:
-        f.write("%s\n" % item)
-#print(index_list)
+        with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
+            changes_strings = f.readlines()
 
-#for i in index_list:
-#  print(changes_strings[i])
+        distances, indices = index.search(query_feature_vectors, k)
 
-with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
-    for item in index_list:
-        f.write("%s" % changes_strings[item])
+        print('searching finished')
 
-#print("END.")
+        np.savetxt('./src/main/resources/Features_Vectors/vector.txt', indices)
+        values = open('./src/main/resources/Features_Vectors/vector.txt').read().split()
+
+        index_list = [round(int(float(x))) for x in values]
+        with open('./src/main/resources/Features_Vectors/vector.txt', 'w') as f:
+            for item in index_list:
+                f.write("%s\n" % item)
+        #print(index_list)
+
+        #for i in index_list:
+        #  print(changes_strings[i])
+
+        with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
+            for item in index_list:
+                f.write("%s" % changes_strings[item])
+
+
+        clientsocket.send(bytes(str(time.time() - start) +"\r\n",'UTF-8'))
+
+        clientsocket.send(bytes("JAVA"+"\r\n",'UTF-8'))
+        print('Message sent.')

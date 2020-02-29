@@ -104,8 +104,17 @@ public class Pipeline {
         try {
             python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py");
 
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_indexing.getErrorStream()));
+
             int exitCode = python_indexing.waitFor();
+            String s = null;
             if (exitCode != 0) {
+                // Read any errors from the attempted command
+                System.out.println("Here is the standard error of the command (if any):\n");
+                while ((s = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
                 throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
             }
             python_indexing.destroy();
@@ -298,7 +307,7 @@ public class Pipeline {
      * @return number of matching changes found
      */
     public static long final_comparison(Java_Tree tree_query, long change_number){
-
+        change_number= 500;
         List<String> allLines = null;
         try {
             //Skip FAISS stage if the dataset is small
@@ -391,7 +400,7 @@ public class Pipeline {
                     number_matching++;
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
+                 //   System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
                 }
             }
         }

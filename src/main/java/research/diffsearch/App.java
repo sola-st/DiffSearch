@@ -16,7 +16,7 @@ public class App {
         long gitdiff_extraction = 0;
         long feature_extraction = 0;
         long time_python = 0;
-        double reading_index = 0;
+        double time_python2 = 0;
 
         if(Config.INDEXING) {
             /***************************************************************************************************************
@@ -37,8 +37,8 @@ public class App {
                 switch(Config.PROGRAMMING_LANGUAGE) {
                     case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
                  //   case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
-                    default: change_number = Change_extraction.read_HTML_dataset3();return;
-     //               change_number =Change_extraction.analyze_diff_file();
+                    default: //change_number = Change_extraction.read_HTML_dataset3();return;
+                    change_number =Change_extraction.analyze_diff_file();
                 }
 
             } catch (Exception e) {
@@ -73,7 +73,7 @@ public class App {
 
             try {
                 Pipeline.indexing_candidate_changes();
-
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,114 +93,134 @@ public class App {
         //Temporary code, in the future I will implement a graphic interface
 
         if(Config.SEARCHING) {
-            String fromclient = null;
-
-            ServerSocket Server = null;
-            try {
-                Server = new ServerSocket(5000);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println ("TCPServer Waiting for client on port 5000");
-
-            while(true)
-            {
-                Socket connected = null;
-                try {
-                    assert Server != null;
-                    connected = Server.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                assert connected != null;
-                System.out.println( " THE CLIENT"+" "+ connected.getInetAddress() +":"+connected.getPort()+" IS CONNECTED ");
-
-                BufferedReader inFromClient = null;
-                try {
-                    inFromClient = new BufferedReader(new InputStreamReader(connected.getInputStream()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                while ( true )
-                {
-                    try {
-                        fromclient = inFromClient.readLine();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    if ( fromclient.equals("q") || fromclient.equals("Q") )
-                    {
-                        try {
-                        connected.close();
-                    } catch (IOException e) {
-                            e.printStackTrace();
-                }
-                        break;
-                    }
-                    else
-                    {
-                        System.out.println( "RECIEVED:" + fromclient );
-                    }
-                }
-
-            
-            
-            
             Socket socket = null;
-            Thread sent;
-            Thread receive;
             try {
-                socket = new Socket("localhost",5000);
-            } catch (UnknownHostException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                socket = new Socket(Config.host,Config.port);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            Socket finalSocket = socket;
-            sent = new Thread(new Runnable() {
 
-                @Override
-                public void run() {
-                    try {
-                        BufferedReader stdIn =new BufferedReader(new InputStreamReader(finalSocket.getInputStream()));
-                        PrintWriter out = new PrintWriter(finalSocket.getOutputStream(), true);
-                        while(true){
-                            System.out.println("Trying to read...");
-                            String in = stdIn.readLine();
-                            System.out.println(in);
-                            out.print("Try"+"\r\n");
-                            out.flush();
-                            System.out.println("Message sent");
+            Java_Tree tree_query = null;
+            String query_input;
+
+            while(true) {
+
+                try {
+                    System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
+
+                    Scanner input = new Scanner(System.in);
+                    List<String> old_code = new ArrayList<String>();
+                    String lineNew;
+
+                    while (input.hasNextLine()) {
+                        lineNew = input.nextLine();
+
+                        if (lineNew.equals("END")) {
+                            System.out.println("\n================================\nProgram finished successfully.");
+                            return;
+                        }
+                        if (lineNew.isEmpty()) {
+                            break;
                         }
 
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        old_code.add(lineNew);
                     }
 
+                    System.out.print("Enter ONLY the new code (blank line for next step or END to end the program):\n");
 
+                    Scanner input2 = new Scanner(System.in);
+                    List<String> new_code = new ArrayList<String>();
+                    String lineNew2;
+
+                    while (input2.hasNextLine()) {
+                        lineNew2 = input2.nextLine();
+
+                        if (lineNew2.equals("END")) {
+                            //removing useless files
+                            if (Config.CLEANUP)
+                                Pipeline.files_cleanup();
+
+                            System.out.println("\n================================\nProgram finished successfully.");
+                            return;
+                        }
+
+                        if (lineNew2.isEmpty()) {
+                            break;
+                        }
+                        new_code.add(lineNew2);
+                    }
+
+                    query_input = String.join(System.lineSeparator(), old_code) + "->" + String.join(System.lineSeparator(), new_code);
+
+                    tree_query = Pipeline.query_feature_extraction(query_input);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-            
-            sent.start();
-            try {
-                sent.join();
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                if (tree_query == null) {
+                    System.out.print("The query is not correct, please try again.\n");
+                    continue;
+                }
+
+                try {
+                    assert socket != null;
+                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    out.print("PYTHON" + "\r\n");
+                    out.flush();
+                    System.out.println("WAITING MESSAGE..");
+
+                    time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
+                    //System.out.println(time_python2);
+
+                    String in = stdIn.readLine();
+                    System.out.println("MESSAGE RECEIVED");
+
+                    if(!in.equals("JAVA"))
+                      continue;
+
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                /***************************************************************************************************************
+                 * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+                 * */
+
+                long startTime_matching = System.currentTimeMillis();
+
+                long number_matching = -1;
+                try {
+                    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
+                    //Deep recursive tree comparison
+                    number_matching = Pipeline.final_comparison(tree_query, change_number);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (number_matching == 0)
+                    System.out.println("No changes found that match the query with deep comparison. \n");
+
+                long duration_matching = (System.currentTimeMillis() - startTime_matching);
+
+
+                /***************************************************************************************************************
+                 * STATISTICS
+                 **/
+                System.out.println("\nFINAL STATISTICS:"
+                        + "\nNumber of changes analyzed: 92070" //+ real_changes
+                        + "\nNumber of final matching changes: " + number_matching
+                        + "\nPython Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
+                        + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
             }
 
-        }
     }
         //////////////////////////////////////////////////////////////////////////////////////
 
 
-            while (true) {
+          /*  while (true) {
                 //Python3_Tree tree_query = null;
                 Java_Tree tree_query = null;
                 String query_input = null;
@@ -311,11 +331,11 @@ public class App {
                 }
 
                 double time_python2 = Double.parseDouble(searching_time.substring(0, 5));
-                /***************************************************************************************************************
+                *//***************************************************************************************************************
                  * SEARCH PYTHON STAGE (FAISS)
-                 */
+                 *//*
                 long startTime_python2 = System.currentTimeMillis();
-/*
+*//*
                 //Skip FAISS stage if the dataset is small
                 if(change_number > 10){
                     try {
@@ -324,13 +344,13 @@ public class App {
                         e.printStackTrace();
                     }
                 }
-*/
+*//*
            //     long time_python2 = (System.currentTimeMillis() - startTime_python2);
 
 
-                /***************************************************************************************************************
+                *//***************************************************************************************************************
                  * FINAL MATCHING STAGE:  Cosine distance as filter + Deep tree comparison as final matching.
-                 * */
+                 * *//*
 
                 long startTime_matching = System.currentTimeMillis();
 
@@ -354,9 +374,9 @@ public class App {
                 long duration_matching = (System.currentTimeMillis() - startTime_matching);
 
 
-                /***************************************************************************************************************
+                *//***************************************************************************************************************
                  * STATISTICS
-                 **/
+                 **//*
                 System.out.println("\nFINAL STATISTICS:"
                         + "\nNumber of changes analyzed: " + real_changes
                         //    + "\nNumber of matching changes with cosine filter: " + number_matching_cosine
@@ -366,7 +386,7 @@ public class App {
                         + "\nIndexing Python Search duration: " + time_python / 1000.0 + " seconds"
                         + "\nPython Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
                         + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
-            }
+            }*/
         }
 
     }
