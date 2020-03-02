@@ -5,10 +5,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Pipeline {
 
@@ -307,12 +304,15 @@ public class Pipeline {
      * @return number of matching changes found
      */
     public static long final_comparison(Java_Tree tree_query, long change_number){
-        change_number= 500;
+        change_number= 1000;
         List<String> allLines = null;
+       // List concurrent_list = null;
         try {
             //Skip FAISS stage if the dataset is small
-            if(change_number > 10)
+            if(change_number > 10) {
                 allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+                //concurrent_list = Collections.synchronizedList(allLines);
+            }
             else
                 allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/changes_strings.txt"));
         } catch (IOException e) {
@@ -347,64 +347,82 @@ public class Pipeline {
         String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
         array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
 
-        assert allLines != null;
-        for(String candidate : allLines){
-        //    Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+/*
+        int processors = Runtime.getRuntime().availableProcessors();
+        for(int i=0; i < processors; i++) {
 
-            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            Thread yourThread = new AThreadYouCreated();
+             You may need to pass in parameters depending on what work you are doing and how you setup your thread.
+            yourThread.start();
+        }
 
-            List<String> list_change_nodes = new ArrayList<>();
-            TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
+        synchronized (concurrent_list) {
+            Iterator i = concurrent_list.iterator();
+            while (i.hasNext()){
+                String candidate = (String) i.next();
 
-            //String s1 = change.get_tree_string();
-            //String s2 = tree_query.get_tree_string();
+            public void run() {*/
 
-            PrintWriter writer = null;
-            try {
-                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
-            } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                assert allLines != null;
+                for (String candidate : allLines) {
 
-            assert writer != null;
-            writer.close();
+                    //    Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+                    int jjj = 0;
+                    if (candidate.contains("mFileSystem.createFile(new AlluxioURI(\"root/testFile1\"), mWriteBoth);"))
+                        jjj++;
 
-            if(equal) {
-                List<String> list_change_old_leaves = new ArrayList<>();
-                List<String> list_change_new_leaves = new ArrayList<>();
+                    Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
 
-                TreeUtils.query_leaves_extraction( change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
+                    List<String> list_change_nodes = new ArrayList<>();
+                    TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
-                new_code = false;
+                    PrintWriter writer = null;
+                    try {
+                        writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
+                    } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
-                for(String str: list_change_old_leaves){
-                    if(str.equals("->") || str.equals("<EOF>")){
-                        new_code = true;
-                    }else{
-                        if(new_code){
-                            list_change_new_leaves.add(str);
+                    assert writer != null;
+                    writer.close();
+
+                    if (equal) {
+                        List<String> list_change_old_leaves = new ArrayList<>();
+                        List<String> list_change_new_leaves = new ArrayList<>();
+
+                        TreeUtils.query_leaves_extraction(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
+
+                        new_code = false;
+
+                        for (String str : list_change_old_leaves) {
+                            if (str.equals("->") || str.equals("<EOF>")) {
+                                new_code = true;
+                            } else {
+                                if (new_code) {
+                                    list_change_new_leaves.add(str);
+                                }
+                            }
+                        }
+
+                        String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
+                        array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
+
+                        String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
+                        array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
+
+                        boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes);
+
+                        if (final_matching) {
+                            number_matching++;
+
+                            List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
+                            System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
                         }
                     }
                 }
 
-                String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
-                array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
-
-                String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
-                array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
-
-                boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes,array_change_old_nodes, array_change_new_nodes);
-
-                if(final_matching){
-                    number_matching++;
-
-                    List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                    System.out.println("- " + list.get(0) + "\n+ " + list.get(1)+ "\n");
-                }
-            }
-        }
-
+      //  }
         System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
         return number_matching;
     }

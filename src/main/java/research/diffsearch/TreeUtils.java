@@ -77,12 +77,15 @@ public class TreeUtils {
                 return false;
             }
 
+            if(query_tree.getChildCount() != change_tree.getChildCount())
+                return false;
+
             String s1;
             String s2;
 
             for (i = 0; i < query_tree.getChildCount(); i++) {
 
-                if (query_tree.getChild(i).getChildCount() > 0) {
+                if (query_tree.getChild(i).getChildCount() > 0 ) {
                         if(Config.LOG_FILE)
                             writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
 
