@@ -24,7 +24,7 @@ end = time.time()
 print("Index read time: ")# + end - start)
 #nprobe = 2  # find 2 most similar clusters
 #n_query = 1
-k = 1000 # return k-nearest neighbours
+k = 2500 # return k-nearest neighbours
 
 ######server#####
 import socket

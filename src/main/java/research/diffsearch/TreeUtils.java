@@ -15,7 +15,7 @@ public class TreeUtils {
      * @param list_parent_child: list of the couple parent-child found
      * @param features: binary feature vector ("it is the return value of the function")
      */
-    static void pairs_parent_childAST(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
+    static void pairs_parent_childAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
@@ -23,7 +23,7 @@ public class TreeUtils {
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
-            pairs_parent_childAST(t.getChild(i), ruleNames, list_parent_child, features);
+            pairs_parent_childAST_python(t.getChild(i), ruleNames, list_parent_child, features);
         }
 
     }
@@ -36,7 +36,7 @@ public class TreeUtils {
      * @param list_hash_sum: list of the hash of nodes
      * @param features: binary feature vector ("it is the return value of the function")
      */
-    static void tree_hash_sumAST(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int [] features) {
+    static void tree_hash_sumAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int [] features) {
         int sum = 0;
         int i;
 
@@ -52,7 +52,63 @@ public class TreeUtils {
         }
 
         for (i = 0; i < t.getChildCount(); i++) {
-            tree_hash_sumAST(t.getChild(i), ruleNames, list_hash_sum, features);
+            tree_hash_sumAST_python(t.getChild(i), ruleNames, list_hash_sum, features);
+        }
+
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param t : AST of a change or query
+     * @param ruleNames: rule names of the AST
+     * @param list_parent_child: list of the couple parent-child found
+     * @param features: binary feature vector ("it is the return value of the function")
+     */
+    static void pairs_parent_childAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
+
+        for (int i = 0; i < t.getChildCount(); i++) {
+            list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
+            features[Math.abs(Integer.MAX_VALUE / 2097152 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 2097152)] = 1;
+        }
+
+        for (int i = 0; i < t.getChildCount(); i++) {
+            if(Trees.getNodeText(t.getChild(i), ruleNames).contains("literal"))
+                continue;
+
+            pairs_parent_childAST_java(t.getChild(i), ruleNames, list_parent_child, features);
+        }
+
+    }
+
+    /**
+     * Extraction of the sum between an hash of the node and the hash of its children.
+     *
+     * @param t : AST of a change or query
+     * @param ruleNames: rule names of the AST
+     * @param list_hash_sum: list of the hash of nodes
+     * @param features: binary feature vector ("it is the return value of the function")
+     */
+    static void tree_hash_sumAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int [] features) {
+        int sum = 0;
+        int i;
+
+        sum += Trees.getNodeText(t, ruleNames).hashCode();
+
+        for (i = 0; i < t.getChildCount(); i++) {
+            sum += Trees.getNodeText(t.getChild(i), ruleNames).hashCode();
+        }
+
+        if (i > 0) {
+            list_hash_sum.add(sum);
+            features[Math.abs(sum / 2097152)] = 1;
+        }
+
+        for (i = 0; i < t.getChildCount(); i++) {
+            if(Trees.getNodeText(t.getChild(i), ruleNames).contains("literal"))
+                continue;
+
+            tree_hash_sumAST_java(t.getChild(i), ruleNames, list_hash_sum, features);
         }
 
     }
@@ -66,7 +122,88 @@ public class TreeUtils {
      * @param change_ruleNames: rule names of the change AST
      * @return two trees are equal or not
      */
-    static boolean deep_tree_comparison(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
+    static boolean deep_tree_comparison_python(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
+        int i;
+
+        try {
+
+            if (!Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames))) {
+                if(Config.LOG_FILE)
+                    writer.println("FALSE0---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                return false;
+            }
+
+            if(query_tree.getChildCount() != change_tree.getChildCount())
+                return false;
+
+            String s1;
+            String s2;
+
+            for (i = 0; i < query_tree.getChildCount(); i++) {
+
+                if (query_tree.getChild(i).getChildCount() > 0 ) {
+                    if(Config.LOG_FILE)
+                        writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+
+                    s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
+                    s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
+                    if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                        if (!(s1.equals(s2))) {
+                            if(Config.LOG_FILE)
+                                writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                            return false;
+                        }
+                    }else
+                        return true;
+                }
+            }
+
+        } catch (Exception e) {
+            // e.printStackTrace();
+            if(Config.LOG_FILE)
+                writer.println("EXCEPTION1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+            return false;
+        }
+
+        try{
+            for (i = 0; i < query_tree.getChildCount(); i++) {
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                    if (query_tree.getChild(i).getChildCount() > 0) {
+                        if(Config.LOG_FILE)
+                            writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        if (!deep_tree_comparison_python(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
+                            if(Config.LOG_FILE)
+                                writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+                            return false;
+                        }
+                    }
+                }else{
+                    if(Config.LOG_FILE)
+                        writer.println("EXPR---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            // e.printStackTrace();
+            if(Config.LOG_FILE)
+                writer.println("EXCEPTION2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param query_ruleNames: rule names of the query AST
+     * @param change_tree : AST of the change
+     * @param change_ruleNames: rule names of the change AST
+     * @return two trees are equal or not
+     */
+    static boolean deep_tree_comparison_java(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
         int i;
 
         try {
@@ -88,6 +225,11 @@ public class TreeUtils {
                 if (query_tree.getChild(i).getChildCount() > 0 ) {
                         if(Config.LOG_FILE)
                             writer.println(i + "---" + Trees.getNodeText( change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
+
+                        //Managing the keyword <...>
+                        if(Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("<...>")
+                                && Trees.getNodeText(change_tree, change_ruleNames).equals("expressionList") )
+                            return true;
 
                         s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                         s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
@@ -111,11 +253,13 @@ public class TreeUtils {
 
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
-                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
+                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("literal")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                         if(Config.LOG_FILE)
                             writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
-                        if (!deep_tree_comparison(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
+                        if (!deep_tree_comparison_java(query_tree.getChild(i), query_ruleNames, change_tree.getChild(i), change_ruleNames, writer)) {
                             if(Config.LOG_FILE)
                                 writer.println("FALSE2---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
                             return false;
@@ -137,6 +281,7 @@ public class TreeUtils {
 
         return true;
     }
+
 
     /**
      * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.

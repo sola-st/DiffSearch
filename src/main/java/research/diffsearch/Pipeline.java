@@ -60,11 +60,11 @@ public class Pipeline {
                 //Computing hash sum of changes
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-                TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
                 //Computing list change parent child
                 List<Integer> list_change_parent_child = new ArrayList<Integer>();
-                TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
                 StringBuilder str_builder = new StringBuilder();
@@ -180,8 +180,8 @@ public class Pipeline {
             List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
 
             //Computing hash sum and pairs parent child
-            TreeUtils.tree_hash_sumAST(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
             list_hash_sum.addAll(list_parent_child);
 
             //Creation of a buffered writer
@@ -274,11 +274,11 @@ public class Pipeline {
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-            TreeUtils.tree_hash_sumAST(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+            TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
             //Computing list change parent child
             List<Integer> list_change_parent_child = new ArrayList<Integer>();
-            TreeUtils.pairs_parent_childAST(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+            TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
             double score =  Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
 
@@ -368,8 +368,8 @@ public class Pipeline {
 
                     //    Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
                     int jjj = 0;
-                    if (candidate.contains("mFileSystem.createFile(new AlluxioURI(\"root/testFile1\"), mWriteBoth);"))
-                        jjj++;
+                  //  if (candidate.contains("mFileSystem.createFile(new AlluxioURI(\"root/testFile1\"), mWriteBoth);"))
+                   // candidate = "if(x>0){\nx = 4; -> if(x>0){\nx = 5;}";
 
                     Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
 
@@ -382,7 +382,7 @@ public class Pipeline {
                     } catch (FileNotFoundException | UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    boolean equal = TreeUtils.deep_tree_comparison(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                    boolean equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
                     assert writer != null;
                     writer.close();

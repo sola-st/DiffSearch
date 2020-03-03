@@ -19,17 +19,15 @@ public class App {
         double time_python2 = 0;
 
         if(Config.INDEXING) {
-            /***************************************************************************************************************
+            /* **************************************************************************************************************
              * EXTRACT CHANGES FROM A GIT REPOSITORY
              * */
 
             //not linked yet
 
-
-            /***************************************************************************************************************
+            /* **************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
              * */
-
 
             long startTime_gitdiff = System.currentTimeMillis();
 
@@ -50,7 +48,7 @@ public class App {
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
 
 
-            /***************************************************************************************************************
+            /* **************************************************************************************************************
              * CHANGES TREE AND FEATURES COMPUTATION
              * */
 
@@ -66,7 +64,7 @@ public class App {
 
             System.out.println("FEATURE EXTRACTION DONE WITH " + real_changes + " CHANGES.\n");
 
-            /***************************************************************************************************************
+            /* **************************************************************************************************************
              * SEARCH PYTHON STAGE (FAISS)
              */
             long startTime_python = System.currentTimeMillis();
@@ -77,16 +75,10 @@ public class App {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-/*
-            Thread t1 = new Thread(() -> {
-                Pipeline.indexing_searching_python();
-            });
-            t1.start();
-*/
-            time_python = (System.currentTimeMillis() - startTime_python);
+           // time_python = (System.currentTimeMillis() - startTime_python);
         }
 
-        /***************************************************************************************************************
+        /* **************************************************************************************************************
          * QUERY TREE AND FEATURES COMPUTATION
          * */
 
@@ -99,6 +91,9 @@ public class App {
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
+
+                System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
+                return;
             }
 
             Java_Tree tree_query = null;
@@ -151,7 +146,7 @@ public class App {
                         new_code.add(lineNew2);
                     }
 
-                    query_input = String.join(System.lineSeparator(), old_code) + "->" + String.join(System.lineSeparator(), new_code);
+                    query_input = String.join("", old_code) + "->" + String.join("", new_code);
 
                     tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
@@ -164,7 +159,6 @@ public class App {
                 }
 
                 try {
-                    assert socket != null;
                     BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                     out.print("PYTHON" + "\r\n");
@@ -185,7 +179,7 @@ public class App {
                     e.printStackTrace();
                 }
 
-                /***************************************************************************************************************
+                /* **************************************************************************************************************
                  * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
                  * */
 
@@ -206,7 +200,7 @@ public class App {
                 long duration_matching = (System.currentTimeMillis() - startTime_matching);
 
 
-                /***************************************************************************************************************
+                /* **************************************************************************************************************
                  * STATISTICS
                  **/
                 System.out.println("\nFINAL STATISTICS:"
@@ -331,7 +325,7 @@ public class App {
                 }
 
                 double time_python2 = Double.parseDouble(searching_time.substring(0, 5));
-                *//***************************************************************************************************************
+                *//* **************************************************************************************************************
                  * SEARCH PYTHON STAGE (FAISS)
                  *//*
                 long startTime_python2 = System.currentTimeMillis();
@@ -348,7 +342,7 @@ public class App {
            //     long time_python2 = (System.currentTimeMillis() - startTime_python2);
 
 
-                *//***************************************************************************************************************
+                *//* **************************************************************************************************************
                  * FINAL MATCHING STAGE:  Cosine distance as filter + Deep tree comparison as final matching.
                  * *//*
 
@@ -374,7 +368,7 @@ public class App {
                 long duration_matching = (System.currentTimeMillis() - startTime_matching);
 
 
-                *//***************************************************************************************************************
+                *//* **************************************************************************************************************
                  * STATISTICS
                  **//*
                 System.out.println("\nFINAL STATISTICS:"
