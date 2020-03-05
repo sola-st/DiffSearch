@@ -217,6 +217,8 @@ public class TreeUtils {
             if(query_tree.getChildCount() != change_tree.getChildCount())
                 return false;
 
+
+
             String s1;
             String s2;
 
@@ -241,6 +243,11 @@ public class TreeUtils {
                             }
                         }else
                             return true;
+                }else{
+                    //Managing the keyword _ using XOR
+                    if((Trees.getNodeText(query_tree.getChild(i), query_ruleNames).equals("_")
+                            ^ Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("_")) )
+                        return false;
                 }
             }
 

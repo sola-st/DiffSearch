@@ -32,7 +32,9 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : blockStatement '->' blockStatement | blockStatement '->' EMPTY | EMPTY '->' blockStatement  //MOD
+    : blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?
+    | blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? EMPTY NEWLINE?
+    | EMPTY NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?  //MOD
     ;
 
 compilationUnit
@@ -285,6 +287,7 @@ literal
     | STRING_LITERAL
     | BOOL_LITERAL
     | NULL_LITERAL
+    | LITERALS
     ;
 
 integerLiteral
@@ -364,7 +367,7 @@ defaultValue
 // STATEMENTS / BLOCKS
 
 block
-    : '{' blockStatement* '}'
+    : NEWLINE? '{' NEWLINE? blockStatement* NEWLINE? '}' //MOD
     ;
 
 blockStatement
@@ -385,9 +388,10 @@ localTypeDeclaration
 
 statement
     : blockLabel=block
-    | ASSERT EXPR (':' EXPR)? ';'
+    | ASSERT EXPR (':' EXPR)? ';' //MOD
    // | IF EXPR statement (ELSE statement)?
-    | FOR '(' EXPR ')' statement
+    | FOR '(' EXPR (',' EXPR)* ')' statement
+    | FOR '(' WILDCARD ')' statement
     | WHILE EXPR statement
     | DO statement WHILE EXPR ';'
     | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
@@ -469,7 +473,7 @@ parExpression
     ;
 
 expressionList
-    : expression (',' expression)*
+    : WILDCARD | EXPR (',' EXPR)* |  expression (',' expression)*
     ;
 
 methodCall
@@ -626,4 +630,3 @@ explicitGenericInvocationSuffix
 arguments
     : '(' expressionList? ')'
     ;
-

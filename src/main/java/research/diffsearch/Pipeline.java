@@ -3,21 +3,24 @@ package research.diffsearch;
 import grammar.Python3BaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.*;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Pipeline {
 
     /**
      * Extraction of the features from changes in the form: old -> new. The features vectors are written in the file
      * changes_feature_vectors.csv and the change in the string format in the file changes_strings.txt to have
-     * an index of features vectors and changes.
+     * an index of features vectors and changes.105000010500001050000
      *
      * @param change_number : number of the changes found
      */
     public static long feature_extraction(long change_number){
         long real_changes = 0;
+        int kk=0;
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
@@ -26,12 +29,11 @@ public class Pipeline {
             FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
             BufferedWriter bw = new BufferedWriter(writer);
 
-            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/changes_gitdiff.txt"));
+            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/merge_diff.txt"));
 
-            for (int i = 0; i < change_number; i++) {
-                //scalability test
-                if(real_changes > 1000000)
-                    break;
+            for (int i = 0; i < 10319030; i++) {
+                byte[] myBytes = null;
+           //     System.out.println(i);
 
                 if(!scanner.hasNext())
                     continue;
@@ -49,13 +51,37 @@ public class Pipeline {
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
+
                // Object[] program_language = new Object[2];
 
               //  Python3_Tree change =new Python3_Tree(change_string);
                 Java_Tree change =new Java_Tree(change_string);
 
-                 if(change.error)
-                    continue;
+                //try to fix errors
+                 if(change.error){
+                     if(change_string.contains("Copyright")){
+                       //  String str22 = change_string.replaceAll(" ", "").replaceAll("\\*Copyright", "@Copyright").replaceAll("->", ",").replaceAll("-", "").replaceAll(",", "->").replaceAll("s.", "s");
+                         change = new Java_Tree("@annotation -> @annotation");
+                     }
+                     else {
+                         if(change_string.equals("_-> "))
+                             change = new Java_Tree("_ -> x++;");
+                            else
+                         change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", ""));
+                     }
+
+                     if(change.error) {
+                         change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "); ->") + ");");
+                         if(change.error) {
+                             change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "; ->") + ";");
+                             if(change.error) {
+                            //     kk++;
+                             //    System.out.println(kk + change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "") + "\n");
+                                 continue;
+                             }
+                         }
+                     }
+                   }
 
                 //Computing hash sum of changes
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
@@ -95,29 +121,39 @@ public class Pipeline {
      * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
      *
      */
-    public static void indexing_candidate_changes(){
+    public static void indexing_candidate_changes(int n){
         Process python_indexing;
 
         try {
-            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py");
+            long startTime_gitdiff = System.currentTimeMillis();
+            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py " + Integer.toString(n));
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(python_indexing.getErrorStream()));
 
+            java.io.InputStream is = python_indexing.getInputStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+
+            if (s.hasNext()) {
+                String ret = s.next();
+            }
+
             int exitCode = python_indexing.waitFor();
-            String s = null;
+            String st = null;
             if (exitCode != 0) {
                 // Read any errors from the attempted command
-                System.out.println("Here is the standard error of the command (if any):\n");
-                while ((s = stdError.readLine()) != null) {
+                System.out.println("Here is the standard error of the command:\n");
+                while ((st = stdError.readLine()) != null) {
                     System.out.println(s);
                 }
                 throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
             }
             python_indexing.destroy();
+            long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+            System.out.println("Indexing time: " + gitdiff_extraction);
         } catch (Exception e) { e.printStackTrace();}
 
-        System.out.println("FAISS INDEXING STAGE DONE.\n");
+      //  System.out.println("FAISS INDEXING STAGE DONE.\n");
 
     }
 
@@ -220,16 +256,25 @@ public class Pipeline {
         try {
             python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
+
             int exitCode = python_Nearest_Neighbor_Search.waitFor();
             if (exitCode != 0) {
+
+                System.out.println("Here is the standard error of the command:\n");
+                String s;
+                while ((s = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
                 throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
             }else{
-                java.io.InputStream is = python_Nearest_Neighbor_Search.getInputStream();
-                java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+             //   java.io.InputStream is = python_Nearest_Neighbor_Search.getInputStream();
+             //   java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
 
-                if (s.hasNext()) {
-                    ret = Double.parseDouble(s.next().substring(0, 5));
-                }
+               // if (s.hasNext()) {
+                 //   ret = Double.parseDouble(s.next().substring(0, 5));
+               // }
             }
 
             python_Nearest_Neighbor_Search.destroy();
@@ -237,7 +282,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-        System.out.println("FAISS SEARCHING STAGE DONE.\n");
+       // System.out.println("FAISS SEARCHING STAGE DONE.\n");
 
         return ret;
     }
@@ -417,15 +462,178 @@ public class Pipeline {
                             number_matching++;
 
                             List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                            System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
+                         //   System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
                         }
                     }
                 }
 
       //  }
-        System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
+       // System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
         return number_matching;
     }
+
+
+    static void scalability(){
+        int[] changes = { 10000, 50000, 100000, 200000, 250000, 300000, 400000, 500000, 575000, 649000};
+//
+	BufferedWriter buff_writer_features = null;
+
+	int delay = 2;
+
+        try {
+            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/scalability.csv"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(int i:changes){
+            System.out.println(i + "");
+            /* **************************************************************************************************************
+             * SEARCH PYTHON STAGE (FAISS)*/
+
+            long startTime_python = System.currentTimeMillis();
+
+            try {
+                Pipeline.indexing_candidate_changes(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+             /* **************************************************************************************************************
+                 * SEARCH PYTHON STAGE (FAISS)
+                    */
+            long startTime_python2 = System.currentTimeMillis();
+
+            //Skip FAISS stage if the dataset is small
+                try {
+                    new Thread( Pipeline::search_candidate_changes).start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+           }
+
+            try {
+                TimeUnit.SECONDS.sleep(delay++);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            //     long time_python2 = (System.currentTimeMillis() - startTime_python2);
+
+        Socket socket = null;
+        try {
+            socket = new Socket(Config.host,Config.port);
+         //   System.out.println("\nCONNECTION WITH SERVER DONE.\n");
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+
+            System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
+            return;
+        }
+
+        Java_Tree tree_query = null;
+        String query_input;
+        List<String> allLines = null;
+
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/GitHub/input.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+            try {
+                assert buff_writer_features != null;
+                buff_writer_features.write(i + ",");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            assert allLines != null;
+            for(String str: allLines){
+            tree_query = Pipeline.query_feature_extraction(str);
+            String time_python2 = null;
+            try {
+                BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                out.print("PYTHON" + "\r\n");
+                out.flush();
+              //  System.out.println("WAITING MESSAGE..");
+
+
+
+                time_python2 = stdIn.readLine().substring(0, 5);
+                //System.out.println(time_python2);
+                System.out.println(" FAISS TIME: " + time_python2);
+                String in = stdIn.readLine();
+              //  System.out.println("MESSAGE RECEIVED");
+
+                if(!in.equals("JAVA"))
+                    break;
+
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            /* **************************************************************************************************************
+             * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+             * */
+
+            long startTime_matching = System.currentTimeMillis();
+
+            long number_matching = -1;
+            try {
+            //    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
+                //Deep recursive tree comparison
+                number_matching = Pipeline.final_comparison(tree_query, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+       //     if (number_matching == 0)
+        //        System.out.println("No changes found that match the query with deep comparison. \n");
+
+            long duration_matching = (System.currentTimeMillis() - startTime_matching);
+                System.out.println("final matching time: " + duration_matching/1000.0);
+
+            try {
+                buff_writer_features.write(time_python2 + "," + duration_matching/1000.0 + ",");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+            try {
+                buff_writer_features.write("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            PrintWriter out = null;
+            try {
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            out.print("END" + "\r\n");
+            out.flush();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        try {
+            buff_writer_features.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * Method that removes useless files at the end of the program in order to have a clean state each time.
@@ -461,3 +669,8 @@ public class Pipeline {
         */
     }
 }
+
+
+
+
+

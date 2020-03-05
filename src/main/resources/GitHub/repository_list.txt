@@ -1,0 +1,12 @@
+springboot.patch
+javadesignpattern.patch
+elastic_search_diff.patch
+guava_diff.patch
+rxjava.patch
+retrofit.patch
+glide.patch
+netty.patch
+fresco.patch
+fastjson.patch
+hystrix.patch
+MPS.patch

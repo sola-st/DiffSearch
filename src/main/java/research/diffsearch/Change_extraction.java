@@ -1,16 +1,14 @@
 package research.diffsearch;
 
 import difflib.*;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -42,98 +40,53 @@ public class Change_extraction {
         List<String> temporary_list_old = new ArrayList<String>();
         List<String> temporary_list_new = new ArrayList<String>();
         long change_number = 0;
+        List<String> allLines = null;
 
-        PrintWriter writer = null;
+
         try {
-            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/changes_gitdiff.txt", "UTF-8");
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        boolean flag = false;
-
-        //List<String> allLines = null;
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(new File(System.getProperty("user.dir") + "/src/main/resources/GitHub/" + Config.GITDIFF_FILE));
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/GitHub/repository_list.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        PrintWriter writer = null;
         try {
-           // assert scanner != null;
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine() + "  ";
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/merge_diff222.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-                //manage -old change
-                if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
 
-                    //Manage sequential change without interruption: -old +new -old +new
-                    if (flag && temporary_list_old.size() > 0) {
-                        ArrayList<String> change = new ArrayList<String>();
+        assert allLines != null;
+        for(String fp: allLines) {
 
-                        if (temporary_list_new.size() == 0) {
-                            change.add(temporary_list_old.toString());
-                            change.add("_\n");
-                        } else {
-                            if (temporary_list_old.size() == 0) {
-                                change.add("_\n");
-                                change.add(temporary_list_new.toString());
-                            } else {
-                                change.add(temporary_list_old.toString());
-                                change.add(temporary_list_new.toString());
-                            }
-                        }
 
-                        //changes_list.add(change);
+            boolean flag = false;
 
-                        if(change.get(0).equals("_\n")){
-                            assert writer != null;
-                            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
-                        }else
-                        if(change.get(1).equals("_\n")){
-                            assert writer != null;
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                        }else {
-                            assert writer != null;
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->") + "$$$");
-                        }
-                        change_number++;
-                      //  System.out.println(change_number + "\n");
-                        if(change_number > 2000000)
-                            break;
+            //List<String> allLines = null;
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(new File(System.getProperty("user.dir") + "/src/main/resources/GitHub/" + fp));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                        temporary_list_old.clear();
-                        temporary_list_new.clear();
-                        flag = false;
-                    }
+            try {
+                //assert scanner != null;
+                while (scanner.hasNext()) {
+                    String line = scanner.nextLine() + "  ";
 
-                    //Add -old in a  temporary list, managing the case: all whitespace
-                    if(line.substring(1, line.length() - 1) .trim().length() > 0)
-                        temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
-                    else
-                        temporary_list_old.add("_\n");
+                    //manage -old change
+                    if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
 
-                } else
-                    //manage +new change, managing the case: all whitespace
-                    if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
-                        if(line.substring(1, line.length() - 1) .trim().length() > 0)
-                            temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
-                        else
-                            temporary_list_new.add("_\n");
-
-                        flag = true;//-old +new is complete
-                    } else {
-                        // merge old and new code in the same list
-                        if (flag || temporary_list_old.size() > 0) {
+                        //Manage sequential change without interruption: -old +new -old +new
+                        if (flag && temporary_list_old.size() > 0) {
                             ArrayList<String> change = new ArrayList<String>();
 
-                            //manage -old only
                             if (temporary_list_new.size() == 0) {
                                 change.add(temporary_list_old.toString());
                                 change.add("_\n");
                             } else {
-                                //manage +new only
                                 if (temporary_list_old.size() == 0) {
                                     change.add("_\n");
                                     change.add(temporary_list_new.toString());
@@ -144,59 +97,116 @@ public class Change_extraction {
                             }
 
                             //changes_list.add(change);
-                            if(change.get(0).equals("_\n")){
-                                assert writer != null;
-                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                            }else
-                            if(change.get(1).equals("_\n")){
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                            }else {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                            }
 
+                            if (change.get(0).equals("_\n")) {
+                                assert writer != null;
+                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                            } else if (change.get(1).equals("_\n")) {
+                                assert writer != null;
+                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                            } else {
+                                assert writer != null;
+                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                            }
                             change_number++;
-                            if(change_number > 2000000)
+                            //  System.out.println(change_number + "\n");
+                            if (change_number > 2000000)
                                 break;
-                          //  System.out.println(change_number + "\n");
+
                             temporary_list_old.clear();
                             temporary_list_new.clear();
                             flag = false;
                         }
-                    }
-            }
 
-            //Last change
-            if (flag) {
-                ArrayList<String> change = new ArrayList<String>();
-                change.add(temporary_list_old.toString());
-                change.add(temporary_list_new.toString());
+                        //Add -old in a  temporary list, managing the case: all whitespace
+                        if (line.substring(1, line.length() - 1).trim().length() > 0)
+                            temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
+                        else
+                            temporary_list_old.add("_\n");
 
+                    } else
+                        //manage +new change, managing the case: all whitespace
+                        if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
+                            if (line.substring(1, line.length() - 1).trim().length() > 0)
+                                temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
+                            else
+                                temporary_list_new.add("_\n");
 
-                if(change.get(0).equals("_\n")){
-                    assert writer != null;
-                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->"));
-                }else
-                if(change.get(1).equals("_\n")){
-                    assert writer != null;
-                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
-                }else {
-                    assert writer != null;
-                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->","->")+ "$$$");
+                            flag = true;//-old +new is complete
+                        } else {
+                            // merge old and new code in the same list
+                            if (flag || temporary_list_old.size() > 0) {
+                                ArrayList<String> change = new ArrayList<String>();
+
+                                //manage -old only
+                                if (temporary_list_new.size() == 0) {
+                                    change.add(temporary_list_old.toString());
+                                    change.add("_\n");
+                                } else {
+                                    //manage +new only
+                                    if (temporary_list_old.size() == 0) {
+                                        change.add("_\n");
+                                        change.add(temporary_list_new.toString());
+                                    } else {
+                                        change.add(temporary_list_old.toString());
+                                        change.add(temporary_list_new.toString());
+                                    }
+                                }
+
+                                //changes_list.add(change);
+                                if (change.get(0).equals("_\n")) {
+                                    assert writer != null;
+                                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                } else if (change.get(1).equals("_\n")) {
+                                    assert writer != null;
+                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                } else {
+                                    assert writer != null;
+                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                }
+
+                                change_number++;
+                              //  if (change_number > 2000000)
+                                //    break;
+                                //  System.out.println(change_number + "\n");
+                                temporary_list_old.clear();
+                                temporary_list_new.clear();
+                                flag = false;
+                            }
+                        }
                 }
 
-                change_number++;
+                //Last change
+                if (flag) {
+                    ArrayList<String> change = new ArrayList<String>();
+                    change.add(temporary_list_old.toString());
+                    change.add(temporary_list_new.toString());
 
-                System.out.println(change_number + "\n");
+
+                    if (change.get(0).equals("_\n")) {
+                        assert writer != null;
+                        writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
+                    } else if (change.get(1).equals("_\n")) {
+                        assert writer != null;
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                    } else {
+                        assert writer != null;
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                    }
+
+                    change_number++;
+
+                   // System.out.println(change_number + "\n");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            assert writer != null;
-            writer.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(fp + " " + change_number + " done.");
         }
+        assert writer != null;
+        writer.close();
 
         return change_number;
     }
@@ -376,6 +386,9 @@ public class Change_extraction {
             for (File f : list_files) {
                 zz++;
 
+                if(!f.toString().contains("6/8153"))
+                    continue;
+
                 boolean flag = false;
                 System.out.println(f.toString() + "n= " + zz +"/"+ n_files);
                 //List<String> allLines = null;
@@ -474,7 +487,8 @@ public class Change_extraction {
                                             } else {
                                                 //    System.out.println(s);
                                                 assert writer != null;
-                                                writer.println(s);
+                                //                writer.println(s);
+                                                System.out.println(s);
                                             }
                                         }//System.out.println("Writing change done");
                                     }
@@ -565,6 +579,139 @@ public class Change_extraction {
 
         return number;//list_files.size();
     }
-    
+
+    static long read_HTML_dataset4() {
+        long change_number = 0;
+        long number = 0;
+
+
+
+        int zz = 0;
+        for(int w = 0; w < 1; w++) {
+            List<File> list_files = listf(System.getProperty("user.dir") + "/src/main/resources/Depth_Corpus/patterns", "details.html");
+            int n_files = list_files.size();
+
+            for (File f : list_files) {
+                zz++;
+
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/p/"+f.toString().replaceAll("/","-"), "UTF-8");
+                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                boolean flag = false;
+             //   System.out.println(f.toString() + "n= " + zz +"/"+ n_files);
+                //List<String> allLines = null;
+                Scanner scanner = null;
+                String html = null;
+                Document doc = null;
+                try {
+                    scanner = new Scanner(f);
+                    if (scanner.hasNext())
+                        html = scanner.useDelimiter("\\A").next();
+                    else
+                        continue;
+                    scanner.close();
+                    if(html != null)
+                        doc = Jsoup.parse(html);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                assert doc != null;
+
+                Elements links = doc.select("a");
+                String previuos_repo = "";
+
+                for(Element el : links){
+                    String url = el.attr("href");
+
+                  //  System.out.println(url);
+                    int kkk = 0;
+                    if(url.equals("https://github.com/apache/ofbiz/commit/f6c31f10fabea49984923b091a091cca2466368c#diff-05e53b1de07b7a73dcd8553f38036ee6L100"))
+                        kkk++;
+
+                    List<String> repository = new ArrayList<String>(Arrays.asList(url.split("/commit/")));
+
+                    if(!url.equals("sampleChange.html")) {
+
+
+                        List<String> line_number = new ArrayList<String>(Arrays.asList(repository.get(1).split("L")));
+                        URL url_download;
+                        InputStream is = null;
+                        BufferedReader br;
+                        String s = null;
+                        List<String> str, range;
+                        List<String> patch = new ArrayList<String>(Arrays.asList(url.split("#diff-")));
+
+                        try {
+                            url_download = new URL(patch.get(0) + ".patch");
+                            is = url_download.openStream();  // throws an IOException
+                            br = new BufferedReader(new InputStreamReader(is));
+
+                            mainLoop:
+                            while ((s = br.readLine()) != null) {
+                                //             System.out.println(s);
+                                if(s.length() >= 4 && s.substring(0,4).equals("@@ -")) {
+                                    //System.out.println("Correct line found");
+                                    str = new ArrayList<String>(Arrays.asList(s.split("\\+")));
+                                    range = new ArrayList<String>(Arrays.asList(str.get(0).split(",")));
+
+                                    if(range.size()<2)
+                                        continue ;
+
+                                    int line = Integer.parseInt(range.get(0).replaceAll("[^0-9]", ""));
+                                    int q = Integer.parseInt(range.get(1).replaceAll("[^0-9]", ""));
+
+                                    int i = Integer.parseInt(line_number.get(line_number.size()-1)) - line;
+                                    if(Integer.parseInt(line_number.get(line_number.size()-1)) > line && Integer.parseInt(line_number.get(line_number.size()-1))< line + q) {
+                                        while ((s = br.readLine()) != null) {
+                                            if (i-- > 0)
+                                                continue;
+
+                                            if (s.length() >= 4 && s.substring(0, 4).equals("@@ -")) {
+                                                break mainLoop;
+                                            } else {
+                                                //    System.out.println(s);
+                                                assert writer != null;
+                                                writer.println(s);
+                                            }
+                                        }//System.out.println("Writing change done");
+                                    }
+                                }
+                            }
+                        } catch (IOException mue) {
+                            mue.printStackTrace();
+                        } finally {
+                            try {
+                                if (is != null) is.close();
+                            } catch (IOException ioe) {
+                                writer.close();
+                                ioe.printStackTrace();
+                            }
+                        }
+
+
+                    }
+
+
+
+                }
+
+                writer.close();
+            }
+
+            System.out.println("File close finished!!" + number);
+            System.out.println("File close finished!!" + number);
+            System.out.println("File close finished!!" + number);
+            System.out.println("File close finished!!" + number);
+        }
+
+
+        return number;//list_files.size();
+    }
 }
 

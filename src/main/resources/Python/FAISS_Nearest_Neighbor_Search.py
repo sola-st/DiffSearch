@@ -21,21 +21,20 @@ start = time.time()
 index = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
 end = time.time()
 
-print("Index read time: ")# + end - start)
-#nprobe = 2  # find 2 most similar clusters
-#n_query = 1
-k = 2500 # return k-nearest neighbours
+print("Index read.")
+k = 1000 # return k-nearest neighbours
 
 ######server#####
 import socket
 
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = "localhost"
 port = 5002
 print (host)
 print (port)
-serversocket.bind((host, port))
+serversocket.bind(('', port))
 
 serversocket.listen(5)
 print ('server started and listening')
@@ -52,6 +51,12 @@ while 1:
         if not data: 
             print ('CONNECTION WITH ', address, ' CLOSED!')
             break
+
+        if(data == "END"):
+            serversocket.shutdown(socket.SHUT_RDWR)
+            serversocket.close()
+            print ('CONNECTION WITH ', address, ' ENDED!')
+            exit()
 
         print (data)
         

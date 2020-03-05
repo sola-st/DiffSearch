@@ -1,22 +1,22 @@
 package research.diffsearch;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class App {
     public static void main(String[] args) {
         long change_number = 0;
         long real_changes = 0;
-        long gitdiff_extraction = 0;
-        long feature_extraction = 0;
-        long time_python = 0;
+      //  long gitdiff_extraction = 0;
+     //   long feature_extraction = 0;
+      //  long time_python = 0;
         double time_python2 = 0;
+
+    //Change_extraction.read_HTML_dataset3();
+      //  new Thread(Change_extraction::read_HTML_dataset4).start();
 
         if(Config.INDEXING) {
             /* **************************************************************************************************************
@@ -36,37 +36,36 @@ public class App {
                     case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
                  //   case "JAVA": change_number = Change_extraction.analyze_diff_file();break;
                     default: //change_number = Change_extraction.read_HTML_dataset3();return;
-                    change_number =Change_extraction.analyze_diff_file();
+                  //  change_number =Change_extraction.analyze_diff_file();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+       //     gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
 
-
             /* **************************************************************************************************************
              * CHANGES TREE AND FEATURES COMPUTATION
-             * */
+             **/
 
             long startTime_indexing = System.currentTimeMillis();
 
             try {
-                real_changes = Pipeline.feature_extraction(change_number);
+          //      real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            feature_extraction = (System.currentTimeMillis() - startTime_indexing);
+         //   feature_extraction = (System.currentTimeMillis() - startTime_indexing);
 
             System.out.println("FEATURE EXTRACTION DONE WITH " + real_changes + " CHANGES.\n");
 
             /* **************************************************************************************************************
              * SEARCH PYTHON STAGE (FAISS)
-             */
+
             long startTime_python = System.currentTimeMillis();
 
             try {
@@ -74,7 +73,7 @@ public class App {
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
            // time_python = (System.currentTimeMillis() - startTime_python);
         }
 
@@ -83,6 +82,8 @@ public class App {
          * */
 
         //Temporary code, in the future I will implement a graphic interface
+
+        Pipeline.scalability();
 
         if(Config.SEARCHING) {
             Socket socket = null;

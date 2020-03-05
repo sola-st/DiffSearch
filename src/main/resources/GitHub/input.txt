@@ -1,0 +1,5 @@
+ID.ID(); -> ID.ID();
+return ID; -> _	
+if(EXPR) ID.ID(); -> if(EXPR) ID.ID();	
+ID = ID(ID<1>, ID); -> ID = ID(ID<2>, ID);	
+ID OP LT<1>; -> ID OP LT<2>;

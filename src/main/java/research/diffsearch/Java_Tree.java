@@ -22,7 +22,12 @@ public class Java_Tree{
     Java_Tree(String change){
         error = false;
         change_string = change;
+        try {
         lexer = new JavaLexer(CharStreams.fromString(change));
+        } catch (RecognitionException e) {
+            error = true;
+            System.out.println("LEXER ERROR " + change);
+        }
         lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
@@ -31,8 +36,13 @@ public class Java_Tree{
             }
         });
 
+        try {
         tokens = new CommonTokenStream(lexer);
         parser = new JavaParser(tokens);
+        } catch (RecognitionException e) {
+            error = true;
+            System.out.println("NEW PARSER ERROR " + change);
+        }
 
         parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
@@ -49,6 +59,7 @@ public class Java_Tree{
             parsetree = parser.program();
         } catch (RecognitionException e) {
             error = true;
+            System.out.println("PARSER ERROR " + change);
         }
 
         features = new int[Integer.MAX_VALUE/1048576]; //4096
