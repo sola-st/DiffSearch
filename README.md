@@ -22,7 +22,6 @@ retrieves a ranked list of changes that match the query.
 - src/main/java/resources/Python/**FAISS_indexing.py** -> FAISS indexing (without query)
 - src/main/java/resources/Python/**FAISS_Nearest_Neighbor_Search.py** -> FAISS Nearest Neighbor Search
 - src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff. It has to be run first, because it has not been linked yet with the Java project.
-- src/main/java/resources/MainPage/**main.html** -> Graphic interface using HTML and Javascript (only a draft, not complete)
 
 **Main folders:**
 - src/main/java/resources/**ANTLR** -> ANTLR modified grammars
@@ -36,18 +35,21 @@ retrieves a ranked list of changes that match the query.
 - [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> conda install faiss
 
 
-extra: I use IntelliJ IDEA for this maven project
+extra: I use IntelliJ IDEA for this maven project.
 
-**How to use**
+**How to reproduce results**
+
+Scalability:
+- In src/main/java/research.diffsearch/**Config.java** set SCALABILITY  = true;
+- In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 100;
 - Run the file src/main/java/research.diffsearch/**App.java**
-- Insert old code query, then a blank line (no arrow)
-- Insert new code query, then a blank line (no arrow)
-- Check the results
+- The results are in the file src/main/java/resources/**Features_Vectors/scalability.csv**, where each line is the test performed using different number of changes. For each query the first column is the FAISS searching time and the second is the final matching time. 
 
-- Type END instead of the query to end the program
-
-Additional:
-- You can change the "change database" modifying the input in the file src/main/java/research.diffsearch/**Change_extraction.java** , line 40. The inputs available are git_changes.txt, git_changes2.txt and git_changes3.txt
+Effectiveness:
+- In src/main/java/research.diffsearch/**Config.java** set SCALABILITY  = false;
+- In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 3;
+- Run the file src/main/java/research.diffsearch/**App.java**
+- The results are in the files: queryN.txt, in each file there is the output of each query. 
 
 **Example of queries**
 Tested Keywords: _ (for insertion of removal), ID, OP, LT, EXPR, ID<1>, etc.

@@ -1,6 +1,6 @@
 package research.diffsearch;
 
-import grammar.Python3BaseListener;
+import grammar.JavaParserBaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.*;
 import java.net.Socket;
@@ -20,29 +20,24 @@ public class Pipeline {
      */
     public static long feature_extraction(long change_number){
         long real_changes = 0;
-        int kk=0;
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
-            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_python.txt");
             BufferedWriter bw = new BufferedWriter(writer);
 
-            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/merge_diff.txt"));
+            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff.txt"));
 
-            for (int i = 0; i < 10319030; i++) {
-                byte[] myBytes = null;
-           //     System.out.println(i);
+            for (int i = 0; i < change_number; i++) {
 
                 if(!scanner.hasNext())
-                    continue;
-
+                    break;
 
                 StringBuilder stringBuilder = new StringBuilder();
 
                 String str = "test";
-
 
                 while(!str.equals("$$$")){
                     str = scanner.next();
@@ -51,46 +46,44 @@ public class Pipeline {
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
-
-               // Object[] program_language = new Object[2];
-
-              //  Python3_Tree change =new Python3_Tree(change_string);
+                //Python3_Tree change =new Python3_Tree(change_string);
                 Java_Tree change =new Java_Tree(change_string);
 
                 //try to fix errors
-                 if(change.error){
-                     if(change_string.contains("Copyright")){
-                       //  String str22 = change_string.replaceAll(" ", "").replaceAll("\\*Copyright", "@Copyright").replaceAll("->", ",").replaceAll("-", "").replaceAll(",", "->").replaceAll("s.", "s");
-                         change = new Java_Tree("@annotation -> @annotation");
-                     }
-                     else {
-                         if(change_string.equals("_-> "))
-                             change = new Java_Tree("_ -> x++;");
+                if(change.error){
+                    if(Config.SCALABILITY) {
+                        if (change_string.contains("Copyright")) {
+                            change = new Java_Tree("@annotation -> @annotation");
+                        } else {
+                            if (change_string.equals("_-> "))
+                                change = new Java_Tree("_ -> x++;");
                             else
-                         change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", ""));
-                     }
+                                change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", ""));
+                        }
 
-                     if(change.error) {
-                         change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "); ->") + ");");
-                         if(change.error) {
-                             change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "; ->") + ";");
-                             if(change.error) {
-                            //     kk++;
-                             //    System.out.println(kk + change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "") + "\n");
-                                 continue;
-                             }
-                         }
-                     }
-                   }
+                        if (change.error) {
+                            change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "); ->") + ");");
+                            if (change.error) {
+                                change = new Java_Tree(change_string.replaceAll("}", "").replaceAll("\\{", "{ int x =0;}").replaceAll("_ ", "").replaceAll("->", "; ->") + ";");
+                                if (change.error) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }else
+                        continue;
+                }
 
                 //Computing hash sum of changes
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
                 TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                // TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
                 //Computing list change parent child
                 List<Integer> list_change_parent_child = new ArrayList<Integer>();
                 TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                //TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
                 StringBuilder str_builder = new StringBuilder();
@@ -150,10 +143,10 @@ public class Pipeline {
             }
             python_indexing.destroy();
             long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
-            System.out.println("Indexing time: " + gitdiff_extraction);
+            System.out.println("Indexing time: " + gitdiff_extraction/1000 + " seconds.\n");
         } catch (Exception e) { e.printStackTrace();}
 
-      //  System.out.println("FAISS INDEXING STAGE DONE.\n");
+        //  System.out.println("FAISS INDEXING STAGE DONE.\n");
 
     }
 
@@ -195,22 +188,21 @@ public class Pipeline {
      * @return AST of the query
      */
     public static Java_Tree query_feature_extraction(String query_input){
-        // String query_input = "import ID -> _";
         Java_Tree tree_query = null;
-       // Python3_Tree tree_query = null;
+        // Python3_Tree tree_query = null;
+
         //Creating the tree for the query string
         try {
             tree_query = new Java_Tree(query_input);
             //tree_query = new Python3_Tree(query_input);
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
-                    tree_query.isError() ||
-                    tree_query.error)
+                    tree_query.isError() || tree_query.error)
                 return null;
 
             //Declaring query variables
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();
-            Python3BaseListener listener = new Python3BaseListener();
+            JavaParserBaseListener listener = new JavaParserBaseListener();
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(listener, tree_query.get_parsetree());
             List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
@@ -268,13 +260,6 @@ public class Pipeline {
                     System.out.println(s);
                 }
                 throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
-            }else{
-             //   java.io.InputStream is = python_Nearest_Neighbor_Search.getInputStream();
-             //   java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-
-               // if (s.hasNext()) {
-                 //   ret = Double.parseDouble(s.next().substring(0, 5));
-               // }
             }
 
             python_Nearest_Neighbor_Search.destroy();
@@ -282,7 +267,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-       // System.out.println("FAISS SEARCHING STAGE DONE.\n");
+        // System.out.println("FAISS SEARCHING STAGE DONE.\n");
 
         return ret;
     }
@@ -315,7 +300,7 @@ public class Pipeline {
         assert allLines != null;
         for(String candidate : allLines){
             Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
-          //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+            //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
             //Computing hash sum of changes
             List<Integer> list_change_hash_sum = new ArrayList<Integer>();
             List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
@@ -345,21 +330,15 @@ public class Pipeline {
      * Method that implements a deep recursive comparison between query tree and change trees to find
      * matching changes.
      *
-     * @param tree_query: query Tree
+     * @param tree_query : query Tree
+     * @param buff_writer_results
      * @return number of matching changes found
      */
-    public static long final_comparison(Java_Tree tree_query, long change_number){
-        change_number= 1000;
+    public static long final_comparison(Java_Tree tree_query, long change_number, BufferedWriter buff_writer_results){
         List<String> allLines = null;
-       // List concurrent_list = null;
+
         try {
-            //Skip FAISS stage if the dataset is small
-            if(change_number > 10) {
-                allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
-                //concurrent_list = Collections.synchronizedList(allLines);
-            }
-            else
-                allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/changes_strings.txt"));
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -381,7 +360,7 @@ public class Pipeline {
                 new_code = true;
             }else{
                 if(new_code){
-                   list_query_new_leaves.add(str);
+                    list_query_new_leaves.add(str);
                 }
             }
         }
@@ -392,93 +371,81 @@ public class Pipeline {
         String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
         array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
 
-/*
-        int processors = Runtime.getRuntime().availableProcessors();
-        for(int i=0; i < processors; i++) {
+        assert allLines != null;
+        for (String candidate : allLines) {
 
-            Thread yourThread = new AThreadYouCreated();
-             You may need to pass in parameters depending on what work you are doing and how you setup your thread.
-            yourThread.start();
-        }
+            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
 
-        synchronized (concurrent_list) {
-            Iterator i = concurrent_list.iterator();
-            while (i.hasNext()){
-                String candidate = (String) i.next();
+            List<String> list_change_nodes = new ArrayList<>();
+            TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
-            public void run() {*/
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
-                assert allLines != null;
-                for (String candidate : allLines) {
+            boolean equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
-                    //    Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
-                    int jjj = 0;
-                  //  if (candidate.contains("mFileSystem.createFile(new AlluxioURI(\"root/testFile1\"), mWriteBoth);"))
-                   // candidate = "if(x>0){\nx = 4; -> if(x>0){\nx = 5;}";
+            assert writer != null;
+            writer.close();
 
-                    Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            if (equal) {
+                List<String> list_change_old_leaves = new ArrayList<>();
+                List<String> list_change_new_leaves = new ArrayList<>();
 
-                    List<String> list_change_nodes = new ArrayList<>();
-                    TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
+                TreeUtils.query_leaves_extraction(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
 
-                    PrintWriter writer = null;
-                    try {
-                        writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
-                    } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    boolean equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                new_code = false;
 
-                    assert writer != null;
-                    writer.close();
-
-                    if (equal) {
-                        List<String> list_change_old_leaves = new ArrayList<>();
-                        List<String> list_change_new_leaves = new ArrayList<>();
-
-                        TreeUtils.query_leaves_extraction(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
-
-                        new_code = false;
-
-                        for (String str : list_change_old_leaves) {
-                            if (str.equals("->") || str.equals("<EOF>")) {
-                                new_code = true;
-                            } else {
-                                if (new_code) {
-                                    list_change_new_leaves.add(str);
-                                }
-                            }
-                        }
-
-                        String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
-                        array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
-
-                        String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
-                        array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
-
-                        boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes);
-
-                        if (final_matching) {
-                            number_matching++;
-
-                            List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                         //   System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
+                for (String str : list_change_old_leaves) {
+                    if (str.equals("->") || str.equals("<EOF>")) {
+                        new_code = true;
+                    } else {
+                        if (new_code) {
+                            list_change_new_leaves.add(str);
                         }
                     }
                 }
 
-      //  }
-       // System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
+                String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
+                array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
+
+                String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
+                array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
+
+                boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes);
+
+                if (final_matching) {
+                    number_matching++;
+
+                    List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
+
+                    if(Config.EFFECTIVENESS) {
+                      //  System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
+                        try {
+                            buff_writer_results.write("- " + list.get(0) + "\n+ " + list.get(1) + "\n\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+        //  }
+        // System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
         return number_matching;
     }
 
 
     static void scalability(){
-        int[] changes = { 10000, 50000, 100000, 200000, 250000, 300000, 400000, 500000, 575000, 649000};
-//
-	BufferedWriter buff_writer_features = null;
+        int[] changes = { 10000, 50000, 100000, 200000, 250000, 300000,400000, 500000, 575000, 649000};
 
-	int delay = 2;
+        BufferedWriter buff_writer_features = null;
+
+        int delay = 5;
 
         try {
             buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/scalability.csv"));
@@ -487,11 +454,9 @@ public class Pipeline {
         }
 
         for(int i:changes){
-            System.out.println(i + "");
+            System.out.println("\n" + i + "");
             /* **************************************************************************************************************
-             * SEARCH PYTHON STAGE (FAISS)*/
-
-            long startTime_python = System.currentTimeMillis();
+             * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
                 Pipeline.indexing_candidate_changes(i);
@@ -499,17 +464,16 @@ public class Pipeline {
                 e.printStackTrace();
             }
 
-             /* **************************************************************************************************************
-                 * SEARCH PYTHON STAGE (FAISS)
-                    */
-            long startTime_python2 = System.currentTimeMillis();
+            /* **************************************************************************************************************
+             * SEARCH PYTHON STAGE (FAISS)
+             ****************************************************************************************************************/
 
             //Skip FAISS stage if the dataset is small
-                try {
-                    new Thread( Pipeline::search_candidate_changes).start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-           }
+            try {
+                new Thread( Pipeline::search_candidate_changes).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 TimeUnit.SECONDS.sleep(delay++);
@@ -517,29 +481,25 @@ public class Pipeline {
                 e.printStackTrace();
             }
 
-            //     long time_python2 = (System.currentTimeMillis() - startTime_python2);
+            Socket socket = null;
+            try {
+                socket = new Socket(Config.host,Config.port);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
 
-        Socket socket = null;
-        try {
-            socket = new Socket(Config.host,Config.port);
-         //   System.out.println("\nCONNECTION WITH SERVER DONE.\n");
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+                System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
+                return;
+            }
 
-            System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
-            return;
-        }
+            Java_Tree tree_query = null;
+            List<String> allLines = null;
 
-        Java_Tree tree_query = null;
-        String query_input;
-        List<String> allLines = null;
-
-        try {
-            allLines = Files.readAllLines(Paths.get("./src/main/resources/GitHub/input.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/GitHub/input.txt"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
             try {
@@ -551,59 +511,56 @@ public class Pipeline {
 
             assert allLines != null;
             for(String str: allLines){
-            tree_query = Pipeline.query_feature_extraction(str);
-            String time_python2 = null;
-            try {
-                BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                out.print("PYTHON" + "\r\n");
-                out.flush();
-              //  System.out.println("WAITING MESSAGE..");
+                tree_query = Pipeline.query_feature_extraction(str);
+                String time_python2 = null;
+                try {
+                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    out.print("PYTHON" + "\r\n");
+                    out.flush();
 
+                    time_python2 = stdIn.readLine().substring(0, 5);
 
+                    System.out.println(" FAISS TIME: " + time_python2);
+                    String in = stdIn.readLine();
 
-                time_python2 = stdIn.readLine().substring(0, 5);
-                //System.out.println(time_python2);
-                System.out.println(" FAISS TIME: " + time_python2);
-                String in = stdIn.readLine();
-              //  System.out.println("MESSAGE RECEIVED");
+                    if(!in.equals("JAVA"))
+                        break;
 
-                if(!in.equals("JAVA"))
-                    break;
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+                /* **************************************************************************************************************
+                 * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+                 * */
 
-            /* **************************************************************************************************************
-             * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
-             * */
+                long startTime_matching = System.currentTimeMillis();
 
-            long startTime_matching = System.currentTimeMillis();
+                long number_matching = -1;
+                try {
+                    //    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
+                    //Deep recursive tree comparison
+                    BufferedWriter buff_writer_results = null;
+                    number_matching = Pipeline.final_comparison(tree_query, 0, buff_writer_results);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            long number_matching = -1;
-            try {
-            //    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
-                //Deep recursive tree comparison
-                number_matching = Pipeline.final_comparison(tree_query, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                //     if (number_matching == 0)
+                //        System.out.println("No changes found that match the query with deep comparison. \n");
 
-       //     if (number_matching == 0)
-        //        System.out.println("No changes found that match the query with deep comparison. \n");
-
-            long duration_matching = (System.currentTimeMillis() - startTime_matching);
+                long duration_matching = (System.currentTimeMillis() - startTime_matching);
                 System.out.println("final matching time: " + duration_matching/1000.0);
 
-            try {
-                buff_writer_features.write(time_python2 + "," + duration_matching/1000.0 + ",");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                try {
+                    buff_writer_features.write(time_python2 + "," + duration_matching/1000.0 + ",");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-        }
+            }
             try {
                 buff_writer_features.write("\n");
             } catch (IOException e) {
@@ -623,7 +580,6 @@ public class Pipeline {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         try {

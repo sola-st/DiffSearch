@@ -3,5 +3,19 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Cloning" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Hystrix" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/MPS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/RxJava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/elasticsearch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fastjson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fresco" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/glide" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/guava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/java-design-patterns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/netty" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/retrofit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/spring-boot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/Python/java-design-patterns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/Python/spring-boot" vcs="Git" />
   </component>
 </project>

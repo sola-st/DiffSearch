@@ -24,7 +24,7 @@ def indexing(nchange):
     dimension = len(changes_feature_vectors[0])    # dimensions of each vector                         
     #n = len(changes_feature_vectors)               # number of vectors 
 
-    nlist = 100  # number of clusters
+    nlist = 100
     quantiser = faiss.IndexFlatL2(dimension)
     index = faiss.IndexIVFFlat(quantiser, dimension, nlist,   faiss.METRIC_L2)
 
