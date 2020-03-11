@@ -30,9 +30,9 @@ retrieves a ranked list of changes that match the query.
 
 **Requirements**
 - JAVA 8 and PYTHON 3.7
-- [ANTLR](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr  
-- [ANACONDA](https://docs.anaconda.com/anaconda/install/linux/) -> preferably in /home/username/anaconda3 
-- [FAISS](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> conda install faiss
+- [ANTLR 4.7.1](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr  
+- [ANACONDA 4.8.0](https://docs.anaconda.com/anaconda/install/linux/) -> preferably in /home/username/anaconda3 
+- [FAISS 1.6.1](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> conda install faiss
 
 
 extra: I use IntelliJ IDEA for this maven project.
