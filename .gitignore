@@ -16,6 +16,8 @@ src/main/resources/Features_Vectors/faiss.index
 src/main/resources/GitHub/git_changes9000.txt
 src/main/resources/Depth_Corpus/*
 
+*.patch
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

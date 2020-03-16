@@ -1,4 +1,4 @@
-#! /home/luca/anaconda3/bin/python3.7
+#! /usr/bin/python3
 import csv
 import numpy as np 
 import pandas as pd
@@ -9,12 +9,8 @@ import time
 #######################################################################
 #FAISS Installation:
 # CPU version only
-#conda install faiss-cpu -c pytorch
+#pip3 install faiss-cpu --no-cache
 
-# GPU version
-#conda install faiss-gpu cudatoolkit=8.0 -c pytorch # For CUDA8
-#conda install faiss-gpu cudatoolkit=9.0 -c pytorch # For CUDA9
-#conda install faiss-gpu cudatoolkit=10.0 -c pytorch # For CUDA10
 
 import faiss                                   # make faiss available
 start = time.time()

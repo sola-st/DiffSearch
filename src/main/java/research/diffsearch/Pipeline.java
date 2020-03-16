@@ -422,13 +422,13 @@ public class Pipeline {
 
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
 
-                    if(Config.EFFECTIVENESS) {
-                      //  System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
-                        try {
+                    if(Config.EFFECTIVENESS || Config.NORMAL ) {
+                        System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
+                        /*try {
                             buff_writer_results.write("- " + list.get(0) + "\n+ " + list.get(1) + "\n\n");
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
+                        }*/
                     }
                 }
             }
