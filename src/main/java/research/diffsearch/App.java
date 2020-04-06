@@ -27,7 +27,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-            change_number = Change_extraction.analyze_diff_file();
+      //      change_number = Change_extraction.analyze_diff_file_new_propagation();
 
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
@@ -36,8 +36,8 @@ public class App {
              * CHANGES TREE AND FEATURES COMPUTATION
              **/
             try {
-                System.out.println("FEATURE EXTRACTION STARTED.\n");
-                real_changes = Pipeline.feature_extraction(change_number);
+                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193
+      //          real_changes = Pipeline.feature_extraction(5000000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -49,7 +49,7 @@ public class App {
 
             try {
                 System.out.println("INDEXING STARTED.\n");
-                Pipeline.indexing_candidate_changes((int) real_changes);
+                Pipeline.indexing_candidate_changes( 150000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -88,7 +88,7 @@ public class App {
 
             while (true) {
                 //Python3_Tree tree_query = null;
-                Java_Tree tree_query = null;
+                Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
                     System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
@@ -339,7 +339,7 @@ public class App {
                 }
 
                 try{
-                    tree_query = Pipeline.query_feature_extraction(query_input);
+                    //tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -379,7 +379,7 @@ public class App {
                 try {
                     //System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                    number_matching = Pipeline.final_comparison(tree_query, change_number, buff_writer_results);
+              //      number_matching = Pipeline.final_comparison(tree_query, change_number, buff_writer_results);
                     buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();

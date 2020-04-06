@@ -32,7 +32,7 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?
+    : blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE? 
     | blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? EMPTY NEWLINE?
     | EMPTY NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?  //MOD
     ;
@@ -630,3 +630,4 @@ explicitGenericInvocationSuffix
 arguments
     : '(' expressionList? ')'
     ;
+

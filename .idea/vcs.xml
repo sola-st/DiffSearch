@@ -3,18 +3,120 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Cloning" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/30-seconds-of-code" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/33-js-concepts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Chart.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Front-End-Checklist" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Ghost" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Hystrix" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Leaflet" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/MPS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Modernizr" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/PhotoSwipe" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/Rocket.Chat" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/RxJS" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/RxJava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/TypeScript" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/You-Dont-Know-JS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/angular" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/anime" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/async" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/atom" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/awesome-interview-questions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/awesome-javascript" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/awesome-nodejs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/axios" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/babel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/bootstrap" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/brackets" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/carbon" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/clean-code-javascript" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/clipboard.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/date-fns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/deno" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/discourse" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/dragula" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/elasticsearch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/electron" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/element" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/ember.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/express" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/faker.js" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fastjson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fetch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/flow" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/free-programming-books-zh_CN" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/freeCodeCamp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/freecodecamp.cn" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fresco" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/front-end-interview-handbook" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/fullPage.js" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/glide" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/guava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/hammer.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/hexo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/html5-boilerplate" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/hyper" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/immutable-js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/ionic" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/iview" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/java-design-patterns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/javascript" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/javascript-algorithms" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/jest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/jquery" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/layui" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/leetcode" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/lerna" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/lodash" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/material-ui" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/materialize" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/meteor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/mobx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/modern-js-cheatsheet" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/moment" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/nest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/netty" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/node" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/nodebestpractices" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/nw.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/nylas-mail" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/open-source-mac-os-apps" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/parcel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/particles.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/pdf.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/phantomjs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/phaser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/pixi.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/prettier" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/prettier/tests_integration/cli/config/editorconfig/repo-root" vcs="hg4idea" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/prettier/tests_integration/cli/ignore-vcs-files" vcs="hg4idea" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/project-based-learning" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/project-guidelines" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/react" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/react-starter-kit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/redux" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/retrofit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/rxjs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/select2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/sequelize" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/serverless" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/spring-boot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/standard" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/storybook" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/strapi" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/sweetalert" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/taro" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/three.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/underscore" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/uppy" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/video.js" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/vue" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/vuetify" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/vuex" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/webpack" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/webtorrent" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub/yarn" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Python/java-design-patterns" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Python/spring-boot" vcs="Git" />
   </component>

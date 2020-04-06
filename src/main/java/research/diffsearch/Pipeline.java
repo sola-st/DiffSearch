@@ -1,5 +1,6 @@
 package research.diffsearch;
 
+import grammar.ECMAScriptBaseListener;
 import grammar.JavaParserBaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.*;
@@ -25,16 +26,20 @@ public class Pipeline {
             //Creation of a buffered writer for the features and the change in a string form (for print)
             BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
-            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_python.txt");
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
+            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop.txt");
             BufferedWriter bw = new BufferedWriter(writer);
+            BufferedWriter bw2 = new BufferedWriter(writer2);
 
             Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff.txt"));
+            Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop.txt"));
 
             for (int i = 0; i < change_number; i++) {
 
                 if(!scanner.hasNext())
                     break;
 
+                String info = scanner2.nextLine();
                 StringBuilder stringBuilder = new StringBuilder();
 
                 String str = "test";
@@ -47,10 +52,16 @@ public class Pipeline {
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
                 //Python3_Tree change =new Python3_Tree(change_string);
-                Java_Tree change =new Java_Tree(change_string);
+                Javascript_Tree change = null;
+                try{
+                    change = new Javascript_Tree(change_string);}
+                catch (Exception e){
+                    continue;
+                }
 
                 //try to fix errors
                 if(change.error){
+                    /*
                     if(Config.SCALABILITY) {
                         if (change_string.contains("Copyright")) {
                             change = new Java_Tree("@annotation -> @annotation");
@@ -70,19 +81,19 @@ public class Pipeline {
                                 }
                             }
                         }
-                    }else
+                    }else*/
                         continue;
                 }
 
                 //Computing hash sum of changes
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                TreeUtils.tree_hash_sumAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
                 // TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
                 //Computing list change parent child
                 List<Integer> list_change_parent_child = new ArrayList<Integer>();
-                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                TreeUtils.pairs_parent_childAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
                 //TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
@@ -98,13 +109,16 @@ public class Pipeline {
 
                 // Writing the string change in a file
                 bw.write(change.get_change_string().replace("\n", "$$") + "\n");
+                bw2.write(info + "\n");
                 real_changes++;
             }
             buff_writer_features.close();
             bw.close();
+            bw2.close();
 
         } catch (IOException e) {
             e.printStackTrace();
+            return real_changes;
         }
 
         return real_changes;
@@ -187,14 +201,15 @@ public class Pipeline {
      * @param query_input: String of the query
      * @return AST of the query
      */
-    public static Java_Tree query_feature_extraction(String query_input){
-        Java_Tree tree_query = null;
+    public static Javascript_Tree query_feature_extraction(String query_input){
+        Javascript_Tree tree_query = null;
         // Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
         try {
-            tree_query = new Java_Tree(query_input);
+           // tree_query = new Java_Tree(query_input);
             //tree_query = new Python3_Tree(query_input);
+            tree_query = new Javascript_Tree(query_input);
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
                     tree_query.isError() || tree_query.error)
                 return null;
@@ -202,14 +217,14 @@ public class Pipeline {
             //Declaring query variables
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();
-            JavaParserBaseListener listener = new JavaParserBaseListener();
+            ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(listener, tree_query.get_parsetree());
             List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
 
             //Computing hash sum and pairs parent child
-            TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
             list_hash_sum.addAll(list_parent_child);
 
             //Creation of a buffered writer
@@ -334,7 +349,7 @@ public class Pipeline {
      * @param buff_writer_results
      * @return number of matching changes found
      */
-    public static long final_comparison(Java_Tree tree_query, long change_number, BufferedWriter buff_writer_results){
+    public static long final_comparison(Javascript_Tree tree_query, long change_number, BufferedWriter buff_writer_results){
         List<String> allLines = null;
 
         try {
@@ -371,10 +386,18 @@ public class Pipeline {
         String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
         array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
 
+        Scanner scanner2 = null;
+        try {
+            scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         assert allLines != null;
         for (String candidate : allLines) {
+            String info = scanner2.nextLine();
 
-            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            Javascript_Tree change = new Javascript_Tree(candidate.replace("$$", "\n"));
 
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
@@ -386,7 +409,9 @@ public class Pipeline {
                 e.printStackTrace();
             }
 
-            boolean equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+      //      String str4 = change.get_tree_string();
+      //      String str5 = tree_query.get_tree_string();
+            boolean equal = TreeUtils.deep_tree_comparison_javascript(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
             assert writer != null;
             writer.close();
@@ -423,7 +448,7 @@ public class Pipeline {
                     List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
 
                     if(Config.EFFECTIVENESS || Config.NORMAL ) {
-                        System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n");
+                        System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n" + info);
                         /*try {
                             buff_writer_results.write("- " + list.get(0) + "\n+ " + list.get(1) + "\n\n");
                         } catch (IOException e) {
@@ -492,7 +517,7 @@ public class Pipeline {
                 return;
             }
 
-            Java_Tree tree_query = null;
+            Javascript_Tree tree_query = null;
             List<String> allLines = null;
 
             try {
