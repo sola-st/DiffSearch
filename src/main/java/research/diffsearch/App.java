@@ -1,10 +1,13 @@
 package research.diffsearch;
 
+import org.antlr.v4.runtime.tree.Tree;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +30,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-      //      change_number = Change_extraction.analyze_diff_file_new_propagation();
+     //       change_number = Change_extraction.analyze_diff_file_new_propagation();
 
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
@@ -36,8 +39,8 @@ public class App {
              * CHANGES TREE AND FEATURES COMPUTATION
              **/
             try {
-                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193
-      //          real_changes = Pipeline.feature_extraction(5000000);
+                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364
+   //             real_changes = Pipeline.feature_extraction(1432571);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,13 +84,12 @@ public class App {
                 return;
             }
 
-          //  Java_Tree tree_query = null;
-            List<String> allLines = null;
+
             BufferedWriter buff_writer_results = null;
             int i = 1;
 
             while (true) {
-                //Python3_Tree tree_query = null;
+               // Python3_Tree tree_query = null;
                 Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
@@ -147,6 +149,12 @@ public class App {
                     continue;
                 }
 
+                Tree query_old = TreeUtils.query_old_extraction(tree_query.get_parsetree().getChild(0));
+                Tree query_new = TreeUtils.query_new_extraction(tree_query.get_parsetree().getChild(2),0);
+
+           //     String ssss = query_old.toStringTree();
+           //     String ssad = query_new.toStringTree();
+
                 try {
                     BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -177,7 +185,8 @@ public class App {
                 try {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                    number_matching = Pipeline.final_comparison(tree_query, change_number, buff_writer_results);
+                    number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
+                 //   Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();

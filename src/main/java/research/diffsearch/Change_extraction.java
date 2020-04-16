@@ -561,7 +561,7 @@ public class Change_extraction {
         }
         writer_prop.println("[");
 
-        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/patch");
+        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/patch_python");
 
         int www = 0;
 
@@ -677,7 +677,7 @@ public class Change_extraction {
                                 //changes_list.add(change);
                                 if (change.get(0).equals("_\n")) {
                                     assert writer != null;
-                                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                    writer.println((change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
                                     cc.codeChange = (change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
                                     assert writer_prop != null;
                                     writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
@@ -685,13 +685,13 @@ public class Change_extraction {
                                 } else if (change.get(1).equals("_\n")) {
                                     assert writer != null;
                                     writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                    cc.codeChange = (change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                                    cc.codeChange = (change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
                                     assert writer_prop != null;
                                     writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
 
                                 } else {
                                     assert writer != null;
-                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
                                     cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
                                     assert writer_prop != null;
                                     writer_prop.println(commit + " " + position + " " + f.toString());// (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
@@ -716,21 +716,21 @@ public class Change_extraction {
 
                     if (change.get(0).equals("_\n")) {
                         assert writer != null;
-                        writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
+                        writer.println((change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
                         cc.codeChange = (change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->");
                         assert writer_prop != null;
                         writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
 
                     } else if (change.get(1).equals("_\n")) {
                         assert writer != null;
-                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
                         cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
                         assert writer_prop != null;
                         writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
 
                     } else {
                         assert writer != null;
-                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
                         cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
                         writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
 
