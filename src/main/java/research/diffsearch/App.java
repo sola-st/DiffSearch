@@ -40,7 +40,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364
-   //             real_changes = Pipeline.feature_extraction(1432571);
+         //       real_changes = Pipeline.feature_extraction(6612193);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -52,7 +52,7 @@ public class App {
 
             try {
                 System.out.println("INDEXING STARTED.\n");
-                Pipeline.indexing_candidate_changes( 150000);
+            //    Pipeline.indexing_candidate_changes( 921701);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,7 +68,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(14);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -89,7 +89,7 @@ public class App {
             int i = 1;
 
             while (true) {
-               // Python3_Tree tree_query = null;
+              //  Python3_Tree tree_query = null;
                 Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
@@ -137,7 +137,7 @@ public class App {
                 }
 
           //  for(String query_input: allLines){
-
+/*
                 try{
                     tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
@@ -147,10 +147,13 @@ public class App {
                 if (tree_query == null) {
                     System.out.print("The query is not correct, please try again.\n");
                     continue;
-                }
+                }*/
 
-                Tree query_old = TreeUtils.query_old_extraction(tree_query.get_parsetree().getChild(0));
-                Tree query_new = TreeUtils.query_new_extraction(tree_query.get_parsetree().getChild(2),0);
+                Tree query_old = null;
+                Tree query_new = null;
+
+                query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+               query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
 
            //     String ssss = query_old.toStringTree();
            //     String ssad = query_new.toStringTree();
@@ -186,7 +189,7 @@ public class App {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
                     number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
-                 //   Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
+              //      Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -204,7 +207,7 @@ public class App {
                 System.out.println("\nFINAL STATISTICS:"
                         + "\nNumber of changes analysed: " + real_changes
                         + "\nNumber of final matched changes: " + number_matching
-                        + "\nPython Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
+                        + "\nFAISS Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
                         + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
             }
 

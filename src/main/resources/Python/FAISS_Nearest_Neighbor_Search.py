@@ -18,11 +18,10 @@ index = faiss.read_index("./src/main/resources/Features_Vectors/faiss.index")
 end = time.time()
 
 print("Index read.")
-k = 2500 # return k-nearest neighbours
+k = 50000 # return k-nearest neighbours
 
 ######server#####
 import socket
-
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -83,7 +82,8 @@ while 1:
 
             with open('./src/main/resources/Features_Vectors/candidate_changes.txt', 'w') as f:
                 for item in index_list:
-                    f.write("%s" % changes_strings[item])
+                    if(len(changes_strings[item]) < 300):
+                        f.write("%s" % changes_strings[item])
 
             with open('./src/main/resources/Features_Vectors/candidate_changes_info.txt', 'w') as f:
                             for item in index_list:

@@ -3,6 +3,7 @@ package research.diffsearch;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Matching_Methods {
@@ -93,6 +94,10 @@ public class Matching_Methods {
                             return false;
                         }
                     }
+/*
+                    if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
                     break;
 
                 case "OP<1>":
@@ -106,6 +111,10 @@ public class Matching_Methods {
                             return false;
                         }
                     }
+                    /*
+                    if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
                     break;
 
                 case "OP<2>":
@@ -119,6 +128,9 @@ public class Matching_Methods {
                             return false;
                         }
                     }
+                /*     if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
                     break;
 
                 case "LT<0>":

@@ -539,6 +539,18 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitTernaryExpression(ECMAScriptParser.TernaryExpressionContext ctx);
     /**
+     * Enter a parse tree produced by the {@code ExprExpression}
+     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
+     * @param ctx the parse tree
+     */
+    void enterExprExpression(ECMAScriptParser.ExprExpressionContext ctx);
+    /**
+     * Exit a parse tree produced by the {@code ExprExpression}
+     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
+     * @param ctx the parse tree
+     */
+    void exitExprExpression(ECMAScriptParser.ExprExpressionContext ctx);
+    /**
      * Enter a parse tree produced by the {@code LogicalAndExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree

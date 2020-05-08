@@ -5,6 +5,10 @@ import grammar.ECMAScriptParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+/* Antlr4 command to create java classes using the terminal with Linux:
+java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java ECMAScript.g4
+*/
+
 public class Javascript_Tree {
     public String change_string;
     private ECMAScriptLexer lexer;
