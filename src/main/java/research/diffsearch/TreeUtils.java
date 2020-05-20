@@ -483,8 +483,7 @@ public class TreeUtils {
                     s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                     s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
                     if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
-                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
-                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")) {
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                         if (!(s1.equals(s2))) {
                             if(Config.LOG_FILE)
                                 writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
@@ -510,9 +509,7 @@ public class TreeUtils {
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
-                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
-                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")
-                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("literal")) {
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                         if(Config.LOG_FILE)
                             writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));

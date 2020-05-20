@@ -1,8 +1,6 @@
 package research.diffsearch;
 
-import grammar.ECMAScriptBaseListener;
-import grammar.JavaParserBaseListener;
-import grammar.Python3BaseListener;
+import ProgrammingLanguage.JavaScript.ECMAScriptBaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.Tree;
 
@@ -39,8 +37,12 @@ public class Pipeline {
             Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop.txt"));
 
             for (int i = 0; i < change_number; i++) {
-                if(i == 500000 || i == 1000000 || i == 1200000 || i == 2200000 || i == 3200000 || i == 4200000|| i == 5200000|| i == 6200000)
-                    System.out.println(i + " with " + real_changes);
+             //  if(i==10000 || i==30000 || i == 500000 || i == 1000000 || i == 1200000 || i == 2200000
+               //         || i == 3200000 || i == 4200000 || i == 5200000 || i == 6200000)
+                System.out.println(i + " with " + real_changes);
+
+              //  if(i == 1676)
+                //    i++;
 
                 if(!scanner.hasNext())
                     break;
@@ -57,8 +59,10 @@ public class Pipeline {
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
-                if(change_string.length() > 500)
+                if(change_string.length() > 1000)
                     continue;
+
+
 
                // Python3_Tree change =new Python3_Tree(change_string);
                 Javascript_Tree change = null;

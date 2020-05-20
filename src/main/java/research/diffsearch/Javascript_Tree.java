@@ -1,7 +1,7 @@
 package research.diffsearch;
 
-import grammar.ECMAScriptLexer;
-import grammar.ECMAScriptParser;
+import ProgrammingLanguage.JavaScript.ECMAScriptLexer;
+import ProgrammingLanguage.JavaScript.ECMAScriptParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -61,7 +61,15 @@ public class Javascript_Tree {
             error = true;
             System.out.println("PARSER ERROR " + change);
         }
+/*
+        try {
+            CompletableFuture.runAsync(() -> parsetree = parser.program())
+                    .get(1, TimeUnit.SECONDS);
 
+        }catch(TimeoutException | InterruptedException | ExecutionException e) {
+            error = true;
+        }
+*/
         features = new int[Integer.MAX_VALUE/1048576]; //4096
     }
 
