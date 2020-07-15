@@ -83,6 +83,26 @@ public class Matching_Methods {
                     }
                     break;
 
+                case "ID<3>":
+                    for(int j=0;j < array_query_new_nodes.length; j++) {
+                        if (array_query_new_nodes[j].equals("ID<3>")) {
+                            if (!array_change_old_nodes[i].equals(array_change_new_nodes[j])) {
+                                return false;
+                            }
+                        }
+                    }
+                    if(!array_query_new_nodes[i].equals("ID<3>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    break;
+
                 case "OP<0>":
                     if(!array_query_new_nodes[i].equals("OP<0>")){
                         if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
@@ -119,6 +139,56 @@ public class Matching_Methods {
 
                 case "OP<2>":
                     if(!array_query_new_nodes[i].equals("OP<2>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                /*     if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
+                    break;
+
+                case "binOP<0>":
+                    if(!array_query_new_nodes[i].equals("binOP<0>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+/*
+                    if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
+                    break;
+
+                case "binOP<1>":
+                    if(!array_query_new_nodes[i].equals("binOP<1>")){
+                        if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    else{
+                        if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
+                            return false;
+                        }
+                    }
+                    /*
+                    if((!Arrays.toString(array_query_old_nodes).contains("=") && Arrays.toString(array_change_old_nodes).contains("="))
+                            || (!Arrays.toString(array_query_new_nodes).contains("=") && Arrays.toString(array_change_new_nodes).contains("=")) )
+                        return false;*/
+                    break;
+
+                case "binOP<2>":
+                    if(!array_query_new_nodes[i].equals("binOP<2>")){
                         if(array_change_old_nodes[i].equals(array_change_new_nodes[i])){
                             return false;
                         }

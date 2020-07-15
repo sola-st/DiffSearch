@@ -1,7 +1,6 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.Tree;
-
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -51,8 +50,8 @@ public class App {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                System.out.println("INDEXING STARTED.\n");
-            //    Pipeline.indexing_candidate_changes( 934399);
+                System.out.println("INDEXING STARTED.\n");//934399
+   //             Pipeline.indexing_candidate_changes( 914399);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,7 +67,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(14);
+                TimeUnit.SECONDS.sleep(15);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -152,8 +151,8 @@ public class App {
                 Tree query_old = null;
                 Tree query_new = null;
 
-                query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
-               query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+               // query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+               // query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
 
            //     String ssss = query_old.toStringTree();
            //     String ssad = query_new.toStringTree();
@@ -188,8 +187,8 @@ public class App {
                 try {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                    number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
-              //      Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
+                     number_matching = Pipeline.final_comparison_multithreading(tree_query, change_number,query_old, query_new, buff_writer_results);
+                   // Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1,6 +1,8 @@
 package research.diffsearch;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
@@ -483,7 +485,8 @@ public class TreeUtils {
                     s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                     s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
                     if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
-                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")) {
                         if (!(s1.equals(s2))) {
                             if(Config.LOG_FILE)
                                 writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
@@ -509,7 +512,8 @@ public class TreeUtils {
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
-                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                         if(Config.LOG_FILE)
                             writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
@@ -716,6 +720,8 @@ public class TreeUtils {
             }else{
 
                 if(deep_tree_comparison_javascript2(query_tree, query_ruleNames, change_tree, change_ruleNames, writer)){
+
+
                     return true;
                 }else{
                     writer.println("######################################################################################################################################");
@@ -731,5 +737,110 @@ public class TreeUtils {
 
         return false;
     }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param query_ruleNames: rule names of the query AST
+     * @param change_tree : AST of the change
+     * @param change_ruleNames: rule names of the change AST
+     * @return two trees are equal or not
+     */
+    static boolean deep_tree_comparison_partial(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer, boolean check, Tree partial ) {
+
+        try {
+            if(!check) {
+                String s1 = Trees.getNodeText(change_tree, change_ruleNames);
+                String s2 = Trees.getNodeText(query_tree, query_ruleNames);
+
+                if(change_tree.getChildCount() > 0 && query_tree.getChildCount() > 0)
+                    if (Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames))) {
+                        if(change_tree.getChildCount() > 0) {
+                            return deep_tree_comparison_partial(query_tree, query_ruleNames, change_tree, change_ruleNames, writer, true, partial);
+                        }else{
+                            System.out.println("No children old\n");
+                            return false;}
+                    } else {
+                        for(int i= 0 ; i < change_tree.getChildCount(); i++) {
+                            if(deep_tree_comparison_partial(query_tree, query_ruleNames, change_tree.getChild(i), change_ruleNames, writer, false,partial))
+                                return true;
+                        }
+                    }
+            }else{
+
+                if(deep_tree_comparison_javascript2(query_tree, query_ruleNames, change_tree, change_ruleNames, writer)){
+                    partial = change_tree;
+
+
+                    return true;
+                }else{
+                    writer.println("######################################################################################################################################");
+                    for(int i= 0 ; i < change_tree.getChildCount(); i++)
+                        if(deep_tree_comparison_partial(query_tree, query_ruleNames, change_tree.getChild(i), change_ruleNames, writer, false, partial))
+                            return true;
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        return false;
+    }
+
+    /**
+     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+     *
+     * @param query_tree : AST of the query
+     * @param query_ruleNames: rule names of the query AST
+     * @param change_tree : AST of the change
+     * @param change_ruleNames: rule names of the change AST
+     * @return two trees are equal or not
+     */
+    static Tree deep_tree_comparison_partial2(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer, boolean check ) {
+
+        try {
+            if(!check) {
+                String s1 = Trees.getNodeText(change_tree, change_ruleNames);
+                String s2 = Trees.getNodeText(query_tree, query_ruleNames);
+
+                if(change_tree.getChildCount() > 0 && query_tree.getChildCount() > 0)
+                    if (Trees.getNodeText(change_tree, change_ruleNames).equals(Trees.getNodeText(query_tree, query_ruleNames))) {
+                        if(change_tree.getChildCount() > 0) {
+                            return deep_tree_comparison_partial2(query_tree, query_ruleNames, change_tree, change_ruleNames, writer, true);
+                        }else{
+                            System.out.println("No children old\n");
+                            return null;}
+                    } else {
+                        for(int i= 0 ; i < change_tree.getChildCount(); i++) {
+                            Tree partial = deep_tree_comparison_partial2(query_tree, query_ruleNames, change_tree.getChild(i), change_ruleNames, writer, false);
+                            if(partial != null)
+                                return partial;
+                        }
+                    }
+            }else{
+                Tree partial = null;
+                if(deep_tree_comparison_javascript2(query_tree, query_ruleNames, change_tree, change_ruleNames, writer)){
+                     partial = change_tree;
+
+                    return partial;
+                }else{
+                    writer.println("######################################################################################################################################");
+                    for(int i= 0 ; i < change_tree.getChildCount(); i++)
+                       partial = deep_tree_comparison_partial2(query_tree, query_ruleNames, change_tree.getChild(i), change_ruleNames, writer, false);
+                    if(partial != null)
+                        return partial;
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        return null;
+    }
+
+
 
 }
