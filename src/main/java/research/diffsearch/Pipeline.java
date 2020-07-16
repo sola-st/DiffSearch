@@ -687,7 +687,9 @@ public class Pipeline {
         }
 
         //long number_matching = 0;
-        AtomicInteger number_matching = new AtomicInteger(0);
+        //AtomicInteger number_matching = new AtomicInteger(0);
+
+        //number_matching.getAndIncrement();
 
         List<String> list_query_nodes = new ArrayList<>();
         TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
