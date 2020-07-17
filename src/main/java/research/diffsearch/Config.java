@@ -11,7 +11,7 @@ public class Config {
 
     //Constants that enable/disable part of the tool
     public static boolean CLEANUP   = false;
-    public static boolean LOG_FILE  = false;
+    public static boolean LOG_FILE  = true;
 
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;

@@ -617,42 +617,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterTernaryExpression(ECMAScriptParser.TernaryExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitTernaryExpression(ECMAScriptParser.TernaryExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterExprExpression(ECMAScriptParser.ExprExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitExprExpression(ECMAScriptParser.ExprExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterLogicalAndExpression(ECMAScriptParser.LogicalAndExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitLogicalAndExpression(ECMAScriptParser.LogicalAndExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
     @Override public void enterPreIncrementExpression(ECMAScriptParser.PreIncrementExpressionContext ctx) { }
     /**
      * {@inheritDoc}
@@ -684,18 +648,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override public void exitInExpression(ECMAScriptParser.InExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterLogicalOrExpression(ECMAScriptParser.LogicalOrExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitLogicalOrExpression(ECMAScriptParser.LogicalOrExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -773,13 +725,13 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterAssignmentExpression(ECMAScriptParser.AssignmentExpressionContext ctx) { }
+    @Override public void enterBinaryExpression(ECMAScriptParser.BinaryExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void exitAssignmentExpression(ECMAScriptParser.AssignmentExpressionContext ctx) { }
+    @Override public void exitBinaryExpression(ECMAScriptParser.BinaryExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -797,13 +749,13 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterWildcard(ECMAScriptParser.WildcardContext ctx) { }
+    @Override public void enterGeneralExpressionclear(ECMAScriptParser.GeneralExpressionclearContext ctx) { }
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void exitWildcard(ECMAScriptParser.WildcardContext ctx) { }
+    @Override public void exitGeneralExpressionclear(ECMAScriptParser.GeneralExpressionclearContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -857,49 +809,13 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterEqualityExpression(ECMAScriptParser.EqualityExpressionContext ctx) { }
+    @Override public void enterWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void exitEqualityExpression(ECMAScriptParser.EqualityExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterBitXOrExpression(ECMAScriptParser.BitXOrExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitBitXOrExpression(ECMAScriptParser.BitXOrExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterMultiplicativeExpression(ECMAScriptParser.MultiplicativeExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitMultiplicativeExpression(ECMAScriptParser.MultiplicativeExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterBitShiftExpression(ECMAScriptParser.BitShiftExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitBitShiftExpression(ECMAScriptParser.BitShiftExpressionContext ctx) { }
+    @Override public void exitWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -917,30 +833,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterAdditiveExpression(ECMAScriptParser.AdditiveExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitAdditiveExpression(ECMAScriptParser.AdditiveExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterRelationalExpression(ECMAScriptParser.RelationalExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitRelationalExpression(ECMAScriptParser.RelationalExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
     @Override public void enterPostIncrementExpression(ECMAScriptParser.PostIncrementExpressionContext ctx) { }
     /**
      * {@inheritDoc}
@@ -948,18 +840,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override public void exitPostIncrementExpression(ECMAScriptParser.PostIncrementExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterGeneralExpression(ECMAScriptParser.GeneralExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitGeneralExpression(ECMAScriptParser.GeneralExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -1044,30 +924,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override public void exitIdentifierExpression(ECMAScriptParser.IdentifierExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterBitAndExpression(ECMAScriptParser.BitAndExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitBitAndExpression(ECMAScriptParser.BitAndExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterBitOrExpression(ECMAScriptParser.BitOrExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitBitOrExpression(ECMAScriptParser.BitOrExpressionContext ctx) { }
     /**
      * {@inheritDoc}
      *

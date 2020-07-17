@@ -39,7 +39,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364
-       //         real_changes = Pipeline.feature_extraction(6612193);
+                //real_changes = Pipeline.feature_extraction(6612193);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,8 +50,8 @@ public class App {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                System.out.println("INDEXING STARTED.\n");//934399
-   //             Pipeline.indexing_candidate_changes( 914399);
+                System.out.println("INDEXING STARTED.\n");//908094
+                //Pipeline.indexing_candidate_changes( 508094);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -187,8 +187,8 @@ public class App {
                 try {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                     number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
-                   // Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
+                     //number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
+                     Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();

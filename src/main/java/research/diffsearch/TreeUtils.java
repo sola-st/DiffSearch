@@ -463,8 +463,11 @@ public class TreeUtils {
                 return false;
             }
 
-            if(query_tree.getChildCount() != change_tree.getChildCount())
-                return false;
+            if(query_tree.getChildCount()>0)
+                if(query_tree.getChildCount() != change_tree.getChildCount() &&
+                        !Trees.getNodeText(query_tree.getChild(0), query_ruleNames).contains("EXPR")
+                   && !Trees.getNodeText(query_tree.getChild(0), query_ruleNames).contains("<...>"))
+                    return false;
 
 
 
@@ -486,7 +489,8 @@ public class TreeUtils {
                     s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
                     if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
                             || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
-                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")) {
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("<...>")) {
                         if (!(s1.equals(s2))) {
                             if(Config.LOG_FILE)
                                 writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
@@ -511,9 +515,11 @@ public class TreeUtils {
 
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
+                String lllllllllllllllll=  Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
                         || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
-                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")) {
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("eos")
+                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("<...>")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                         if(Config.LOG_FILE)
                             writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));

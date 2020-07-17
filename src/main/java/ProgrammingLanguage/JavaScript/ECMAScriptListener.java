@@ -527,42 +527,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitExpressionSequence(ECMAScriptParser.ExpressionSequenceContext ctx);
     /**
-     * Enter a parse tree produced by the {@code TernaryExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterTernaryExpression(ECMAScriptParser.TernaryExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code TernaryExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitTernaryExpression(ECMAScriptParser.TernaryExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code ExprExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterExprExpression(ECMAScriptParser.ExprExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code ExprExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitExprExpression(ECMAScriptParser.ExprExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code LogicalAndExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterLogicalAndExpression(ECMAScriptParser.LogicalAndExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code LogicalAndExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitLogicalAndExpression(ECMAScriptParser.LogicalAndExpressionContext ctx);
-    /**
      * Enter a parse tree produced by the {@code PreIncrementExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
@@ -598,18 +562,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitInExpression(ECMAScriptParser.InExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code LogicalOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterLogicalOrExpression(ECMAScriptParser.LogicalOrExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code LogicalOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitLogicalOrExpression(ECMAScriptParser.LogicalOrExpressionContext ctx);
     /**
      * Enter a parse tree produced by the {@code NotExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
@@ -683,17 +635,17 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitUnaryMinusExpression(ECMAScriptParser.UnaryMinusExpressionContext ctx);
     /**
-     * Enter a parse tree produced by the {@code AssignmentExpression}
+     * Enter a parse tree produced by the {@code BinaryExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void enterAssignmentExpression(ECMAScriptParser.AssignmentExpressionContext ctx);
+    void enterBinaryExpression(ECMAScriptParser.BinaryExpressionContext ctx);
     /**
-     * Exit a parse tree produced by the {@code AssignmentExpression}
+     * Exit a parse tree produced by the {@code BinaryExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void exitAssignmentExpression(ECMAScriptParser.AssignmentExpressionContext ctx);
+    void exitBinaryExpression(ECMAScriptParser.BinaryExpressionContext ctx);
     /**
      * Enter a parse tree produced by the {@code PostDecreaseExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
@@ -707,17 +659,17 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitPostDecreaseExpression(ECMAScriptParser.PostDecreaseExpressionContext ctx);
     /**
-     * Enter a parse tree produced by the {@code Wildcard}
+     * Enter a parse tree produced by the {@code GeneralExpressionclear}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void enterWildcard(ECMAScriptParser.WildcardContext ctx);
+    void enterGeneralExpressionclear(ECMAScriptParser.GeneralExpressionclearContext ctx);
     /**
-     * Exit a parse tree produced by the {@code Wildcard}
+     * Exit a parse tree produced by the {@code GeneralExpressionclear}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void exitWildcard(ECMAScriptParser.WildcardContext ctx);
+    void exitGeneralExpressionclear(ECMAScriptParser.GeneralExpressionclearContext ctx);
     /**
      * Enter a parse tree produced by the {@code TypeofExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
@@ -767,53 +719,17 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitDeleteExpression(ECMAScriptParser.DeleteExpressionContext ctx);
     /**
-     * Enter a parse tree produced by the {@code EqualityExpression}
+     * Enter a parse tree produced by the {@code WildcardExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void enterEqualityExpression(ECMAScriptParser.EqualityExpressionContext ctx);
+    void enterWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx);
     /**
-     * Exit a parse tree produced by the {@code EqualityExpression}
+     * Exit a parse tree produced by the {@code WildcardExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
      */
-    void exitEqualityExpression(ECMAScriptParser.EqualityExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code BitXOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterBitXOrExpression(ECMAScriptParser.BitXOrExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code BitXOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitBitXOrExpression(ECMAScriptParser.BitXOrExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code MultiplicativeExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterMultiplicativeExpression(ECMAScriptParser.MultiplicativeExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code MultiplicativeExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitMultiplicativeExpression(ECMAScriptParser.MultiplicativeExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code BitShiftExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterBitShiftExpression(ECMAScriptParser.BitShiftExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code BitShiftExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitBitShiftExpression(ECMAScriptParser.BitShiftExpressionContext ctx);
+    void exitWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx);
     /**
      * Enter a parse tree produced by the {@code ParenthesizedExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
@@ -827,30 +743,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitParenthesizedExpression(ECMAScriptParser.ParenthesizedExpressionContext ctx);
     /**
-     * Enter a parse tree produced by the {@code AdditiveExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterAdditiveExpression(ECMAScriptParser.AdditiveExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code AdditiveExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitAdditiveExpression(ECMAScriptParser.AdditiveExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code RelationalExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterRelationalExpression(ECMAScriptParser.RelationalExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code RelationalExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitRelationalExpression(ECMAScriptParser.RelationalExpressionContext ctx);
-    /**
      * Enter a parse tree produced by the {@code PostIncrementExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
@@ -862,18 +754,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitPostIncrementExpression(ECMAScriptParser.PostIncrementExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code GeneralExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterGeneralExpression(ECMAScriptParser.GeneralExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code GeneralExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitGeneralExpression(ECMAScriptParser.GeneralExpressionContext ctx);
     /**
      * Enter a parse tree produced by the {@code BitNotExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
@@ -958,30 +838,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitIdentifierExpression(ECMAScriptParser.IdentifierExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code BitAndExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterBitAndExpression(ECMAScriptParser.BitAndExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code BitAndExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitBitAndExpression(ECMAScriptParser.BitAndExpressionContext ctx);
-    /**
-     * Enter a parse tree produced by the {@code BitOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterBitOrExpression(ECMAScriptParser.BitOrExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code BitOrExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitBitOrExpression(ECMAScriptParser.BitOrExpressionContext ctx);
     /**
      * Enter a parse tree produced by the {@code AssignmentOperatorExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.

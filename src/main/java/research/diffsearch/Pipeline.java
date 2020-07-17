@@ -160,8 +160,8 @@ public class Pipeline {
                //         || i == 3200000 || i == 4200000 || i == 5200000 || i == 6200000)
                 System.out.println(i + " with " + real_changes);
 
-              //  if(i == 1676)
-                //    i++;
+                if(i == 1676)
+                    i++;
 
                 if(!scanner.hasNext())
                     break;
@@ -178,7 +178,7 @@ public class Pipeline {
 
                 String change_string = stringBuilder.toString().replace("$$$", "");
 
-                if(change_string.length() > 1000)
+                if(change_string.length() > 500)
                     continue;
 
 
@@ -973,7 +973,7 @@ public class Pipeline {
 
 
     public static void small_test(Javascript_Tree tree_query, Tree query_old, Tree query_new, BufferedWriter buff_writer_results) {
-        String candidate = "if(x>0){ -> if(x>0){ ";
+        String candidate = "if(x>0){x++;} -> if(x<0){x++;} ";
 
 
         List<String> list_query_nodes = new ArrayList<>();
