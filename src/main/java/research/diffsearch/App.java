@@ -187,8 +187,8 @@ public class App {
                 try {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
-                     //number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
-                     Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
+                     number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results);
+                     //Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();

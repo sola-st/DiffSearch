@@ -504,12 +504,16 @@ public class Pipeline {
     public static long final_comparison(Javascript_Tree tree_query, long change_number,  Tree query_old, Tree query_new, BufferedWriter buff_writer_results){
         List<String> allLines = null;
         BufferedWriter buff_writer_features = null;
+        BufferedWriter buff_writer_features_candidate = null;
         try {
             Writer writer =
                     new OutputStreamWriter(
                             new FileOutputStream("./src/main/resources/Features_Vectors/deepbugs.csv"), StandardCharsets.UTF_8);
             //buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/deepbugs.csv"), "UTF-8");
             buff_writer_features = new BufferedWriter(writer);
+
+            buff_writer_features_candidate = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_candidates.csv"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -562,6 +566,40 @@ public class Pipeline {
 
             Javascript_Tree change = new Javascript_Tree(candidate.replace("$$", "\n"));
           //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+
+            //CANDIDATE CSV!!!
+            int xx= Integer.MAX_VALUE / 2097152;
+            //Computing hash sum of changes
+            List<Integer> list_change_hash_sum = new ArrayList<Integer>();
+            List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
+            TreeUtils.tree_hash_sumAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+            //   TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+
+            //Computing list change parent child
+            List<Integer> list_change_parent_child = new ArrayList<Integer>();
+            TreeUtils.pairs_parent_childAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+            // TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+
+            // Writing the feature vector in a csv file
+            StringBuilder str_builder = new StringBuilder();
+
+            for (int element : change.features) {
+                str_builder.append(element);
+                str_builder.append(",");
+            }
+            str_builder.append("\n");
+
+            try {
+                buff_writer_features_candidate.write(str_builder.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            /////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////
+
+
+
 
             List<String> list_change_nodes = new ArrayList<>();
             TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
@@ -650,6 +688,7 @@ public class Pipeline {
 
         try {
             buff_writer_features.close();
+            buff_writer_features_candidate.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
