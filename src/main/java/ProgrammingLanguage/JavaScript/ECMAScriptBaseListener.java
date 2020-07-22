@@ -809,18 +809,6 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
     @Override public void enterParenthesizedExpression(ECMAScriptParser.ParenthesizedExpressionContext ctx) { }
     /**
      * {@inheritDoc}

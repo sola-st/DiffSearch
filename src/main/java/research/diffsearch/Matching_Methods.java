@@ -5,6 +5,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static research.diffsearch.Pipeline.escapeSpecialCharacters;
 
 public class Matching_Methods {
 
@@ -18,7 +21,7 @@ public class Matching_Methods {
      * @param array_change_new_nodes : Array of new tokens in change tree
      * @return True if there is a match
      */
-    static boolean leaves_final_matching(String[] array_query_old_nodes, String[] array_query_new_nodes, String[] array_change_old_nodes, String[] array_change_new_nodes){
+    static boolean leaves_final_matching(String[] array_query_old_nodes, String[] array_query_new_nodes, String[] array_change_old_nodes, String[] array_change_new_nodes, String query_string, String candidate){
         for(int i = 0; i < array_query_new_nodes.length; i++){
             switch(array_query_old_nodes[i]) {
 
@@ -245,12 +248,34 @@ public class Matching_Methods {
 //                    if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
   //                      return false;
     //                }
+                    try {
 
+                        String regex = escapeSpecialRegexChars(query_string).replaceAll(" ", "").replaceAll("\n","")
+                                .replaceAll("EXPR<([0-9])>", "(.*?)")
+                                .replaceAll("ID<([0-9])>", "(.*?)")
+                                .replaceAll("LT<([0-9])>", "(.*?)")
+                                .replaceAll("binOP<([0-9])>", "(.*?)")
+                                .replaceAll("OP<([0-9])>", "(.*?)");
+
+                        boolean xx =  Pattern.matches(regex, candidate.replaceAll(" ", "").replaceAll("\n",""));
+                        boolean yy =  Pattern.matches(regex, "saasdas");
+
+                        return xx;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
 
                 default:
             }
         }
         return true;
+    }
+
+    static String escapeSpecialRegexChars(String str) {
+        Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
+
+        return SPECIAL_REGEX_CHARS.matcher(str).replaceAll("\\\\$0");
     }
 
     public static double cosineSimilarity(int[] v1, int[] v2, int length) {

@@ -719,18 +719,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitDeleteExpression(ECMAScriptParser.DeleteExpressionContext ctx);
     /**
-     * Enter a parse tree produced by the {@code WildcardExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void enterWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx);
-    /**
-     * Exit a parse tree produced by the {@code WildcardExpression}
-     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
-     * @param ctx the parse tree
-     */
-    void exitWildcardExpression(ECMAScriptParser.WildcardExpressionContext ctx);
-    /**
      * Enter a parse tree produced by the {@code ParenthesizedExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
      * @param ctx the parse tree
