@@ -235,6 +235,7 @@ statement
  | throwStatement
  | tryStatement
  | debuggerStatement
+ | WILDCARD
  ;
 
 /// Block :
@@ -427,7 +428,7 @@ formalParameterList
 functionBody
  : sourceElements?
  ;
-    
+
 /// ArrayLiteral :
 ///     [ Elision? ]
 ///     [ ElementList ]
@@ -465,7 +466,7 @@ objectLiteral
 propertyNameAndValueList
  : propertyAssignment ( ',' propertyAssignment )*
  ;
-    
+
 /// PropertyAssignment :
 ///     PropertyName : AssignmentExpression
 ///     get PropertyName ( ) { FunctionBody }
@@ -474,8 +475,8 @@ propertyAssignment
  : propertyName ':' singleExpression                            # PropertyExpressionAssignment
  | getter '(' ')' '{' functionBody '}'                          # PropertyGetter
  | setter '(' propertySetParameterList ')' '{' functionBody '}' # PropertySetter
- ;           
-    
+ ;
+
 /// PropertyName :
 ///     IdentifierName
 ///     StringLiteral
@@ -487,7 +488,7 @@ propertyName
  | HexIntegerLiteral
  | OctalIntegerLiteral //MOD
  ;
-    
+
 /// PropertySetParameterList :
 ///     Identifier
 propertySetParameterList
@@ -500,14 +501,14 @@ propertySetParameterList
 arguments
  : '(' argumentList? ')'
  ;
-    
+
 /// ArgumentList :
 ///     AssignmentExpression
 ///     ArgumentList , AssignmentExpression
 argumentList
  : singleExpression ( ',' singleExpression )*
  ;
-    
+
 /// Expression :
 ///     AssignmentExpression
 ///     Expression , AssignmentExpression
@@ -554,7 +555,7 @@ argumentList
 ///     RelationalExpression > ShiftExpression
 ///     RelationalExpression <= ShiftExpression
 ///     RelationalExpression >= ShiftExpression
-///     RelationalExpression instanceof ShiftExpression 
+///     RelationalExpression instanceof ShiftExpression
 ///     RelationalExpression in ShiftExpression
 ///
 /// ShiftExpression :
@@ -562,7 +563,7 @@ argumentList
 ///     ShiftExpression << AdditiveExpression
 ///     ShiftExpression >> AdditiveExpression
 ///     ShiftExpression >>> AdditiveExpression
-/// 
+///
 /// AdditiveExpression :
 ///     MultiplicativeExpression
 ///     AdditiveExpression + MultiplicativeExpression
@@ -648,7 +649,6 @@ singleExpression
  | singleExpression Instanceof singleExpression                           # InstanceofExpression
  | singleExpression In singleExpression                                   # InExpression
  | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
- | WILDCARD                                                               # WildcardExpression
  | EXPR                                                                   # GeneralExpressionclear
  | This                                                                   # ThisExpression
  | Identifier                                                             # IdentifierExpression
@@ -661,23 +661,23 @@ singleExpression
 /// AssignmentOperator : one of
 ///     *=	/=	%=	+=	-=	<<=	>>=	>>>=	&=	^=	|=
 assignmentOperator
- : '*=' 
- | '/=' 
- | '%=' 
- | '+=' 
- | '-=' 
- | '<<=' 
- | '>>=' 
- | '>>>=' 
- | '&=' 
- | '^=' 
+ : '*='
+ | '/='
+ | '%='
+ | '+='
+ | '-='
+ | '<<='
+ | '>>='
+ | '>>>='
+ | '&='
+ | '^='
  | '|='
- | '=' 
+ | '='
  | 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>'
  ;
 
 literal
- : ( NullLiteral 
+ : ( NullLiteral
    | BooleanLiteral
    | StringLiteral
    | RegularExpressionLiteral
@@ -823,15 +823,15 @@ BitOr                      : '|';
 And                        : '&&';
 Or                         : '||';
 MultiplyAssign             : '*=';
-DivideAssign               : '/='; 
-ModulusAssign              : '%='; 
-PlusAssign                 : '+='; 
-MinusAssign                : '-='; 
-LeftShiftArithmeticAssign  : '<<='; 
-RightShiftArithmeticAssign : '>>='; 
-RightShiftLogicalAssign    : '>>>='; 
-BitAndAssign               : '&='; 
-BitXorAssign               : '^='; 
+DivideAssign               : '/=';
+ModulusAssign              : '%=';
+PlusAssign                 : '+=';
+MinusAssign                : '-=';
+LeftShiftArithmeticAssign  : '<<=';
+RightShiftArithmeticAssign : '>>=';
+RightShiftLogicalAssign    : '>>>=';
+BitAndAssign               : '&=';
+BitXorAssign               : '^=';
 BitOrAssign                : '|=';
 
 /// 7.8.1 Null Literals
@@ -898,8 +898,8 @@ Const   : 'const';
 Export  : 'export';
 Import  : 'import';
 
-/// The following tokens are also considered to be FutureReservedWords 
-/// when parsing strict mode  
+/// The following tokens are also considered to be FutureReservedWords
+/// when parsing strict mode
 Implements : {strictMode}? 'implements';
 Let        : {strictMode}? 'let';
 Private    : {strictMode}? 'private';
@@ -911,7 +911,7 @@ Static     : {strictMode}? 'static';
 Yield      : {strictMode}? 'yield';
 
 
-//Expressions 
+//Expressions
 EXPR: 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR';//MOD
 
 EMPTY: '_'; //MOD
@@ -1002,7 +1002,7 @@ fragment EscapeCharacter
  ;
 
 fragment LineContinuation
- : '\\' LineTerminatorSequence 
+ : '\\' LineTerminatorSequence
  ;
 
 fragment LineTerminatorSequence
@@ -1315,7 +1315,7 @@ fragment UnicodeCombiningMark
  | [\u0591-\u05A1]
  | [\u05A3-\u05B9]
  | [\u05BB-\u05BD]
- | [\u05BF] 
+ | [\u05BF]
  | [\u05C1-\u05C2]
  | [\u05C4]
  | [\u064B-\u0655]
@@ -1500,7 +1500,7 @@ fragment RegularExpressionNonTerminator
 fragment RegularExpressionBackslashSequence
  : '\\' RegularExpressionNonTerminator
  ;
- 
+
 /// RegularExpressionClass ::
 ///     [ RegularExpressionClassChars ]
 ///
@@ -1510,7 +1510,7 @@ fragment RegularExpressionBackslashSequence
 fragment RegularExpressionClass
   : '[' RegularExpressionClassChar* ']'
   ;
- 
+
 /// RegularExpressionClassChar ::
 ///     RegularExpressionNonTerminator but not ] or \
 ///     RegularExpressionBackslashSequence
@@ -1518,4 +1518,3 @@ fragment RegularExpressionClassChar
  : ~[\r\n\u2028\u2029\]\\]
  | RegularExpressionBackslashSequence
  ;
-

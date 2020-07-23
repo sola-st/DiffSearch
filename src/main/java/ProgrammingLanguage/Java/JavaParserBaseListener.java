@@ -1,4 +1,4 @@
-package grammar;
+package ProgrammingLanguage.Java;
 
 // Generated from JavaParser.g4 by ANTLR 4.7.1
 

@@ -1,7 +1,7 @@
 package research.diffsearch;
 
-import grammar.Python3Lexer;
-import grammar.Python3Parser;
+import ProgrammingLanguage.Python.Python3Lexer;
+import ProgrammingLanguage.Python.Python3Parser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 

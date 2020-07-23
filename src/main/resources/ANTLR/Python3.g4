@@ -129,8 +129,9 @@ tokens { INDENT, DEDENT }
  * parser rules
  */
 
-program: file_input (NEWLINE file_input)? '->'? file_input (NEWLINE file_input)?;
-single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE?;
+program: file_input (NEWLINE file_input)? '-->'? file_input (NEWLINE file_input)? |
+         single_input (NEWLINE single_input)? '-->'? single_input (NEWLINE single_input)?;
+single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE? | WILDCARD NEWLINE?;
 file_input: (NEWLINE | stmt)* EOF?;
 eval_input: testlist NEWLINE* EOF?;
 
@@ -139,7 +140,8 @@ decorators: decorator+;
 decorated: decorators (classdef | funcdef | async_funcdef);
 
 async_funcdef: ASYNC funcdef;
-funcdef: 'def' NAME parameters ('->' test)? ':' suite;
+funcdef: //'def' NAME parameters ('->' test)? ':' suite?
+         'def' dotted_name parameters ('->' test)? ':' suite?;
 
 parameters: '(' (typedargslist)? ')';
 typedargslist: (tfpdef ('=' test)? (',' tfpdef ('=' test)?)* (',' (
@@ -147,7 +149,8 @@ typedargslist: (tfpdef ('=' test)? (',' tfpdef ('=' test)?)* (',' (
       | '**' tfpdef (',')?)?)?
   | '*' (tfpdef)? (',' tfpdef ('=' test)?)* (',' ('**' tfpdef (',')?)?)?
   | '**' tfpdef (',')?);
-tfpdef: NAME (':' test)?;
+tfpdef: //NAME (':' test)?;
+       dotted_name(':' test)?;//MOD
 varargslist: (vfpdef ('=' test)? (',' vfpdef ('=' test)?)* (',' (
         '*' (vfpdef)? (',' vfpdef ('=' test)?)* (',' ('**' vfpdef (',')?)?)?
       | '**' vfpdef (',')?)?)?
@@ -156,16 +159,17 @@ varargslist: (vfpdef ('=' test)? (',' vfpdef ('=' test)?)* (',' (
 );
 vfpdef: NAME;
 
-stmt: simple_stmt | compound_stmt;
+stmt: simple_stmt | compound_stmt | WILDCARD;
 simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE?;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
-expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) |
-                     ('=' (yield_expr|testlist_star_expr))*); //MOD
-annassign: ':' test ('=' test)?;
+expr_stmt: testlist_star_expr (annassign | ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
+            '<<=' | '>>=' | '**=' | 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>'| '//=') (yield_expr|testlist) |
+                     (('='| 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>') (yield_expr|testlist_star_expr))*); //MOD
+annassign: ':' test (('=' | 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>') test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
 augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
-            '<<=' | '>>=' | '**=' | '//=');
+            '<<=' | '>>=' | '**=' | 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>'| '//=');
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
 del_stmt: 'del' exprlist;
 pass_stmt: 'pass';
@@ -203,7 +207,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' suite?;
 with_item: test ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
-suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT | 'BLK<' NUMBER '>' | 'BLK';
+suite: simple_stmt | NEWLINE? INDENT? stmt+ DEDENT | 'BLK<' NUMBER '>' | 'BLK';
 
 test: or_test ('if' or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
@@ -212,18 +216,23 @@ lambdef_nocond: 'lambda' (varargslist)? ':' test_nocond;
 or_test: and_test ('or' and_test)*;
 and_test: not_test ('and' not_test)*;
 not_test: 'not' not_test | comparison;
-comparison: expr (comp_op expr)* | 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR'; //MOD
+comparison: expr (bin_op expr)* | 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR'; //MOD
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 //MOD
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>';
+bin_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>'|
+'+'|'-'|'*'|'@'|'/'|'%' | '^'|'&' |('<<'|'>>');
+
+//comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'| 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>';
 star_expr: '*' expr;
-expr: xor_expr ('|' xor_expr)* ;
-xor_expr: and_expr ('^' and_expr)*;
-and_expr: shift_expr ('&' shift_expr)*;
-shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
-arith_expr: term (('+'|'-') term)*;
-term: factor (('*'|'@'|'/'|'%'|'//') factor)*;
+expr: expr_general ('|' expr_general)* ;
+//xor_expr: and_expr ('^' and_expr)*;
+//and_expr: shift_expr ('&' shift_expr)*;
+//shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
+//shift_expr: expr_general (('<<'|'>>') expr_general)*;
+expr_general: factor (bin_op factor)*;
+//arith_expr: term (('+'|'-') term)*;
+//term: factor (('*'|'@'|'/'|'%'| 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>' |'//') factor)*;
 factor: ('+'|'-'|'~') factor | power;
 power: atom_expr ('**' factor)?;
 atom_expr: (AWAIT)? atom trailer* ;
@@ -417,6 +426,7 @@ IMAG_NUMBER
  : ( FLOAT_NUMBER | INT_PART ) [jJ]
  ;
 
+WILDCARD: '<...>'; //MOD
 DOT : '.';
 ELLIPSIS : '...';
 STAR : '*';

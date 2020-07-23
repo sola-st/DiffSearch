@@ -1,6 +1,7 @@
 package research.diffsearch;
 
 import ProgrammingLanguage.JavaScript.ECMAScriptBaseListener;
+import ProgrammingLanguage.Python.Python3BaseListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.Tree;
 
@@ -350,15 +351,15 @@ public class Pipeline {
      * @param query_input: String of the query
      * @return AST of the query
      */
-    public static Javascript_Tree query_feature_extraction(String query_input){
-        Javascript_Tree tree_query = null;
+    public static Python3_Tree query_feature_extraction(String query_input){
+        Python3_Tree tree_query = null;
         //Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
         try {
            // tree_query = new Java_Tree(query_input);
-            tree_query = new Javascript_Tree(query_input);
-           // tree_query = new Python3_Tree(query_input);
+           // tree_query = new Javascript_Tree(query_input);
+            tree_query = new Python3_Tree(query_input);
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
                     tree_query.isError() || tree_query.error)
                 return null;
@@ -366,18 +367,18 @@ public class Pipeline {
             //Declaring query variables
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();
-           ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
-         //   Python3BaseListener listener = new Python3BaseListener();
+          // ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
+            Python3BaseListener listener = new Python3BaseListener();
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(listener, tree_query.get_parsetree());
             List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
 
             //Computing hash sum and pairs parent child
-            TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+           // TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+           // TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
 
-           // TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-           // TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
             list_hash_sum.addAll(list_parent_child);
 
             //Creation of a buffered writer
@@ -1013,8 +1014,8 @@ public class Pipeline {
     }
 
 
-    public static void small_test(Javascript_Tree tree_query, Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string) {
-        String candidate = "if(x>0){ -> if(x<0){ ";
+    public static void small_test(Python3_Tree tree_query, Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string) {
+        String candidate = "if(x>0): --> if(x<0): ";
 
 
         List<String> list_query_nodes = new ArrayList<>();
@@ -1028,7 +1029,7 @@ public class Pipeline {
         boolean new_code = false;
 
         for(String str: list_query_old_leaves){
-            if(str.equals("->") || str.equals("<EOF>")){
+            if(str.equals("-->") || str.equals("<EOF>")){
                 new_code = true;
             }else{
                 if(new_code){
@@ -1043,8 +1044,8 @@ public class Pipeline {
         String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
         array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
 
-      //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
-        Javascript_Tree change = new Javascript_Tree(candidate.replace("$$", "\n"));
+        Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+      //  Javascript_Tree change = new Javascript_Tree(candidate.replace("$$", "\n"));
 
         List<String> list_change_nodes = new ArrayList<>();
         TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
@@ -1064,8 +1065,8 @@ public class Pipeline {
             equal3 = TreeUtils.deep_tree_comparison_partial(query_new, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(2), Arrays.asList(change.get_parser().getRuleNames()), writer, false, candidate);
         }
 
-  //   -+ boolean equal = TreeUtils.deep_tree_comparison_python(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
-        boolean equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+        boolean equal = TreeUtils.deep_tree_comparison_python(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+       // boolean equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
         assert writer != null;
         writer.close();
@@ -1079,7 +1080,7 @@ public class Pipeline {
             new_code = false;
 
             for (String str : list_change_old_leaves) {
-                if (str.equals("->") || str.equals("<EOF>")) {
+                if (str.equals("-->") || str.equals("<EOF>")) {
                     new_code = true;
                 } else {
                     if (new_code) {
@@ -1096,8 +1097,9 @@ public class Pipeline {
 
             boolean final_matching = false;
 
-            if(equal)
-                final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes, query_string, candidate);
+           // if(equal)
+            final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes, query_string, candidate);
+            /*
             else {
                 List<String> list_change_old_leaves2 = new ArrayList<>();
                 List<String> list_change_new_leaves2 = new ArrayList<>();
@@ -1117,11 +1119,11 @@ public class Pipeline {
                 array_change_new_nodes2 = list_change_new_leaves2.toArray(array_change_new_nodes2);
 
                 final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes2, array_change_new_nodes2, query_string, candidate);
-            }
+            }*/
 
             if (final_matching) {
 
-                List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
+                List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("-->"));
 
                 if(Config.EFFECTIVENESS || Config.NORMAL ) {
                     System.out.println("- " + list.get(0) + "\n+ " + list.get(1));

@@ -1,7 +1,7 @@
 package research.diffsearch;
 
-import grammar.JavaLexer;
-import grammar.JavaParser;
+import ProgrammingLanguage.Java.JavaLexer;
+import ProgrammingLanguage.Java.JavaParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 

@@ -1,4 +1,4 @@
-package grammar;
+package ProgrammingLanguage.Python;
 
 // Generated from Python3.g4 by ANTLR 4.7.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -589,15 +589,15 @@ public interface Python3Listener extends ParseTreeListener {
      */
     void exitComparison(Python3Parser.ComparisonContext ctx);
     /**
-     * Enter a parse tree produced by {@link Python3Parser#comp_op}.
+     * Enter a parse tree produced by {@link Python3Parser#bin_op}.
      * @param ctx the parse tree
      */
-    void enterComp_op(Python3Parser.Comp_opContext ctx);
+    void enterBin_op(Python3Parser.Bin_opContext ctx);
     /**
-     * Exit a parse tree produced by {@link Python3Parser#comp_op}.
+     * Exit a parse tree produced by {@link Python3Parser#bin_op}.
      * @param ctx the parse tree
      */
-    void exitComp_op(Python3Parser.Comp_opContext ctx);
+    void exitBin_op(Python3Parser.Bin_opContext ctx);
     /**
      * Enter a parse tree produced by {@link Python3Parser#star_expr}.
      * @param ctx the parse tree
@@ -619,55 +619,15 @@ public interface Python3Listener extends ParseTreeListener {
      */
     void exitExpr(Python3Parser.ExprContext ctx);
     /**
-     * Enter a parse tree produced by {@link Python3Parser#xor_expr}.
+     * Enter a parse tree produced by {@link Python3Parser#expr_general}.
      * @param ctx the parse tree
      */
-    void enterXor_expr(Python3Parser.Xor_exprContext ctx);
+    void enterExpr_general(Python3Parser.Expr_generalContext ctx);
     /**
-     * Exit a parse tree produced by {@link Python3Parser#xor_expr}.
+     * Exit a parse tree produced by {@link Python3Parser#expr_general}.
      * @param ctx the parse tree
      */
-    void exitXor_expr(Python3Parser.Xor_exprContext ctx);
-    /**
-     * Enter a parse tree produced by {@link Python3Parser#and_expr}.
-     * @param ctx the parse tree
-     */
-    void enterAnd_expr(Python3Parser.And_exprContext ctx);
-    /**
-     * Exit a parse tree produced by {@link Python3Parser#and_expr}.
-     * @param ctx the parse tree
-     */
-    void exitAnd_expr(Python3Parser.And_exprContext ctx);
-    /**
-     * Enter a parse tree produced by {@link Python3Parser#shift_expr}.
-     * @param ctx the parse tree
-     */
-    void enterShift_expr(Python3Parser.Shift_exprContext ctx);
-    /**
-     * Exit a parse tree produced by {@link Python3Parser#shift_expr}.
-     * @param ctx the parse tree
-     */
-    void exitShift_expr(Python3Parser.Shift_exprContext ctx);
-    /**
-     * Enter a parse tree produced by {@link Python3Parser#arith_expr}.
-     * @param ctx the parse tree
-     */
-    void enterArith_expr(Python3Parser.Arith_exprContext ctx);
-    /**
-     * Exit a parse tree produced by {@link Python3Parser#arith_expr}.
-     * @param ctx the parse tree
-     */
-    void exitArith_expr(Python3Parser.Arith_exprContext ctx);
-    /**
-     * Enter a parse tree produced by {@link Python3Parser#term}.
-     * @param ctx the parse tree
-     */
-    void enterTerm(Python3Parser.TermContext ctx);
-    /**
-     * Exit a parse tree produced by {@link Python3Parser#term}.
-     * @param ctx the parse tree
-     */
-    void exitTerm(Python3Parser.TermContext ctx);
+    void exitExpr_general(Python3Parser.Expr_generalContext ctx);
     /**
      * Enter a parse tree produced by {@link Python3Parser#factor}.
      * @param ctx the parse tree

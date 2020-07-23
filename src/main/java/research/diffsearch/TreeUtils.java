@@ -191,8 +191,8 @@ public class TreeUtils {
                 return false;
             }
 
-            if(query_tree.getChildCount() != change_tree.getChildCount())
-                return false;
+           // if(query_tree.getChildCount() != change_tree.getChildCount())
+           //     return false;
 
             String s1;
             String s2;

@@ -29,7 +29,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-            change_number = Change_extraction.analyze_diff_file_new_propagation();
+            //change_number = Change_extraction.analyze_diff_file_new_propagation();
 
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
@@ -38,8 +38,8 @@ public class App {
              * CHANGES TREE AND FEATURES COMPUTATION
              **/
             try {
-                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6352132
-                //real_changes = Pipeline.feature_extraction(6612193);
+                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
+                //real_changes = Pipeline.feature_extraction(6352000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -51,7 +51,7 @@ public class App {
 
             try {
                 System.out.println("INDEXING STARTED.\n");//908094  js: 508094
-                Pipeline.indexing_candidate_changes( 50094);
+                Pipeline.indexing_candidate_changes( 50000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,8 +93,8 @@ public class App {
             int i = 1;
 
             while (true) {
-              //  Python3_Tree tree_query = null;
-                Javascript_Tree tree_query = null;
+                Python3_Tree tree_query = null;
+                //Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
                     System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
@@ -132,7 +132,7 @@ public class App {
                     }
                     query_input = String.join(System.lineSeparator(), old_code) + "->" + String.join(System.lineSeparator(), new_code);
 
-                    query_input = "if(EXPR<0>){ -> if(EXPR<1>){";
+                    query_input = "if(ID binOP<0> LT): --> if(ID binOP<1> LT):";
                     tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
                     e.printStackTrace();

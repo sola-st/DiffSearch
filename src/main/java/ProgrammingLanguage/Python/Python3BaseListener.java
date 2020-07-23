@@ -1,4 +1,4 @@
-package grammar;
+package ProgrammingLanguage.Python;
 
 // Generated from Python3.g4 by ANTLR 4.7.1
 
@@ -713,13 +713,13 @@ public class Python3BaseListener implements Python3Listener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterComp_op(Python3Parser.Comp_opContext ctx) { }
+    @Override public void enterBin_op(Python3Parser.Bin_opContext ctx) { }
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void exitComp_op(Python3Parser.Comp_opContext ctx) { }
+    @Override public void exitBin_op(Python3Parser.Bin_opContext ctx) { }
     /**
      * {@inheritDoc}
      *
@@ -749,61 +749,13 @@ public class Python3BaseListener implements Python3Listener {
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void enterXor_expr(Python3Parser.Xor_exprContext ctx) { }
+    @Override public void enterExpr_general(Python3Parser.Expr_generalContext ctx) { }
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
-    @Override public void exitXor_expr(Python3Parser.Xor_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterAnd_expr(Python3Parser.And_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitAnd_expr(Python3Parser.And_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterShift_expr(Python3Parser.Shift_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitShift_expr(Python3Parser.Shift_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterArith_expr(Python3Parser.Arith_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitArith_expr(Python3Parser.Arith_exprContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void enterTerm(Python3Parser.TermContext ctx) { }
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override public void exitTerm(Python3Parser.TermContext ctx) { }
+    @Override public void exitExpr_general(Python3Parser.Expr_generalContext ctx) { }
     /**
      * {@inheritDoc}
      *
