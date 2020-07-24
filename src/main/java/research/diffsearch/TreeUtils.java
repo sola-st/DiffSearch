@@ -205,7 +205,9 @@ public class TreeUtils {
 
                     s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                     s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
-                    if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                    if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("<...>")) {
                         if (!(s1.equals(s2))) {
                             if(Config.LOG_FILE)
                                 writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
@@ -225,7 +227,9 @@ public class TreeUtils {
 
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
-                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
+                        || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
+                || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("<...>")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                         if(Config.LOG_FILE)
                             writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
@@ -237,7 +241,7 @@ public class TreeUtils {
                     }
                 }else{
                     if(Config.LOG_FILE)
-                        writer.println("EXPR---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
+                        writer.println("EXPR or <...>---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
                     break;
                 }
             }
@@ -272,8 +276,8 @@ public class TreeUtils {
                 return false;
             }
 
-            if(query_tree.getChildCount() != change_tree.getChildCount())
-                return false;
+            //if(query_tree.getChildCount() != change_tree.getChildCount())
+              //  return false;
 
 
 
@@ -320,7 +324,8 @@ public class TreeUtils {
             for (i = 0; i < query_tree.getChildCount(); i++) {
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
                         || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
-                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("literal")) {
+                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("literal")
+                        || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("<...>")) {
                     if (query_tree.getChild(i).getChildCount() > 0) {
                       //  if(Config.LOG_FILE)
                        //     writer.println("next---" + Trees.getNodeText(change_tree.getChild(i), change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree.getChild(i), query_ruleNames));
@@ -388,7 +393,8 @@ public class TreeUtils {
 
                     s1 = Trees.getNodeText(change_tree.getChild(i), change_ruleNames);
                     s2 = Trees.getNodeText(query_tree.getChild(i), query_ruleNames);
-                    if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR") || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
+                    if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
+                            || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")) {
                         if (!(s1.equals(s2))) {
                               if(Config.LOG_FILE)
                                   writer.println("FALSE1---" + Trees.getNodeText(change_tree, change_ruleNames) + "  Q: " + Trees.getNodeText(query_tree, query_ruleNames));
@@ -413,6 +419,10 @@ public class TreeUtils {
 
         try{
             for (i = 0; i < query_tree.getChildCount(); i++) {
+                // Important for partial tree matching
+                if(Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains(";"))
+                    continue;
+
                 if (!Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("EXPR")
                         || !Trees.getNodeText(change_tree.getChild(i), change_ruleNames).equals("expr")
                         || !Trees.getNodeText(query_tree.getChild(i), query_ruleNames).contains("literal")) {
@@ -646,6 +656,51 @@ public class TreeUtils {
         }
 
         return n;
+    }
+
+    public static Tree query_java_extraction(final Tree query_tree, List<String> query_ruleNames) {
+        Tree old = null;
+
+        try {
+            String test = Trees.getNodeText(query_tree, query_ruleNames);
+            if(Trees.getNodeText(query_tree, query_ruleNames).equals("expression")){
+                return query_tree;
+            }else{
+                if(query_tree.getChildCount() > 0)
+                    old = query_java_extraction(query_tree.getChild(0), query_ruleNames);
+                else
+                    return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return old;
+        }
+
+        return old;
+    }
+
+
+    public static Tree query_python_extraction(final Tree query_tree, List<String> query_ruleNames) {
+        Tree old = null;
+
+        try {
+            String test = Trees.getNodeText(query_tree, query_ruleNames);
+            if(Trees.getNodeText(query_tree, query_ruleNames).equals("expr_general")){
+                return query_tree;
+            }else{
+                if(query_tree.getChildCount() > 0)
+                    old = query_python_extraction(query_tree.getChild(0), query_ruleNames);
+                else
+                    return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return old;
+        }
+
+        return old;
     }
 
     public static Tree query_javascript_extraction(final Tree query_tree, List<String> query_ruleNames) {

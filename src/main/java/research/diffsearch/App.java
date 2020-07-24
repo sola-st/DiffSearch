@@ -29,7 +29,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-            //change_number = Change_extraction.analyze_diff_file_new_propagation();
+            change_number = Change_extraction.analyze_diff_file_new_propagation();
 
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
@@ -39,7 +39,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
-                //real_changes = Pipeline.feature_extraction(6352000);
+                real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -51,7 +51,7 @@ public class App {
 
             try {
                 System.out.println("INDEXING STARTED.\n");//908094  js: 508094
-                Pipeline.indexing_candidate_changes( 50000);
+                //Pipeline.indexing_candidate_changes( 50000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,7 +93,8 @@ public class App {
             int i = 1;
 
             while (true) {
-                Python3_Tree tree_query = null;
+                Java_Tree tree_query = null;
+                //Python3_Tree tree_query = null;
                 //Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
@@ -130,9 +131,9 @@ public class App {
                         }
                         new_code.add(lineNew2);
                     }
-                    query_input = String.join(System.lineSeparator(), old_code) + "->" + String.join(System.lineSeparator(), new_code);
+                    query_input = String.join(System.lineSeparator(), old_code) + "-->" + String.join(System.lineSeparator(), new_code);
 
-                    query_input = "if(ID binOP<0> LT): --> if(ID binOP<1> LT):";
+                    query_input = "ID binOP<0> LT; --> ID binOP<1> LT;";
                     tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -159,11 +160,17 @@ public class App {
                 Tree query_new = null;
 
 
-                query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
-                query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_old = TreeUtils.query_python_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_new = TreeUtils.query_python_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
 
-           //     String ssss = query_old.toStringTree();
-           //     String ssad = query_new.toStringTree();
+                query_old = TreeUtils.query_java_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                query_new = TreeUtils.query_java_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+
+
+                //String ssss = query_old.toStringTree();
+                //String ssad = query_new.toStringTree();
 
                 try {
                     BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));

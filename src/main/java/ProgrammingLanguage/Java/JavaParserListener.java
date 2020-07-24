@@ -839,6 +839,26 @@ public interface JavaParserListener extends ParseTreeListener {
      */
     void exitMethodCall(JavaParser.MethodCallContext ctx);
     /**
+     * Enter a parse tree produced by {@link JavaParser#binary_operators}.
+     * @param ctx the parse tree
+     */
+    void enterBinary_operators(JavaParser.Binary_operatorsContext ctx);
+    /**
+     * Exit a parse tree produced by {@link JavaParser#binary_operators}.
+     * @param ctx the parse tree
+     */
+    void exitBinary_operators(JavaParser.Binary_operatorsContext ctx);
+    /**
+     * Enter a parse tree produced by {@link JavaParser#assign_operators}.
+     * @param ctx the parse tree
+     */
+    void enterAssign_operators(JavaParser.Assign_operatorsContext ctx);
+    /**
+     * Exit a parse tree produced by {@link JavaParser#assign_operators}.
+     * @param ctx the parse tree
+     */
+    void exitAssign_operators(JavaParser.Assign_operatorsContext ctx);
+    /**
      * Enter a parse tree produced by {@link JavaParser#expression}.
      * @param ctx the parse tree
      */

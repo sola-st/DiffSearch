@@ -9,7 +9,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources/GitHub" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources/patch" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources/patch_python" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/GitHub_Java" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/GitHub_Java" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

@@ -153,6 +153,8 @@ BITOR:              '|';
 CARET:              '^';
 MOD:                '%';
 OP: 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>';//MOD
+BINOP: 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>';//MOD
+QUERY_ARROW : '-->';
 
 ADD_ASSIGN:         '+=';
 SUB_ASSIGN:         '-=';
@@ -220,4 +222,3 @@ fragment Letter
     | ~[\u0000-\u007F\uD800-\uDBFF] // covers all characters above 0x7F which are not a surrogate
     | [\uD800-\uDBFF] [\uDC00-\uDFFF] // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
     ;
-

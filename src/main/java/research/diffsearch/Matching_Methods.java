@@ -3,7 +3,6 @@ package research.diffsearch;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -245,20 +244,20 @@ public class Matching_Methods {
                     }
 
                 case "EXPR": case "EXPR<0>": case "EXPR<1>": case "EXPR<2>": case "<...>":
-//                    if(!array_change_old_nodes[i].equals(array_change_new_nodes[i])){
-  //                      return false;
-    //                }
+
                     try {
+                        String wildcard = java.util.UUID.randomUUID().toString().replaceAll("[^A-Za-z0-9]","");
+                        query_string = query_string.replaceAll("<...>",wildcard);
 
                         String regex = escapeSpecialRegexChars(query_string).replaceAll(" ", "").replaceAll("\n","")
-                                .replaceAll("EXPR<([0-9])>", "(.*?)")
-                                .replaceAll("ID<([0-9])>", "(.*?)")
-                                .replaceAll("LT<([0-9])>", "(.*?)")
-                                .replaceAll("binOP<([0-9])>", "(.*?)")
-                                .replaceAll("OP<([0-9])>", "(.*?)");
+                                .replaceAll(wildcard, "(.*?)")
+                                .replaceAll("EXPR(<([0-9])>)?", "(.*?)")
+                                .replaceAll("ID(<([0-9])>)?", "(.*?)")
+                                .replaceAll("LT(<([0-9])>)?", "(.*?)")
+                                .replaceAll("binOP(<([0-9])>)?", "(.*?)")
+                                .replaceAll("OP(<([0-9])>)?", "(.*?)");
 
                         boolean xx =  Pattern.matches(regex, candidate.replaceAll(" ", "").replaceAll("\n",""));
-                        boolean yy =  Pattern.matches(regex, "saasdas");
 
                         return xx;
                     } catch (Exception e) {

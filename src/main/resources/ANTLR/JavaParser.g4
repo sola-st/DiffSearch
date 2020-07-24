@@ -32,9 +32,9 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE? 
-    | blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? EMPTY NEWLINE?
-    | EMPTY NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?  //MOD
+    : blockStatement (NEWLINE blockStatement)* NEWLINE? QUERY_ARROW NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?
+    | blockStatement (NEWLINE blockStatement)* NEWLINE? QUERY_ARROW NEWLINE? EMPTY NEWLINE?
+    | EMPTY NEWLINE? QUERY_ARROW NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?  //MOD
     ;
 
 compilationUnit
@@ -367,13 +367,15 @@ defaultValue
 // STATEMENTS / BLOCKS
 
 block
-    : NEWLINE? '{' NEWLINE? blockStatement* NEWLINE? '}' //MOD
+    : NEWLINE? '{' NEWLINE? blockStatement* NEWLINE? '}'?
+      | NEWLINE? '{' NEWLINE? WILDCARD NEWLINE? '}'?  //MOD
     ;
 
 blockStatement
     : localVariableDeclaration ';'
     | statement
     | localTypeDeclaration
+    | WILDCARD
     ;
 
 localVariableDeclaration
@@ -390,18 +392,18 @@ statement
     : blockLabel=block
     | ASSERT EXPR (':' EXPR)? ';' //MOD
    // | IF EXPR statement (ELSE statement)?
-    | FOR '(' EXPR (',' EXPR)* ')' statement
-    | FOR '(' WILDCARD ')' statement
-    | WHILE EXPR statement
+    | FOR '(' EXPR (',' EXPR)* ')' statement?
+    | FOR '(' WILDCARD ')' statement?
+    | WHILE EXPR statement?
     | DO statement WHILE EXPR ';'
     | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
     | SYNCHRONIZED EXPR block
     | RETURN EXPR ';'
     | THROW EXPR ';'
     | ASSERT expression (':' expression)? ';'
-    | IF parExpression statement (ELSE statement)?
-    | FOR '(' forControl ')' statement
-    | WHILE parExpression statement
+    | IF parExpression statement? (ELSE statement)?
+    | FOR '(' forControl ')' statement?
+    | WHILE parExpression statement?
     | DO statement WHILE parExpression ';'
     | TRY block (catchClause+ finallyBlock? | finallyBlock)
     | TRY resourceSpecification block catchClause* finallyBlock?
@@ -482,6 +484,11 @@ methodCall
     | SUPER '(' expressionList? ')'
     ;
 
+binary_operators: '*'|'/'|'%'|'+'|'-'|'<' '<' | '>' '>' '>' | '>' '>'| '<=' | '>=' | '>' | '<'
+                 | '==' | '!=' | '&' |'^' |'|' |'&&' | '||' | BINOP ;
+
+assign_operators : '=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=' | OP;
+
 expression
     : primary
     | expression bop='.'
@@ -499,20 +506,24 @@ expression
     | expression postfix=('++' | '--')
     | prefix=('+'|'-'|'++'|'--') expression
     | prefix=('~'|'!') expression
-    | expression bop=('*'|'/'|'%') expression
-    | expression bop=('+'|'-') expression
-    | expression ('<' '<' | '>' '>' '>' | '>' '>') expression
-    | expression bop=( OP | '<=' | '>=' | '>' | '<') expression
+    | expression binary_operators expression
+    //| expression bop=('*'|'/'|'%') expression
+    //| expression bop=('+'|'-') expression
+    //| expression ('<' '<' | '>' '>' '>' | '>' '>') expression
+    //| expression bop=( '<=' | '>=' | '>' | '<') expression
     | expression bop=INSTANCEOF typeType
-    | expression bop=('==' | '!=') expression
-    | expression bop='&' expression
-    | expression bop='^' expression
-    | expression bop='|' expression
-    | expression bop='&&' expression
-    | expression bop='||' expression
+    //| expression bop=('==' | '!=') expression
+    //| expression bop='&' expression
+    //| expression bop='^' expression
+    //| expression bop='|' expression
+    //| expression bop='&&' expression
+    //| expression bop='||' expression
     | <assoc=right> expression bop='?' expression ':' expression
+    //| <assoc=right> expression
+    //  bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
+    //  expression
     | <assoc=right> expression
-      bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
+      assign_operators
       expression
     | lambdaExpression // Java8
 
@@ -630,4 +641,3 @@ explicitGenericInvocationSuffix
 arguments
     : '(' expressionList? ')'
     ;
-

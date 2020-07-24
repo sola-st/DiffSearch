@@ -207,7 +207,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' suite?;
 with_item: test ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
-suite: simple_stmt | NEWLINE? INDENT? stmt+ DEDENT | 'BLK<' NUMBER '>' | 'BLK';
+suite: simple_stmt | NEWLINE? INDENT? stmt+ DEDENT? | 'BLK<' NUMBER '>' | 'BLK' | NEWLINE? INDENT? WILDCARD DEDENT? NEWLINE?; //MOD
 
 test: or_test ('if' or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;

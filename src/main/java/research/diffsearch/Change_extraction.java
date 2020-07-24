@@ -561,7 +561,7 @@ public class Change_extraction {
         }
         writer_prop.println("[");
 
-        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/patch_python");
+        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/java_patch");
 
         int www = 0;
 

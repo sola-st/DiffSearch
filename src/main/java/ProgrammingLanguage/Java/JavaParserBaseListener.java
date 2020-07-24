@@ -1013,6 +1013,30 @@ public class JavaParserBaseListener implements JavaParserListener {
      *
      * <p>The default implementation does nothing.</p>
      */
+    @Override public void enterBinary_operators(JavaParser.Binary_operatorsContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitBinary_operators(JavaParser.Binary_operatorsContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void enterAssign_operators(JavaParser.Assign_operatorsContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitAssign_operators(JavaParser.Assign_operatorsContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
     @Override public void enterExpression(JavaParser.ExpressionContext ctx) { }
     /**
      * {@inheritDoc}
