@@ -20,7 +20,7 @@ public class Config {
 
     //Socket
     public static String host_javascript = "localhost";
-    public static int port_javascript = 8372;
+    public static int port_web = 8843;
 
     public static String host = "localhost";
     public static int port = 5002;

@@ -62,31 +62,8 @@ public class App {
             int i = 1;
 
             MiniPbxManServer gtp = new MiniPbxManServer();
-            gtp.run();
+            gtp.run(socket);
 
-            //JS
-            try {
-                ServerSocket serverConnect = new ServerSocket(Config.port_javascript);
-                System.out.println("Server started.\nListening for connections on port : " + Config.port_javascript + " ...\n");
-
-                // we listen until user halts server execution
-                while (true) {
-                    JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
-
-                    if (true) {
-                        System.out.println("Connecton opened. (" + new Date() + ")");
-                    }
-
-                    //create dedicated thread to manage the client connection
-                    //Thread thread = new Thread(myServer);
-                    //thread.start();
-                    myServer.run();
-                    System.out.println("Bye");
-                }
-
-            } catch (IOException e) {
-                System.err.println("Server Connection error : " + e.getMessage());
-            }
 
 
             // JavaScript Socket
@@ -94,7 +71,7 @@ public class App {
             Socket          socket_js   = null;
             DataInputStream inn       =  null;
             try {
-                server_js = new ServerSocket(Config.port_javascript);
+                server_js = new ServerSocket(Config.port_web);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

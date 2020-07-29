@@ -13,9 +13,9 @@ import java.util.List;
 import static research.diffsearch.Pipeline.run_test;
 
 public class MiniPbxManServer extends Thread {
-    private final int PORT = 8372;
+    private final int PORT = Config.port_web;
 
-    public void run() {
+    public void run(Socket socket_python) {
         try {
             ServerSocket server = new ServerSocket(PORT);
             System.out.println("MiniServer active "+PORT);
@@ -58,7 +58,7 @@ public class MiniPbxManServer extends Thread {
 
                 if(postDataI > 0){
                     String result = java.net.URLDecoder.decode(postData.replaceAll("Text1=","").replaceAll("&Text2=","-->"), StandardCharsets.UTF_8);
-                    output_list = run_test(result);
+                    output_list = run_test(result, socket_python);
                    // String out = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(in);
                 }
 

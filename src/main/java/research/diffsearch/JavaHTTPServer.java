@@ -24,7 +24,7 @@ public class JavaHTTPServer implements Runnable{
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
-    static final int PORT = Config.port_javascript;
+    static final int PORT = Config.port_web;
 
     // verbose mode
     static final boolean verbose = true;
