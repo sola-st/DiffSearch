@@ -18,7 +18,7 @@ public class MiniPbxManServer extends Thread {
     public void run() {
         try {
             ServerSocket server = new ServerSocket(PORT);
-            System.out.println("\n\nMiniServer active "+PORT);
+            System.out.println("MiniServer active "+PORT);
             boolean shudown = true;
             while (shudown) {
                 System.out.println("Waiting request on port "+PORT);
@@ -50,7 +50,7 @@ public class MiniPbxManServer extends Thread {
                 List<String> output_list = new ArrayList<String>();
 
                 if(postDataI > 0){
-                    String result = java.net.URLDecoder.decode(postData.replaceAll("user=",""), StandardCharsets.UTF_8);
+                    String result = java.net.URLDecoder.decode(postData.replaceAll("Text1=","").replaceAll("&Text2=","-->"), StandardCharsets.UTF_8);
                     output_list = run_test(result);
                    // String out = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(in);
                 }
@@ -61,17 +61,23 @@ public class MiniPbxManServer extends Thread {
                 // this blank line signals the end of the headers
                 out.println("");
                 // Send the HTML page
-                out.println("<H1>Welcome to DiffSearch</H1>");
-                out.println("<H2>Insert you query</H2>");
+                out.println("<center><H1>Welcome to DiffSearch</H1></center>");
+                out.println("<center><H2>Insert you query</H2></center>");
               //  out.println("<H2>Post->"+postData+ "</H2>");
                 out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
-                out.println("Query: <input type=\"text\" name=\"user\"><input type=\"submit\" value=\"Submit\"></form>");
+                out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
+                        "<big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big>"+
+                        "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" ></textarea></pre>" +
+                        "<input type=\"submit\" value=\"Search\"></form></center>");
+
 
                 if(output_list.size() > 0){
-                    out.println("<H3>Code changes found (Max 20):</H3>");
+                    out.println("<center><H3>Code changes found (Max 10):</H3></center>");
 
                     for(String change:output_list)
-                        out.println("<H4>" + change + "</H4>");
+                        out.println("<center><H4>" + change + "</H4></center>");
+                }else{
+                    out.println("<center><H3>No Matching Code changes found</H3></center>");
                 }
 
                 //if your get parameter contains shutdown it will shutdown
