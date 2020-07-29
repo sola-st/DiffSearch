@@ -72,6 +72,7 @@ public class MiniPbxManServer extends Thread {
 
 
                 if(output_list.size() > 0){
+                    System.out.println("Number of code changes found = " + output_list.size());
                     out.println("<center><H3>Code changes found (Max 10):</H3></center>");
 
                     for(String change:output_list)

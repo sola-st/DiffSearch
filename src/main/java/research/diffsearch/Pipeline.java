@@ -409,7 +409,7 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-        System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
+       // System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
 
         return tree_query;
     }
@@ -1333,7 +1333,7 @@ public class Pipeline {
 
                 List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("-->"));
 
-                if(Config.EFFECTIVENESS || Config.NORMAL || Config.WEB ) {
+                if(Config.EFFECTIVENESS || Config.NORMAL) {
                     System.out.println("- " + list.get(0) + "\n+ " + list.get(1));
                     output_list.add(candidate);
                 }
