@@ -56,9 +56,19 @@ public class MiniPbxManServer extends Thread {
 
                 List<String> output_list = new ArrayList<String>();
 
+                long duration_matching = 0;
+
                 if(postDataI > 0){
                     String result = java.net.URLDecoder.decode(postData.replaceAll("Text1=","").replaceAll("&Text2=","-->"), StandardCharsets.UTF_8);
+
+                    System.out.println("Search started.");
+                    long startTime_matching = System.currentTimeMillis();
+
                     output_list = run_test(result, socket_python);
+
+                    duration_matching = (System.currentTimeMillis() - startTime_matching);
+
+                    System.out.println("Search ended.");
                    // String out = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(in);
                 }
 
@@ -69,7 +79,7 @@ public class MiniPbxManServer extends Thread {
                 out.println("");
                 // Send the HTML page
                 out.println("<center><H1>Welcome to DiffSearch</H1></center>");
-                out.println("<center><H2>Insert you query</H2></center>");
+                out.println("<center><H2>Insert your query for matching Python code</H2></center>");
               //  out.println("<H2>Post->"+postData+ "</H2>");
                 out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
@@ -79,8 +89,8 @@ public class MiniPbxManServer extends Thread {
 
 
                 if(output_list.size() > 0){
-                    System.out.println("Number of code changes found = " + output_list.size());
-                    out.println("<center><H3>Code changes found (Max 10):</H3></center>");
+                    //System.out.println("Number of code changes found = " + output_list.size());
+                    out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 5.5 million dataset:</H3></center>");
 
                     for(String change:output_list)
                         out.println("<center><H4>" + change + "</H4></center>");

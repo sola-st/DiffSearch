@@ -279,8 +279,8 @@ public class App {
             int i = 1;
 
             while (true) {
-                Java_Tree tree_query = null;
-                //Python3_Tree tree_query = null;
+                //Java_Tree tree_query = null;
+                Python3_Tree tree_query = null;
                 //Javascript_Tree tree_query = null;
                 String query_input = null;
                 try {
@@ -389,7 +389,7 @@ public class App {
                     System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
                     //Deep recursive tree comparison
                    //  number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results, query_input);
-                     Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results, query_input);
+                   //  Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results, query_input);
     //                buff_writer_results.close();
                 } catch (Exception e) {
                     e.printStackTrace();
