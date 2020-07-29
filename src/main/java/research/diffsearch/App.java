@@ -1,21 +1,230 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.Tree;
+
 import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import org.java_websocket.client.WebSocketClient;
+
+import org.java_websocket.handshake.ServerHandshake;
+
 
 public class App {
     public static void main(String[] args) {
         long change_number = 0;
         long real_changes = 0;
         double time_python2 = 0;
+
+        /* **************************************************************************************************************
+         * WEB INTERFACE MODE
+         * */
+
+
+        if(Config.WEB) {
+
+            /* **************************************************************************************************************
+             * SEARCH PYTHON STAGE (FAISS)
+             ****************************************************************************************************************/
+
+            System.out.println("FAISS SEARCHING STAGE STARTED.\n");
+            try {
+                new Thread( Pipeline::search_candidate_changes).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                TimeUnit.SECONDS.sleep(15);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("FAISS SEARCHING STAGE DONE.\n");
+
+            Socket socket = null;
+            try {
+                socket = new Socket(Config.host,Config.port);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+
+                System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
+                return;
+            }
+
+            BufferedWriter buff_writer_results = null;
+            int i = 1;
+
+            MiniPbxManServer gtp = new MiniPbxManServer();
+            gtp.run();
+
+            //JS
+            try {
+                ServerSocket serverConnect = new ServerSocket(Config.port_javascript);
+                System.out.println("Server started.\nListening for connections on port : " + Config.port_javascript + " ...\n");
+
+                // we listen until user halts server execution
+                while (true) {
+                    JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+
+                    if (true) {
+                        System.out.println("Connecton opened. (" + new Date() + ")");
+                    }
+
+                    //create dedicated thread to manage the client connection
+                    //Thread thread = new Thread(myServer);
+                    //thread.start();
+                    myServer.run();
+                    System.out.println("Bye");
+                }
+
+            } catch (IOException e) {
+                System.err.println("Server Connection error : " + e.getMessage());
+            }
+
+
+            // JavaScript Socket
+            ServerSocket server_js = null;
+            Socket          socket_js   = null;
+            DataInputStream inn       =  null;
+            try {
+                server_js = new ServerSocket(Config.port_javascript);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+
+                System.out.println("\nJAVASCRIPT CONNECTION FAILED.\n");
+                return;
+            }
+            System.out.println("Server started");
+
+            System.out.println("Waiting for a client ...");
+
+
+            while (true) {
+                Java_Tree tree_query = null;
+                //Python3_Tree tree_query = null;
+                //Javascript_Tree tree_query = null;
+                String query_input = null;
+
+                try{
+                    while(true){
+
+                        socket_js = server_js.accept();
+                    System.out.println("Client accepted");
+
+                    // takes input from the client socket
+                        BufferedReader stdIn2 = new BufferedReader(new InputStreamReader(socket_js.getInputStream()));
+
+                        String line;
+                        while((line = stdIn2.readLine()) != null)
+                        {
+                            System.out.println("echo: " + line);
+                           // out.println("test");
+                        }
+
+                    System.out.println("Closing connection");
+
+                    // close connection
+                        socket_js.close();
+                        stdIn2.close();
+                    }
+
+
+                   // tree_query = Pipeline.query_feature_extraction(query_input);
+                } catch (Exception e) {
+                    System.out.println("ERROR");
+                    e.printStackTrace();
+                }
+
+
+                if (tree_query == null) {
+                    System.out.print("The query is not correct, please try again.\n");
+                    continue;
+                }
+
+
+                Tree query_old = null;
+                Tree query_new = null;
+
+
+                //query_old = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_new = TreeUtils.query_javascript_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_old = TreeUtils.query_python_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                //query_new = TreeUtils.query_python_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+
+                query_old = TreeUtils.query_java_extraction(tree_query.get_parsetree().getChild(0), Arrays.asList(tree_query.get_parser().getRuleNames()));
+                query_new = TreeUtils.query_java_extraction(tree_query.get_parsetree().getChild(2),Arrays.asList(tree_query.get_parser().getRuleNames()));
+
+
+                //String ssss = query_old.toStringTree();
+                //String ssad = query_new.toStringTree();
+
+                try {
+                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    out.print("PYTHON" + "\r\n");
+                    out.flush();
+                    System.out.println("WAITING MESSAGE..");
+
+                    time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+                    String in = stdIn.readLine();
+                    System.out.println("MESSAGE RECEIVED");
+
+                    if(!in.equals("JAVA"))
+                        continue;
+
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                /* **************************************************************************************************************
+                 * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+                 * */
+
+                long startTime_matching = System.currentTimeMillis();
+
+                long number_matching = -1;
+                try {
+                    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
+                    //Deep recursive tree comparison
+                    //  number_matching = Pipeline.final_comparison(tree_query, change_number,query_old, query_new, buff_writer_results, query_input);
+                    Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results, query_input);
+                    //                buff_writer_results.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (number_matching == 0)
+                    System.out.println("No changes found that match the query with deep comparison. \n");
+
+                long duration_matching = (System.currentTimeMillis() - startTime_matching);
+
+
+                /* **************************************************************************************************************
+                 * STATISTICS
+                 **/
+                System.out.println("\nFINAL STATISTICS:"
+                        + "\nNumber of changes analysed: " + real_changes
+                        + "\nNumber of final matched changes: " + number_matching
+                        + "\nFAISS Search duration: " + time_python2 + " seconds"// + ", read index: " + reading_index + " seconds"
+                        + "\nFinal Matching duration: " + duration_matching / 1000.0 + " seconds.\n");
+            }
+
+            //System.out.println("\n\n\nEND OF THE PROGRAM SUCCESSFULLY REACHED.");
+        }
+
+
+
+
 
         /* **************************************************************************************************************
          * NORMAL MODE
@@ -29,7 +238,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-            change_number = Change_extraction.analyze_diff_file_new_propagation();
+            //change_number = Change_extraction.analyze_diff_file_new_propagation();
 
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
@@ -39,7 +248,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
-                real_changes = Pipeline.feature_extraction(change_number);
+                //real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) {
                 e.printStackTrace();
             }

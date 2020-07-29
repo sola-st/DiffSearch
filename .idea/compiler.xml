@@ -14,7 +14,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="diffsearch" target="8" />
+      <module name="diffsearch" target="10" />
     </bytecodeTargetLevel>
   </component>
 </project>

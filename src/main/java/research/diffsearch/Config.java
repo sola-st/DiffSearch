@@ -15,9 +15,13 @@ public class Config {
 
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = true;
+    public static boolean NORMAL  = false;
+    public static boolean WEB  = true;
 
     //Socket
+    public static String host_javascript = "localhost";
+    public static int port_javascript = 8372;
+
     public static String host = "localhost";
     public static int port = 5002;
 
