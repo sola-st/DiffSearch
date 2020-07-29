@@ -23,6 +23,13 @@ public class MiniPbxManServer extends Thread {
             while (shudown) {
                 System.out.println("Waiting request on port "+PORT);
                 Socket socket = server.accept();
+
+                if (!socket.getInetAddress().isLoopbackAddress()){
+                    socket.close();
+                    continue;
+                }
+
+
                 InputStream is = socket.getInputStream();
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 BufferedReader in = new BufferedReader(new InputStreamReader(is));
