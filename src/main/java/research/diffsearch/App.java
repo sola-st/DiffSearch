@@ -75,12 +75,11 @@ public class App {
                     assert server != null;
                     System.out.println("Waiting request on port " + Config.port_web);
                     socket = server.accept();
-                    MiniPbxManServer client = new MiniPbxManServer(socket, socket_faiss);
+                    DiffSearch_WebServer client = new DiffSearch_WebServer(socket, socket_faiss);
                     client.start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
 
             }
         }
