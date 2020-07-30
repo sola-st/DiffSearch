@@ -150,15 +150,15 @@ public class Pipeline {
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
-            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv"));
+            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
-            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_js.txt");
-            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop_js.txt");
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_java.txt");
+            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop_java.txt");
             BufferedWriter bw = new BufferedWriter(writer);
             BufferedWriter bw2 = new BufferedWriter(writer2);
 
             Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff.txt"));
-            Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop_.txt"));
+            Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop.txt"));
 
             for (int i = 0; i < change_number; i++) {
                 //  if(i==10000 || i==30000 || i == 500000 || i == 1000000 || i == 1200000 || i == 2200000
