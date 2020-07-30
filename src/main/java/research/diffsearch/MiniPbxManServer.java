@@ -1,9 +1,6 @@
 package research.diffsearch;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -13,22 +10,27 @@ import java.util.List;
 import static research.diffsearch.Pipeline.run_test;
 
 public class MiniPbxManServer extends Thread {
-    private final int PORT = Config.port_web;
+    protected Socket socket;
+    protected Socket socket_faiss;
 
-    public void run(Socket socket_python) {
+    public MiniPbxManServer(Socket socket_accepted, Socket socket_faiss_accepted) {
+        socket = socket_accepted;
+        socket_faiss = socket_faiss_accepted;
+    }
+
+    public void run() {
         try {
-            ServerSocket server = new ServerSocket(PORT);
-            System.out.println("MiniServer active "+PORT);
-            boolean shudown = true;
-            while (shudown) {
-                System.out.println("Waiting request on port "+PORT);
-                Socket socket = server.accept();
-
                 if (!socket.getInetAddress().isLoopbackAddress()){
-                    socket.close();
-                    continue;
+                    try {
+                        socket.close();
+                        System.out.println("Connection closed because the client is not a localhost");
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    return;
                 }
 
+                System.out.println("Connection accepted with thread " + Thread.currentThread().getId());
 
                 InputStream is = socket.getInputStream();
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
@@ -66,7 +68,7 @@ public class MiniPbxManServer extends Thread {
 
                     try {
 
-                        output_list = run_test(result, socket_python);
+                        output_list = run_test(result, socket_faiss);
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -117,15 +119,21 @@ public class MiniPbxManServer extends Thread {
                 }
 
                 //if your get parameter contains shutdown it will shutdown
-                if(auxLine.indexOf("?shutdown")>-1){
-                    shudown = false;
-                }
+               // if(auxLine.indexOf("?shutdown")>-1){
+                 //   shudown = false;
+                //}
                 out.close();
                 socket.close();
-            }
-            server.close();
+                System.out.println("Connection closed with thread " + Thread.currentThread().getId());
+            //}
+            //server.close();
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                socket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 }
