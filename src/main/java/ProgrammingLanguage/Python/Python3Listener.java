@@ -19,6 +19,16 @@ public interface Python3Listener extends ParseTreeListener {
      */
     void exitProgram(Python3Parser.ProgramContext ctx);
     /**
+     * Enter a parse tree produced by {@link Python3Parser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void enterQuerySnippet(Python3Parser.QuerySnippetContext ctx);
+    /**
+     * Exit a parse tree produced by {@link Python3Parser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void exitQuerySnippet(Python3Parser.QuerySnippetContext ctx);
+    /**
      * Enter a parse tree produced by {@link Python3Parser#single_input}.
      * @param ctx the parse tree
      */

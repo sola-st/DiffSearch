@@ -4,19 +4,17 @@ public class Config {
 
     //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
     public static String PYTHON_CMD = "python3";
-    public static String GITDIFF_FILE = "elastic.patch";
+    public static String GITDIFF_FILE = "";
 
     //Programming language supported: PYTHON3, JAVA
     public static String PROGRAMMING_LANGUAGE = "JAVA_SCALABILITY";
 
     //Constants that enable/disable part of the tool
-    public static boolean CLEANUP   = false;
-    public static boolean LOG_FILE  = true;
-
+    public static boolean LOG_FILE  = false;
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = false;
-    public static boolean WEB  = true;
+    public static boolean NORMAL  = true;
+    public static boolean WEB  = false;
 
     //Socket
     public static String host_javascript = "localhost";
