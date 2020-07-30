@@ -148,15 +148,15 @@ public class Pipeline {
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
-            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors.csv"));
+            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
-            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings.txt");
-            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop.txt");
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_py.txt");
+            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop_py.txt");
             BufferedWriter bw = new BufferedWriter(writer);
             BufferedWriter bw2 = new BufferedWriter(writer2);
 
-            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff.txt"));
-            Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop.txt"));
+            Scanner scanner = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_py.txt"));
+            Scanner scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/corpus_diff_prop_py.txt"));
 
             for (int i = 0; i < change_number; i++) {
                 //  if(i==10000 || i==30000 || i == 500000 || i == 1000000 || i == 1200000 || i == 2200000
@@ -186,13 +186,13 @@ public class Pipeline {
 
 
 
-                //Python3_Tree change = null;
+                Python3_Tree change = null;
                 //Javascript_Tree change = null;
-                Java_Tree change = null;
+                //Java_Tree change = null;
                 try{
-                    //  change = new Javascript_Tree(change_string);}
-                    //change = new Python3_Tree(change_string);
-                    change = new Java_Tree(change_string);
+                    //change = new Javascript_Tree(change_string);}
+                    change = new Python3_Tree(change_string);
+                    //change = new Java_Tree(change_string);
                 }
                 catch (Exception e){
                     continue;
@@ -243,14 +243,14 @@ public class Pipeline {
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
                 // TreeUtils.tree_hash_sumAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-                //  TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                  TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+               // TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
                 //Computing list change parent child
                 List<Integer> list_change_parent_child = new ArrayList<Integer>();
                 //  TreeUtils.pairs_parent_childAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-                // TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                 TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+               // TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
                 StringBuilder str_builder = new StringBuilder();

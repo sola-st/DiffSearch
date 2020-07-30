@@ -64,7 +64,12 @@ public class MiniPbxManServer extends Thread {
                     System.out.println("Search started.");
                     long startTime_matching = System.currentTimeMillis();
 
-                    output_list = run_test(result, socket_python);
+                    try {
+
+                        output_list = run_test(result, socket_python);
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     duration_matching = (System.currentTimeMillis() - startTime_matching);
 
@@ -79,7 +84,7 @@ public class MiniPbxManServer extends Thread {
                 out.println("");
                 // Send the HTML page
                 out.println("<center><H1>Welcome to DiffSearch</H1></center>");
-                out.println("<center><H2>Insert your query for matching Python code</H2></center>");
+                out.println("<center><H2>Insert your query for matching Python code changes</H2></center>");
               //  out.println("<H2>Post->"+postData+ "</H2>");
                 out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
@@ -89,11 +94,24 @@ public class MiniPbxManServer extends Thread {
 
 
                 if(output_list.size() > 0){
-                    //System.out.println("Number of code changes found = " + output_list.size());
-                    out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 5.5 million dataset:</H3></center>");
+                    boolean flag = true;
+                    for(String change:output_list) {
+                        try {
+                            String[] parts = change.split("-->");
 
-                    for(String change:output_list)
-                        out.println("<center><H4>" + change + "</H4></center>");
+                            if(parts.length == 1){
+                                out.println("<center><H3><span style='color: #0022b9'>The query is not correct, please try again.</span></H3></center>");
+                            }
+                            else{
+                                if(flag){
+                                    out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 5.5 million dataset:</H3></center>");
+                                    flag = false;
+                                }
+                                out.println("<center><H4><span style='color:#9c0101'>" + parts[0] + "</span> --> <span style='color:#008000'>" + parts[1] + "</span></H4></center>");}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }else{
                     out.println("<center><H3>No Matching Code changes found</H3></center>");
                 }

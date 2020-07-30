@@ -15,8 +15,8 @@ public class Config {
 
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = false;
-    public static boolean WEB  = true;
+    public static boolean NORMAL  = true;
+    public static boolean WEB  = false;
 
     //Socket
     public static String host_javascript = "localhost";
