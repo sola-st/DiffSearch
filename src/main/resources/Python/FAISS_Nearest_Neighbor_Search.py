@@ -14,7 +14,7 @@ import time
 
 import faiss                                   # make faiss available
 start = time.time()
-index = faiss.read_index("./src/main/resources/Features_Vectors/faiss_py.index")
+index = faiss.read_index("./src/main/resources/Features_Vectors/faiss_java.index")
 end = time.time()
 
 print("Index read.")
