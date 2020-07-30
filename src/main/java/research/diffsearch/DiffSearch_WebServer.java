@@ -85,7 +85,7 @@ public class DiffSearch_WebServer extends Thread {
             out.println("");
             // Send the HTML page
             out.println("<center><H1>Welcome to DiffSearch</H1></center>");
-            out.println("<center><H2>Insert your query for matching <span style='color: #0022b9'>Python</span> code changes</H2></center>");
+            out.println("<center><H2>Insert your query for matching <span style='color: #0022b9'>Java</span> code changes</H2></center>");
             //  out.println("<H2>Post->"+postData+ "</H2>");
             out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
             out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
@@ -105,7 +105,7 @@ public class DiffSearch_WebServer extends Thread {
                         }
                         else{
                             if(flag){
-                                out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 1 million dataset:</H3></center>");
+                                out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a dataset of 700 000 code changes:</H3></center>");
                                 flag = false;
                             }
                             out.println("<center><H4><span style='color:#9c0101'>" + parts[0] + "</span> --> <span style='color:#008000'>" + parts[1] + "</span></H4></center>");}

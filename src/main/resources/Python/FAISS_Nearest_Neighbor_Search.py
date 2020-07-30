@@ -62,10 +62,10 @@ while 1:
             #Reading csv feature vectors files
             query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv', header=None).iloc[:, :].values[0:, :-1].astype('float32')
 
-            with open('./src/main/resources/Features_Vectors/changes_strings.txt') as f:
+            with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
                 changes_strings = f.readlines()
 
-            with open('./src/main/resources/Features_Vectors/changes_strings_prop.txt') as f:
+            with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
                             changes_info = f.readlines()
 
             distances, indices = index.search(query_feature_vectors, k)
