@@ -1,7 +1,6 @@
 package research.diffsearch;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ public class DiffSearch_WebServer extends Thread {
         socket = socket_accepted;
         socket_faiss = socket_faiss_accepted;
     }
-
 
     public void run() {
         try {
@@ -43,7 +41,6 @@ public class DiffSearch_WebServer extends Thread {
             // looks for post data
             int postDataI = -1;
             while ((line = in.readLine()) != null && (line.length() != 0)) {
-                // System.out.println(line);
                 if (line.contains("Content-Length:")) {
                     postDataI = Integer.parseInt(line
                             .substring(
@@ -79,7 +76,6 @@ public class DiffSearch_WebServer extends Thread {
                 duration_matching = (System.currentTimeMillis() - startTime_matching);
 
                 System.out.println("Search ended.");
-                // String out = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(in);
             }
 
             out.println("HTTP/1.0 200 OK");
@@ -122,15 +118,10 @@ public class DiffSearch_WebServer extends Thread {
                     out.println("<center><H3>No Matching Code changes found</H3></center>");
             }
 
-            //if your get parameter contains shutdown it will shutdown
-            // if(auxLine.indexOf("?shutdown")>-1){
-            //   shudown = false;
-            //}
             out.close();
             socket.close();
             System.out.println("Connection closed with thread " + Thread.currentThread().getId());
-            //}
-            //server.close();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {

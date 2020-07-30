@@ -1,20 +1,13 @@
 package research.diffsearch;
 
-import matching.Matching;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
-
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import org.java_websocket.client.WebSocketClient;
-
-import org.java_websocket.handshake.ServerHandshake;
 
 
 public class App {
@@ -23,8 +16,6 @@ public class App {
         long real_changes = 0;
         double time_python2 = 0;
 
-        String query = null;
-        String candidate = null;
 
         /* **************************************************************************************************************
          * WEB INTERFACE MODE
@@ -63,9 +54,6 @@ public class App {
                 return;
             }
 
-
-           // MiniPbxManServer diffsearch_webserver = new MiniPbxManServer();
-            //diffsearch_webserver.socket_python = socket_python;
             ServerSocket server = null;
             Socket socket = null;
             try {
@@ -88,8 +76,6 @@ public class App {
 
             }
         }
-
-
 
 
 

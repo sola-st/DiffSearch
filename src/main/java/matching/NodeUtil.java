@@ -28,14 +28,16 @@ public class NodeUtil {
     private static Set<String> placeholderNames = new HashSet<>(Arrays.asList("LT", "ID", "binOP", "OP", "EXPR"));
 
     public enum Kind {
-        UNNAMED_PLACEHOLDER, NAMED_PLACEHOLDER, NORMAL, WILDCARD;
+        UNNAMED_PLACEHOLDER, NAMED_PLACEHOLDER, NORMAL, WILDCARD, EMPTY;
     }
 
     public Kind getKind(ParseTree t) {
         String text = t.getText();
-        if (text.equals("<...>"))
+        if (text.equals("<...>")) {
             return Kind.WILDCARD;
-        if (t.getChildCount() == 0) {
+        } else if (t.getChildCount() == 0 && text.equals("_")) {
+            return Kind.EMPTY;
+        } else if (t.getChildCount() == 0) {
             if (placeholderNames.contains(text))
                 return Kind.UNNAMED_PLACEHOLDER;
             for (String n : placeholderNames) {
@@ -66,7 +68,7 @@ public class NodeUtil {
     }
 
     public boolean isMatchingPlaceholder(ParseTree k, ParseTree v) {
-        // TODO: the following checks are brittle w.r.t. changes of the grammar and may be incomplete
+        // Note: the following checks are brittle w.r.t. changes of the grammar and may be incomplete
         String kText = Trees.getNodeText(k, queryParser);
         String vText = Trees.getNodeText(v, changeParser);
         if (kText.equals("LT")) {
@@ -82,6 +84,13 @@ public class NodeUtil {
             return vText.equals("expression");
         }
         throw new IllegalArgumentException("Unexpected node label " + kText);
+    }
+
+    public boolean isMatchingEmpty(ParseTree k, ParseTree v) {
+        // Note: the following check is brittle w.r.t. changes of the grammar
+        return getKind(k) == Kind.EMPTY &&
+                v.getChildCount() == 0 &&
+                Trees.getNodeText(v, changeParser).equals("multipleStatements");
     }
 
     public ParseTree extractOldSubtree(ParseTree t) {

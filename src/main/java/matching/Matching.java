@@ -2,13 +2,10 @@ package matching;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.Trees;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Checks if a query tree matches a change tree.
@@ -33,9 +30,6 @@ public class Matching {
         this.queryParser = queryParser;
     }
 
-    // TODO: optimization: prune search space when certain that no match
-    // TODO: optimization: avoid exploring the same node map multiple times
-
     public boolean isMatch(ParseTree change, Parser changeParser) {
         NodeUtil nodeUtil = new NodeUtil(queryParser, changeParser);
 
@@ -53,9 +47,13 @@ public class Matching {
         List<ParseTree> nodesToMatch = computeNodes(queryOld);
         nodesToMatch.addAll(computeNodes(queryNew));
 
+        if (quickPruning(queryOld, queryNew, changeOld, changeNew, nodesToMatch, nodeUtil)) {
+            return false;
+        }
+
         // explore possible mapping until matching mapping found
         while (!workList.isEmpty()) {
-            NodeMap m = workList.removeFirst(); // TODO: optimization (?): newest first
+            NodeMap m = workList.removeLast();
 
             ParseTree unmatchedQueryNode = m.nextUnmatchedNode(nodesToMatch);
             if (unmatchedQueryNode == null) {
@@ -83,6 +81,37 @@ public class Matching {
                     } else {
                         workList.add(updatedMap);
                     }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean quickPruning(ParseTree queryOld, ParseTree queryNew,
+                                 ParseTree changeOld, ParseTree changeNew,
+                                 List<ParseTree> nodesToMatch,
+                                 NodeUtil nodeUtil) {
+        return quickPruningByLeaves(changeOld, changeNew, nodesToMatch, nodeUtil);
+    }
+
+    private boolean quickPruningByLeaves(ParseTree changeOld, ParseTree changeNew,
+                                         List<ParseTree> nodesToMatch,
+                                         NodeUtil nodeUtil) {
+        // compute leaf nodes of change
+        List<ParseTree> changeNodes = computeNodes(changeOld);
+        changeNodes.addAll(computeNodes(changeNew));
+        Set<String> leaves = new HashSet<>();
+        for (ParseTree n : changeNodes) {
+            if (n.getChildCount() == 0) {
+                leaves.add(n.getText());
+            }
+        }
+
+        // if any of the leaves to match don't appear in the change, certainly no match
+        for (ParseTree n : nodesToMatch) {
+            if (n.getChildCount() == 0 && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL) {
+                if (!leaves.contains(n.getText())) {
+                    return true;
                 }
             }
         }
@@ -151,8 +180,8 @@ public class Matching {
         List<ImmutablePair<ParseTree, ParseTree>> result = new ArrayList<>();
         for (ParseTree nOld : computeNodes(treeOld)) {
             for (ParseTree nNew : computeNodes(treeNew)) {
-                if (nodeUtil.isMatchingNormalNode(queryOld, nOld) &&
-                        nodeUtil.isMatchingNormalNode(queryNew, nNew))
+                if ((nodeUtil.isMatchingNormalNode(queryOld, nOld) | nodeUtil.isMatchingEmpty(queryOld, nOld)) &&
+                        (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew)))
                     result.add(new ImmutablePair<>(nOld, nNew));
             }
         }

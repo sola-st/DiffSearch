@@ -359,13 +359,13 @@ public class Pipeline {
      * @param query_input: String of the query
      * @return AST of the query
      */
-    public static Java_Tree query_feature_extraction(String query_input){
-        Java_Tree tree_query = null;
+    public static Python3_Tree query_feature_extraction(String query_input){
+        Python3_Tree tree_query = null;
         //Python3_Tree tree_query = null;
 
         //Creating the tree for the query string
         try {
-            tree_query = new Java_Tree(query_input);
+            tree_query = new Python3_Tree(query_input);
             // tree_query = new Javascript_Tree(query_input);
             //  tree_query = new Python3_Tree(query_input);
             if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
@@ -376,8 +376,8 @@ public class Pipeline {
             List<Integer> list_parent_child = new ArrayList<Integer>();
             List<Integer> list_hash_sum = new ArrayList<Integer>();
             // ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
-           // Python3BaseListener listener = new Python3BaseListener();
-            JavaParserBaseListener listener = new JavaParserBaseListener();
+            Python3BaseListener listener = new Python3BaseListener();
+            //JavaParserBaseListener listener = new JavaParserBaseListener();
 
 
             ParseTreeWalker walker = new ParseTreeWalker();
@@ -388,11 +388,11 @@ public class Pipeline {
             // TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
             // TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
 
-            //TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
 
-            TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            //TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            //TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
             list_hash_sum.addAll(list_parent_child);
 
             //Creation of a buffered writer
@@ -1168,7 +1168,7 @@ public class Pipeline {
 
     public static  List<String> run_test(String query, Socket socket_python){
 
-        Java_Tree tree_query = null;
+        Python3_Tree tree_query = null;
 
         String candidate = "x>0;--> x<0; ";
 
@@ -1325,11 +1325,11 @@ public class Pipeline {
      * @param tree_query : query Tree
      * @return number of matching changes found
      */
-    public static List<String> diffsearch_online(Java_Tree tree_query, Tree query_old, Tree query_new, String query_string, String candidate, Socket socket) {
+    public static List<String> diffsearch_online(Python3_Tree tree_query, Tree query_old, Tree query_new, String query_string, String candidate, Socket socket) {
 
 
         List<String> output_list = new ArrayList<String>();
-        long change_number = 0;
+       // long change_number = 0;
 
         try {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -1355,12 +1355,12 @@ public class Pipeline {
          * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
          * */
 
-        BufferedWriter buff_writer_results = null;
+        //BufferedWriter buff_writer_results = null;
 
         try {
             //System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
             //Deep recursive tree comparison
-            output_list = Pipeline.final_comparison_new(tree_query,query_old, query_new, buff_writer_results, query_string);
+            output_list = Pipeline.final_comparison_new(tree_query, query_string);
             //Pipeline.small_test(tree_query, query_old, query_new, buff_writer_results, query_input);
             //                buff_writer_results.close();
         } catch (Exception e) {
@@ -1378,7 +1378,7 @@ public class Pipeline {
      * @param tree_query : query Tree
      * @return number of matching changes found
      */
-    public static List<String> final_comparison_new(Java_Tree tree_query,  Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string){
+    public static List<String> final_comparison_new(Python3_Tree tree_query, String query_string){
         List<String> allLines = null;
         List<String> output_list = new ArrayList<String>();
         int matching_counter = 0;
@@ -1438,7 +1438,7 @@ public class Pipeline {
         }
 
         assert allLines != null;*/
-        Java_Tree queryJavaTree = new Java_Tree(query_string);
+        Python3_Tree queryJavaTree = new Python3_Tree(query_string);
         ParseTree queryTree = queryJavaTree.get_parsetree();
 
         try {
@@ -1449,7 +1449,7 @@ public class Pipeline {
 
         for (String candidate : allLines) {
 
-            Java_Tree changeJavaTree = new Java_Tree(candidate);
+            Python3_Tree changeJavaTree = new Python3_Tree(candidate);
             ParseTree changeTree = changeJavaTree.get_parsetree();
 
             Matching matching = new Matching(queryTree, tree_query.get_parser());

@@ -32,7 +32,6 @@ public class NodeMap {
         this.treeRightRoot = treeRightRoot;
         nodeMap.put(queryLeftRoot, queryRightRoot);
         nodeMap.put(treeLeftRoot, treeRightRoot);
-        usedValueNodes.add(queryRightRoot);
         usedValueNodes.add(treeRightRoot);
         this.nodeUtil = nodeUtil;
     }
@@ -75,6 +74,10 @@ public class NodeMap {
                     return null;
                 }
             }
+        } else if (kind == NodeUtil.Kind.EMPTY) {
+            if (nodeUtil.isMatchingEmpty(k, v)) {
+                return updatedCopy(k, v);
+            }
         }
         return null;
     }
@@ -82,8 +85,9 @@ public class NodeMap {
     private NodeMap updatedCopy(ParseTree k, ParseTree v) {
         NodeMap other = new NodeMap(queryLeftRoot, queryRightRoot, treeLeftRoot, treeRightRoot, nodeUtil);
         other.nodeMap.put(k, v);
-        other.usedValueNodes.add(v);
         other.nodeMap.putAll(nodeMap);
+        other.usedValueNodes.add(v);
+        other.usedValueNodes.addAll(usedValueNodes);
         other.namedPlaceholders.putAll(namedPlaceholders);
         return other;
     }
@@ -110,6 +114,7 @@ public class NodeMap {
         return nodeMap.get(k);
     }
 
+    @Override
     public String toString() {
         String s = "NodeMap with mapping:\n";
         for (Map.Entry<ParseTree, ParseTree> entry : nodeMap.entrySet()) {
