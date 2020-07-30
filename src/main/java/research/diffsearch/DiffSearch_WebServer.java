@@ -105,7 +105,7 @@ public class DiffSearch_WebServer extends Thread {
                         }
                         else{
                             if(flag){
-                                out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 5.5 million dataset:</H3></center>");
+                                out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a 1 million dataset:</H3></center>");
                                 flag = false;
                             }
                             out.println("<center><H4><span style='color:#9c0101'>" + parts[0] + "</span> --> <span style='color:#008000'>" + parts[1] + "</span></H4></center>");}
