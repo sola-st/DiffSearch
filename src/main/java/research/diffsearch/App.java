@@ -115,7 +115,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
-//                real_changes = Pipeline.feature_extraction(6351999);
+                real_changes = Pipeline.feature_extraction(6351999);
             } catch (Exception e) {
                 e.printStackTrace();
             }
