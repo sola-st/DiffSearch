@@ -29,6 +29,18 @@ public class JavaParserBaseListener implements JavaParserListener {
      *
      * <p>The default implementation does nothing.</p>
      */
+    @Override public void enterQuerySnippet(JavaParser.QuerySnippetContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitQuerySnippet(JavaParser.QuerySnippetContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
     @Override public void enterCompilationUnit(JavaParser.CompilationUnitContext ctx) { }
     /**
      * {@inheritDoc}
@@ -792,6 +804,18 @@ public class JavaParserBaseListener implements JavaParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override public void exitBlock(JavaParser.BlockContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void enterMultipleStatements(JavaParser.MultipleStatementsContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitMultipleStatements(JavaParser.MultipleStatementsContext ctx) { }
     /**
      * {@inheritDoc}
      *

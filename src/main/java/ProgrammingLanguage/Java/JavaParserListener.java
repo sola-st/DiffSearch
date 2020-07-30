@@ -19,6 +19,16 @@ public interface JavaParserListener extends ParseTreeListener {
      */
     void exitProgram(JavaParser.ProgramContext ctx);
     /**
+     * Enter a parse tree produced by {@link JavaParser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void enterQuerySnippet(JavaParser.QuerySnippetContext ctx);
+    /**
+     * Exit a parse tree produced by {@link JavaParser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void exitQuerySnippet(JavaParser.QuerySnippetContext ctx);
+    /**
      * Enter a parse tree produced by {@link JavaParser#compilationUnit}.
      * @param ctx the parse tree
      */
@@ -658,6 +668,16 @@ public interface JavaParserListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitBlock(JavaParser.BlockContext ctx);
+    /**
+     * Enter a parse tree produced by {@link JavaParser#multipleStatements}.
+     * @param ctx the parse tree
+     */
+    void enterMultipleStatements(JavaParser.MultipleStatementsContext ctx);
+    /**
+     * Exit a parse tree produced by {@link JavaParser#multipleStatements}.
+     * @param ctx the parse tree
+     */
+    void exitMultipleStatements(JavaParser.MultipleStatementsContext ctx);
     /**
      * Enter a parse tree produced by {@link JavaParser#blockStatement}.
      * @param ctx the parse tree

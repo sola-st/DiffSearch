@@ -44,17 +44,17 @@ public class DiffSearch_WebServer extends Thread {
             int postDataI = -1;
             while ((line = in.readLine()) != null && (line.length() != 0)) {
                 // System.out.println(line);
-                if (line.indexOf("Content-Length:") > -1) {
-                    postDataI = new Integer(line
+                if (line.contains("Content-Length:")) {
+                    postDataI = Integer.parseInt(line
                             .substring(
                                     line.indexOf("Content-Length:") + 16,
-                                    line.length())).intValue();
+                                    line.length()));
                 }
             }
-            String postData = "";
+            StringBuilder postData = new StringBuilder();
             for (int i = 0; i < postDataI; i++) {
                 int intParser = in.read();
-                postData += (char) intParser;
+                postData.append((char) intParser);
             }
 
             List<String> output_list = new ArrayList<String>();
@@ -64,7 +64,7 @@ public class DiffSearch_WebServer extends Thread {
 
             if(postDataI > 0){
                 flag_first_connection = true;
-                String result = java.net.URLDecoder.decode(postData.replaceAll("Text1=","").replaceAll("&Text2=","-->"), StandardCharsets.UTF_8);
+                String result = java.net.URLDecoder.decode(postData.toString().replaceAll("Text1=","").replaceAll("&Text2=","-->"), StandardCharsets.UTF_8);
 
                 System.out.println("Search started.");
                 long startTime_matching = System.currentTimeMillis();
@@ -89,7 +89,7 @@ public class DiffSearch_WebServer extends Thread {
             out.println("");
             // Send the HTML page
             out.println("<center><H1>Welcome to DiffSearch</H1></center>");
-            out.println("<center><H2>Insert your query for matching Python code changes</H2></center>");
+            out.println("<center><H2>Insert your query for matching <span style='color: #0022b9'>Python</span> code changes</H2></center>");
             //  out.println("<H2>Post->"+postData+ "</H2>");
             out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
             out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +

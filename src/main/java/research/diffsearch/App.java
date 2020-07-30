@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+import matching.Matching;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 
 import java.io.*;
@@ -20,6 +22,9 @@ public class App {
         long change_number = 0;
         long real_changes = 0;
         double time_python2 = 0;
+
+        String query = null;
+        String candidate = null;
 
         /* **************************************************************************************************************
          * WEB INTERFACE MODE
@@ -192,8 +197,8 @@ public class App {
                         lineNew2 = input2.nextLine();
                         if (lineNew2.equals("END")) {
                             //removing useless files
-                            if(Config.CLEANUP)
-                                Pipeline.files_cleanup();
+                          //  if(Config.CLEANUP)
+                           //     Pipeline.files_cleanup();
                             System.out.println("\n================================\nProgram finished successfully.");
                             return;
                         }
@@ -205,7 +210,7 @@ public class App {
                     query_input = String.join(System.lineSeparator(), old_code) + "-->" + String.join(System.lineSeparator(), new_code);
 
                     query_input = "ID binOP<0> LT; --> ID binOP<1> LT;";
-                    tree_query = Pipeline.query_feature_extraction(query_input);
+                   // tree_query = Pipeline.query_feature_extraction(query_input);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
