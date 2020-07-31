@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+import matching.Matching;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 import java.io.*;
 import java.net.ServerSocket;
@@ -494,4 +496,16 @@ public class App {
 
     }
 
+    public static boolean run_junit(String query, String candidate) {
+        Java_Tree queryJavaTree = new Java_Tree(query);
+
+        ParseTree queryTree = queryJavaTree.get_parsetree();
+
+        Java_Tree changeJavaTree = new Java_Tree(candidate);
+        ParseTree changeTree = changeJavaTree.get_parsetree();
+
+        Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
+        return matching.isMatch(changeTree, changeJavaTree.get_parser());
+
+    }
 }

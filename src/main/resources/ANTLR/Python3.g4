@@ -129,9 +129,25 @@ tokens { INDENT, DEDENT }
  * parser rules
  */
 
-program: file_input (NEWLINE file_input)? '-->'? file_input (NEWLINE file_input)? |
-         single_input (NEWLINE single_input)? '-->'? single_input (NEWLINE single_input)?;
-single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE? | WILDCARD NEWLINE?;
+//program: file_input (NEWLINE file_input)? '-->'? file_input (NEWLINE file_input)? |
+//         single_input (NEWLINE single_input)? '-->'? single_input (NEWLINE single_input)?;
+
+program
+    : querySnippet NEWLINE? QUERY_ARROW querySnippet NEWLINE? //MOD
+    ;
+
+querySnippet
+    : simple_stmt
+    | compound_stmt
+    | stmt
+    | async_funcdef
+    | funcdef
+    | WILDCARD
+    | EMPTY    //MOD
+    ;
+
+
+single_input: simple_stmt NEWLINE? | compound_stmt NEWLINE?;
 file_input: (NEWLINE | stmt)* EOF?;
 eval_input: testlist NEWLINE* EOF?;
 
@@ -159,7 +175,7 @@ varargslist: (vfpdef ('=' test)? (',' vfpdef ('=' test)?)* (',' (
 );
 vfpdef: NAME;
 
-stmt: simple_stmt | compound_stmt | WILDCARD;
+stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE?;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
@@ -239,7 +255,7 @@ atom_expr: (AWAIT)? atom trailer* ;
 atom: ('(' (yield_expr|testlist_comp)? ')' |
        '[' (testlist_comp)? ']' |
        '{' (dictorsetmaker)? '}' |
-       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<0>' |'ID<1>' |'ID<2>' |'ID<3>' | 'ID' | 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>'| 'LT' | '_');//MOD
+       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | 'ID<0>' |'ID<1>' |'ID<2>' |'ID<3>' | 'ID' | 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>'| 'LT' | EMPTY );//MOD
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* (',')? );
 trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME | '.' 'ID<0>' | '.' 'ID<1>' | '.' 'ID<2>' |'.' 'ID<3>' | '.' 'ID' ;
 subscriptlist: subscript (',' subscript)* (',')?;
@@ -427,6 +443,8 @@ IMAG_NUMBER
  ;
 
 WILDCARD: '<...>'; //MOD
+QUERY_ARROW: '-->';
+EMPTY: '_';
 DOT : '.';
 ELLIPSIS : '...';
 STAR : '*';
@@ -629,7 +647,7 @@ fragment LINE_JOINING
 
 /// id_start     ::=  <all characters in general categories Lu, Ll, Lt, Lm, Lo, Nl, the underscore, and characters with the Other_ID_Start property>
 fragment ID_START
- : '_'
+ : EMPTY
  | [A-Z]
  | [a-z]
  | '\u00AA'
