@@ -32,7 +32,7 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : querySnippet NEWLINE? QUERY_ARROW querySnippet NEWLINE? //MOD
+    : querySnippet NEWLINE? QUERY_ARROW NEWLINE? querySnippet NEWLINE? //MOD
     ;
 
 querySnippet
@@ -395,7 +395,27 @@ block
     ;
 
 multipleStatements
-    : blockStatement*  //MOD
+    : packageDeclaration NEWLINE? packageDeclaration*
+    | importDeclaration NEWLINE? importDeclaration*
+    | enumDeclaration NEWLINE? enumDeclaration*
+    | enumConstant NEWLINE? enumConstant*
+    | interfaceDeclaration NEWLINE? interfaceDeclaration*
+    | memberDeclaration NEWLINE? memberDeclaration*
+    | interfaceMethodDeclaration NEWLINE? interfaceMethodDeclaration*
+    | genericInterfaceMethodDeclaration NEWLINE? genericInterfaceMethodDeclaration*
+    | variableDeclarator NEWLINE? variableDeclarator*
+    | literal NEWLINE? literal*
+    | annotation NEWLINE? annotation*
+    | elementValuePair NEWLINE? elementValuePair*
+    | annotationTypeDeclaration  NEWLINE? annotationTypeDeclaration*
+    | blockStatement NEWLINE? blockStatement*
+    | block  NEWLINE? block*
+    | expression NEWLINE? expression*
+    | parExpression  NEWLINE? parExpression*
+    | expressionList NEWLINE? expressionList*
+    | methodCall NEWLINE? methodCall*
+    | WILDCARD NEWLINE? multipleStatements*
+    | EMPTY    //MOD
     ;
 
 blockStatement

@@ -182,7 +182,7 @@ public class AppTest
     @org.junit.jupiter.api.Test
     public void test19() throws Exception {
         String query = "_ --> 1+1";
-        String candidate = "_ --> 1+1+2"; // I added _ 
+        String candidate = "_ --> 1+1+2"; // I added _
 
         assertEquals(true, App.run_junit(query, candidate));
     }
