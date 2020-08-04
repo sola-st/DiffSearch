@@ -182,7 +182,7 @@ public class AppTest
     @org.junit.jupiter.api.Test
     public void test19() throws Exception {
         String query = "_ --> 1+1";
-        String candidate = "_ --> 1+1+2"; // I added _
+        String candidate = "_ --> 1+1+2"; // I added _ 
 
         assertEquals(true, App.run_junit(query, candidate));
     }
@@ -217,6 +217,86 @@ public class AppTest
         String candidate = "{ g(); f(); h(); j(); f(); } --> {  g(); z(); h(); j(); m(); }";
 
         assertEquals(false, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test24() throws Exception {
+        String query = "<...>\n" +
+                "ID();\n" +
+                "<...> --> <...>\n" +
+                "ID(ID);\n" +
+                "<...>";
+        String candidate = "x =0;\n" +
+                "foo();\n" +
+                "x++; --> x=0;\n" +
+                "foo(x);\n" +
+                "x++;";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test26() throws Exception {
+        String query = "<...>\n" +
+                "ID();\n" +
+                "<...> --> <...>\n" +
+                "ID(ID);\n" +
+                "<...>";
+        String candidate = "x =0;\n" +
+                "foo();\n" +
+                "x++; --> x=0;\n" +
+                "foo();\n" +
+                "x++;";
+
+        assertEquals(false, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test25() throws Exception {
+        String query = "ID<0>(EXPR);\n" +
+                "ID<1>(EXPR);\n" +
+                "-->\n" +
+                "ID<1>(EXPR);\n" +
+                "ID<0>(EXPR);";
+        String candidate = "foo1(x+1);\n" +
+                "foo2(x+2);\n" +
+                "-->\n" +
+                "foo2(x+2);\n" +
+                "foo1(x+1);";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test27() throws Exception {
+        String query = "EXPR<0>.next()\n" +
+                "-->\n" +
+                "if (EXPR<0>.hasNext()) {\n" +
+                "  EXPR<0>.next()\n" +
+                "}";
+        String candidate = "x.next()\n" +
+                "-->\n" +
+                "if (x.hasNext()) {\n" +
+                "  x.next()\n" +
+                "}";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test28() throws Exception {
+        String query = "EXPR<0>.ID<0>()\n" +
+                "-->\n" +
+                "if (EXPR<0> != null) {\n" +
+                "  EXPR<0>.ID<0>()\n" +
+                "}";
+        String candidate = "x.start()\n" +
+                "-->\n" +
+                "if (x != null) {\n" +
+                "  x.start()\n" +
+                "}";
+
+        assertEquals(true, App.run_junit(query, candidate));
     }
 
 }

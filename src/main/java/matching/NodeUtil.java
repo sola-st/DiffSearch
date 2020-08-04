@@ -99,7 +99,16 @@ public class NodeUtil {
     }
 
     public ParseTree extractNewSubtree(ParseTree t) {
-        ParseTree leftQuerySnippet = t.getChild(2);
+        // Managing the case in which there is a NEWLINE child
+
+        int n = 2;
+
+        while( t.getChild(n).toStringTree().equals( "\n")) {
+            n++;
+        }
+        ParseTree leftQuerySnippet = t.getChild(n);
+
+
         return leftQuerySnippet.getChild(0);
     }
 

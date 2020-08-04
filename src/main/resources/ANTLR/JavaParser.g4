@@ -49,9 +49,9 @@ querySnippet
     | annotation
     | elementValuePair
     | annotationTypeDeclaration
+    | multipleStatements
     | blockStatement
     | block
-    | multipleStatements
     | expression
     | parExpression
     | expressionList
@@ -65,11 +65,11 @@ compilationUnit
     ;
 
 packageDeclaration
-    : annotation* PACKAGE qualifiedName ';'
+    : annotation* PACKAGE qualifiedName ';'?
     ;
 
 importDeclaration
-    : IMPORT STATIC? qualifiedName ('.' '*')? ';'
+    : IMPORT STATIC? qualifiedName ('.' '*')? ';'?
     ;
 
 typeDeclaration
@@ -201,7 +201,7 @@ constructorDeclaration
     ;
 
 fieldDeclaration
-    : typeType variableDeclarators ';'
+    : typeType variableDeclarators ';'?
     ;
 
 interfaceBodyDeclaration
@@ -220,7 +220,7 @@ interfaceMemberDeclaration
     ;
 
 constDeclaration
-    : typeType constantDeclarator (',' constantDeclarator)* ';'
+    : typeType constantDeclarator (',' constantDeclarator)* ';'?
     ;
 
 constantDeclarator
@@ -363,7 +363,7 @@ annotationTypeElementDeclaration
     ;
 
 annotationTypeElementRest
-    : typeType annotationMethodOrConstantRest ';'
+    : typeType annotationMethodOrConstantRest ';'?
     | classDeclaration ';'?
     | interfaceDeclaration ';'?
     | enumDeclaration ';'?
@@ -395,34 +395,16 @@ block
     ;
 
 multipleStatements
-    : packageDeclaration NEWLINE? packageDeclaration*
-    | importDeclaration NEWLINE? importDeclaration*
-    | enumDeclaration NEWLINE? enumDeclaration*
-    | enumConstant NEWLINE? enumConstant*
-    | interfaceDeclaration NEWLINE? interfaceDeclaration*
-    | memberDeclaration NEWLINE? memberDeclaration*
-    | interfaceMethodDeclaration NEWLINE? interfaceMethodDeclaration*
-    | genericInterfaceMethodDeclaration NEWLINE? genericInterfaceMethodDeclaration*
-    | variableDeclarator NEWLINE? variableDeclarator*
-    | literal NEWLINE? literal*
-    | annotation NEWLINE? annotation*
-    | elementValuePair NEWLINE? elementValuePair*
-    | annotationTypeDeclaration  NEWLINE? annotationTypeDeclaration*
-    | blockStatement NEWLINE? blockStatement*
-    | block  NEWLINE? block*
-    | expression NEWLINE? expression*
-    | parExpression  NEWLINE? parExpression*
-    | expressionList NEWLINE? expressionList*
-    | methodCall NEWLINE? methodCall*
-    | WILDCARD NEWLINE? multipleStatements*
-    | EMPTY    //MOD
+    :
+    | blockStatement*
+    //MOD
     ;
 
 blockStatement
-    : localVariableDeclaration ';'
-    | statement
-    | localTypeDeclaration
-    | WILDCARD
+    : localVariableDeclaration ';'? NEWLINE?
+    | statement NEWLINE?
+    | localTypeDeclaration NEWLINE?
+    | WILDCARD NEWLINE?
     ;
 
 localVariableDeclaration
@@ -437,31 +419,31 @@ localTypeDeclaration
 
 statement
     : blockLabel=block
-    | ASSERT EXPR (':' EXPR)? ';' //MOD
+    | ASSERT EXPR (':' EXPR)? ';'? //MOD
    // | IF EXPR statement (ELSE statement)?
     | FOR '(' EXPR (',' EXPR)* ')' statement?
     | FOR '(' WILDCARD ')' statement?
     | WHILE EXPR statement?
-    | DO statement WHILE EXPR ';'
+    | DO statement WHILE EXPR ';'?
     | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
     | SYNCHRONIZED EXPR block
-    | RETURN EXPR ';'
-    | THROW EXPR ';'
-    | ASSERT expression (':' expression)? ';'
+    | RETURN EXPR ';'?
+    | THROW EXPR ';'?
+    | ASSERT expression (':' expression)? ';'?
     | IF parExpression statement? (ELSE statement)?
     | FOR '(' forControl ')' statement?
     | WHILE parExpression statement?
-    | DO statement WHILE parExpression ';'
+    | DO statement WHILE parExpression ';'?
     | TRY block (catchClause+ finallyBlock? | finallyBlock)
     | TRY resourceSpecification block catchClause* finallyBlock?
     | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'
     | SYNCHRONIZED parExpression block
-    | RETURN expression? ';'
-    | THROW expression ';'
-    | BREAK IDENTIFIER? ';'
-    | CONTINUE IDENTIFIER? ';'
+    | RETURN expression? ';'?
+    | THROW expression ';'?
+    | BREAK IDENTIFIER? ';'?
+    | CONTINUE IDENTIFIER? ';'?
     | SEMI
-    | statementExpression=expression ';'
+    | statementExpression=expression ';'?
     | identifierLabel=IDENTIFIER ':' statement
     ;
 
@@ -482,7 +464,7 @@ resourceSpecification
     ;
 
 resources
-    : resource (';' resource)*
+    : resource (';'? resource)*
     ;
 
 resource
@@ -503,7 +485,7 @@ switchLabel
 
 forControl
     : enhancedForControl
-    | forInit? ';' expression? ';' forUpdate=expressionList?
+    | forInit? ';'? expression? ';'? forUpdate=expressionList?
     ;
 
 forInit
@@ -548,6 +530,7 @@ expression
       )
     | expression '[' expression ']'
     | methodCall
+    | EXPR
     | NEW creator
     | '(' typeType ')' expression
     | expression postfix=('++' | '--')
