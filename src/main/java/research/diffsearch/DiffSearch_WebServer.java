@@ -2,8 +2,13 @@ package research.diffsearch;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static research.diffsearch.Pipeline.run_test;
@@ -11,10 +16,13 @@ import static research.diffsearch.Pipeline.run_test;
 public class DiffSearch_WebServer extends Thread {
     protected Socket socket;
     protected Socket socket_faiss;
+    protected FileOutputStream server_log;
 
-    public DiffSearch_WebServer(Socket socket_accepted, Socket socket_faiss_accepted) {
+    public DiffSearch_WebServer(Socket socket_accepted, Socket socket_faiss_accepted,FileOutputStream log) {
         socket = socket_accepted;
         socket_faiss = socket_faiss_accepted;
+        server_log = log;
+
     }
 
     public void run() {
@@ -86,9 +94,9 @@ public class DiffSearch_WebServer extends Thread {
             // this blank line signals the end of the headers
             out.println("");
             // Send the HTML page
-            out.println("<body style=\"background-color:#24292e;\">");
-            out.println("<center><H1><span style='color: #fafbfc'>Welcome to DiffSearch</span></H1></center>");
-            out.println("<center><H2><span style='color: #fafbfc'>Insert your query for matching <span style='color: #f1f8ff'>Java</span> code changes</span></H2></center>");
+            out.println("<body style=\"background-color:#000000;\">");
+            out.println("<center><H1><span style='color: #ffffff'><span style='color: #a1a1a6'>Diff</span>Search</span></H1></center>");
+            out.println("<center><H2><span style='color: #ffffff'>Insert your query for matching <span style='color: #a1a1a6'>Java</span> code changes</span></H2></center>");
             //  out.println("<H2>Post->"+postData+ "</H2>");
             out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
 
@@ -96,44 +104,65 @@ public class DiffSearch_WebServer extends Thread {
                 String[] parts = result.split("-->");
 
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" >"+ parts[0]+"</textarea>" +
-                        "<span style='color: #fafbfc'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
+                        "<span style='color: #ffffff'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" >"+parts[1]+"</textarea></pre>" +
-                        "<input type=\"submit\" value=\"Search\"></form></center>");
+                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#ffffff\" type=\"submit\" value=\"Search\"></form></center>");
             }
             else
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
-                        "<span style='color: #fafbfc'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
+                        "<span style='color: #ffffff'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" ></textarea></pre>" +
-                        "<input type=\"submit\" value=\"Search\"></form></center>");
+                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#ffffff\" type=\"submit\" value=\"Search\"></form></center>");
 
+            FileChannel chan;
+            FileLock lock;
 
+            chan = server_log.getChannel();
+            lock = chan.lock();
             if(output_list.size() > 0){
+                chan.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date())+"\n").getBytes()));
+                chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
+
                 boolean flag = true;
                 for(String change:output_list) {
                     try {
                         String[] parts = change.split("-->");
 
                         if(parts.length == 1){
-                            out.println("<center><H3><span style='color: #f5f0ff'>The query is not correct, please try again.</span></H3></center>");
+                            out.println("<center><H3><span style='color: #ffffff'>The query is not correct, please try again.</span></H3></center>");
+
+                            //chan = server_log.getChannel();
+                            //lock = chan.lock();
+                            chan.write(ByteBuffer.wrap("The query is not correct, please try again.\n".getBytes()));
+                            //lock.release();
                         }
                         else{
                             if(flag){
-                                out.println("<center><H3><span style='color: #fafbfc'>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a dataset of 700 000 code changes:</span></H3></center>");
+                                out.println("<center><H3><span style='color: #ffffff'>(<span style='color: #a1a1a6'>Max 10</span>) Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #a1a1a6'>739 005 code changes</span>:</span></H3></center>");
                                 flag = false;
                             }
                             out.println("<center><H4>"
-                                    + "<span style='background-color: #ffdce0'> - " + parts[0]
-                                    + "</span> </H4> <H4> <span style='background-color:#dcffe4'>+ " + parts[1] + "</span></H4>"
-                                    + "<span style='background-color:#fafbfc'><a href=" + parts[2] + "> Link "+ parts[3] +"</a></span>"
-                                    + "</center>");}
+                                    + "<span style='background-color: #b54845'><span style='color: #ffffff'> - " + parts[0]
+                                    + "</span></span> </H4> <H4> <span style='background-color:#2cab13'><span style='color: #ffffff'>+ " + parts[1] + "</span></span></H4>"
+                                    + "<span style='color: #ffffff'><a href=" + parts[2] + " style=\"color: #fafbfc\"> Link "+ parts[3] +"</a></span>"
+                                    + "</center>");
+                            chan.write(ByteBuffer.wrap((change +"\n").getBytes()));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+                chan.write(ByteBuffer.wrap(("==========================================================================================="
+                        +"============================================================================================\n\n").getBytes()));
+
             }else{
-                if(flag_first_connection)
-                    out.println("<center><H3><span style='color: #fafbfc'>No Matching Code changes found</span></H3></center>");
+                if(flag_first_connection) {
+                    out.println("<center><H3><span style='color: #ffffff'>No Matching Code changes found</span></H3></center>");
+
+                    chan.write(ByteBuffer.wrap("No Matching Code changes found\n".getBytes()));
+                }
             }
+            lock.release();
 
             out.close();
             socket.close();

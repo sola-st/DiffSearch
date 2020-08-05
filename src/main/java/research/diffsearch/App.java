@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.tree.Tree;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -65,12 +67,25 @@ public class App {
             }
             System.out.println("DiffSearch Server active on port "+ Config.port_web);
 
+            // Get a file channel for the file
+          //  File file = new File(Config.server_log_file);
+          //  FileChannel channel = null;
+            FileOutputStream server_log = null;
+
+            try {
+             //   channel = new RandomAccessFile(file, "rw").getChannel();
+                server_log = new FileOutputStream(Config.server_log_file, true);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             while (true) {
                 try {
                     assert server != null;
                     System.out.println("Waiting request on port " + Config.port_web);
                     socket = server.accept();
-                    DiffSearch_WebServer client = new DiffSearch_WebServer(socket, socket_faiss);
+                    DiffSearch_WebServer client = new DiffSearch_WebServer(socket, socket_faiss, server_log);
                     client.start();
                 } catch (IOException e) {
                     e.printStackTrace();

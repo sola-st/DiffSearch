@@ -22,4 +22,7 @@ public class Config {
     public static String host = "localhost";
     public static int port = 5002;
 
+    //Files
+    public static String server_log_file = "./src/main/resources/Features_Vectors/server_log.log";
+
 }
