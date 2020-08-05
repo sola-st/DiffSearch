@@ -86,8 +86,9 @@ public class DiffSearch_WebServer extends Thread {
             // this blank line signals the end of the headers
             out.println("");
             // Send the HTML page
-            out.println("<center><H1>Welcome to DiffSearch</H1></center>");
-            out.println("<center><H2>Insert your query for matching <span style='color: #0022b9'>Java</span> code changes</H2></center>");
+            out.println("<body style=\"background-color:#24292e;\">");
+            out.println("<center><H1><span style='color: #fafbfc'>Welcome to DiffSearch</span></H1></center>");
+            out.println("<center><H2><span style='color: #fafbfc'>Insert your query for matching <span style='color: #f1f8ff'>Java</span> code changes</span></H2></center>");
             //  out.println("<H2>Post->"+postData+ "</H2>");
             out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
 
@@ -95,13 +96,13 @@ public class DiffSearch_WebServer extends Thread {
                 String[] parts = result.split("-->");
 
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" >"+ parts[0]+"</textarea>" +
-                        "<big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big>" +
+                        "<span style='color: #fafbfc'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" >"+parts[1]+"</textarea></pre>" +
                         "<input type=\"submit\" value=\"Search\"></form></center>");
             }
             else
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
-                        "<big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big>"+
+                        "<span style='color: #fafbfc'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" ></textarea></pre>" +
                         "<input type=\"submit\" value=\"Search\"></form></center>");
 
@@ -113,25 +114,25 @@ public class DiffSearch_WebServer extends Thread {
                         String[] parts = change.split("-->");
 
                         if(parts.length == 1){
-                            out.println("<center><H3><span style='color: #0022b9'>The query is not correct, please try again.</span></H3></center>");
+                            out.println("<center><H3><span style='color: #f5f0ff'>The query is not correct, please try again.</span></H3></center>");
                         }
                         else{
                             if(flag){
-                                out.println("<center><H3>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a dataset of 700 000 code changes:</H3></center>");
+                                out.println("<center><H3><span style='color: #fafbfc'>(Max 10) Code changes found in " + duration_matching / 1000.0 + " seconds using a dataset of 700 000 code changes:</span></H3></center>");
                                 flag = false;
                             }
                             out.println("<center><H4>"
-                                    + "<span style='color:#9c0101'>" + parts[0]
-                                    + "</span> --> <span style='color:#008000'>" + parts[1] + "</span>"
-                                    + "<a href=" + parts[2] + "> Link "+ parts[3] +"</a>"
-                                    + "</H4></center>");}
+                                    + "<span style='background-color: #ffdce0'> - " + parts[0]
+                                    + "</span> </H4> <H4> <span style='background-color:#dcffe4'>+ " + parts[1] + "</span></H4>"
+                                    + "<span style='background-color:#fafbfc'><a href=" + parts[2] + "> Link "+ parts[3] +"</a></span>"
+                                    + "</center>");}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }else{
                 if(flag_first_connection)
-                    out.println("<center><H3>No Matching Code changes found</H3></center>");
+                    out.println("<center><H3><span style='color: #fafbfc'>No Matching Code changes found</span></H3></center>");
             }
 
             out.close();

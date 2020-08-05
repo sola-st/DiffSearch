@@ -37,7 +37,7 @@ function search_function() {
 
     document.getElementById("myParagraph0").innerHTML ="<pre><font size=\"16\"><span style='color:#ffffff'>Ten of the total code changes found are:\n\n</span></font></pre>";
     document.getElementById("myParagraph1").innerHTML = "<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#008000'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
-    document.getElementById("myParagraph2").innerHTML ="<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#008000'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
+    document.getElementById("myParagraph2").innerHTML ="<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#698469'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
     document.getElementById("myParagraph3").innerHTML ="<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#008000'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
     document.getElementById("myParagraph4").innerHTML ="<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#008000'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
     document.getElementById("myParagraph5").innerHTML ="<pre><font size=\"14\"><span style='color:#9c0101'>-" + inputVal + "</span>\n<span style='color:#008000'>+" + inputVal2 + "</span>\n\n"+ "</font></pre>";
