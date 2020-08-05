@@ -7,6 +7,7 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.Tree;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -18,6 +19,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Pipeline {
@@ -553,7 +556,7 @@ public class Pipeline {
         boolean new_code = false;
 
         for(String str: list_query_old_leaves){
-            if(str.equals("->") || str.equals("<EOF>")){
+            if(str.equals("-->") || str.equals("<EOF>")){
                 new_code = true;
             }else{
                 if(new_code){
@@ -1359,7 +1362,22 @@ public class Pipeline {
             return output_list;
         }
 
+        BufferedReader info_reader = null;
+        try {
+            info_reader = new BufferedReader(new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         for (String candidate : allLines) {
+            String candidate_url = null;
+            try {
+                assert info_reader != null;
+                candidate_url = info_reader.readLine();
+            } catch (IOException e) {
+                candidate_url = "";
+                e.printStackTrace();
+            }
 
             Java_Tree changeJavaTree = new Java_Tree(candidate);
             ParseTree changeTree = changeJavaTree.get_parsetree();
@@ -1370,8 +1388,10 @@ public class Pipeline {
                 List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
 
                 if(!list.get(1).equals(list.get(0))) {
-                    output_list.add(candidate);
+                    output_list.add(candidate + "-->" + compute_candidate_url(candidate_url));
                     matching_counter++;
+
+                    //System.out.println(compute_candidate_url(candidate_url));
 
                     if (matching_counter == 10)
                         return output_list;
@@ -1384,7 +1404,29 @@ public class Pipeline {
 
     }
 
+    public static String compute_candidate_url(String candidate){
+        String candidate_url = "https://github.com/";
+        String repository = "";
+        String commit = "";
 
+        List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
+        if(items.size() >2){
+
+        commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
+       // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
+
+
+        repository = StringUtils.substringBetween(items.get(2),"patch/", ".patch").replaceAll("-","/");
+        } else{
+
+            return "";
+        }
+
+
+
+
+        return candidate_url + repository + "/commit/" + commit + "-->" + items.get(1);
+    }
 
 }
 

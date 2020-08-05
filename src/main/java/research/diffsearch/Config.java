@@ -13,11 +13,10 @@ public class Config {
     public static boolean LOG_FILE  = false;
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = true;
-    public static boolean WEB  = false;
+    public static boolean NORMAL  = false;
+    public static boolean WEB  = true;
 
     //Socket
-    public static String host_javascript = "localhost";
     public static int port_web = 8843;
 
     public static String host = "localhost";
