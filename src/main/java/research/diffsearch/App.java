@@ -505,7 +505,7 @@ public class App {
         ParseTree changeTree = changeJavaTree.get_parsetree();
 
         Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
-        return matching.isMatch(changeTree, changeJavaTree.get_parser());
 
+        return matching.isMatch(changeTree, changeJavaTree.get_parser());
     }
 }
