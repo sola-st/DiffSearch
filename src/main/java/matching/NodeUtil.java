@@ -75,7 +75,7 @@ public class NodeUtil {
             return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("literal");
         } else if (kText.equals("ID")) {
             return v.getChildCount() == 0;
-        } else if (kText.equals("binOp")) {
+        } else if (kText.equals("binOP")) {
             return vText.equals("binary_operators");
         } else if (kText.equals("OP")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);

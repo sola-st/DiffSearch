@@ -56,6 +56,7 @@ public class Matching {
             NodeMap m = workList.removeLast();
 
             ParseTree unmatchedQueryNode = m.nextUnmatchedNode(nodesToMatch);
+
             if (unmatchedQueryNode == null) {
                 if (validateMatchingCandidate(m, nodeUtil)) {
                     return true;
@@ -71,6 +72,8 @@ public class Matching {
             int startIdx = m.indexOfLastMatchedChild(treeParent);
             for (int i = startIdx; i < treeParent.getChildCount(); i++) {
                 ParseTree treeCandidateNode = treeParent.getChild(i);
+                String quer = unmatchedQueryNode.getText();
+                String cand = treeCandidateNode.getText();
                 NodeMap updatedMap = m.checkAndUpdate(unmatchedQueryNode, treeCandidateNode);
                 if (updatedMap != null) {
                     if (updatedMap.nextUnmatchedNode(nodesToMatch) == null) {

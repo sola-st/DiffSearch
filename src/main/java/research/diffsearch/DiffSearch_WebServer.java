@@ -8,7 +8,6 @@ import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static research.diffsearch.Pipeline.run_test;
@@ -157,9 +156,9 @@ public class DiffSearch_WebServer extends Thread {
 
             }else{
                 if(flag_first_connection) {
-                    out.println("<center><H3><span style='color: #ffffff'>No Matching Code changes found</span></H3></center>");
+                    out.println("<center><H3><span style='color: #ffffff'>No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds</span>.</span></H3></center>");
 
-                    chan.write(ByteBuffer.wrap("No Matching Code changes found\n".getBytes()));
+                    chan.write(ByteBuffer.wrap(("No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span>\n").getBytes()));
                 }
             }
             lock.release();

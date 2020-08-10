@@ -299,4 +299,52 @@ public class AppTest
         assertEquals(true, App.run_junit(query, candidate));
     }
 
+    @org.junit.jupiter.api.Test//error
+    public void test29() throws Exception {
+        String query = "_ --> if(ID binOP LT){ ID = LT;}";
+        String candidate = "_ --> if (frequency < 1) { frequency = 1; }";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test30() throws Exception {
+        String query = "if (EXPR) { ID = ID; } --> if (EXPR) { ID = ID; }";
+        String candidate = "if (vmType == null) { vmType = Type; } --> if (vmType == null) { vmType = defaultVmType; }";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test31() throws Exception {
+        String query = "_ --> assert EXPR;";
+        String candidate = "_ --> assert x;";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test32() throws Exception {
+        String query = "_ --> assert ID;";
+        String candidate = "_ --> assert x;";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test33() throws Exception {
+        String query = " if (EXPR != null) { --> if (EXPR == null) {";
+        String candidate = " if (x != null) { --> if (x == null) {";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void test34() throws Exception {
+        String query = " _ --> EXPR(EXPR);";
+        String candidate = " _ --> foo(x);";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 }

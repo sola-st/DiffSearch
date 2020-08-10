@@ -205,8 +205,24 @@ public class Pipeline {
 
                 //try to fix errors
                 if(change.error){
-                    continue;
-                    // System.out.println(change.get_change_string() + "\n");
+                    //System.out.println(change.get_change_string() + "\n");
+
+                    if(!change_string.contains("-->"))
+                        change_string = change_string.replaceAll("->", "-->");
+
+
+                    try{
+                        //change = new Javascript_Tree(change_string);}
+                        //change = new Python3_Tree(change_string);
+                        change = new Java_Tree(change_string.replace("}", ""));
+                    }
+                    catch (Exception e){
+                        continue;
+                    }
+
+                    if(change.error) {
+                        continue;
+                    }
                     //  int eee=0;
                     //          if(change_string.contains("transformer.Transformer("))
                     //             eee++;
@@ -295,6 +311,46 @@ public class Pipeline {
         try {
             long startTime_gitdiff = System.currentTimeMillis();
             python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py " + Integer.toString(n));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_indexing.getErrorStream()));
+
+            java.io.InputStream is = python_indexing.getInputStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+
+            if (s.hasNext()) {
+                String ret = s.next();
+            }
+
+            int exitCode = python_indexing.waitFor();
+            String st = null;
+            if (exitCode != 0) {
+                // Read any errors from the attempted command
+                System.out.println("Here is the standard error of the command:\n");
+                while ((st = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
+                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
+            }
+            python_indexing.destroy();
+            long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+            System.out.println("Indexing time: " + gitdiff_extraction/1000 + " seconds.\n");
+        } catch (Exception e) { e.printStackTrace();}
+
+        //  System.out.println("FAISS INDEXING STAGE DONE.\n");
+
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
+     *
+     */
+    public static void indexing_candidate_changes_new(int n, String reader, String writer){
+        Process python_indexing;
+
+        try {
+            long startTime_gitdiff = System.currentTimeMillis();
+            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py " + Integer.toString(n) + " " + reader + " " + writer);
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(python_indexing.getErrorStream()));
@@ -427,6 +483,42 @@ public class Pipeline {
      *
      */
     public static double search_candidate_changes(){
+        Process python_Nearest_Neighbor_Search;
+        String line = null;
+        double ret = -1;
+
+        try {
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
+
+            int exitCode = python_Nearest_Neighbor_Search.waitFor();
+            if (exitCode != 0) {
+
+                System.out.println("Here is the standard error of the command:\n");
+                String s;
+                while ((s = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
+                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+            }
+
+            python_Nearest_Neighbor_Search.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        return ret;
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
+     *
+     */
+    public static double search_candidate_changes_new(){
         Process python_Nearest_Neighbor_Search;
         String line = null;
         double ret = -1;
@@ -846,8 +938,8 @@ public class Pipeline {
     }
 
 
-    static void scalability(){
-        int[] changes = { 10000, 50000, 100000, 200000, 250000, 300000,400000, 500000, 575000, 649000};
+    static void scalability_python(){
+        int[] changes = { 10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
 
         BufferedWriter buff_writer_features = null;
 
@@ -865,7 +957,8 @@ public class Pipeline {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                Pipeline.indexing_candidate_changes(i);
+                Pipeline.indexing_candidate_changes_new(i, "scalability/changes_feature_vectors_java.csv",
+                        "scalability/faiss_java.index");
             } catch (Exception e) {
                 e.printStackTrace();
             }

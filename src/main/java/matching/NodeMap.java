@@ -94,6 +94,7 @@ public class NodeMap {
 
     public ParseTree nextUnmatchedNode(List<ParseTree> nodesToMatch) {
         for (ParseTree n : nodesToMatch) {
+            String test = n.getText();
             if (!nodeMap.containsKey(n))
                 return n;
         }

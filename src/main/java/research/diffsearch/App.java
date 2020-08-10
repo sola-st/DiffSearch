@@ -6,8 +6,6 @@ import org.antlr.v4.runtime.tree.Tree;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -67,13 +65,9 @@ public class App {
             }
             System.out.println("DiffSearch Server active on port "+ Config.port_web);
 
-            // Get a file channel for the file
-          //  File file = new File(Config.server_log_file);
-          //  FileChannel channel = null;
             FileOutputStream server_log = null;
 
             try {
-             //   channel = new RandomAccessFile(file, "rw").getChannel();
                 server_log = new FileOutputStream(Config.server_log_file, true);
 
             } catch (IOException e) {
@@ -168,7 +162,6 @@ public class App {
             }
 
 
-            BufferedWriter buff_writer_results = null;
             int i = 1;
 
             while (true) {
@@ -313,40 +306,8 @@ public class App {
          * SCALABILITY
          * */
         if(Config.SCALABILITY) {
-            /* **************************************************************************************************************
-             * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
-             * */
 
-            System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
-            try {
-                switch(Config.PROGRAMMING_LANGUAGE) {
-                    case "PYTHON3": change_number = Change_extraction.analyze_diff_file();break;
-                    case "JAVA_SCALABILITY": change_number = Change_extraction.analyze_diff_file_scalability();break;
-                    default: change_number = Change_extraction.read_HTML_dataset3();
-                   change_number = Change_extraction.analyze_diff_file();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
-
-            /* **************************************************************************************************************
-             * CHANGES TREE AND FEATURES COMPUTATION
-             **/
-
-            System.out.println("FEATURE EXTRACTION STARTED.\n");
-
-            try {
-                real_changes = Pipeline.feature_extraction(change_number);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("FEATURE EXTRACTION DONE WITH " + real_changes + " CHANGES.\n");
-
-            Pipeline.scalability();
+            Pipeline.scalability_python();
         }
 
 
