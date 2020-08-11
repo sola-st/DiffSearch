@@ -32,32 +32,9 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : querySnippet NEWLINE? QUERY_ARROW NEWLINE? querySnippet NEWLINE? //MOD
-    ;
-
-querySnippet
-    : packageDeclaration
-    | importDeclaration
-    | enumDeclaration
-    | enumConstant
-    | interfaceDeclaration
-    | memberDeclaration
-    | interfaceMethodDeclaration
-    | genericInterfaceMethodDeclaration
-    | variableDeclarator
-    | literal
-    | annotation
-    | elementValuePair
-    | annotationTypeDeclaration
-    | multipleStatements
-    | blockStatement
-    | block
-    | expression
-    | parExpression
-    | expressionList
-    | methodCall
-    | WILDCARD
-    | EMPTY    //MOD
+    : blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?
+    | blockStatement (NEWLINE blockStatement)* NEWLINE? '->' NEWLINE? EMPTY NEWLINE?
+    | EMPTY NEWLINE? '->' NEWLINE? blockStatement (NEWLINE blockStatement)* NEWLINE?  //MOD
     ;
 
 compilationUnit
@@ -390,21 +367,13 @@ defaultValue
 // STATEMENTS / BLOCKS
 
 block
-    : NEWLINE? '{' NEWLINE? multipleStatements NEWLINE? '}'?
-      | NEWLINE? '{' NEWLINE? WILDCARD NEWLINE? '}'?  //MOD
-    ;
-
-multipleStatements
-    :
-    | blockStatement*
-    //MOD
+    : NEWLINE? '{' NEWLINE? blockStatement* NEWLINE? '}' //MOD
     ;
 
 blockStatement
-    : localVariableDeclaration ';' NEWLINE?
-    | statement NEWLINE?
-    | localTypeDeclaration NEWLINE?
-    | WILDCARD NEWLINE?
+    : localVariableDeclaration ';'
+    | statement
+    | localTypeDeclaration
     ;
 
 localVariableDeclaration
@@ -421,18 +390,18 @@ statement
     : blockLabel=block
     | ASSERT EXPR (':' EXPR)? ';' //MOD
    // | IF EXPR statement (ELSE statement)?
-    | FOR '(' EXPR (',' EXPR)* ')' statement?
-    | FOR '(' WILDCARD ')' statement?
-    | WHILE EXPR statement?
+    | FOR '(' EXPR (',' EXPR)* ')' statement
+    | FOR '(' WILDCARD ')' statement
+    | WHILE EXPR statement
     | DO statement WHILE EXPR ';'
     | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
     | SYNCHRONIZED EXPR block
     | RETURN EXPR ';'
     | THROW EXPR ';'
     | ASSERT expression (':' expression)? ';'
-    | IF parExpression statement? (ELSE statement)?
-    | FOR '(' forControl ')' statement?
-    | WHILE parExpression statement?
+    | IF parExpression statement (ELSE statement)?
+    | FOR '(' forControl ')' statement
+    | WHILE parExpression statement
     | DO statement WHILE parExpression ';'
     | TRY block (catchClause+ finallyBlock? | finallyBlock)
     | TRY resourceSpecification block catchClause* finallyBlock?
@@ -513,11 +482,6 @@ methodCall
     | SUPER '(' expressionList? ')'
     ;
 
-binary_operators: '*'|'/'|'%'|'+'|'-'|'<' '<' | '>' '>' '>' | '>' '>'| '<=' | '>=' | '>' | '<'
-                 | '==' | '!=' | '&' |'^' |'|' |'&&' | '||' | BINOP ;
-
-assign_operators : '=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=' | OP;
-
 expression
     : primary
     | expression bop='.'
@@ -530,30 +494,25 @@ expression
       )
     | expression '[' expression ']'
     | methodCall
-    | EXPR
     | NEW creator
     | '(' typeType ')' expression
     | expression postfix=('++' | '--')
     | prefix=('+'|'-'|'++'|'--') expression
     | prefix=('~'|'!') expression
-    | expression binary_operators expression
-    //| expression bop=('*'|'/'|'%') expression
-    //| expression bop=('+'|'-') expression
-    //| expression ('<' '<' | '>' '>' '>' | '>' '>') expression
-    //| expression bop=( '<=' | '>=' | '>' | '<') expression
+    | expression bop=('*'|'/'|'%') expression
+    | expression bop=('+'|'-') expression
+    | expression ('<' '<' | '>' '>' '>' | '>' '>') expression
+    | expression bop=( OP | '<=' | '>=' | '>' | '<') expression
     | expression bop=INSTANCEOF typeType
-    //| expression bop=('==' | '!=') expression
-    //| expression bop='&' expression
-    //| expression bop='^' expression
-    //| expression bop='|' expression
-    //| expression bop='&&' expression
-    //| expression bop='||' expression
+    | expression bop=('==' | '!=') expression
+    | expression bop='&' expression
+    | expression bop='^' expression
+    | expression bop='|' expression
+    | expression bop='&&' expression
+    | expression bop='||' expression
     | <assoc=right> expression bop='?' expression ':' expression
-    //| <assoc=right> expression
-    //  bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
-    //  expression
     | <assoc=right> expression
-      assign_operators
+      bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
       expression
     | lambdaExpression // Java8
 
