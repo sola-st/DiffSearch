@@ -354,4 +354,21 @@ public class AppTest
 
         assertEquals(true, App.run_junit(query, candidate));
     }
+
+
+    //@org.junit.jupiter.api.Test
+    public void test36() throws Exception {
+        String query = " _ --> EXPR(5);";
+        String candidate = " _ --> foo(5);";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+    //@org.junit.jupiter.api.Test
+    public void test37() throws Exception {
+        String query = " _ --> EXPR(EXPR);";
+        String candidate = " _ --> foo(5);";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 }

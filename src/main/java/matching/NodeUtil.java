@@ -81,7 +81,7 @@ public class NodeUtil {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
             return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators");
         } else if (kText.equals("EXPR")) {
-            return vText.equals("expression");
+            return vText.equals("expression") || v.getChildCount() == 0;
         }
         throw new IllegalArgumentException("Unexpected node label " + kText);
     }
