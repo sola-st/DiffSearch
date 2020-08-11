@@ -333,7 +333,7 @@ public class AppTest
 
     //@org.junit.jupiter.api.Test
     public void test33() throws Exception {
-        String query = " if (EXPR != null) { --> if (EXPR == null) {";
+        String query = " if (ID != null) { --> if (ID == null) {";
         String candidate = " if (x != null) { --> if (x == null) {";
 
         assertEquals(true, App.run_junit(query, candidate));
@@ -347,4 +347,11 @@ public class AppTest
         assertEquals(true, App.run_junit(query, candidate));
     }
 
+    //@org.junit.jupiter.api.Test
+    public void test35() throws Exception {
+        String query = " if(EXPR binOP LT){ ID = LT;} --> _\n";
+        String candidate = " if (frequency < 1) { frequency = 1; } --> _\n";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
 }

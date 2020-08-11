@@ -137,14 +137,14 @@ public class DiffSearch_WebServer extends Thread {
                         }
                         else{
                             if(flag){
-                                out.println("<center><H3><span style='color: #ffffff'>(<span style='color: #a1a1a6'>Max 10</span>) Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #a1a1a6'>739 005 code changes</span>:</span></H3></center>");
+                                out.println("<H3><span style='color: #ffffff'>(<span style='color: #a1a1a6'>Max 10</span>) Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #a1a1a6'>739 005 code changes</span>:</span></H3>");
                                 flag = false;
                             }
-                            out.println("<center><H4>"
+                            out.println("<H4>"
                                     + "<span style='background-color: #b54845'><span style='color: #ffffff'> - " + parts[0]
                                     + "</span></span> </H4> <H4> <span style='background-color:#2cab13'><span style='color: #ffffff'>+ " + parts[1] + "</span></span></H4>"
                                     + "<span style='color: #ffffff'><a href=" + parts[2] + " style=\"color: #fafbfc\"> Link "+ parts[3] +"</a></span>"
-                                    + "</center>");
+                                    + "<pre></pre><pre></pre>");
                             chan.write(ByteBuffer.wrap((change +"\n").getBytes()));
                         }
                     } catch (Exception e) {
