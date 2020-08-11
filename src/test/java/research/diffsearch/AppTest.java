@@ -387,4 +387,33 @@ public class AppTest
         assertEquals(false, App.run_junit(query, candidate));
     }
 
+    //@org.junit.jupiter.api.Test
+    public void test40() throws Exception {
+        String query = " while (EXPR) {-->while (ID(<...>)) {";
+        String candidate = " while (a()) { --> while (a()) { // a() exits root, while() exits root";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test41() throws Exception {
+        String query = " while (ID()) {-->while (ID(<...>)) {";
+        String candidate = " while (a()) { --> while (a()) { // a() exits root, while() exits root";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test42() throws Exception {
+        String query = " while (EXPR) {-->while (ID(<...>)) {";
+        String candidate = " while (true) { --> while (isIdlingEventEnabled()) {";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test43() throws Exception {
+        String query = " while (EXPR) {-->while (ID(<...>)) {";
+        String candidate = " while (expandTree(graph, assumptions)) { --> while (expandTree(graph, assumptions, expansionLogger)) { ";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 }

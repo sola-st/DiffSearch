@@ -38,7 +38,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(15);
+                TimeUnit.SECONDS.sleep(20);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
