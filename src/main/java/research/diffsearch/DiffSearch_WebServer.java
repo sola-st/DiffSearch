@@ -77,7 +77,7 @@ public class DiffSearch_WebServer extends Thread {
 
                 try {
 
-                    output_list = run_test(result.replaceAll("\r",""), socket_faiss);
+                    output_list = run_test(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }

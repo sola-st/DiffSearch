@@ -416,4 +416,11 @@ public class AppTest
         assertEquals(true, App.run_junit(query, candidate));
     }
 
+    public void test44() throws Exception {
+        String query = " <...> --> try {<...> } catch (<...>) {<...> }  ";
+        String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()); --> try { profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray())); } catch (InvalidInputException e) { Log.w(TAG, \"Invalid profile key ignored\", e); }  ";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 }
