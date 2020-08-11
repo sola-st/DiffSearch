@@ -76,12 +76,14 @@ public class NodeUtil {
         } else if (kText.equals("ID")) {
             return v.getChildCount() == 0;
         } else if (kText.equals("binOP")) {
-            return vText.equals("binary_operators");
+           // return vText.equals("binary_operators");
+            return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("binary_operators");
         } else if (kText.equals("OP")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
             return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators");
         } else if (kText.equals("EXPR")) {
-            return vText.equals("expression") || v.getChildCount() == 0;
+            return vText.equals("expression") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
+                    || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall");
         }
         throw new IllegalArgumentException("Unexpected node label " + kText);
     }

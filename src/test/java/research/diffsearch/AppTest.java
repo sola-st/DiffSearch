@@ -147,7 +147,7 @@ public class AppTest
         assertEquals(true, App.run_junit(query, candidate));
     }
 
-    @org.junit.jupiter.api.Test
+    //@org.junit.jupiter.api.Test
     public void test15() throws Exception {
         String query = "<...> --> try { <...> } catch (ID ID) { <...> }";
         String candidate = "{ f(); h(); g(); } --> g();";
@@ -304,7 +304,7 @@ public class AppTest
         String query = "_ --> if(ID binOP LT){ ID = LT;}";
         String candidate = "_ --> if (frequency < 1) { frequency = 1; }";
 
-        assertEquals(true, App.run_junit(query, candidate));
+         assertEquals(true, App.run_junit(query, candidate));
     }
 
     //@org.junit.jupiter.api.Test
@@ -340,6 +340,14 @@ public class AppTest
     }
 
     //@org.junit.jupiter.api.Test
+    public void test38() throws Exception {
+        String query = " if (EXPR != null) { --> if (EXPR == null) {";
+        String candidate = " if (x != null) { --> if (x == null) {";
+
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    //@org.junit.jupiter.api.Test
     public void test34() throws Exception {
         String query = " _ --> EXPR(EXPR);";
         String candidate = " _ --> foo(x);";
@@ -369,6 +377,14 @@ public class AppTest
         String candidate = " _ --> foo(5);";
 
         assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    //@org.junit.jupiter.api.Test
+    public void test39() throws Exception {
+        String query = " _ --> EXPR(ID);";
+        String candidate = " _ --> foo(x,y);";
+
+        assertEquals(false, App.run_junit(query, candidate));
     }
 
 }

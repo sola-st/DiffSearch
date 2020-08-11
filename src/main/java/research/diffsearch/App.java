@@ -110,7 +110,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
-                real_changes = Pipeline.feature_extraction(1700000);
+             //   real_changes = Pipeline.feature_extraction(1700000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -122,7 +122,7 @@ public class App {
 
             try {
                 System.out.println("INDEXING STARTED.\n");//908094  js: 508094
-                Pipeline.indexing_candidate_changes( (int) real_changes);
+                Pipeline.indexing_candidate_changes( 832139);//(int) real_changes);
             } catch (Exception e) {
                 e.printStackTrace();
             }
