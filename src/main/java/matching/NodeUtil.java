@@ -71,17 +71,17 @@ public class NodeUtil {
         // Note: the following checks are brittle w.r.t. changes of the grammar and may be incomplete
         String kText = Trees.getNodeText(k, queryParser);
         String vText = Trees.getNodeText(v, changeParser);
-        if (kText.equals("LT")) {
+        if (kText.equals("LT")|| kText.matches("LT<[0-9]+>")) {
             return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("literal");
-        } else if (kText.equals("ID")) {
+        } else if (kText.equals("ID") || kText.matches("ID<[0-9]+>")) {
             return v.getChildCount() == 0;
-        } else if (kText.equals("binOP")) {
+        } else if (kText.equals("binOP")|| kText.matches("binOP<[0-9]+>")) {
            // return vText.equals("binary_operators");
             return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("binary_operators");
-        } else if (kText.equals("OP")) {
+        } else if (kText.equals("OP")|| kText.matches("OP<[0-9]+>")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
             return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators");
-        } else if (kText.equals("EXPR")) {
+        } else if (kText.equals("EXPR")|| kText.matches("EXPR<[0-9]+>")) {
             return vText.equals("expression") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
                     || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall");
         }

@@ -432,7 +432,7 @@ public class AppTest
     public void test46() throws Exception {
         String query = " ID<0>.ID<1>(<...>); --> ID<2>.ID<1>(<...>); ";
         String candidate = " when(context.getContextPath()).thenReturn(\"/context\"); -->  when(request.getContextPath()).thenReturn(\"/context\"); ";
-        assertEquals(true, App.run_junit(query, candidate));
+        assertEquals(false, App.run_junit(query, candidate));
     }
 
     public void test47() throws Exception {
@@ -451,6 +451,48 @@ public class AppTest
         String query = " EXPR<1>.ID<0>(EXPR<3>, EXPR<2>);-->EXPR<1>.ID<0>(EXPR<2>, EXPR<3>); ";
         String candidate = " Files.write(badKeystore, keystore); --> Files.write(keystore, badKeystore);";
         assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test50() throws Exception {
+        String query = " while(true)  --> while(EXPR) ";
+        String candidate = " while(true) --> while(x>0)";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test51() throws Exception {
+        String query = " while(true)  --> while(EXPR) ";
+        String candidate = " while(true){ --> while(x>0){";
+        assertEquals(false, App.run_junit(query, candidate));
+    }
+
+    public void test52() throws Exception {
+        String query = " EXPR binOP<0> EXPR --> EXPR binOP<0> EXPR";
+        String candidate = " graphDrawable.cameraLocation[1] = limits.getMinYoctree() + graphWidth / 2; --> graphDrawable.cameraLocation[1] = limits.getMinYoctree() + graphHeight / 2;";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test54() throws Exception {
+        String query = " EXPR<0> binOP EXPR<1> --> EXPR<0> binOP EXPR<1> ";
+        String candidate = " return mError != null; --> return mError == null;";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test53() throws Exception {
+        String query = "ID<0>(ID<1>, ID<2>);-->ID<0>(ID<2>, ID<1>); ";
+        String candidate = " assertTrue(valid1,1); --> assertTrue(1, valid1);";
+        assertEquals(false, App.run_junit(query, candidate));
+    }
+
+    public void test55() throws Exception {
+        String query = "if(EXPR<0>){-->if(EXPR<0> || EXPR){ ";
+        String candidate = " if (subtypeProps.isEmpty()) { --> if (subtypeProps == null || subtypeProps.isEmpty()) {";
+        assertEquals(false, App.run_junit(query, candidate));
+    }
+
+    public void test56() throws Exception {
+        String query = "if(EXPR<0>){-->if(EXPR<0> && EXPR){ ";
+        String candidate = " if (subtypeProps.isEmpty()) { --> if (subtypeProps == null && subtypeProps.isEmpty()) {";
+        assertEquals(false, App.run_junit(query, candidate));
     }
 
 }

@@ -64,8 +64,12 @@ public class NodeMap {
             String currentSubtree = nodeUtil.querySubtreeToString(v);
             if (boundSubtree == null) {
                 // first time we see this placeholder, bind to the subtree
-                namedPlaceholders.put(placeholder, currentSubtree);
-                return updatedCopy(k, v);
+                if(nodeUtil.isMatchingPlaceholder(k, v)){
+                    namedPlaceholders.put(placeholder, currentSubtree);
+                    return updatedCopy(k, v);
+                } else{
+                    return null;
+                }
             } else {
                 // we've seen this placeholder before; make sure it is consistently bound
                 if (boundSubtree.equals(currentSubtree)) {

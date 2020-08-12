@@ -18,7 +18,6 @@ public class App {
         long real_changes = 0;
         double time_python2 = 0;
 
-
         /* **************************************************************************************************************
          * WEB INTERFACE MODE
          * */
@@ -109,9 +108,9 @@ public class App {
              * CHANGES TREE AND FEATURES COMPUTATION
              **/
             try {
-                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836
-             //   real_changes = Pipeline.feature_extraction(1700000);
-            } catch (Exception e) {
+                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836 //JAVA: 1700000
+            //    real_changes = Pipeline.feature_extraction(change_number);
+            } catch (Exception e) { //Java new 13171207 with 4568584
                 e.printStackTrace();
             }
 
@@ -121,8 +120,8 @@ public class App {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                System.out.println("INDEXING STARTED.\n");//908094  js: 508094
-                Pipeline.indexing_candidate_changes( 832139);//(int) real_changes);
+                System.out.println("INDEXING STARTED.\n");//908094  js: 508094  JAVA: 832139
+                Pipeline.indexing_candidate_changes((int) real_changes);//(int) real_changes);
             } catch (Exception e) {
                 e.printStackTrace();
             }
