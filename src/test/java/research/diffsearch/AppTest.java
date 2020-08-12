@@ -423,4 +423,34 @@ public class AppTest
         assertEquals(true, App.run_junit(query, candidate));
     }
 
+    public void test45() throws Exception {
+        String query = " EXPR.ID(ID,ID); --> EXPR.ID(ID); ";
+        String candidate = "x.y(t,r); --> x.y(t); ";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test46() throws Exception {
+        String query = " ID<0>.ID<1>(<...>); --> ID<2>.ID<1>(<...>); ";
+        String candidate = " when(context.getContextPath()).thenReturn(\"/context\"); -->  when(request.getContextPath()).thenReturn(\"/context\"); ";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test47() throws Exception {
+        String query = " ID binOP<0> LT -->  ID binOP<1> LT ";
+        String candidate = " return mError != null && !mCancel && !mEof; --> return mError == null && !mCancel && !mEof;";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test48() throws Exception {
+        String query = " EXPR<1>.ID<0>(ID<1>, ID<2>);-->EXPR<1>.ID<0>(ID<2>, ID<1>); ";
+        String candidate = " Files.write(badKeystore, keystore); --> Files.write(keystore, badKeystore);";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test49() throws Exception {
+        String query = " EXPR<1>.ID<0>(EXPR<3>, EXPR<2>);-->EXPR<1>.ID<0>(EXPR<2>, EXPR<3>); ";
+        String candidate = " Files.write(badKeystore, keystore); --> Files.write(keystore, badKeystore);";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 }

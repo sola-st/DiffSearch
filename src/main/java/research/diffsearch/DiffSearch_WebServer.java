@@ -159,7 +159,13 @@ public class DiffSearch_WebServer extends Thread {
                 if(flag_first_connection) {
                     out.println("<center><H3><span style='color: #ffffff'>No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds</span>.</span></H3></center>");
 
+                    chan.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date())+"\n").getBytes()));
+                    chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
+
                     chan.write(ByteBuffer.wrap(("No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span>\n").getBytes()));
+
+                    chan.write(ByteBuffer.wrap(("==========================================================================================="
+                            +"============================================================================================\n\n").getBytes()));
                 }
             }
             lock.release();
