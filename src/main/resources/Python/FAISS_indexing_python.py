@@ -5,9 +5,9 @@ import pandas as pd
 import faiss
 import sys
 
-def indexing(nchange):
+def indexing(nchange, feature_in, index_out):
     #Reading csv feature vectors files
-    changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv', header=None, nrows=int(nchange)).iloc[:, :].values[0:, :-1].astype('float32')
+    changes_feature_vectors = pd.read_csv('./src/main/resources/' + str(feature_in), header=None, nrows=int(nchange)).iloc[:, :].values[0:, :-1].astype('float32')
 
 
     #######################################################################
@@ -31,8 +31,8 @@ def indexing(nchange):
     print(index.is_trained)  # True
     print(index.ntotal)   # 200
 
-    faiss.write_index(index, "./src/main/resources/Features_Vectors/faiss_java.index")
+    faiss.write_index(index, "./src/main/resources/"+str(index_out))
 
 
-#print(str(sys.argv[-1]))
-indexing(sys.argv[-1])
+#print(str(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))
+indexing(sys.argv[-3], sys.argv[-2], sys.argv[-1])

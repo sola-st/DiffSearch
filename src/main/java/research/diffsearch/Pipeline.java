@@ -350,7 +350,7 @@ public class Pipeline {
 
         try {
             long startTime_gitdiff = System.currentTimeMillis();
-            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py " + Integer.toString(n) + " " + reader + " " + writer);
+            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing_python.py " + Integer.toString(n) + " " + reader + " " + writer);
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(python_indexing.getErrorStream()));
