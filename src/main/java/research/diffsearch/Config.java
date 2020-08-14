@@ -12,8 +12,8 @@ public class Config {
     //Constants that enable/disable part of the tool
     public static boolean LOG_FILE  = false;
     public static boolean SCALABILITY  = false;
-    public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = true;
+    public static boolean EFFECTIVENESS  = true;
+    public static boolean NORMAL  = false;
     public static boolean WEB  = false;
 
     //Socket

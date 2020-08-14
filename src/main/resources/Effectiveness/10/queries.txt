@@ -1,0 +1,4 @@
+EXPR binOP<0> EXPR<0> --> EXPR binOP<0> EXPR<0>
+EXPR<0> binOP<0> EXPR --> EXPR<0> binOP<0> EXPR
+EXPR binOP<0> EXPR<0>; --> EXPR binOP<0> EXPR<0>;
+EXPR<0> binOP<0> EXPR; --> EXPR<0> binOP<0> EXPR;

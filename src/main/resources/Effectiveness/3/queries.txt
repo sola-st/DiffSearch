@@ -1,0 +1,3 @@
+if (EXPR<0>) { --> if (EXPR<0> && EXPR) {
+if (EXPR<0>) { --> if (EXPR && EXPR<0>) {
+if (EXPR<0> && EXPR<1>) { --> if (EXPR<0> && EXPR && EXPR<1>) {

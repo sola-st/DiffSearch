@@ -1497,6 +1497,92 @@ public class Pipeline {
 
     }
 
+    /**
+     * Method that implements a deep recursive comparison between query tree and change trees to find
+     * matching changes.
+     *
+     * @param queryJavaTree : query Tree
+     * @return number of matching changes found
+     */
+    public static List<String> diffsearch_offline(Java_Tree queryJavaTree, Socket socket) {
+
+
+        List<String> output_list = new ArrayList<String>();
+
+        try {
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.print("PYTHON" + "\r\n");
+            out.flush();
+            //System.out.println("WAITING MESSAGE..");
+
+            Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+            String in = stdIn.readLine();
+            //System.out.println("MESSAGE RECEIVED");
+
+            if(!in.equals("JAVA"))
+                return output_list;
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        /* **************************************************************************************************************
+         * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+         * */
+
+        List<String> allLines = null;
+
+        ParseTree queryTree = queryJavaTree.get_parsetree();
+
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return output_list;
+        }
+
+        BufferedReader info_reader = null;
+        try {
+            info_reader = new BufferedReader(new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (String candidate : allLines) {
+            String candidate_url = null;
+            try {
+                assert info_reader != null;
+                candidate_url = info_reader.readLine();
+            } catch (IOException e) {
+                candidate_url = "";
+                e.printStackTrace();
+            }
+
+            Java_Tree changeJavaTree = new Java_Tree(candidate);
+            ParseTree changeTree = changeJavaTree.get_parsetree();
+
+            Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
+
+            if(matching.isMatch(changeTree, changeJavaTree.get_parser())){
+                List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+
+                if(!list.get(1).equals(list.get(0))) {
+                    output_list.add(candidate + " [url] " + compute_candidate_url(candidate_url));
+
+                    //System.out.println(compute_candidate_url(candidate_url));
+
+                }
+            }
+
+        }
+
+        return output_list;
+
+    }
+
     public static String compute_candidate_url(String candidate){
         String candidate_url = "https://github.com/";
         String repository = "";
