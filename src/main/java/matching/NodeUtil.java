@@ -25,7 +25,7 @@ public class NodeUtil {
     }
 
     // TODO: get this from the grammar or some other place
-    private static Set<String> placeholderNames = new HashSet<>(Arrays.asList("LT", "ID", "binOP", "OP", "EXPR"));
+    private static Set<String> placeholderNames = new HashSet<>(Arrays.asList("LT", "ID", "binOP", "OP", "unOP", "EXPR"));
 
     public enum Kind {
         UNNAMED_PLACEHOLDER, NAMED_PLACEHOLDER, NORMAL, WILDCARD, EMPTY;
@@ -81,6 +81,9 @@ public class NodeUtil {
         } else if (kText.equals("OP")|| kText.matches("OP<[0-9]+>")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
             return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators");
+        }else if (kText.equals("unOP")|| kText.matches("unOP<[0-9]+>")) {
+            String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
+            return parentLabel.equals("expression");
         } else if (kText.equals("EXPR")|| kText.matches("EXPR<[0-9]+>")) {
             return vText.equals("expression") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
                     || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall");

@@ -938,7 +938,7 @@ public class Pipeline {
     }
 
 
-    static void scalability_python(){
+    static void scalability_java(){
         int[] changes = { 10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
 
         BufferedWriter buff_writer_features = null;
@@ -946,7 +946,7 @@ public class Pipeline {
         int delay = 5;
 
         try {
-            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/scalability.csv"));
+            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/scalability/Java/scalability_java.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -957,7 +957,7 @@ public class Pipeline {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                Pipeline.indexing_candidate_changes_new(i, "scalability/changes_feature_vectors_java.csv",
+                Pipeline.indexing_candidate_changes_new(i, "scalability/Java/changes_feature_vectors_java.csv",
                         "scalability/faiss_java.index");
             } catch (Exception e) {
                 e.printStackTrace();

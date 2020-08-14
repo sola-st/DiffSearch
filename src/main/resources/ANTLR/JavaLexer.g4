@@ -154,6 +154,7 @@ CARET:              '^';
 MOD:                '%';
 OP: 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>';//MOD
 BINOP: 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>';//MOD
+UNOP: 'unOP' | 'unOP<0>' | 'unOP<1>'  | 'unOP<2>' | 'unOP<3>';
 QUERY_ARROW : '-->';
 
 ADD_ASSIGN:         '+=';

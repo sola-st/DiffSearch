@@ -465,12 +465,6 @@ public class AppTest
         assertEquals(false, App.run_junit(query, candidate));
     }
 
-    public void test52() throws Exception {
-        String query = " EXPR binOP<0> EXPR --> EXPR binOP<0> EXPR";
-        String candidate = " graphDrawable.cameraLocation[1] = limits.getMinYoctree() + graphWidth / 2; --> graphDrawable.cameraLocation[1] = limits.getMinYoctree() + graphHeight / 2;";
-        assertEquals(true, App.run_junit(query, candidate));
-    }
-
     public void test54() throws Exception {
         String query = " EXPR<0> binOP EXPR<1> --> EXPR<0> binOP EXPR<1> ";
         String candidate = " return mError != null; --> return mError == null;";
@@ -484,15 +478,40 @@ public class AppTest
     }
 
     public void test55() throws Exception {
-        String query = "if(EXPR<0>){-->if(EXPR<0> || EXPR){ ";
-        String candidate = " if (subtypeProps.isEmpty()) { --> if (subtypeProps == null || subtypeProps.isEmpty()) {";
-        assertEquals(false, App.run_junit(query, candidate));
+        String query = "if(EXPR){ --> if(EXPR || EXPR){ ";
+        String candidate = " if (isEmpty()) { --> if (subtypeProps || isEmpty()) {";
+        assertEquals(true, App.run_junit(query, candidate));
     }
 
     public void test56() throws Exception {
-        String query = "if(EXPR<0>){-->if(EXPR<0> && EXPR){ ";
-        String candidate = " if (subtypeProps.isEmpty()) { --> if (subtypeProps == null && subtypeProps.isEmpty()) {";
-        assertEquals(false, App.run_junit(query, candidate));
+        String query = "if(EXPR){-->if(EXPR && EXPR){ ";
+        String candidate = " if (isEmpty()) { --> if (subtypeProps && isEmpty()) {";
+        assertEquals(true, App.run_junit(query, candidate));
     }
+
+    public void test57() throws Exception {
+        String query = "EXPR.ID<0>() -->EXPR.ID<1>() ";
+        String candidate = " if (graphModel.getGraph().getEdgeCount() > 0) { --> if (graphModel.getGraph().getNodeCount() > 0) {";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test58() throws Exception {
+        String query = "EXPR.ID<0>() -->EXPR.ID<1>() ";
+        String candidate = " if (graphModel.getGraph().getEdgeCount() > 0) { --> if (graphModel.getGraph().getNodeCount() > 0) {";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test59() throws Exception {
+        String query = "ID<0> unOP; --> ID<0> unOP;  ";
+        String candidate = " x++; --> x--;";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test60() throws Exception {
+        String query = "<...> ID(<...>) { --> <...> ID(<...>) throws ID {";
+        String candidate = " public void run() { --> public void run() throws InterruptedException {";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
 
 }
