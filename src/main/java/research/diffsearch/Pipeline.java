@@ -942,6 +942,7 @@ public class Pipeline {
         int[] changes = { 10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
 
         BufferedWriter buff_writer_features = null;
+        double time_python2 = 0;
 
         int delay = 5;
 
@@ -992,11 +993,11 @@ public class Pipeline {
             }
 
             // Javascript_Tree tree_query = null;
-            Python3_Tree tree_query = null;
+            Java_Tree tree_query = null;
             List<String> allLines = null;
 
             try {
-                allLines = Files.readAllLines(Paths.get("./src/main/resources/GitHub/input.txt"));
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/scalability/Java/input.txt"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1009,26 +1010,37 @@ public class Pipeline {
                 e.printStackTrace();
             }
 
+
+
             assert allLines != null;
-            for(String str: allLines){
-                //    tree_query = Pipeline.query_feature_extraction(str);
-                String time_python2 = null;
+            for(String query_input: allLines){
+                try {
+                    tree_query = Pipeline.query_feature_extraction(query_input);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (tree_query == null) {
+                    System.out.print("The query is not correct, please try again.\n" + query_input);
+                    return;
+                }
+
                 try {
                     BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                     out.print("PYTHON" + "\r\n");
                     out.flush();
+                    //System.out.println("WAITING MESSAGE..");
 
-                    time_python2 = stdIn.readLine().substring(0, 5);
+                    time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
 
-                    System.out.println(" FAISS TIME: " + time_python2);
                     String in = stdIn.readLine();
+                    //System.out.println("MESSAGE RECEIVED");
 
-                    if(!in.equals("JAVA"))
-                        break;
+                    if (!in.equals("JAVA"))
+                        continue;
 
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
@@ -1038,18 +1050,12 @@ public class Pipeline {
 
                 long startTime_matching = System.currentTimeMillis();
 
-                long number_matching = -1;
+
                 try {
-                    //    System.out.println("\n============================\n\nChanges found with the deep tree comparison:\n");
-                    //Deep recursive tree comparison
-                    BufferedWriter buff_writer_results = null;
-                    //      number_matching = Pipeline.final_comparison(tree_query, 0, buff_writer_results);
+                    List <String> output = diffsearch_offline(tree_query,  socket);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //     if (number_matching == 0)
-                //        System.out.println("No changes found that match the query with deep comparison. \n");
 
                 long duration_matching = (System.currentTimeMillis() - startTime_matching);
                 System.out.println("final matching time: " + duration_matching/1000.0);

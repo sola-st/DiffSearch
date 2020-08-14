@@ -311,7 +311,6 @@ public class App {
             Pipeline.scalability_java();
         }
 
-
         /* **************************************************************************************************************
          * EFFECTIVENESS
          * ************************************************************************************************************/
@@ -348,7 +347,7 @@ public class App {
             try {
                 System.out.println("INDEXING STARTED.\n");
                 // Pipeline.indexing_candidate_changes((int) real_changes);
-                Pipeline.indexing_candidate_changes(4568580);//4568580
+                //Pipeline.indexing_candidate_changes(4568580);//4568580
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -364,7 +363,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(30);
+                TimeUnit.SECONDS.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
