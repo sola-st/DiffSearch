@@ -509,6 +509,8 @@ public class Pipeline {
             e.printStackTrace();
         }
 
+        System.out.println("INDEX LOADED.\n");
+
 
 
         return ret;

@@ -363,7 +363,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(50);
+                TimeUnit.SECONDS.sleep(120);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
