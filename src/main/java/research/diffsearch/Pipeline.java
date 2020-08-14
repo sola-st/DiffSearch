@@ -488,6 +488,7 @@ public class Pipeline {
         double ret = -1;
 
         try {
+
             python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
             BufferedReader stdError = new BufferedReader(new

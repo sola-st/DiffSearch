@@ -348,6 +348,7 @@ public class App {
                 System.out.println("INDEXING STARTED.\n");
                 // Pipeline.indexing_candidate_changes((int) real_changes);
                 //Pipeline.indexing_candidate_changes(4568580);//4568580
+                System.out.println("INDEXING DONE.\n");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -357,13 +358,14 @@ public class App {
              ****************************************************************************************************************/
 
             try {
+                System.out.println("INDEX LOADING.\n");
                 new Thread(Pipeline::search_candidate_changes).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             try {
-                TimeUnit.SECONDS.sleep(120);
+                TimeUnit.SECONDS.sleep(600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
