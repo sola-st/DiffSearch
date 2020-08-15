@@ -365,7 +365,7 @@ public class App {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(10800);
+                TimeUnit.SECONDS.sleep(3600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -407,7 +407,7 @@ public class App {
                 e.printStackTrace();
             }
 
-            for (int j = 1; j < 2; j++) {
+            for (int j = 1; j < 13; j++) {
                 int counter = 0;
 
                 try {
@@ -477,7 +477,7 @@ public class App {
 
                         counter += output.size();
 
-                        buff_writer_results.close();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -495,6 +495,11 @@ public class App {
                 System.out.println("Pattern " + j + ": " + counter + " found.");
 
 
+            }
+            try {
+                buff_writer_results.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             //Creation of a buffered writer
             BufferedWriter buff_writer = null;

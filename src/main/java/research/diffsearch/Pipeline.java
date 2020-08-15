@@ -486,6 +486,7 @@ public class Pipeline {
         Process python_Nearest_Neighbor_Search;
         String line = null;
         double ret = -1;
+        long startTime_gitdiff = System.currentTimeMillis();
 
         try {
 
@@ -510,9 +511,8 @@ public class Pipeline {
             e.printStackTrace();
         }
 
-        System.out.println("INDEX LOADED.\n");
-
-
+        long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+        System.out.println("INDEX LOADED in " + gitdiff_extraction/1000 + " seconds.\n");
 
         return ret;
     }

@@ -18,7 +18,7 @@ index = faiss.read_index("./src/main/resources/Features_Vectors/faiss_java.index
 end = time.time()
 
 print("Index read.")
-k = 1000 # return k-nearest neighbours
+k = 5000 # return k-nearest neighbours
 
 ######server#####
 import socket
