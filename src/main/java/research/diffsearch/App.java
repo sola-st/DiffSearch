@@ -366,7 +366,9 @@ public class App {
             }
 
             try {
+                System.out.println("SLEEPING\n");
                 TimeUnit.SECONDS.sleep(320);
+                System.out.println("WAKE UP\n");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
