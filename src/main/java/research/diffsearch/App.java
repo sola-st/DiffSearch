@@ -360,6 +360,12 @@ public class App {
                 /* **************************************************************************************************************
                  * SEARCH PYTHON STAGE (FAISS)
                  ****************************************************************************************************************/
+                try {
+                    System.out.println("CLOSING PORT.\n");
+                    Pipeline.port_close(Config.port);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 try {
                     System.out.println("INDEX LOADING.\n");
@@ -408,7 +414,7 @@ public class App {
                 int i = 1;
 
                 try {
-                    buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS.log"));
+                    buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS"+sub+".log"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

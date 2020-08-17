@@ -557,6 +557,41 @@ public class Pipeline {
         return ret;
     }
 
+    public static void port_close(int port){
+        Process python_Nearest_Neighbor_Search;
+        String line = null;
+        double ret = -1;
+        long startTime_gitdiff = System.currentTimeMillis();
+
+        try {
+
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec("fuser -k "+Integer.toString(port)+"/tcp");
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
+
+            int exitCode = python_Nearest_Neighbor_Search.waitFor();
+            if (exitCode != 0) {
+
+                System.out.println("Here is the standard error of the command:\n");
+                String s;
+                while ((s = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
+                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+            }
+
+            python_Nearest_Neighbor_Search.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+        System.out.println("INDEX LOADED in " + gitdiff_extraction/1000 + " seconds.\n");
+
+
+    }
+
     /**
      * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      *
