@@ -521,6 +521,45 @@ public class Pipeline {
      * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      *
      */
+    public static double search_candidate_changes_scalability(){
+        Process python_Nearest_Neighbor_Search;
+        String line = null;
+        double ret = -1;
+        long startTime_gitdiff = System.currentTimeMillis();
+
+        try {
+
+            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search_python.py " + "scalability/Java/faiss_java.index");
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
+
+            int exitCode = python_Nearest_Neighbor_Search.waitFor();
+            if (exitCode != 0) {
+
+                System.out.println("Here is the standard error of the command:\n");
+                String s;
+                while ((s = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
+                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+            }
+
+            python_Nearest_Neighbor_Search.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+        System.out.println("INDEX LOADED in " + gitdiff_extraction/1000 + " seconds.\n");
+
+        return ret;
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
+     *
+     */
     public static double search_candidate_changes_new(){
         Process python_Nearest_Neighbor_Search;
         String line = null;
@@ -944,6 +983,8 @@ public class Pipeline {
     static void scalability_java(){
         int[] changes = { 10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
 
+        //int[] changes = { 10000, 50000, 100000};
+
         BufferedWriter buff_writer_features = null;
         double time_python2 = 0;
 
@@ -961,8 +1002,8 @@ public class Pipeline {
              * INDEXING PYTHON STAGE (FAISS)*/
 
             try {
-                Pipeline.indexing_candidate_changes_new(i, "scalability/Java/changes_feature_vectors_java.csv",
-                        "scalability/faiss_java.index");
+               // Pipeline.indexing_candidate_changes_new(i, "scalability/Java/changes_feature_vectors_java.csv", "scalability/Java/faiss_java.index");
+                Pipeline.indexing_candidate_changes(i);
             } catch (Exception e) {
                 e.printStackTrace();
             }
