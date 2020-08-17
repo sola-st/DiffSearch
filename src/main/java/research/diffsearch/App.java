@@ -348,7 +348,7 @@ public class App {
                 System.out.println("INDEXING STARTED.\n");
                 // Pipeline.indexing_candidate_changes((int) real_changes);
                 //Pipeline.indexing_candidate_changes(4568580);//4568580
-                Pipeline.indexing_candidate_changes(1068580);//4568580
+                Pipeline.indexing_candidate_changes(4568580);//4568580
                 System.out.println("INDEXING DONE.\n");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -367,11 +367,12 @@ public class App {
 
             try {
                 System.out.println("SLEEPING\n");
-                TimeUnit.SECONDS.sleep(320);
+                TimeUnit.SECONDS.sleep(1000);
                 System.out.println("WAKE UP\n");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
 
             Socket socket = null;
             try {
