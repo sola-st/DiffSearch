@@ -370,7 +370,7 @@ public class App {
 
                 try {
                     System.out.println("SLEEPING\n");
-                    TimeUnit.SECONDS.sleep(600);
+                    TimeUnit.SECONDS.sleep(200);
                     System.out.println("WAKE UP\n");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -515,6 +515,7 @@ public class App {
 
                     // Writing the feature vector in a csv file
                     StringBuilder str_builder = new StringBuilder();
+
 
                     str_builder.append("Pattern, mineSStubs, DiffSearch, Percentage(%) \n");
 
