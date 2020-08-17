@@ -343,199 +343,202 @@ public class App {
 
             /* **************************************************************************************************************
              * INDEXING PYTHON STAGE (FAISS)*/
+            int[] array = {1000000, 1000000, 1000000, 1000000, 568580};
 
-            try {
-                System.out.println("INDEXING STARTED.\n");
-                // Pipeline.indexing_candidate_changes((int) real_changes);
-                //Pipeline.indexing_candidate_changes(4568580);//4568580
-                //Pipeline.indexing_candidate_changes(3000000);//4568580
-                System.out.println("INDEXING DONE.\n");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            /* **************************************************************************************************************
-             * SEARCH PYTHON STAGE (FAISS)
-             ****************************************************************************************************************/
-
-            try {
-                System.out.println("INDEX LOADING.\n");
-                new Thread(Pipeline::search_candidate_changes).start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                System.out.println("SLEEPING\n");
-                TimeUnit.SECONDS.sleep(600);
-                System.out.println("WAKE UP\n");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-            Socket socket = null;
-            try {
-                socket = new Socket(Config.host, Config.port);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-
-                System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
-                return;
-            }
-
-            int[][] matrix_results = new int[][]{
-                    { 1, 187, 0, 0},
-                    { 2, 275, 0, 0 },
-                    { 3, 175, 0, 0 },
-                    { 4, 215, 0, 0 },
-                    { 5, 1486, 0, 0 },
-                    { 6, 758, 0, 0 },
-                    { 7, 179, 0, 0 },
-                    { 8, 127, 0, 0 },
-                    { 9, 170, 0, 0 },
-                    { 10, 120, 0, 0 },
-                    { 11, 68, 0, 0 },
-                    { 12, 48, 0, 0 }
-            };
-
-            Java_Tree tree_query = null;
-            List<String> allLines = null;
-            BufferedWriter buff_writer_results = null;
-            int i = 1;
-
-            try {
-                buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS.log"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            for (int j = 1; j < 13; j++) {
-                int counter = 0;
+            for (int sub = 0; sub < 5; sub++) {
 
                 try {
-                    allLines = Files.readAllLines(Paths.get("./src/main/resources/Effectiveness/"+ j + "/queries.txt"));
-                } catch (IOException e) {
+                    System.out.println("INDEXING STARTED.\n");
+                    // Pipeline.indexing_candidate_changes((int) real_changes);
+                    //Pipeline.indexing_candidate_changes(4568580);//4568580
+                    Pipeline.indexing_candidate_changes_effectiveness(array[sub], 1000000*sub);//4568580
+                    System.out.println("INDEXING DONE.\n");
+                } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                /* **************************************************************************************************************
+                 * SEARCH PYTHON STAGE (FAISS)
+                 ****************************************************************************************************************/
+
+                try {
+                    System.out.println("INDEX LOADING.\n");
+                    new Thread(Pipeline::search_candidate_changes).start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    System.out.println("SLEEPING\n");
+                    TimeUnit.SECONDS.sleep(600);
+                    System.out.println("WAKE UP\n");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+                Socket socket = null;
+                try {
+                    socket = new Socket(Config.host, Config.port);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+
+                    System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
                     return;
                 }
 
+                int[][] matrix_results = new int[][]{
+                        {1, 187, 0, 0},
+                        {2, 275, 0, 0},
+                        {3, 175, 0, 0},
+                        {4, 215, 0, 0},
+                        {5, 1486, 0, 0},
+                        {6, 758, 0, 0},
+                        {7, 179, 0, 0},
+                        {8, 127, 0, 0},
+                        {9, 170, 0, 0},
+                        {10, 120, 0, 0},
+                        {11, 68, 0, 0},
+                        {12, 48, 0, 0}
+                };
+
+
+                BufferedWriter buff_writer_results = null;
+                int i = 1;
+
                 try {
-                    assert buff_writer_results != null;
-                    buff_writer_results.write("PATTERN: " + j + "\n\n");
+                    buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS.log"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                for (String query_input : allLines) {
+                for (int j = 1; j < 13; j++) {
+                    int counter = 0;
+                    Java_Tree tree_query = null;
+                    List<String> allLines = null;
 
                     try {
-                        tree_query = Pipeline.query_feature_extraction(query_input);
-                    } catch (Exception e) {
+                        allLines = Files.readAllLines(Paths.get("./src/main/resources/Effectiveness/" + j + "/queries.txt"));
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }
-
-                    if (tree_query == null) {
-                        System.out.print("The query is not correct, please try again.\n" + query_input);
                         return;
                     }
 
                     try {
-                        BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                        out.print("PYTHON" + "\r\n");
-                        out.flush();
-                        //System.out.println("WAITING MESSAGE..");
-
-                        time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
-
-                        String in = stdIn.readLine();
-                        //System.out.println("MESSAGE RECEIVED");
-
-                        if (!in.equals("JAVA"))
-                            continue;
-
+                        assert buff_writer_results != null;
+                        buff_writer_results.write("PATTERN: " + j + "\n\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    /* **************************************************************************************************************
-                     * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
-                     * */
+                    for (String query_input : allLines) {
 
-                    long startTime_matching = System.currentTimeMillis();
-
-                    long number_matching = -1;
-                    try {
-
-                        List <String> output = diffsearch_offline(tree_query,  socket);
-
-                        for(String temp:output){
-                            try {
-                                buff_writer_results.write(temp + "\n\n");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            tree_query = Pipeline.query_feature_extraction(query_input);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
-                        counter += output.size();
+                        if (tree_query == null) {
+                            System.out.print("The query is not correct, please try again.\n" + query_input);
+                            return;
+                        }
+
+                        try {
+                            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                            out.print("PYTHON" + "\r\n");
+                            out.flush();
+                            //System.out.println("WAITING MESSAGE..");
+
+                            time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+                            String in = stdIn.readLine();
+                            //System.out.println("MESSAGE RECEIVED");
+
+                            if (!in.equals("JAVA"))
+                                continue;
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        /* **************************************************************************************************************
+                         * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+                         * */
+
+                        long startTime_matching = System.currentTimeMillis();
+
+                        long number_matching = -1;
+                        try {
+
+                            List<String> output = diffsearch_offline(tree_query, socket);
+
+                            for (String temp : output) {
+                                try {
+                                    buff_writer_results.write(temp + "\n\n");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            counter += output.size();
 
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        System.out.println("DONE with query: " + query_input);
+
+
                     }
 
+                    matrix_results[j - 1][2] = counter;
+                    matrix_results[j - 1][3] = counter / matrix_results[j - 1][1] * 100;
 
-                    System.out.println("DONE with query: " + query_input);
-
+                    System.out.println("Pattern " + j + ": " + counter + " found.");
 
 
                 }
-
-                matrix_results[j-1][2] = counter;
-                matrix_results[j-1][3] = counter/matrix_results[j-1][1]*100;
-
-                System.out.println("Pattern " + j + ": " + counter + " found.");
-
-
-            }
-            try {
-                buff_writer_results.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //Creation of a buffered writer
-            BufferedWriter buff_writer = null;
-            try {
-                buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/effectiveness_results.csv"));
-
-                // Writing the feature vector in a csv file
-                StringBuilder str_builder = new StringBuilder();
-
-                str_builder.append("Pattern, mineSStubs, DiffSearch, Percentage(%) \n");
-
-                for(int j=0; j<12; j++) {
-                    for (i = 0; i < 4; i++) {
-                        str_builder.append(matrix_results[j][i]);
-                        str_builder.append(",");
-                    }
-                    str_builder.append("\n");
+                try {
+                    buff_writer_results.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                buff_writer.write(str_builder.toString());
-                buff_writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+                //Creation of a buffered writer
+                BufferedWriter buff_writer = null;
+                try {
+                    buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/effectiveness_results"+sub+".csv"));
+
+                    // Writing the feature vector in a csv file
+                    StringBuilder str_builder = new StringBuilder();
+
+                    str_builder.append("Pattern, mineSStubs, DiffSearch, Percentage(%) \n");
+
+                    for (int j = 0; j < 12; j++) {
+                        for (i = 0; i < 4; i++) {
+                            str_builder.append(matrix_results[j][i]);
+                            str_builder.append(",");
+                        }
+                        str_builder.append("\n");
+                    }
+                    buff_writer.write(str_builder.toString());
+                    buff_writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                /* **************************************************************************************************************
+                 * STATISTICS
+                 **/
+                System.out.println("\nFINAL STATISTICS:");
+
+                System.out.println("\n\n\nEND OF THE PROGRAM SUCCESSFULLY REACHED.");
+            }
         }
-
-            /* **************************************************************************************************************
-             * STATISTICS
-             **/
-            System.out.println("\nFINAL STATISTICS:");
-
-            System.out.println("\n\n\nEND OF THE PROGRAM SUCCESSFULLY REACHED.");
-        }
-
     }
 
     public static boolean run_junit(String query, String candidate) {

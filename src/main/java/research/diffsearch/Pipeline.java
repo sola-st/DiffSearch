@@ -345,6 +345,46 @@ public class Pipeline {
      * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
      *
      */
+    public static void indexing_candidate_changes_effectiveness(int n, int skip){
+        Process python_indexing;
+
+        try {
+            long startTime_gitdiff = System.currentTimeMillis();
+            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing_effectiveness.py " + Integer.toString(n) + " " + Integer.toString(skip));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(python_indexing.getErrorStream()));
+
+            java.io.InputStream is = python_indexing.getInputStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+
+            if (s.hasNext()) {
+                String ret = s.next();
+            }
+
+            int exitCode = python_indexing.waitFor();
+            String st = null;
+            if (exitCode != 0) {
+                // Read any errors from the attempted command
+                System.out.println("Here is the standard error of the command:\n");
+                while ((st = stdError.readLine()) != null) {
+                    System.out.println(s);
+                }
+                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
+            }
+            python_indexing.destroy();
+            long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
+            System.out.println("Indexing time: " + gitdiff_extraction/1000 + " seconds.\n");
+        } catch (Exception e) { e.printStackTrace();}
+
+        //  System.out.println("FAISS INDEXING STAGE DONE.\n");
+
+    }
+
+    /**
+     * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
+     *
+     */
     public static void indexing_candidate_changes_new(int n, String reader, String writer){
         Process python_indexing;
 
