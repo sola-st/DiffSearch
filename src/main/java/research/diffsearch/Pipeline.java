@@ -519,6 +519,72 @@ public class Pipeline {
     }
 
     /**
+     * Creation of the query tree and extraction of its features.
+     *
+     * @param query_input: String of the query
+     * @return AST of the query
+     */
+    public static Javascript_Tree query_feature_extraction_js(String query_input){
+        Javascript_Tree tree_query = null;
+        //Python3_Tree tree_query = null;
+
+        //Creating the tree for the query string
+        try {
+            //tree_query = new Java_Tree(query_input);
+             tree_query = new Javascript_Tree(query_input);
+            //  tree_query = new Python3_Tree(query_input);
+            if(TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
+                    tree_query.isError() || tree_query.error)
+                return null;
+
+            //Declaring query variables
+            List<Integer> list_parent_child = new ArrayList<Integer>();
+            List<Integer> list_hash_sum = new ArrayList<Integer>();
+            ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
+            //Python3BaseListener listener = new Python3BaseListener();
+            //JavaParserBaseListener listener = new JavaParserBaseListener();
+
+
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(listener, tree_query.get_parsetree());
+            List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
+
+            //Computing hash sum and pairs parent child
+             TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+             TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+
+            //TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            //TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+
+           // TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
+            //TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
+            list_hash_sum.addAll(list_parent_child);
+
+            //Creation of a buffered writer
+            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
+
+            // Writing the feature vector in a csv file
+            StringBuilder str_builder = new StringBuilder();
+
+            for (int element : tree_query.features) {
+                str_builder.append(element);
+                str_builder.append(",");
+            }
+            str_builder.append("\n");
+
+            buff_writer.write(str_builder.toString());
+            buff_writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
+
+        return tree_query;
+    }
+
+    /**
      * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      *
      */
@@ -1216,6 +1282,167 @@ public class Pipeline {
     }
 
 
+    static void scalability_javaScript(){
+        int[] changes = { 10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
+
+        //int[] changes = { 10000, 50000, 100000};
+
+        BufferedWriter buff_writer_features = null;
+        double time_python2 = 0;
+
+        int delay = 5;
+
+        try {
+            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/scalability/JavaScript/scalability_javaScript.csv"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(int i:changes){
+            System.out.println("\n" + i + "");
+            /* **************************************************************************************************************
+             * INDEXING PYTHON STAGE (FAISS)*/
+
+            try {
+               // Pipeline.indexing_candidate_changes_new(i, "scalability/JavaScript/changes_feature_vectors_javaScript.csv", "scalability/Java/faiss_javaScript.index");
+                Pipeline.indexing_candidate_changes(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            /* **************************************************************************************************************
+             * SEARCH PYTHON STAGE (FAISS)
+             ****************************************************************************************************************/
+
+            //Skip FAISS stage if the dataset is small
+            try {
+                new Thread( Pipeline::search_candidate_changes).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                TimeUnit.SECONDS.sleep(delay++);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Socket socket = null;
+            try {
+                socket = new Socket(Config.host,Config.port);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+
+                System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
+                return;
+            }
+
+             Javascript_Tree tree_query = null;
+            //Java_Tree tree_query = null;
+            List<String> allLines = null;
+
+            try {
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/scalability/Java/input.txt"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                assert buff_writer_features != null;
+                buff_writer_features.write(i + ",");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            assert allLines != null;
+            for(String query_input: allLines){
+                try {
+                    tree_query = Pipeline.query_feature_extraction_js(query_input);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (tree_query == null) {
+                    System.out.print("The query is not correct, please try again.\n" + query_input);
+                    return;
+                }
+
+                try {
+                    BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    out.print("PYTHON" + "\r\n");
+                    out.flush();
+                    //System.out.println("WAITING MESSAGE..");
+
+                    time_python2 = Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+                    String in = stdIn.readLine();
+                    //System.out.println("MESSAGE RECEIVED");
+
+                    if (!in.equals("JAVA"))
+                        continue;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                /* **************************************************************************************************************
+                 * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+                 * */
+
+                long startTime_matching = System.currentTimeMillis();
+
+
+                try {
+                    List <String> output = diffsearch_offline_js(tree_query,  socket);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                long duration_matching = (System.currentTimeMillis() - startTime_matching);
+                System.out.println("final matching time: " + duration_matching/1000.0);
+
+                try {
+                    buff_writer_features.write(time_python2 + "," + duration_matching/1000.0 + ",");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            try {
+                buff_writer_features.write("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            PrintWriter out = null;
+            try {
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            out.print("END" + "\r\n");
+            out.flush();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            buff_writer_features.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public static void small_test(Java_Tree tree_query, Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string) {
         String candidate = "if(x>0){<...>} --> if(x<0){<...>} ";
 
@@ -1702,6 +1929,90 @@ public class Pipeline {
                 }
             }
 
+        }
+
+        return output_list;
+
+    }
+
+    public static List<String> diffsearch_offline_js(Javascript_Tree queryJavaScripTree, Socket socket) {
+
+
+        List<String> output_list = new ArrayList<String>();
+
+        try {
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.print("PYTHON" + "\r\n");
+            out.flush();
+            //System.out.println("WAITING MESSAGE..");
+
+            Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+            String in = stdIn.readLine();
+            //System.out.println("MESSAGE RECEIVED");
+
+            if(!in.equals("JAVA"))
+                return output_list;
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        /* **************************************************************************************************************
+         * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+         * */
+
+        List<String> allLines = null;
+
+        ParseTree queryTree = queryJavaScripTree.get_parsetree();
+
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return output_list;
+        }
+
+        BufferedReader info_reader = null;
+        try {
+            info_reader = new BufferedReader(new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (String candidate : allLines) {
+            String candidate_url = null;
+            try {
+                assert info_reader != null;
+                candidate_url = info_reader.readLine();
+            } catch (IOException e) {
+                candidate_url = "";
+                e.printStackTrace();
+            }
+
+            Javascript_Tree changeJavaScriptTree = new Javascript_Tree(candidate);
+            ParseTree changeTree = changeJavaScriptTree.get_parsetree();
+
+            Matching matching = new Matching(queryTree, queryJavaScripTree.get_parser());
+
+            try {
+
+                if (matching.isMatch(changeTree, changeJavaScriptTree.get_parser())) {
+                    List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+
+                    if (!list.get(1).equals(list.get(0))) {
+                        output_list.add(candidate + " [url] " + compute_candidate_url(candidate_url));
+
+                        //System.out.println(compute_candidate_url(candidate_url));
+
+                    }
+                }
+
+            } catch (Exception e) {
+                continue;
+            }
         }
 
         return output_list;

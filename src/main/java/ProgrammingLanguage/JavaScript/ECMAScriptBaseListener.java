@@ -29,6 +29,18 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
+    @Override public void enterQuerySnippet(ECMAScriptParser.QuerySnippetContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitQuerySnippet(ECMAScriptParser.QuerySnippetContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
     @Override public void enterSourceElements(ECMAScriptParser.SourceElementsContext ctx) { }
     /**
      * {@inheritDoc}
@@ -672,6 +684,18 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override public void exitPreDecreaseExpression(ECMAScriptParser.PreDecreaseExpressionContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void enterWildcard(ECMAScriptParser.WildcardContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitWildcard(ECMAScriptParser.WildcardContext ctx) { }
     /**
      * {@inheritDoc}
      *

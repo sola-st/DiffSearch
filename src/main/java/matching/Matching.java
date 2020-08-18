@@ -18,7 +18,7 @@ import java.util.*;
  * algorithm that maintains each possible match as a NodeMap.
  * There may be multiple matches, but the algorithm stops as soon as one found.
  *
- * @author Michael Pradel
+ *
  */
 public class Matching {
 

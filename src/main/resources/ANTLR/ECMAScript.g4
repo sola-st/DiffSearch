@@ -183,9 +183,33 @@ grammar ECMAScript;
 
 /// Program :
 ///     SourceElements?
+//program
+// : sourceElements (NEWLINE sourceElements)* '->' sourceElements (NEWLINE sourceElements)* EOF? //MOD
+// ;
 program
- : sourceElements (NEWLINE sourceElements)* '->' sourceElements (NEWLINE sourceElements)* EOF? //MOD
- ;
+    : querySnippet NEWLINE? QUERY_ARROW querySnippet NEWLINE? //MOD
+    ;
+
+querySnippet
+	:block
+	| variableStatement
+	| emptyStatement
+	| {_input.LA(1) != OpenBrace}? expressionStatement
+	| ifStatement
+	| iterationStatement
+	| continueStatement
+	| breakStatement
+	| returnStatement
+	| withStatement
+	| labelledStatement
+	| switchStatement
+	| throwStatement
+	| tryStatement
+        | futureReservedWord
+	| debuggerStatement
+	| WILDCARD
+	| EMPTY    //MOD
+    ;
 
 /// SourceElements :
 ///     SourceElement
@@ -396,7 +420,8 @@ tryStatement
 ///     catch ( Identifier ) Block
 catchProduction
  : Catch '(' Identifier ')' block
- ;
+ | Catch '(' WILDCARD ')' block
+;
 
 /// Finally :
 ///     finally Block
@@ -500,6 +525,7 @@ propertySetParameterList
 ///     ( ArgumentList )
 arguments
  : '(' argumentList? ')'
+ | '(' WILDCARD ')'
  ;
 
 /// ArgumentList :
@@ -507,6 +533,7 @@ arguments
 ///     ArgumentList , AssignmentExpression
 argumentList
  : singleExpression ( ',' singleExpression )*
+ | WILDCARD
  ;
 
 /// Expression :
@@ -655,7 +682,8 @@ singleExpression
  | literal                                                                # LiteralExpression
  | arrayLiteral                                                           # ArrayLiteralExpression
  | objectLiteral                                                          # ObjectLiteralExpression
- | '(' expressionSequence ')'                                             # ParenthesizedExpression
+ | WILDCARD                                                               #wildcard
+| '(' expressionSequence ')'                                             # ParenthesizedExpression
  ;
 
 /// AssignmentOperator : one of
@@ -743,7 +771,7 @@ futureReservedWord
  | Super
  | Const
  | Export
- | Import
+ | Import Identifier ('from' Identifier)*
  | Implements
  | Let
  | Private
@@ -912,6 +940,8 @@ Yield      : {strictMode}? 'yield';
 
 
 //Expressions
+QUERY_ARROW: '-->';
+
 EXPR: 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR';//MOD
 
 EMPTY: '_'; //MOD

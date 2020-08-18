@@ -19,6 +19,16 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitProgram(ECMAScriptParser.ProgramContext ctx);
     /**
+     * Enter a parse tree produced by {@link ECMAScriptParser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void enterQuerySnippet(ECMAScriptParser.QuerySnippetContext ctx);
+    /**
+     * Exit a parse tree produced by {@link ECMAScriptParser#querySnippet}.
+     * @param ctx the parse tree
+     */
+    void exitQuerySnippet(ECMAScriptParser.QuerySnippetContext ctx);
+    /**
      * Enter a parse tree produced by {@link ECMAScriptParser#sourceElements}.
      * @param ctx the parse tree
      */
@@ -586,6 +596,18 @@ public interface ECMAScriptListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitPreDecreaseExpression(ECMAScriptParser.PreDecreaseExpressionContext ctx);
+    /**
+     * Enter a parse tree produced by the {@code wildcard}
+     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
+     * @param ctx the parse tree
+     */
+    void enterWildcard(ECMAScriptParser.WildcardContext ctx);
+    /**
+     * Exit a parse tree produced by the {@code wildcard}
+     * labeled alternative in {@link ECMAScriptParser#singleExpression}.
+     * @param ctx the parse tree
+     */
+    void exitWildcard(ECMAScriptParser.WildcardContext ctx);
     /**
      * Enter a parse tree produced by the {@code ArgumentsExpression}
      * labeled alternative in {@link ECMAScriptParser#singleExpression}.
