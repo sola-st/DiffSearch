@@ -104,7 +104,7 @@ public class App {
 
             System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-            //change_number = Change_extraction.analyze_diff_file_new_propagation();
+            change_number = Change_extraction.analyze_diff_file_new_propagation();
 
             System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
 
@@ -113,7 +113,7 @@ public class App {
              **/
             try {
                 System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836 //JAVA: 1700000
-                real_changes = Pipeline.feature_extraction(13171207);
+                real_changes = Pipeline.feature_extraction(change_number);
             } catch (Exception e) { //Java new 13171207 with 4568580
                 e.printStackTrace();
             }
