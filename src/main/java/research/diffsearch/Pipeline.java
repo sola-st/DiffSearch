@@ -1397,7 +1397,6 @@ public class Pipeline {
             try {
                 socket = new Socket(Config.host,Config.port);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
 
                 System.out.println("\nCONNECTION WITH SERVER FAILED.\n");
