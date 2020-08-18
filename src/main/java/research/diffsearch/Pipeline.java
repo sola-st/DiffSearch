@@ -1519,7 +1519,7 @@ public class Pipeline {
         int delay = 5;
 
         try {
-            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/scalability/JavaScript/scalability_python.csv"));
+            buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/scalability/Python/scalability_python.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -2297,6 +2297,7 @@ public class Pipeline {
 
         for (String candidate : allLines) {
             String candidate_url = null;
+
             try {
                 assert info_reader != null;
                 candidate_url = info_reader.readLine();
