@@ -710,7 +710,7 @@ public class Pipeline {
                 while ((s = stdError.readLine()) != null) {
                     System.out.println(s);
                 }
-                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
+                throw new IOException("port_close exited with error " + exitCode + ".\n");
             }
 
             python_Nearest_Neighbor_Search.destroy();
