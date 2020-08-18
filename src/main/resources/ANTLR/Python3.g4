@@ -270,7 +270,8 @@ dictorsetmaker: ( ((test ':' test | '**' expr)
 
 classdef: 'class' NAME ('(' (arglist)? ')')? ':' suite;
 
-arglist: argument (',' argument)*  (',')?;
+arglist: argument (',' argument)*  (',')?
+         | WILDCARD;
 
 // The reason that keywords are test nodes instead of NAME is that using NAME
 // results in an ambiguity. ast.c makes sure it's a NAME.

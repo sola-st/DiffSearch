@@ -10,7 +10,7 @@ import java.util.*;
  * The mapping assumes that there are wildcards between all nodes, i.e., for the final matching,
  * one still needs to check whether the query and the change match with the actually given wildcards.
  *
- * @author Michael Pradel
+ *
  */
 public class NodeMap {
 

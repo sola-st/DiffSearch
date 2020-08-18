@@ -12,7 +12,7 @@ import java.util.Set;
  * Utility methods to handle parse tree nodes.
  * Some of them are specific to the grammar and/or language.
  *
- * @author Michael Pradel
+ *
  */
 public class NodeUtil {
 

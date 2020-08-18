@@ -7,7 +7,7 @@ import sys
 
 def indexing(nchange):
     #Reading csv feature vectors files
-    changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv', header=None, nrows=int(nchange)).iloc[:, :].values[0:, :-1].astype('float32')
+    changes_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/changes_feature_vectors.csv', header=None, nrows=int(nchange)).iloc[:, :].values[0:, :-1].astype('float32')
 
 
     #######################################################################
