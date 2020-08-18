@@ -364,7 +364,7 @@ public class App {
                  ****************************************************************************************************************/
                 try {
                     System.out.println("CLOSING PORT.\n");
-                    Pipeline.port_close(Config.port);
+                    //Pipeline.port_close(Config.port);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
