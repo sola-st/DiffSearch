@@ -309,8 +309,8 @@ public class App {
         if(Config.SCALABILITY) {
 
             //Pipeline.scalability_java();
-            Pipeline.scalability_javaScript();
-            //Pipeline.scalability_python();
+            //Pipeline.scalability_javaScript();
+            Pipeline.scalability_python();
         }
 
         /* **************************************************************************************************************

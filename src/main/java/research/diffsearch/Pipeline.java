@@ -1569,7 +1569,7 @@ public class Pipeline {
             List<String> allLines = null;
 
             try {
-                allLines = Files.readAllLines(Paths.get("./src/main/resources/scalability/Java/input.txt"));
+                allLines = Files.readAllLines(Paths.get("./src/main/resources/scalability/Python/input.txt"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
