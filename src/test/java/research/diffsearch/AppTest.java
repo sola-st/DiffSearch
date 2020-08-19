@@ -478,19 +478,19 @@ public class AppTest
     }
 
     public void test55() throws Exception {
-        String query = "if(EXPR<0>){<...> --> if(<...> || EXPR<0>){<...> ";
+        String query = "if(EXPR<0>){<...> --> if(EXPR|| EXPR<0>){<...> ";
         String candidate = " if (foo()) { --> if (subtypeProps || foo()) {";
         assertEquals(true, App.run_junit(query, candidate));
     }
 
     public void test64() throws Exception {
-        String query = "if(ID<0>){ --> if(EXPR || ID<0>){ ";
-        String candidate = " if (isEmpty) { --> if (subtypeProps || isEmpty) {";
+        String query = "if(ID<0>()){ --> if(EXPR || ID<0>()){ ";
+        String candidate = " if (isEmpty()) { --> if (subtypeProps || isEmpty()) {";
         assertEquals(true, App.run_junit(query, candidate));
     }
 
     public void test56() throws Exception {
-        String query = "if(EXPR<0>){-->if(<...> && EXPR<0>){ ";
+        String query = "if(EXPR<0>){-->if(EXPR && EXPR<0>){ ";
         String candidate = " if (isEmpty()) { --> if (subtypeProps && isEmpty()) {";
         assertEquals(true, App.run_junit(query, candidate));
     }
@@ -538,6 +538,12 @@ public class AppTest
     }
 
     public void test65() throws Exception {
+        String query = "unOP EXPR<0>; --> unOP EXPR<0>;";
+        String candidate = " --x; --> ++x;";
+        assertEquals(true, App.run_junit(query, candidate));
+    }
+
+    public void test66() throws Exception {
         String query = "unOP EXPR<0>; --> unOP EXPR<0>;";
         String candidate = " --x; --> ++x;";
         assertEquals(true, App.run_junit(query, candidate));
