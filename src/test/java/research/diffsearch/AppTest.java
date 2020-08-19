@@ -544,8 +544,8 @@ public class AppTest
     }
 
     public void test66() throws Exception {
-        String query = "unOP EXPR<0>; --> unOP EXPR<0>;";
-        String candidate = " --x; --> ++x;";
+        String query = "unOP EXPR<0>; --> EXPR<0>;";
+        String candidate = " !x; --> ++x;";
         assertEquals(true, App.run_junit(query, candidate));
     }
 
