@@ -421,7 +421,7 @@ public class App {
                     e.printStackTrace();
                 }
 
-                for (int j = 1; j < 13; j++) {
+                for (int j = 8; j < 13; j++) {
                     int counter = 0;
                     Java_Tree tree_query = null;
                     List<String> allLines = null;
