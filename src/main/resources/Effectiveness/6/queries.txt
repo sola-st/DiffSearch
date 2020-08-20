@@ -1,72 +1,72 @@
-ID<0>(); --> ID<0>(EXPR);
-ID<0>(EXPR<0>); --> ID<0>(EXPR<0>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR);
-EXPR<2>.ID<0>(); --> EXPR<2>.ID<0>(EXPR);
-EXPR<2>.ID<0>(EXPR<0>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>, EXPR);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>, EXPR);
-ID<0>(EXPR<0>); --> ID<0>(EXPR, EXPR<0>);
-ID<0>(EXPR<0>, EXPR<1>); --> ID<0>(EXPR<0>, EXPR, EXPR<1>);
-ID<0>(EXPR<0>, EXPR<1>); --> ID<0>(EXPR, EXPR<0>, EXPR<1>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR, EXPR<0>, EXPR<1>, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR);
-ID<0>(EXPR<0>); --> ID<0>(EXPR, EXPR<0>);
-ID<0>(EXPR<0>, EXPR<1>); --> ID<0>(EXPR<0>, EXPR, EXPR<1>);
-ID<0>(EXPR<0>, EXPR<1>); --> ID<0>(EXPR, EXPR<0>, EXPR<1>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>); --> ID<0>(EXPR, EXPR<0>, EXPR<1>, EXPR<2>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR, EXPR<3>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>, EXPR<3>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>, EXPR<3>);
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> ID<0>(EXPR,EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>);
-EXPR<2>.ID<0>(); --> EXPR<2>.ID<0>(EXPR);
-EXPR<2>.ID<0>(EXPR<0>); --> EXPR<2>.ID<0>(EXPR, EXPR<0>);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR, EXPR<1>);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>); --> EXPR<2>.ID<0>(EXPR,EXPR<0>, EXPR<1>);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>, EXPR,EXPR<3>);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>); --> EXPR<2>.ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<3>);
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>); --> EXPR<2>.ID<0>(EXPR,EXPR<0>, EXPR<1>, EXPR<3>);
-ID<0>() --> ID<0>(EXPR)
-ID<0>(EXPR<0>) --> ID<0>(EXPR<0>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR)
-EXPR<2>.ID<0>() --> EXPR<2>.ID<0>(EXPR)
-EXPR<2>.ID<0>(EXPR<0>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>, EXPR)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>, EXPR)
-ID<0>(EXPR<0>) --> ID<0>(EXPR, EXPR<0>)
-ID<0>(EXPR<0>, EXPR<1>) --> ID<0>(EXPR<0>, EXPR, EXPR<1>)
-ID<0>(EXPR<0>, EXPR<1>) --> ID<0>(EXPR, EXPR<0>, EXPR<1>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR, EXPR<0>, EXPR<1>, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR)
-ID<0>(EXPR<0>) --> ID<0>(EXPR, EXPR<0>)
-ID<0>(EXPR<0>, EXPR<1>) --> ID<0>(EXPR<0>, EXPR, EXPR<1>)
-ID<0>(EXPR<0>, EXPR<1>) --> ID<0>(EXPR, EXPR<0>, EXPR<1>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>) --> ID<0>(EXPR, EXPR<0>, EXPR<1>, EXPR<2>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>, EXPR)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR, EXPR<3>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR<1>, EXPR, EXPR<2>, EXPR<3>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<2>, EXPR<3>)
-ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>) --> ID<0>(EXPR,EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>)
-EXPR<2>.ID<0>() --> EXPR<2>.ID<0>(EXPR)
-EXPR<2>.ID<0>(EXPR<0>) --> EXPR<2>.ID<0>(EXPR, EXPR<0>)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR, EXPR<1>)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>) --> EXPR<2>.ID<0>(EXPR,EXPR<0>, EXPR<1>)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR<1>, EXPR,EXPR<3>)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>) --> EXPR<2>.ID<0>(EXPR<0>, EXPR, EXPR<1>, EXPR<3>)
-EXPR<2>.ID<0>(EXPR<0>, EXPR<1>,EXPR<3>) --> EXPR<2>.ID<0>(EXPR,EXPR<0>, EXPR<1>, EXPR<3>)
+ID<0>(); --> ID<0>(ID);
+ID<0>(ID<0>); --> ID<0>(ID<0>, ID);
+ID<0>(ID<0>, ID<1>); --> ID<0>(ID<0>, ID<1>, ID);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID);
+ID<2>.ID<0>(); --> ID<2>.ID<0>(ID);
+ID<2>.ID<0>(ID<0>); --> ID<2>.ID<0>(ID<0>, ID);
+ID<2>.ID<0>(ID<0>, ID<1>); --> ID<2>.ID<0>(ID<0>, ID<1>, ID);
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>); --> ID<2>.ID<0>(ID<0>, ID<1>,ID<3>, ID);
+ID<0>(ID<0>); --> ID<0>(ID, ID<0>);
+ID<0>(ID<0>, ID<1>); --> ID<0>(ID<0>, ID, ID<1>);
+ID<0>(ID<0>, ID<1>); --> ID<0>(ID, ID<0>, ID<1>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID<1>, ID, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID, ID<1>, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID, ID<0>, ID<1>, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID);
+ID<0>(ID<0>); --> ID<0>(ID, ID<0>);
+ID<0>(ID<0>, ID<1>); --> ID<0>(ID<0>, ID, ID<1>);
+ID<0>(ID<0>, ID<1>); --> ID<0>(ID, ID<0>, ID<1>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID<1>, ID, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID<0>, ID, ID<1>, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>); --> ID<0>(ID, ID<0>, ID<1>, ID<2>);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID<1>, ID<2>, ID, ID<3>);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID<1>, ID, ID<2>, ID<3>);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID<0>, ID, ID<1>, ID<2>, ID<3>);
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>); --> ID<0>(ID,ID<0>, ID<1>, ID<2>, ID<3>);
+ID<2>.ID<0>(); --> ID<2>.ID<0>(ID);
+ID<2>.ID<0>(ID<0>); --> ID<2>.ID<0>(ID, ID<0>);
+ID<2>.ID<0>(ID<0>, ID<1>); --> ID<2>.ID<0>(ID<0>, ID, ID<1>);
+ID<2>.ID<0>(ID<0>, ID<1>); --> ID<2>.ID<0>(ID,ID<0>, ID<1>);
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>); --> ID<2>.ID<0>(ID<0>, ID<1>, ID,ID<3>);
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>); --> ID<2>.ID<0>(ID<0>, ID, ID<1>, ID<3>);
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>); --> ID<2>.ID<0>(ID,ID<0>, ID<1>, ID<3>);
+ID<0>() --> ID<0>(ID)
+ID<0>(ID<0>) --> ID<0>(ID<0>, ID)
+ID<0>(ID<0>, ID<1>) --> ID<0>(ID<0>, ID<1>, ID)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID)
+ID<2>.ID<0>() --> ID<2>.ID<0>(ID)
+ID<2>.ID<0>(ID<0>) --> ID<2>.ID<0>(ID<0>, ID)
+ID<2>.ID<0>(ID<0>, ID<1>) --> ID<2>.ID<0>(ID<0>, ID<1>, ID)
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>) --> ID<2>.ID<0>(ID<0>, ID<1>,ID<3>, ID)
+ID<0>(ID<0>) --> ID<0>(ID, ID<0>)
+ID<0>(ID<0>, ID<1>) --> ID<0>(ID<0>, ID, ID<1>)
+ID<0>(ID<0>, ID<1>) --> ID<0>(ID, ID<0>, ID<1>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID, ID<1>, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID, ID<0>, ID<1>, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID)
+ID<0>(ID<0>) --> ID<0>(ID, ID<0>)
+ID<0>(ID<0>, ID<1>) --> ID<0>(ID<0>, ID, ID<1>)
+ID<0>(ID<0>, ID<1>) --> ID<0>(ID, ID<0>, ID<1>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID<0>, ID, ID<1>, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>) --> ID<0>(ID, ID<0>, ID<1>, ID<2>)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID<3>, ID)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID<1>, ID<2>, ID, ID<3>)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID<1>, ID, ID<2>, ID<3>)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID<0>, ID, ID<1>, ID<2>, ID<3>)
+ID<0>(ID<0>, ID<1>, ID<2>, ID<3>) --> ID<0>(ID,ID<0>, ID<1>, ID<2>, ID<3>)
+ID<2>.ID<0>() --> ID<2>.ID<0>(ID)
+ID<2>.ID<0>(ID<0>) --> ID<2>.ID<0>(ID, ID<0>)
+ID<2>.ID<0>(ID<0>, ID<1>) --> ID<2>.ID<0>(ID<0>, ID, ID<1>)
+ID<2>.ID<0>(ID<0>, ID<1>) --> ID<2>.ID<0>(ID,ID<0>, ID<1>)
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>) --> ID<2>.ID<0>(ID<0>, ID<1>, ID,ID<3>)
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>) --> ID<2>.ID<0>(ID<0>, ID, ID<1>, ID<3>)
+ID<2>.ID<0>(ID<0>, ID<1>,ID<3>) --> ID<2>.ID<0>(ID,ID<0>, ID<1>, ID<3>)

@@ -498,8 +498,7 @@ public class App {
                             e.printStackTrace();
                         }
 
-
-                        System.out.println("DONE with query: " + query_input);
+                        //System.out.println("DONE with query: " + query_input);
 
 
                     }
