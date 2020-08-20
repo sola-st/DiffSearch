@@ -421,7 +421,7 @@ public class App {
                     e.printStackTrace();
                 }
 
-                for (int j = 8; j < 13; j++) {
+                for (int j = 1; j < 13; j++) {
                     int counter = 0;
                     Java_Tree tree_query = null;
                     List<String> allLines = null;
@@ -450,7 +450,7 @@ public class App {
 
                         if (tree_query == null) {
                             System.out.print("The query is not correct, please try again.\n" + query_input);
-                            return;
+                            continue;
                         }
 
                         try {
