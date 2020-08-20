@@ -497,7 +497,7 @@ public class App {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        System.out.println("DONE with query: " + query_input);
+                        System.out.println(counter + " DONE with query: " + query_input);
 
 
                     }
