@@ -1,7 +1,17 @@
 ID<0>(ID<1>, ID<0>) --> ID<0>(ID<0>, ID<1>)
 ID<0>(ID<1>, LT<0>) --> ID<0>(LT<0>, ID<1>)
 ID<0>(LT<1>, ID<0>) --> ID<0>(ID<0>, LT<1>)
-ID<0>(ID<1>, ID<0>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID<2>) 
+ID.ID<0>(ID<1>, LT<0>) --> ID.ID<0>(LT<0>, ID<1>)
+ID.ID<0>(LT<1>, ID<0>) --> ID.ID<0>(ID<0>, LT<1>)
+ID.ID<0>(ID.ID<1>, LT<0>) --> ID.ID<0>(LT<0>, ID.ID<1>)
+ID.ID<0>(LT<1>, ID.ID<0>) --> ID.ID<0>(ID.ID<0>, LT<1>)
+ID<0>(ID<1>, LT<0>); --> ID<0>(LT<0>, ID<1>);
+ID<0>(LT<1>, ID<0>); --> ID<0>(ID<0>, LT<1>);
+ID.ID<0>(ID<1>, LT<0>); --> ID.ID<0>(LT<0>, ID<1>);
+ID.ID<0>(LT<1>, ID<0>); --> ID.ID<0>(ID<0>, LT<1>);
+ID.ID<0>(ID.ID<1>, LT<0>); --> ID.ID<0>(LT<0>, ID.ID<1>);
+ID.ID<0>(LT<1>, ID.ID<0>); --> ID.ID<0>(ID.ID<0>, LT<1>);
+ID<0>(ID<1>, ID<0>, ID<2>) --> ID<0>(ID<0>, ID<1>, ID<2>; 
 ID<0>(ID<1>, ID<2>, ID<0>) --> ID<0>(ID<0>, ID<1>, ID<2>) 
 ID<0>( ID<2>, ID<1>, ID<0>) --> ID<0>(ID<0>, ID<1>, ID<2>) 
 ID<0>(ID<1>, ID<2>, ID<0>) --> ID<0>(ID<0>,ID<2>, ID<1>) 
