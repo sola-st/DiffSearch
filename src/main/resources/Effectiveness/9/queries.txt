@@ -1,8 +1,32 @@
-EXPR<0> unOP; --> EXPR<0> unOP;
-EXPR<0> unOP --> EXPR<0> unOP
-unOP EXPR<0>; --> unOP EXPR<0>;
-unOP EXPR<0> --> unOP EXPR<0> 
-EXPR<0> unOP; --> EXPR<0>;
-EXPR<0> unOP --> EXPR<0>
-unOP EXPR<0>; --> EXPR<0>;
-unOP EXPR<0> -->  EXPR<0> 
+ID<0>(<...>) unOP; --> ID<0>(<...>) unOP;
+ID<0>(<...>) unOP --> ID<0>(<...>) unOP
+unOP ID<0>(<...>); --> unOP ID<0>(<...>);
+unOP ID<0>(<...>) --> unOP ID<0>(<...>) 
+ID<0>(<...>) unOP; --> ID<0>(<...>);
+ID<0>(<...>) unOP --> ID<0>(<...>)
+unOP ID<0>(<...>); --> ID<0>(<...>);
+unOP ID<0>(<...>) -->  ID<0>(<...>) 
+ID<0> unOP; --> ID<0> unOP;
+ID<0> unOP --> ID<0> unOP
+unOP ID<0>; --> unOP ID<0>;
+unOP ID<0> --> unOP ID<0> 
+ID<0> unOP; --> ID<0>;
+ID<0> unOP --> ID<0>
+unOP ID<0>; --> ID<0>;
+unOP ID<0> -->  ID<0> 
+ID<1>.ID<0>(<...>) unOP; --> ID<1>.ID<0>(<...>) unOP;
+ID<1>.ID<0>(<...>) unOP --> ID<1>.ID<0>(<...>) unOP
+unOP ID<1>.ID<0>(<...>); --> unOP ID<1>.ID<0>(<...>);
+unOP ID<1>.ID<0>(<...>) --> unOP ID<1>.ID<0>(<...>) 
+ID<1>.ID<0>(<...>) unOP; --> ID<1>.ID<0>(<...>);
+ID<1>.ID<0>(<...>) unOP --> ID<1>.ID<0>(<...>)
+unOP ID<1>.ID<0>(<...>); --> ID<1>.ID<0>(<...>);
+unOP ID<1>.ID<0>(<...>) -->  ID<1>.ID<0>(<...>) 
+ID<1>.ID<0> unOP; --> ID<1>.ID<0> unOP;
+ID<1>.ID<0> unOP --> ID<1>.ID<0> unOP
+unOP ID<1>.ID<0>; --> unOP ID<1>.ID<0>;
+unOP ID<1>.ID<0> --> unOP ID<1>.ID<0> 
+ID<1>.ID<0> unOP; --> ID<1>.ID<0>;
+ID<1>.ID<0> unOP --> ID<1>.ID<0>
+unOP ID<1>.ID<0>; --> ID<1>.ID<0>;
+unOP ID<1>.ID<0> -->  ID<1>.ID<0>

@@ -347,7 +347,7 @@ public class App {
              * INDEXING PYTHON STAGE (FAISS)*/
             int[] array = {1000000, 1000000, 1000000, 1000000, 568580};
 
-            for (int sub = 0; sub < 5; sub++) {
+            for (int sub = 0; sub < 1; sub++) {
 
                 try {
                     System.out.println("INDEXING STARTED.\n");
