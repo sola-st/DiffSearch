@@ -1,6 +1,122 @@
 # DiffSearch
 
-This package contains the code of DiffSearch and the data required to reproduce the results reported in the paper. If you want simply run the tool see the section "how to run".
+DiffSearch is a search engine for code changes. The input is a query that describes the code
+change and the output is a list of code changes. The following explains how the queries work.
+Then, your task is to formulate queries to find specific code changes.
+
+**Syntax and Semantics of Queries**
+Queries are formulated in an extension of Java. The structure of a query is the following:
+
+                                 old code --> new code
+
+Here’s an example query:
+
+                                 x = foo(); --> x = bar();
+                                 
+Queries are compared against the **lines changed in a commit**, by checking that everything in
+the query indeed appears in the commit. If a commit changes more than what is asked for in a
+query, then this commit counts as a match. In contrast, if a query contains code not among the
+changed lines, it’ll not match. For example, the above query will match
+
+                               x = foo(); y = z; --> x = bar(); z = y;
+                               
+but it won’t match the following:
+
+                                     foo(); --> x = bar();
+
+The syntax of queries follows the Java language and also allows for some **syntactically
+incomplete code snippets**. For example, a query may open a block with “{“ but not close it with
+a matching “}”.
+
+In addition to the syntax of the target programming language, queries support some special
+symbols (note: the symbols are case-sensitive):
+
+**LT** which matches any literal, e.g., a number, a char, or a string
+**ID** which matches any identifier, e.g., a variable name or method name
+**EXPR** which matches any expression, e.g., x < y + 1 or x.foo
+**binOP** which matches any binary operator, e.g., + and -
+**unOP** which matches any unary operator, e.g., ++ and --
+**OP** which matches any assign operator, e.g., = , -=, and +=
+
+These symbols can also be **labeled with a number** (0 to 3) to match the same syntactic
+element multiple times, e.g., ID<1> and LT<2>. For example, this query searches for code
+changes where the binary operands inside an if condition changes:
+
+                      if (ID<0> binOP LT<0>) { --> if (ID<0> binOP LT<0>) {
+
+The query matches this code change:
+
+                                   if (x > 0) { --> if (x < 0) {
+
+But not this one (because x changes to y):
+
+                                   if (x > 0) { --> if (y < 0) {
+
+Another special symbol is ​ _ ​ , which indicates that one part of the code change is **empty**. It is
+useful for finding inserted and deleted code. For example, the following query looks for an
+inserted return statement:
+
+                                           _ --> return EXPR;
+
+There is a last special symbol, ​ <...>​ , which represents a **wildcard**. It matches zero, one, or more
+statements or expressions and helps with queries where some other code may be interspersed
+between the code to find. For example, the following query searches for any code change that
+replaces some (potentially empty) code with a return statement that returns a variable:
+
+                                            <...> --> return ID;
+
+
+**Examples of Queries and Matching Code Changes**
+
+Query:    
+               	
+               	       <...>                      <...>
+                           ID<0>();                   ID<1>();
+                           <...>         	-->       <...>
+                           ID<0>();                	  ID<1>();
+               	 
+Matching change:   
+    
+                           g();              	   g();
+                           f();                        z();
+                           h();    		-->        h();
+                           j();                        j();
+                           f(); }                	   z();
+
+
+Query:     
+               	
+               	       <...> 		         try {
+                                                           <...>
+                                            -->      } catch (ID ID) {
+                                                           <...> }
+
+Matching change: 	
+
+                           x=3; 		  	try {
+                                            -->          x=3;
+                                                    } catch (Exception e) {
+                                                         System.out.println("oops");}
+
+
+Query:                  
+  	
+  	                      <...>
+                          ID = 23;   	 -->  	<...>
+                          <...>
+
+Matching change: 	
+
+                            a=2;             		a=2;
+                            b=5;             		b=5;
+                            c=7;    	  -->	        c=7;
+                            d=23;           		d=23;
+                            e=1;             		e=1;
+                            f=2;              		f=2;
+
+
+
+This package contains the code of DiffSearch. If you want simply run the tool see the section "how to run".
 
 **Main files:**
 - src/main/java/research.diffsearch/**App.java** -> Main file
@@ -16,10 +132,6 @@ This package contains the code of DiffSearch and the data required to reproduce 
 - src/main/java/resources/Python/**FAISS_Nearest_Neighbor_Search.py** -> FAISS Nearest Neighbor Search
 - src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff.
 
-**Main folders:**
-- src/main/java/resources/**ANTLR** -> ANTLR modified grammars
-- src/main/java/resources/**Features_Vectors** -> Folder where the feature vectors are saved
-- src/main/java/resources/**GitHub** -> There are the toy test files with changes
 
 **Requirements**
 - Java 8 and Python 3.7
@@ -31,31 +143,3 @@ This package contains the code of DiffSearch and the data required to reproduce 
 - In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 100;
 - Run the file src/main/java/research.diffsearch/**App.java**
 - The results are in the file src/main/java/resources/**Features_Vectors/scalability.csv**, where each line is the test performed using different number of changes. For each query the first column is the FAISS searching time and the second is the final matching time. 
-
-
-**How to reproduce results**
-
-Scalability:
-- In src/main/java/research.diffsearch/**Config.java** set NORMAL = false, SCALABILITY  = true and EFFECTIVENESS = false;
-- In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 100;
-- Run the file src/main/java/research.diffsearch/**App.java**
-- The results are in the file src/main/java/resources/**Features_Vectors/scalability.csv**, where each line is the test performed using different number of changes. For each query the first column is the FAISS searching time and the second is the final matching time. 
-
-Effectiveness:
-- In src/main/java/research.diffsearch/**Config.java** set NORMAL = false, SCALABILITY  = false and EFFECTIVENESS = true;
-- In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 3;
-- Run the file src/main/java/research.diffsearch/**App.java**
-- The results are in the files: queryN.txt, in each file there is the output of each query. 
-
-**Example of queries**
-
-Note that the query syntax slightly differs from the paper for named placeholders, e.g., ID2 in the paper is ID<2> in the implementation.
-
-Examples with Java:
-
-- ID OP LT<0>; -> ID OP LT<1>;
-
-- if(EXPR<0>){    ID OP LT;} -> if(EXPR<1>): {     ID OP LT;}
-      
-- ID OP LT; -> _
-

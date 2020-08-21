@@ -96,7 +96,6 @@ public class App {
          * NORMAL MODE
          * */
 
-
         if(Config.NORMAL) {
             /* **************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
@@ -300,8 +299,6 @@ public class App {
 
             //System.out.println("\n\n\nEND OF THE PROGRAM SUCCESSFULLY REACHED.");
         }
-
-
 
         /* **************************************************************************************************************
          * SCALABILITY
