@@ -10,3 +10,23 @@ if (ID<0> binOP<0> LT<0>){ <...>  --> if (ID<0> binOP<0> LT<0> || EXPR) { <...>
 if (ID<0> binOP<0> LT<0>){ <...>  --> if (EXPR || ID<0> binOP<0> LT<0>) { <...>
 if (ID<0> binOP<0> LT<0>){ <...>  --> if (ID<0> binOP<0> LT<0> || EXPR) { <...>
 if (ID<0> binOP<0> LT<0>){ <...>  --> if (EXPR || ID<0> binOP<0> LT<0>){ <...> 
+if (ID<0> binOP<0> ID<1>){ <...>  --> if (ID<0> binOP<0> ID<1> || EXPR) { <...>
+if (ID<0> binOP<0> ID<1>){ <...>  --> if (EXPR || ID<0> binOP<0> ID<1>) { <...>
+if (ID<0> binOP<0> ID<1>){ <...>  --> if (ID<0> binOP<0> ID<1> || EXPR) { <...>
+if (ID<0> binOP<0> ID<1>){ <...>  --> if (EXPR || ID<0> binOP<0> ID<1>){ <...> 
+if (ID<0> binOP<0> LT<0>)  --> if (ID<0> binOP<0> LT<0> || EXPR) 
+if (ID<0> binOP<0> LT<0>)  --> if (EXPR || ID<0> binOP<0> LT<0>) 
+if (ID<0> binOP<0> LT<0>) --> if (ID<0> binOP<0> LT<0> || EXPR) 
+if (ID<0> binOP<0> LT<0>)  --> if (EXPR || ID<0> binOP<0> LT<0>)
+if (ID<0> binOP<0> ID<1>)  --> if (ID<0> binOP<0> ID<1> || EXPR) 
+if (ID<0> binOP<0> ID<1>) --> if (EXPR || ID<0> binOP<0> ID<1>) 
+if (ID<0> binOP<0> ID<1>)  --> if (ID<0> binOP<0> ID<1> || EXPR) 
+if (ID<0> binOP<0> ID<1>) --> if (EXPR || ID<0> binOP<0> ID<1>)
+if (ID<0>(<...>) binOP<0> LT<0>){ <...>  --> if (ID<0>(<...>) binOP<0> LT<0> || EXPR) { <...>
+if (ID<0>(<...>) binOP<0> LT<0>){ <...>  --> if (EXPR || ID<0>(<...>) binOP<0> LT<0>) { <...>
+if (ID<0>(<...>) binOP<0> LT<0>){ <...>  --> if (ID<0> binOP<0> LT<0> || EXPR) { <...>
+if (ID<0>(<...>) binOP<0> LT<0>){ <...>  --> if (EXPR || ID<0>(<...>) binOP<0> LT<0>){ <...> 
+if (ID<0>(<...>) binOP<0> ID<1>){ <...>  --> if (ID<0> binOP<0> ID<1> || EXPR) { <...>
+if (ID<0>(<...>) binOP<0> ID<1>){ <...>  --> if (EXPR || ID<0>(<...>) binOP<0> ID<1>) { <...>
+if (ID<0>(<...>) binOP<0> ID<1>){ <...>  --> if (ID<0> binOP<0> ID<1> || EXPR) { <...>
+if (ID<0>(<...>) binOP<0> ID<1>){ <...>  --> if (EXPR || ID<0>(<...>) binOP<0> ID<1>){ <...> 

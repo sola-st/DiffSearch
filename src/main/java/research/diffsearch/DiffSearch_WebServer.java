@@ -93,9 +93,9 @@ public class DiffSearch_WebServer extends Thread {
             // this blank line signals the end of the headers
             out.println("");
             // Send the HTML page
-            out.println("<body style=\"background-color:#000000;\">");
-            out.println("<center><H1><span style='color: #ffffff'><span style='color: #a1a1a6'>Diff</span>Search</span></H1></center>");
-            out.println("<center><H2><span style='color: #ffffff'>Insert your query for matching <span style='color: #a1a1a6'>Java</span> code changes</span></H2></center>");
+            out.println("<body style=\"background-color:#E8E8E8;\">");
+            out.println("<center><H1><span style='color: #000000'><span style='color: #0071e3'>Diff</span>Search</span></H1></center>");
+            out.println("<center><H2><span style='color: #000000'>Insert your query for matching <span style='color: #0071e3'>Java</span> code changes</span></H2></center>");
             //  out.println("<H2>Post->"+postData+ "</H2>");
             out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
 
@@ -103,15 +103,15 @@ public class DiffSearch_WebServer extends Thread {
                 String[] parts = result.split("-->");
 
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" >"+ parts[0]+"</textarea>" +
-                        "<span style='color: #ffffff'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
+                        "<span style='color: #000000'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" >"+parts[1]+"</textarea></pre>" +
-                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#ffffff\" type=\"submit\" value=\"Search\"></form></center>");
+                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#FFFFFF\" type=\"submit\" value=\"Search\"></form></center>");
             }
             else
                 out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
-                        "<span style='color: #ffffff'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
+                        "<span style='color: #000000'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
                         "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" ></textarea></pre>" +
-                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#ffffff\" type=\"submit\" value=\"Search\"></form></center>");
+                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#FFFFFF\" type=\"submit\" value=\"Search\"></form></center>");
 
             FileChannel chan;
             FileLock lock;
@@ -128,7 +128,7 @@ public class DiffSearch_WebServer extends Thread {
                         String[] parts = change.split("-->");
 
                         if(parts.length == 1){
-                            out.println("<center><H3><span style='color: #ffffff'>The query is not correct, please try again.</span></H3></center>");
+                            out.println("<center><H3><span style='color: #000000'>The query is not correct, please try again.</span></H3></center>");
 
                             //chan = server_log.getChannel();
                             //lock = chan.lock();
@@ -137,14 +137,14 @@ public class DiffSearch_WebServer extends Thread {
                         }
                         else{
                             if(flag){
-                                out.println("<H3><span style='color: #ffffff'>   (<span style='color: #a1a1a6'>Max 10</span>) Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #a1a1a6'>832 139 code changes</span>:</span></H3>");
+                                out.println("<H3><span style='color: #000000'>   (<span style='color: #0071e3'>Max 10</span>) Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #0071e3'>832 139 code changes</span>:</span></H3>");
                                 flag = false;
                             }
                             out.println("<H4>"
-                                    + "<span style='background-color: #b54845'><span style='color: #ffffff'> - " + parts[0]
-                                    + "</span></span><span style='color: #ffffff'>  <big><big><big><big><big><span>&#10132;</span></big></big></big></big></big>  </span> "
-                                    +"<span style='background-color:#2cab13'><span style='color: #ffffff'>+ " + parts[1] + "</span></span></H4>"
-                                    + "<a href=" + parts[2] + " style=\"color: #fafbfc\"> Link "+ parts[3] +"</a></span>"
+                                    + "<span style='background-color: #b54845'><span style='color: #FFFFFF'> - " + parts[0]
+                                    + "</span></span><span style='color: #000000'>  <big><big><big><big><big><span>&#10132;</span></big></big></big></big></big>  </span> "
+                                    +"<span style='background-color:#2cab13'><span style='color: #FFFFFF'>+ " + parts[1] + "</span></span></span></H4>"
+                                    + "<span style='color: #000000'><a href=" + parts[2] + " style=\"color: #000000\"> Link "+ parts[3] +"</a></span></span>"
                                     + "<pre>  </pre><pre>   </pre>");
                             chan.write(ByteBuffer.wrap((change +"\n").getBytes()));
                         }
@@ -157,12 +157,12 @@ public class DiffSearch_WebServer extends Thread {
 
             }else{
                 if(flag_first_connection) {
-                    out.println("<center><H3><span style='color: #ffffff'>No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds</span>.</span></H3></center>");
+                    out.println("<center><H3><span style='color: #000000'>No Matching Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds</span>.</span></H3></center>");
 
                     chan.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date())+"\n").getBytes()));
                     chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
 
-                    chan.write(ByteBuffer.wrap(("No Matching Code changes found in <span style='color: #a1a1a6'>" + duration_matching / 1000.0 + " seconds </span>\n").getBytes()));
+                    chan.write(ByteBuffer.wrap(("No Matching Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds </span>\n").getBytes()));
 
                     chan.write(ByteBuffer.wrap(("==========================================================================================="
                             +"============================================================================================\n\n").getBytes()));
