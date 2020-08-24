@@ -1,6 +1,0 @@
-int ID = ID.ID().ID();->int ID = ID.ID();
-ID<1>.ID(LT);->if(ID<1>!= null) ID<1>.ID(LT);
-if(EXPR){return;}->if(EXPR)return;
-ID.ID(ID);->_
-ID.ID(new ID(ID));->ID.ID(new ID(ID)).close();
-ID.ID(ID,ID<1>);->ID.ID(ID,ID<2>);

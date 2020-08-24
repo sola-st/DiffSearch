@@ -121,7 +121,7 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 **Main files:**
 - src/main/java/research.diffsearch/**App.java** -> Main file
 - src/main/java/research.diffsearch/**Change_extraction.java** -> Clone repository and extract changes
-- src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage and final matching stage
+- src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage 
 - src/main/java/research.diffsearch/**Python3_Tree.java** -> Python tree class 
 - src/main/java/grammar/**Python3(...).java** -> ANTLR Java classes
 - src/main/java/research.diffsearch/**Java_Tree.java** -> Java tree class 
@@ -131,6 +131,8 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 - src/main/java/resources/Python/**FAISS_indexing.py** -> FAISS indexing (without query)
 - src/main/java/resources/Python/**FAISS_Nearest_Neighbor_Search.py** -> FAISS Nearest Neighbor Search
 - src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff.
+- src/main/java/matching/*  -> final matching algorithm
+- src/main/resources/Results/* -> there are some output file results
 
 
 **Requirements**
@@ -139,7 +141,7 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 - [FAISS 1.6.1](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> pip3 install faiss-cpu --no-cache
 
 **How to run**
-- In src/main/java/research.diffsearch/**Config.java** set NORMAL = true, SCALABILITY  = false and EFFECTIVENESS = false;
-- In src/main/java/resources/Python/**FAISS_indexing.py** set nlist = 100;
+- In src/main/java/research.diffsearch/**Config.java** set WEB = true, SCALABILITY  = false and EFFECTIVENESS = false;
 - Run the file src/main/java/research.diffsearch/**App.java**
-- The results are in the file src/main/java/resources/**Features_Vectors/scalability.csv**, where each line is the test performed using different number of changes. For each query the first column is the FAISS searching time and the second is the final matching time. 
+- Open a Browser and digit **http://localhost:8843**
+- Try a query, e.g. return ID --> return ID (It is a toy dataset with a few code changes)
