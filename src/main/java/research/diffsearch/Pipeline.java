@@ -1839,7 +1839,7 @@ public class Pipeline {
         return;
     }
 
-    public static  List<String> run_test(String query, Socket socket_python){
+    public static  List<CodeChangeWeb> run_test(String query, Socket socket_python){
 
         Java_Tree tree_query = null;
 
@@ -1847,8 +1847,9 @@ public class Pipeline {
 
         if (tree_query == null) {
 
-            List<String> output_list = new ArrayList<String>();
-            output_list.add("The query is not correct, please try again.");
+            List<CodeChangeWeb> output_list = new ArrayList<CodeChangeWeb>();
+            CodeChangeWeb temp = new CodeChangeWeb("The query is not correct, please try again."," ", " ", " ");
+            output_list.add(temp);
             return output_list;
         }
 
@@ -1989,10 +1990,10 @@ public class Pipeline {
      * @param tree_query : query Tree
      * @return number of matching changes found
      */
-    public static List<String> diffsearch_online(Java_Tree tree_query, String query_string, Socket socket) {
+    public static List<CodeChangeWeb> diffsearch_online(Java_Tree tree_query, String query_string, Socket socket) {
 
 
-        List<String> output_list = new ArrayList<String>();
+        List<CodeChangeWeb> output_list = new ArrayList<CodeChangeWeb>();
 
         try {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -2058,7 +2059,9 @@ public class Pipeline {
                 List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
 
                 if(!list.get(1).equals(list.get(0))) {
-                    output_list.add(candidate + "-->" + compute_candidate_url(candidate_url));
+                    List<String> url_line =  Arrays.asList(compute_candidate_url(candidate_url).split("-->"));
+                    CodeChangeWeb temp = new CodeChangeWeb(url_line.get(0), url_line.get(1), list.get(0), list.get(1));
+                    output_list.add(temp);
                     matching_counter++;
 
                     //System.out.println(compute_candidate_url(candidate_url));
@@ -2314,7 +2317,9 @@ public class Pipeline {
                     List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
 
                     if (!list.get(1).equals(list.get(0))) {
+                        //CodeChange temp = new CodeChange(compute_candidate_url(candidate_url), " ", list.get(0),list.get(1) );
                         output_list.add(candidate + " [url] " + compute_candidate_url(candidate_url));
+                       // output_list.add(temp);
 
                         //System.out.println(compute_candidate_url(candidate_url));
 

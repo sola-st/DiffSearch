@@ -13,8 +13,9 @@ public class Config {
     public static boolean LOG_FILE  = false;
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
-    public static boolean NORMAL  = true;
+    public static boolean NORMAL  = false;
     public static boolean WEB  = false;
+    public static boolean WEB_GUI  = true;
 
 
     //Socket

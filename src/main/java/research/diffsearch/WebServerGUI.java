@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -12,12 +14,12 @@ import java.util.List;
 
 import static research.diffsearch.Pipeline.run_test;
 
-public class DiffSearch_WebServer extends Thread {
+public class WebServerGUI extends Thread {
     protected Socket socket;
     protected Socket socket_faiss;
     protected FileOutputStream server_log;
 
-    public DiffSearch_WebServer(Socket socket_accepted, Socket socket_faiss_accepted,FileOutputStream log) {
+    public WebServerGUI(Socket socket_accepted, Socket socket_faiss_accepted,FileOutputStream log) {
         socket = socket_accepted;
         socket_faiss = socket_faiss_accepted;
         server_log = log;
@@ -61,10 +63,11 @@ public class DiffSearch_WebServer extends Thread {
                 postData.append((char) intParser);
             }
 
-            List<String> output_list = new ArrayList<String>();
+            List<CodeChangeWeb> output_list = new ArrayList<CodeChangeWeb>();
 
             long duration_matching = 0;
             boolean flag_first_connection = false;
+            String JSON_output = "";
 
             String result = "";
 
@@ -75,9 +78,11 @@ public class DiffSearch_WebServer extends Thread {
                 System.out.println("Search started.");
                 long startTime_matching = System.currentTimeMillis();
 
+
                 try {
 
-                    //output_list = run_test(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
+                    output_list = run_test(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
+                    JSON_output = new Gson().toJson(output_list);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -123,34 +128,10 @@ public class DiffSearch_WebServer extends Thread {
                 chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
 
                 boolean flag = true;
-                for(String change:output_list) {
-                    try {
-                        String[] parts = change.split("-->");
 
-                        if(parts.length == 1){
-                            out.println("<center><H3><span style='color: #000000'>The query is not correct, please try again.</span></H3></center>");
+                out.println(JSON_output);
 
-                            //chan = server_log.getChannel();
-                            //lock = chan.lock();
-                            chan.write(ByteBuffer.wrap("The query is not correct, please try again.\n".getBytes()));
-                            //lock.release();
-                        }
-                        else{
-                            if(flag){
-                                out.println("<H3><span style='color: #000000'>   (<span style='color: #0071e3'>Max 10</span>) Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds </span> using a dataset of <span style='color: #0071e3'>17 121 code changes</span>:</span></H3>");
-                                flag = false;
-                            }
-                            out.println("<H4>"
-                                    + "<span style='background-color: #b54845'><span style='color: #FFFFFF'> - " + parts[0]
-                                    + "</span></span><span style='color: #000000'>  <big><big><big><big><big><span>&#10132;</span></big></big></big></big></big>  </span> "
-                                    +"<span style='background-color:#2cab13'><span style='color: #FFFFFF'>+ " + parts[1] + "</span></span></span></H4>"
-                                    + "<pre>  </pre><pre>   </pre>");
-                            chan.write(ByteBuffer.wrap((change +"\n").getBytes()));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+
                 chan.write(ByteBuffer.wrap(("==========================================================================================="
                         +"============================================================================================\n\n").getBytes()));
 
@@ -167,6 +148,11 @@ public class DiffSearch_WebServer extends Thread {
                             +"============================================================================================\n\n").getBytes()));
                 }
             }
+
+            PrintWriter writer = new PrintWriter("./src/main/resources/GUI/Output/output.json", StandardCharsets.UTF_8);
+            writer.println(JSON_output);
+            writer.close();
+
             lock.release();
 
             out.close();

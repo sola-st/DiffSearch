@@ -29,6 +29,76 @@ public class App {
          * */
 
 
+        if(Config.WEB_GUI) {
+
+            /* **************************************************************************************************************
+             * SEARCH PYTHON STAGE (FAISS)
+             ****************************************************************************************************************/
+
+            System.out.println("FAISS SEARCHING STAGE STARTED.\n");
+            try {
+                new Thread( Pipeline::search_candidate_changes).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                TimeUnit.SECONDS.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("FAISS SEARCHING STAGE DONE.\n");
+
+            Socket socket_faiss = null;
+            try {
+                socket_faiss = new Socket(Config.host,Config.port);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+
+                System.out.println("\nCONNECTION WITH SERVER FAISS FAILED.\n");
+                return;
+            }
+
+            ServerSocket server = null;
+            Socket socket = null;
+            try {
+                server = new ServerSocket(Config.port_web);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("DiffSearch Server active on port "+ Config.port_web);
+
+            FileOutputStream server_log = null;
+
+            try {
+                server_log = new FileOutputStream(Config.server_log_file, true);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            while (true) {
+                try {
+                    assert server != null;
+                    System.out.println("Waiting request on port " + Config.port_web);
+                    socket = server.accept();
+                    WebServerGUI client = new WebServerGUI(socket, socket_faiss, server_log);
+                    client.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+
+        /* **************************************************************************************************************
+         * WEB INTERFACE MODE
+         * */
+
+
         if(Config.WEB) {
 
             /* **************************************************************************************************************
@@ -196,9 +266,9 @@ public class App {
             }
 
             System.out.println("QUERY CORRECT, START SEARCHING CODE CHANGES\n");
-            List<String> output = diffsearch_online(tree_query, query_input, socket_python);
+            //List<String> output = diffsearch_online(tree_query, query_input, socket_python);
 
-            System.out.println(output.size() + " CODE CHANGES FOUND.\n");
+            //System.out.println(output.size() + " CODE CHANGES FOUND.\n");
 
             //return;
 
