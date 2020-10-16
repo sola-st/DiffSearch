@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Main-Class: research.diffsearch.App
+Class-Path: slf4j-api-1.7.2.jar javax.servlet-api-3.1.0.jar org.eclipse.
+ jgit-4.8.0.201705170830-rc1.jar jetty-client-9.4.30.v20200611.jar diffu
+ tils-1.2.1.jar websocket-client-9.4.30.v20200611.jar jetty-xml-9.4.30.v
+ 20200611.jar websocket-server-9.4.30.v20200611.jar log4j-1.2.12.jar com
+ mons-io-2.6.jar commons-lang3-3.11.jar commons-codec-1.6.jar JavaEWAH-1
+ .1.6.jar jetty-server-9.4.30.v20200611.jar gson-2.8.6.jar httpclient-4.
+ 3.6.jar jetty-security-9.4.30.v20200611.jar antlr4-runtime-4.7.1.jar je
+ tty-io-9.4.30.v20200611.jar websocket-common-9.4.30.v20200611.jar jetty
+ -util-9.4.30.v20200611.jar websocket-api-9.4.30.v20200611.jar jetty-htt
+ p-9.4.30.v20200611.jar commons-logging-1.1.3.jar jsoup-1.12.2.jar jsch-
+ 0.1.54.jar websocket-servlet-9.4.30.v20200611.jar jetty-servlet-9.4.30.
+ v20200611.jar Java-WebSocket-1.5.1.jar httpcore-4.3.3.jar
+

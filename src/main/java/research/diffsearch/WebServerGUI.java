@@ -96,59 +96,18 @@ public class WebServerGUI extends Thread {
             out.println("Content-Type: text/html; charset=utf-8");
             out.println("Server: MINISERVER");
             // this blank line signals the end of the headers
-            out.println("");
-            // Send the HTML page
-            out.println("<body style=\"background-color:#E8E8E8;\">");
-            out.println("<center><H1><span style='color: #000000'><span style='color: #0071e3'>Diff</span>Search</span></H1></center>");
-            out.println("<center><H2><span style='color: #000000'>Insert your query for matching <span style='color: #0071e3'>Java</span> code changes</span></H2></center>");
-            //  out.println("<H2>Post->"+postData+ "</H2>");
-            out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
-
-            if(result.length() > 1) {
-                String[] parts = result.split("-->");
-
-                out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" >"+ parts[0]+"</textarea>" +
-                        "<span style='color: #000000'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>" +
-                        "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" >"+parts[1]+"</textarea></pre>" +
-                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#FFFFFF\" type=\"submit\" value=\"Search\"></form></center>");
-            }
-            else
-                out.println("<center><pre><textarea name=\"Text1\" cols=\"40\" rows=\"5\" placeholder=\"Insert the old code...\" id=\"query_old\" ></textarea>" +
-                        "<span style='color: #000000'><big><big><big><big><big><big><big><big><big><big><span>&#10132;</span></big></big></big></big></big></big></big></big></big></big></span>"+
-                        "<textarea name=\"Text2\" cols=\"40\" rows=\"5\" placeholder=\"Insert the new code...\" id=\"query_new\" ></textarea></pre>" +
-                        "<input style=\"background-color:#0071e3; border-color:#0071e3; color:#FFFFFF\" type=\"submit\" value=\"Search\"></form></center>");
 
             FileChannel chan;
             FileLock lock;
 
+            // The lock is not useful for now.
             chan = server_log.getChannel();
             lock = chan.lock();
-            if(output_list.size() > 0){
-                chan.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date())+"\n").getBytes()));
-                chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
 
-                boolean flag = true;
+            // Writing the JSON file on the port 8843
+            out.println(JSON_output);
 
-                out.println(JSON_output);
-
-
-                chan.write(ByteBuffer.wrap(("==========================================================================================="
-                        +"============================================================================================\n\n").getBytes()));
-
-            }else{
-                if(flag_first_connection) {
-                    out.println("<center><H3><span style='color: #000000'>No Matching Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds</span>.</span></H3></center>");
-
-                    chan.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date())+"\n").getBytes()));
-                    chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r","")+"\n").getBytes()));
-
-                    chan.write(ByteBuffer.wrap(("No Matching Code changes found in <span style='color: #0071e3'>" + duration_matching / 1000.0 + " seconds </span>\n").getBytes()));
-
-                    chan.write(ByteBuffer.wrap(("==========================================================================================="
-                            +"============================================================================================\n\n").getBytes()));
-                }
-            }
-
+            //Backup of the JSON file
             PrintWriter writer = new PrintWriter("./src/main/resources/GUI/Output/output.json", StandardCharsets.UTF_8);
             writer.println(JSON_output);
             writer.close();

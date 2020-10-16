@@ -21,6 +21,8 @@ public class App {
         long real_changes = 0;
         double time_python2 = 0;
 
+        System.out.println(System.getProperty("java.vendor"));
+
         String old_test_example = "ID<1>(ID<2>, LT<3>);";
         String new_test_example = "ID<1>(LT<3>, ID<2>);";
 
