@@ -23,8 +23,7 @@ public class App {
 
         System.out.println(System.getProperty("java.vendor"));
 
-        String old_test_example = "ID<1>(ID<2>, LT<3>);";
-        String new_test_example = "ID<1>(LT<3>, ID<2>);";
+
 
         /* **************************************************************************************************************
          * WEB INTERFACE MODE
@@ -174,6 +173,36 @@ public class App {
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
              * */
 
+            System.out.println("EXTRACTION FROM REPOSITORIES STARTED.\n");
+
+            //change_number = Change_extraction.analyze_diff_file_new_propagation();
+
+            System.out.println("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
+
+            /* **************************************************************************************************************
+             * CHANGES TREE AND FEATURES COMPUTATION
+             **/
+            try {
+                System.out.println("FEATURE EXTRACTION STARTED.\n");//6612193 1432571 -> 51233 52364   PY: 6351999 with 5602836 //JAVA: 1700000
+                real_changes = Pipeline.feature_extraction(500000);
+            } catch (Exception e) { //Java new 13171207 with 4568580
+                e.printStackTrace();
+            }
+
+            System.out.println("FEATURE EXTRACTION DONE WITH " + real_changes + " CHANGES.\n");
+
+            /* **************************************************************************************************************
+             * INDEXING PYTHON STAGE (FAISS)*/
+
+            try {
+                System.out.println("INDEXING STARTED.\n");//908094  js: 508094  JAVA: 832139
+                Pipeline.indexing_candidate_changes((int) real_changes);//(int) real_changes);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("INDEXING FINISHED.\n");
+
 
 
             /* **************************************************************************************************************
@@ -255,6 +284,9 @@ public class App {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
+
+            String old_test_example = "ID<1>(ID<2>, LT<3>);";
+            String new_test_example = "ID<1>(LT<3>, ID<2>);";
 
             String query_input = null;
             Java_Tree tree_query = null;

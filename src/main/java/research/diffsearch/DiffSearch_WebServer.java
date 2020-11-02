@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static research.diffsearch.Pipeline.run_test;
-
 public class DiffSearch_WebServer extends Thread {
     protected Socket socket;
     protected Socket socket_faiss;
