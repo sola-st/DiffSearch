@@ -3,6 +3,7 @@ package research.diffsearch;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -30,7 +31,7 @@ public class App {
          * */
 
 
-        if(Config.WEB_GUI) {
+        if (Config.WEB_GUI) {
 
             /* **************************************************************************************************************
              * SEARCH PYTHON STAGE (FAISS)
@@ -38,7 +39,7 @@ public class App {
 
             System.out.println("FAISS SEARCHING STAGE STARTED.\n");
             try {
-                new Thread( Pipeline::search_candidate_changes).start();
+                new Thread(Pipeline::search_candidate_changes).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,7 +54,7 @@ public class App {
 
             Socket socket_faiss = null;
             try {
-                socket_faiss = new Socket(Config.host,Config.port);
+                socket_faiss = new Socket(Config.host, Config.port);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -69,7 +70,7 @@ public class App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("DiffSearch Server active on port "+ Config.port_web);
+            System.out.println("DiffSearch Server active on port " + Config.port_web);
 
             FileOutputStream server_log = null;
 
@@ -100,7 +101,7 @@ public class App {
          * */
 
 
-        if(Config.WEB) {
+        if (Config.WEB) {
 
             /* **************************************************************************************************************
              * SEARCH PYTHON STAGE (FAISS)
@@ -108,7 +109,7 @@ public class App {
 
             System.out.println("FAISS SEARCHING STAGE STARTED.\n");
             try {
-                new Thread( Pipeline::search_candidate_changes).start();
+                new Thread(Pipeline::search_candidate_changes).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -123,7 +124,7 @@ public class App {
 
             Socket socket_faiss = null;
             try {
-                socket_faiss = new Socket(Config.host,Config.port);
+                socket_faiss = new Socket(Config.host, Config.port);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -139,7 +140,7 @@ public class App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("DiffSearch Server active on port "+ Config.port_web);
+            System.out.println("DiffSearch Server active on port " + Config.port_web);
 
             FileOutputStream server_log = null;
 
@@ -168,7 +169,7 @@ public class App {
          * NORMAL MODE
          * */
 
-        if(Config.NORMAL) {
+        if (Config.NORMAL) {
             /* **************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
              * */
@@ -211,7 +212,7 @@ public class App {
 
             System.out.println("FAISS SEARCHING STAGE STARTED.\n");
             try {
-                new Thread( Pipeline::search_candidate_changes).start();
+                new Thread(Pipeline::search_candidate_changes).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,7 +227,7 @@ public class App {
 
             Socket socket_python = null;
             try {
-                socket_python = new Socket(Config.host,Config.port);
+                socket_python = new Socket(Config.host, Config.port);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -311,7 +312,7 @@ public class App {
         /* **************************************************************************************************************
          * SCALABILITY
          * ***********************************************************************************************************/
-        if(Config.SCALABILITY) {
+        if (Config.SCALABILITY) {
 
             //Pipeline.scalability_java();
             //Pipeline.scalability_javaScript();
@@ -322,7 +323,7 @@ public class App {
          * EFFECTIVENESS
          * ************************************************************************************************************/
 
-        if(Config.EFFECTIVENESS) {
+        if (Config.EFFECTIVENESS) {
             /* **************************************************************************************************************
              * CHANGES EXTRACTED FROM A GIT DIFF OUTPUT
              * */
@@ -358,7 +359,7 @@ public class App {
                     System.out.println("INDEXING STARTED.\n");
                     // Pipeline.indexing_candidate_changes((int) real_changes);
                     //Pipeline.indexing_candidate_changes(4568580);//4568580
-                    Pipeline.indexing_candidate_changes_effectiveness(array[sub], 1000000*sub);//4568580
+                    Pipeline.indexing_candidate_changes_effectiveness(array[sub], 1000000 * sub);//4568580
                     System.out.println("INDEXING DONE.\n");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -421,7 +422,7 @@ public class App {
                 int i = 1;
 
                 try {
-                    buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS"+sub+".log"));
+                    buff_writer_results = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS" + sub + ".log"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -522,7 +523,7 @@ public class App {
                 //Creation of a buffered writer
                 BufferedWriter buff_writer = null;
                 try {
-                    buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/effectiveness_results"+sub+".csv"));
+                    buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Effectiveness/effectiveness_results" + sub + ".csv"));
 
                     // Writing the feature vector in a csv file
                     StringBuilder str_builder = new StringBuilder();
