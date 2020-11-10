@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static research.diffsearch.Pipeline.run_test_noGUI;
+
 public class DiffSearch_WebServer extends Thread {
     protected Socket socket;
     protected Socket socket_faiss;
@@ -75,7 +77,7 @@ public class DiffSearch_WebServer extends Thread {
 
                 try {
 
-                    //output_list = run_test(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
+                    output_list = run_test_noGUI(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
                 }catch (Exception e) {
                     e.printStackTrace();
                 }

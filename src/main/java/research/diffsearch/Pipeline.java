@@ -1853,6 +1853,25 @@ public class Pipeline {
     }
 
 
+    public static List<String> run_test_noGUI(String query, Socket socket_python) {
+
+        Java_Tree tree_query = null;
+
+        tree_query = query_feature_extraction(query);
+
+        if (tree_query == null) {
+
+            List<String> output_list = new ArrayList<String>();
+            output_list.add("The query is not correct, please try again.");
+            return output_list;
+        }
+
+
+        //return small_test_new(tree_query, query_old, query_new, query, candidate);
+        return diffsearch_online_noGUI(tree_query, query, socket_python);
+    }
+
+
     public static List<String> small_test_new(Java_Tree tree_query, Tree query_old, Tree query_new, String query_string, String candidate) {
         List<String> output_list = new ArrayList<String>();
 
@@ -2062,6 +2081,99 @@ public class Pipeline {
 
                     if (matching_counter == 10)
                         return output_list;
+                }
+            }
+
+        }
+
+        return output_list;
+
+    }
+
+
+    /**
+     * Method that implements a deep recursive comparison between query tree and change trees to find
+     * matching changes.
+     *
+     * @param tree_query : query Tree
+     * @return number of matching changes found
+     */
+    public static List<String> diffsearch_online_noGUI(Java_Tree tree_query, String query_string, Socket socket) {
+
+
+        List<String> output_list = new ArrayList<>();
+
+        try {
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.print("PYTHON" + "\r\n");
+            out.flush();
+            //System.out.println("WAITING MESSAGE..");
+
+            Double.parseDouble(stdIn.readLine().substring(0, 5));
+
+            String in = stdIn.readLine();
+            //System.out.println("MESSAGE RECEIVED");
+
+            if (!in.equals("JAVA"))
+                return output_list;
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        /* **************************************************************************************************************
+         * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
+         * */
+
+        List<String> allLines = null;
+
+        int matching_counter = 0;
+
+        Java_Tree queryJavaTree = new Java_Tree(query_string);
+        ParseTree queryTree = queryJavaTree.get_parsetree();
+
+        try {
+            allLines = Files.readAllLines(Paths.get("./src/main/resources/Features_Vectors/candidate_changes.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return output_list;
+        }
+
+        BufferedReader info_reader = null;
+        try {
+            info_reader = new BufferedReader(new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (String candidate : allLines) {
+            String candidate_url = null;
+            try {
+                assert info_reader != null;
+                candidate_url = info_reader.readLine();
+            } catch (IOException e) {
+                candidate_url = "";
+                e.printStackTrace();
+            }
+
+            Java_Tree changeJavaTree = new Java_Tree(candidate);
+            ParseTree changeTree = changeJavaTree.get_parsetree();
+
+            Matching matching = new Matching(queryTree, tree_query.get_parser());
+
+            if (matching.isMatch(changeTree, changeJavaTree.get_parser())) {
+                List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+
+                if (!list.get(1).equals(list.get(0))) {
+                    output_list.add(candidate + "-->" + compute_candidate_url(candidate_url));
+                    matching_counter++;
+
+                    //System.out.println(compute_candidate_url(candidate_url));
+
+                    //if (matching_counter == 10)
+                      //  return output_list;
                 }
             }
 
