@@ -21,7 +21,6 @@ public class DiffSearch_WebServer extends Thread {
         socket = socket_accepted;
         socket_faiss = socket_faiss_accepted;
         server_log = log;
-
     }
 
     public void run() {

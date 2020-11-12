@@ -19,7 +19,7 @@ public class Java_Tree{
     boolean error;
     public int [] features;
 
-    Java_Tree(String change){
+    public Java_Tree(String change){
         error = false;
         change_string = change;
         try {
@@ -81,11 +81,11 @@ public class Java_Tree{
         return tokens;
     }
 
-    JavaParser get_parser() {
+    public JavaParser get_parser() {
         return parser;
     }
 
-    ParseTree get_parsetree() {
+    public ParseTree get_parsetree() {
         return parsetree;
     }
 

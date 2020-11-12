@@ -1502,7 +1502,7 @@ public class Pipeline {
     }
 
 
-    static void scalability_python() {
+    public static void scalability_python() {
         int[] changes = {10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
 
         //int[] changes = { 10000, 50000, 100000};

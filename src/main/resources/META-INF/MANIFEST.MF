@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: research.diffsearch.App
+Main-Class: research.diffsearch.main.App
 Class-Path: slf4j-api-1.7.2.jar javax.servlet-api-3.1.0.jar org.eclipse.
  jgit-4.8.0.201705170830-rc1.jar jetty-client-9.4.30.v20200611.jar diffu
  tils-1.2.1.jar websocket-client-9.4.30.v20200611.jar jetty-xml-9.4.30.v

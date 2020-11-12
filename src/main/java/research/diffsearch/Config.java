@@ -16,7 +16,7 @@ public class Config {
     public static boolean NORMAL  = false;
     public static boolean WEB  = true;
     public static boolean WEB_GUI  = false;
-
+    public static boolean ONLY_JAVA = false;
 
     //Socket
     public static int port_web = 8843;
