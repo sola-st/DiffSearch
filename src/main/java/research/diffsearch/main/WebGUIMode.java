@@ -37,7 +37,6 @@ public class WebGUIMode extends App {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();
             }
-
         }
     }
 }

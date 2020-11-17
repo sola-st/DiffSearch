@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java JavaLexer.g4 JavaParser.g4
 */
 
-public class Java_Tree{
+public class Java_Tree {
     public String change_string;
     private JavaLexer lexer;
     private CommonTokenStream tokens;

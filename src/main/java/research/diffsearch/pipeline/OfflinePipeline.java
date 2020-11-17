@@ -33,7 +33,7 @@ public class OfflinePipeline {
             BufferedReader infoReader = Pipeline.getInfoReader();
 
             for (String candidate : allLines) {
-                String candidateUrl = Pipeline.getCandidateUrl(infoReader);
+                String candidateUrl = infoReader.readLine();
 
                 Object changeTree = TreeObjectUtils.getChangeTree(candidate, language);
                 ParseTree changeParseTree = TreeObjectUtils.getParseTree(changeTree, language);

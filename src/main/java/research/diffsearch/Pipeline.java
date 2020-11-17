@@ -3,12 +3,10 @@ package research.diffsearch;
 import ProgrammingLanguage.Java.JavaParserBaseListener;
 import ProgrammingLanguage.JavaScript.ECMAScriptBaseListener;
 import ProgrammingLanguage.Python.Python3BaseListener;
-import matching.Matching;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.Tree;
 import org.apache.commons.lang3.StringUtils;
+import research.diffsearch.pipeline.OnlinePipeline;
 
 import java.io.*;
 import java.net.Socket;
@@ -676,7 +674,9 @@ public class Pipeline {
 
         try {
 
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
+            python_Nearest_Neighbor_Search = Runtime
+                    .getRuntime().exec(Config.PYTHON_CMD +
+                                       " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
@@ -1180,7 +1180,7 @@ public class Pipeline {
         Java_Tree javaTree = query_feature_extraction_java(query);
         List<CodeChangeWeb> outputList = handleNullQuery(javaTree);
         if (outputList == null) {
-            outputList = diffsearch_online(javaTree, query, socket_python);
+            outputList = OnlinePipeline.diffsearchOnline(javaTree, query, socket_python);
         }
         return outputList;
     }
@@ -1198,11 +1198,11 @@ public class Pipeline {
 
 
     public static List<String> run_test_noGUI(String query, Socket socketPython) {
-        Java_Tree tree_query = query_feature_extraction_java(query);
-        List<String> outputList = handleNullQueryString(tree_query);
+        Java_Tree treeQuery = query_feature_extraction_java(query);
+        List<String> outputList = handleNullQueryString(treeQuery);
         if (outputList != null) return outputList;
 
-        return diffsearch_online_noGUI(tree_query, query, socketPython);
+        return OnlinePipeline.diffsearchOnlineNoGUI(treeQuery, socketPython, Config.PROGRAMMING_LANGUAGE);
     }
 
     protected static List<String> handleNullQueryString(Java_Tree tree_query) {
@@ -1216,117 +1216,13 @@ public class Pipeline {
     }
 
 
-    /**
-     * Method that implements a deep recursive comparison between query tree and change trees to find
-     * matching changes.
-     *
-     * @param tree_query : query Tree
-     * @return number of matching changes found
-     */
-    public static List<CodeChangeWeb> diffsearch_online(Java_Tree tree_query, String query_string, Socket socket) {
-        try {
-            List<CodeChangeWeb> outputList = new ArrayList<>();
-
-            if (writeAndCheckLanguage(socket)) return outputList;
-
-            /* **************************************************************************************************************
-             * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
-             * */
-
-            List<String> allLines = getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
-
-            int matching_counter = 0;
-
-            Java_Tree queryJavaTree = new Java_Tree(query_string);
-            ParseTree queryTree = queryJavaTree.get_parsetree();
-
-            BufferedReader infoReader = getInfoReader();
-
-            for (String candidate : allLines) {
-                String candidateUrl = getCandidateUrl(infoReader);
-
-                Java_Tree changeJavaTree = new Java_Tree(candidate);
-                ParseTree changeTree = changeJavaTree.get_parsetree();
-
-                Matching matching = new Matching(queryTree, tree_query.get_parser());
-
-                if (matching.isMatch(changeTree, changeJavaTree.get_parser())) {
-                    List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
-
-                    if (!list.get(1).equals(list.get(0))) {
-                        List<String> url_line = Arrays.asList(computeCandidateUrl(candidateUrl).split("-->"));
-                        CodeChangeWeb temp = new CodeChangeWeb(url_line.get(0), url_line.get(1), list.get(0), list.get(1));
-                        outputList.add(temp);
-                        matching_counter++;
-
-                        if (matching_counter == 10)
-                            return outputList;
-                    }
-                }
-
-            }
-
-            return outputList;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
-    /**
-     * Method that implements a deep recursive comparison between query tree and change trees to find
-     * matching changes.
-     *
-     * @param tree_query : query Tree
-     * @return number of matching changes found
-     */
-    public static List<String> diffsearch_online_noGUI(Java_Tree tree_query, String query_string, Socket socket) {
-        try {
-            List<String> outputList = new ArrayList<>();
-
-            if (writeAndCheckLanguage(socket)) return outputList;
-
-            /* *******************************
-             * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
-             * */
-
-            List<String> allLines = getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
-
-            Java_Tree queryJavaTree = new Java_Tree(query_string);
-            ParseTree queryTree = queryJavaTree.get_parsetree();
-            BufferedReader infoReader = getInfoReader();
-
-            processCandidatesJava(tree_query, outputList, queryTree, allLines, infoReader);
-            return outputList;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
-    protected static void processCandidatesJava(Java_Tree queryJavaTree, List<String> outputList,
-                                                ParseTree queryTree, List<String> allLines,
-                                                BufferedReader info_reader) {
-        for (String candidate : allLines) {
-            String candidateUrl = getCandidateUrl(info_reader);
-
-            Java_Tree changeJavaTree = new Java_Tree(candidate);
-            ParseTree changeTree = changeJavaTree.get_parsetree();
-
-            Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
-
-            updateOutputList(outputList, candidate, candidateUrl,
-                    matching.isMatch(changeTree, changeJavaTree.get_parser()), false);
-        }
-    }
-
     public static BufferedReader getInfoReader() throws FileNotFoundException {
         return new BufferedReader(
                     new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
     }
 
-    public static List<String> getAllLines(String s) throws IOException {
-        return Files.readAllLines(Paths.get(s));
+    public static List<String> getAllLines(String path) throws IOException {
+        return Files.readAllLines(Paths.get(path));
     }
 
     public static void updateOutputList(List<String> outputList, String candidate, String candidateUrl,
@@ -1362,18 +1258,6 @@ public class Pipeline {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public static String getCandidateUrl(BufferedReader infoReader) {
-        String candidate_url;
-        try {
-            assert infoReader != null;
-            candidate_url = infoReader.readLine();
-        } catch (IOException e) {
-            candidate_url = "";
-            e.printStackTrace();
-        }
-        return candidate_url;
     }
 
     public static String computeCandidateUrl(String candidate) {

@@ -94,7 +94,7 @@ public class DiffSearchWebServer extends Thread {
         logger.trace("Connection closed with thread " + Thread.currentThread().getId());
     }
 
-    protected void printOutputList(List<String> output, long durationMatching) {
+    public static void printOutputList(List<String> output, long durationMatching) {
         logger.info("Search done in {} seconds.", durationMatching / 1000.0);
         if (Config.QUERY_MODE) {
             logger.info("DiffSearch fount the following results:");

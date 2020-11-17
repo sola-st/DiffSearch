@@ -87,6 +87,7 @@ public abstract class App implements Runnable {
                 .addOption("w", "web", false, "launch DiffSearch with web interface")
                 .addOption("l", "log", false, "save log to file")
                 .addOption("p", "port", true, "set the port for the web interface")
+                .addOption("r", "recall", false, "measure recall of queries (slow!)")
                 .addOption("py_port", true, "set the port for the python server")
                 .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("q", "query", true, "process a query");
@@ -105,6 +106,7 @@ public abstract class App implements Runnable {
             Config.WEB = commandLine.hasOption("w");
             Config.LOG_FILE = commandLine.hasOption("l");
             Config.QUERY_MODE = commandLine.hasOption("q");
+            Config.MEASURE_RECALL = commandLine.hasOption("r");
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
             }
@@ -140,6 +142,8 @@ public abstract class App implements Runnable {
             app = new ScalabilityMode();
         } else if (Config.EFFECTIVENESS) {
             app = new EffectivenessMode();
+        } else if (Config.QUERY_MODE) {
+            app = new QueryMode();
         }
 
         if (app != null) {

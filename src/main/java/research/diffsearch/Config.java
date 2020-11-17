@@ -18,9 +18,10 @@ public class Config {
     public static boolean WEB_GUI  = false;
     public static boolean ONLY_JAVA = false;
     public static boolean QUERY_MODE = false;
+    public static boolean MEASURE_RECALL = false;
     public static String query = "";
 
-    //Socket
+    // socket
     public static int port_web = 8843;
 
     public static String host = "localhost";
