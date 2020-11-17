@@ -1,12 +1,11 @@
 package research.diffsearch.main;
 
-import research.diffsearch.Pipeline;
+import research.diffsearch.Config;
+import research.diffsearch.pipeline.ScalabilityPipeline;
 
 public class ScalabilityMode extends App {
     @Override
     public void run() {
-        //Pipeline.scalability_java();
-        //Pipeline.scalability_javaScript();
-        Pipeline.scalability_python();
+        ScalabilityPipeline.runScalabilityPipeline(Config.PROGRAMMING_LANGUAGE);
     }
 }

@@ -8,7 +8,6 @@ import research.diffsearch.Pipeline;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class NormalMode extends App {
 
@@ -120,7 +119,7 @@ public class NormalMode extends App {
         Java_Tree tree_query;
         query_input = String.join(System.lineSeparator(), old_test_example) + "-->"
                 + String.join(System.lineSeparator(), new_test_example);
-        tree_query = Pipeline.query_feature_extraction(query_input);
+        tree_query = Pipeline.query_feature_extraction_java(query_input);
 
         if (tree_query == null) {
 

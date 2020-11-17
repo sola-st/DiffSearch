@@ -182,7 +182,7 @@ public class Change_extraction {
 
                 //Last change
                 if (flag) {
-                    ArrayList<String> change = new ArrayList<String>();
+                    ArrayList<String> change = new ArrayList<>();
                     change.add(temporary_list_old.toString());
                     change.add(temporary_list_new.toString());
 

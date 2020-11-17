@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.Java_Tree;
 import research.diffsearch.Pipeline;
+import research.diffsearch.ProgrammingLanguage;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,25 +23,22 @@ public abstract class App implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    protected void startPythonServer() {
+    protected static void startPythonServer() {
+        startPythonServer(30);
+    }
+
+    public static void startPythonServer(long timeout) {
         if (!Config.ONLY_JAVA) {
-            logger.info("FAISS SEARCHING STAGE STARTED.\n");
+            logger.info("FAISS SEARCHING STAGE STARTED.");
             try {
                 new Thread(Pipeline::search_candidate_changes).start();
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-
-            try {
-                // TODO change this
-                TimeUnit.SECONDS.sleep(30);
+                TimeUnit.SECONDS.sleep(timeout);
             } catch (InterruptedException e) {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();
             }
 
-            logger.info("FAISS SEARCHING STAGE DONE.\n");
+            logger.info("FAISS SEARCHING STAGE DONE.");
         } else {
             logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
         }
@@ -85,11 +83,12 @@ public abstract class App implements Runnable {
                 .addOption("n", "normal", false, "launch DiffSearch in normal mode")
                 .addOption("s", "scalability", false, "launch DiffSearch in scalability mode")
                 .addOption("e", "effectiveness", false, "launch DiffSearch in effectiveness mode")
-                .addOption("g", "web-gui", false, "")
+                .addOption("g", "web-gui", false, "launch in web GUI mode")
                 .addOption("w", "web", false, "launch DiffSearch with web interface")
                 .addOption("l", "log", false, "save log to file")
                 .addOption("p", "port", true, "set the port for the web interface")
                 .addOption("py_port", true, "set the port for the python server")
+                .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("q", "query", true, "process a query");
     }
 
@@ -105,13 +104,20 @@ public abstract class App implements Runnable {
             Config.WEB_GUI = commandLine.hasOption("g");
             Config.WEB = commandLine.hasOption("w");
             Config.LOG_FILE = commandLine.hasOption("l");
+            Config.QUERY_MODE = commandLine.hasOption("q");
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
+            }
+            if (commandLine.hasOption("q")) {
+                Config.query = commandLine.getOptionValue("q");
             }
             if (commandLine.hasOption("py_port")) {
                 Config.port = Integer.parseInt(commandLine.getOptionValue("py_port"));
             }
-
+            if (commandLine.hasOption("lang")) {
+                Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.valueOf(
+                        commandLine.getOptionValue("lang").toUpperCase());
+            }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getLocalizedMessage());
             exception.printStackTrace();
@@ -120,8 +126,8 @@ public abstract class App implements Runnable {
 
     public static void main(String[] args) {
         logger.debug(System.getProperty("java.vendor"));
-
         parseArgs(args);
+        logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.name());
 
         App app = null;
         if (Config.WEB_GUI) {

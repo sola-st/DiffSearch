@@ -38,7 +38,7 @@ public class Javascript_Tree {
 
         try {
             tokens = new CommonTokenStream(lexer);
-            parser = new  ECMAScriptParser(tokens);
+            parser = new ECMAScriptParser(tokens);
         } catch (RecognitionException e) {
             error = true;
             System.out.println("NEW PARSER ERROR " + change);

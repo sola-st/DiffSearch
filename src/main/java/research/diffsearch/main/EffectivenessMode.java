@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.Java_Tree;
 import research.diffsearch.Pipeline;
+import research.diffsearch.ProgrammingLanguage;
+import research.diffsearch.pipeline.OfflinePipeline;
 
 import java.io.*;
 import java.net.Socket;
@@ -13,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static research.diffsearch.Pipeline.diffsearch_offline;
+import static research.diffsearch.pipeline.OfflinePipeline.*;
 
 public class EffectivenessMode extends App {
 
@@ -153,7 +155,7 @@ public class EffectivenessMode extends App {
                 for (String query_input : allLines) {
 
                     try {
-                        tree_query = Pipeline.query_feature_extraction(query_input);
+                        tree_query = Pipeline.query_feature_extraction_java(query_input);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -190,7 +192,7 @@ public class EffectivenessMode extends App {
                     long number_matching = -1;*/
                     try {
 
-                        List<String> output = diffsearch_offline(tree_query, socket);
+                        List<String> output = diffsearchOffline(tree_query, socket, ProgrammingLanguage.JAVA);
 
                         for (String temp : output) {
                             try {

@@ -3,7 +3,7 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.DiffSearch_WebServer;
+import research.diffsearch.DiffSearchWebServer;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,16 +30,14 @@ public class WebMode extends App {
 
         while (true) {
             try {
-                logger.info("Waiting request on port " + Config.port_web);
+                logger.debug("Waiting request on port " + Config.port_web);
                 socket = server.accept();
-                DiffSearch_WebServer client = new DiffSearch_WebServer(socket, socketFaiss, serverLog);
+                DiffSearchWebServer client = new DiffSearchWebServer(socket, socketFaiss, serverLog);
                 client.start();
             } catch (IOException e) {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();
             }
-
         }
     }
-
 }

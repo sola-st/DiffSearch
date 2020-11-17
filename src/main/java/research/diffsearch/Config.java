@@ -7,7 +7,7 @@ public class Config {
     public static String GITDIFF_FILE = "";
 
     //Programming language supported: PYTHON3, JAVA
-    public static String PROGRAMMING_LANGUAGE = "JAVA_SCALABILITY";
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
     //Constants that enable/disable part of the tool
     public static boolean LOG_FILE  = false;
@@ -17,6 +17,8 @@ public class Config {
     public static boolean WEB  = true;
     public static boolean WEB_GUI  = false;
     public static boolean ONLY_JAVA = false;
+    public static boolean QUERY_MODE = false;
+    public static String query = "";
 
     //Socket
     public static int port_web = 8843;
