@@ -4,9 +4,10 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.Pipeline;
-import research.diffsearch.ProgrammingLanguage;
-import research.diffsearch.TreeObjectUtils;
+import research.diffsearch.PipelineOld;
+import research.diffsearch.util.FilePathUtils;
+import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.TreeObjectUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,14 +24,14 @@ public class OfflinePipeline {
         try {
             logger.debug("Starting offline pipeline [{}]", language.name());
             List<String> outputList = new ArrayList<>();
-            if (Pipeline.writeAndCheckLanguage(socket)) {
+            if (!PipelineOld.writeAndCheckLanguage(socket)) {
                 return outputList;
             }
 
             /* FINAL MATCHING STAGE:  Deep tree comparison as final matching. */
-            List<String> allLines = Pipeline.getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
+            Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.CANDIDATE_CHANGES);
             ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, language);
-            BufferedReader infoReader = Pipeline.getInfoReader();
+            BufferedReader infoReader = PipelineOld.getInfoReader();
 
             for (String candidate : allLines) {
                 String candidateUrl = infoReader.readLine();
@@ -39,7 +40,7 @@ public class OfflinePipeline {
                 ParseTree changeParseTree = TreeObjectUtils.getParseTree(changeTree, language);
                 Matching matching = new Matching(parseTree, TreeObjectUtils.getParser(queryTree, language));
 
-                Pipeline.updateOutputList(outputList, candidate, candidateUrl,
+                PipelineOld.updateOutputList(outputList, candidate, candidateUrl,
                         matching.isMatch(changeParseTree, TreeObjectUtils.getParser(changeTree, language)), true);
             }
 

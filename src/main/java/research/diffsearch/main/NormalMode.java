@@ -3,8 +3,8 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.Java_Tree;
-import research.diffsearch.Pipeline;
+import research.diffsearch.PipelineOld;
+import research.diffsearch.pipeline.FeatureExtractionPipelineOld;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -29,7 +29,7 @@ public class NormalMode extends App {
         /* CHANGES TREE AND FEATURES COMPUTATION */
         try {
             logger.info("FEATURE EXTRACTION STARTED.\n");
-            realChanges = Pipeline.feature_extraction(500000);
+            realChanges = PipelineOld.feature_extraction(500000);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class NormalMode extends App {
 
         try {
             logger.info("INDEXING STARTED.\n");
-            Pipeline.indexing_candidate_changes((int) realChanges);
+            PipelineOld.indexing_candidate_changes((int) realChanges);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
             e.printStackTrace();
@@ -116,10 +116,9 @@ public class NormalMode extends App {
         String new_test_example = "ID<1>(LT<3>, ID<2>);";
 
         String query_input;
-        Java_Tree tree_query;
         query_input = String.join(System.lineSeparator(), old_test_example) + "-->"
                 + String.join(System.lineSeparator(), new_test_example);
-        tree_query = Pipeline.query_feature_extraction_java(query_input);
+        var tree_query = FeatureExtractionPipelineOld.queryFeatureExtraction(query_input, Config.PROGRAMMING_LANGUAGE);
 
         if (tree_query == null) {
 

@@ -2,6 +2,12 @@ package research.diffsearch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.pipeline.MatchingPipeline;
+import research.diffsearch.pipeline.OnlinePipeline;
+import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.util.FilePathUtils;
+import research.diffsearch.util.QueryUtil;
+import research.diffsearch.util.Util;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static research.diffsearch.Pipeline.run_test_noGUI;
+import static research.diffsearch.pipeline.OnlinePipeline.runDiffsearchOnline;
 
 public class DiffSearchWebServer extends Thread {
 
@@ -60,7 +66,7 @@ public class DiffSearchWebServer extends Thread {
         int postDataI = getPostDataIndex(in);
         StringBuilder postData = getPostDataStringBuilder(in, postDataI);
 
-        List<String> outputList = new ArrayList<>();
+        List<CodeChangeWeb> outputList = new ArrayList<>();
 
         long durationMatching = 0;
         boolean flagFirstConnection = false;
@@ -70,12 +76,10 @@ public class DiffSearchWebServer extends Thread {
         if (postDataI > 0) {
             flagFirstConnection = true;
             query = getQuery(postData);
-            logger.info("Starting query {}", query);
 
             long startTimeMatching = System.currentTimeMillis();
             outputList = performSearch(query);
-            durationMatching = (System.currentTimeMillis() - startTimeMatching);
-            printOutputList(outputList, durationMatching);
+            Util.printOutputList(outputList, startTimeMatching);
         }
 
         writeHeader(out);
@@ -83,7 +87,7 @@ public class DiffSearchWebServer extends Thread {
 
         FileChannel channel = serverLog.getChannel();
         FileLock lock = channel.lock();
-        if (outputList.size() > 0) {
+        if (!outputList.isEmpty()) {
             writeOutput(out, outputList, durationMatching, query, channel);
         } else if (flagFirstConnection) {
             writeNoMatchingCodeFound(out, durationMatching, query, channel);
@@ -94,42 +98,35 @@ public class DiffSearchWebServer extends Thread {
         logger.trace("Connection closed with thread " + Thread.currentThread().getId());
     }
 
-    public static void printOutputList(List<String> output, long durationMatching) {
-        logger.info("Search done in {} seconds.", durationMatching / 1000.0);
-        if (Config.QUERY_MODE) {
-            logger.info("DiffSearch fount the following results:");
-            output.forEach(logger::info);
-        }
-    }
-
-    protected void writeOutput(PrintWriter out,
-                               List<String> outputList,
-                               long durationMatching,
-                               String result,
-                               FileChannel channel) throws IOException {
+    protected static void writeOutput(PrintWriter out,
+                                      List<CodeChangeWeb> outputList,
+                                      long durationMatching,
+                                      String result,
+                                      FileChannel channel) throws IOException {
         channel.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-                .format(new java.util.Date()) + "\n").getBytes()));
+                                               .format(new java.util.Date()) + "\n").getBytes()));
         channel.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r", "") + "\n").getBytes()));
 
         writeOutputList(out, outputList, durationMatching, channel);
         channel.write(ByteBuffer.wrap(("=================================================================" +
-                "=========================="
-                + "========================" +
-                "====================================================================\n\n").getBytes()));
+                                       "=========================="
+                                       + "========================" +
+                                       "====================================================================\n\n").getBytes()));
     }
 
-    protected void writeOutputList(PrintWriter out,
-                                   List<String> outputList,
-                                   long durationMatching,
-                                   FileChannel channel) {
+    protected static void writeOutputList(PrintWriter out,
+                                          List<CodeChangeWeb> outputList,
+                                          long durationMatching,
+                                          FileChannel channel) {
         boolean flag = true;
-        for (String change : outputList) {
+        for (CodeChangeWeb change : outputList) {
             try {
-                String[] parts = change.split("-->");
+                String[] parts = {change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url};
 
+                // TODO look into
                 if (parts.length == 1) {
                     out.println("<center><H3><span style='color: #000000'>" +
-                            "The query is not correct, please try again.</span></H3></center>");
+                                "The query is not correct, please try again.</span></H3></center>");
 
                     //channel = server_log.getChannel();
                     //lock = channel.lock();
@@ -139,18 +136,18 @@ public class DiffSearchWebServer extends Thread {
                     if (flag) {
                         out.println("<H3><span style='color: #000000'>   <span style='color: #0071e3'>" +
                                     outputList.size() + "</span>" +
-                                " Code changes found in <span style='color: #0071e3'>" +
-                                durationMatching / 1000.0 + " seconds </span> using a dataset of " +
-                                "<span style='color: #0071e3'>17 121 code changes</span>:</span></H3>");
+                                    " Code changes found in <span style='color: #0071e3'>" +
+                                    durationMatching / 1000.0 + " seconds </span> using a dataset of " +
+                                    "<span style='color: #0071e3'>832 142 code changes</span>:</span></H3>");
                         flag = false;
                     }
                     out.println("<H4>"
-                            + "<span style='background-color: #b54845'><span style='color: #FFFFFF'> - " + parts[0]
-                            + "</span></span><span style='color: #000000'>  <big><big><big><big><big><span>&#10132;" +
-                            "</span></big></big></big></big></big>  </span> "
-                            + "<span style='background-color:#2cab13'><span style='color: #FFFFFF'>+ " + parts[1] +
-                            "</span></span></span></H4>"
-                            + "<pre>  </pre><pre>   </pre>");
+                                + "<span style='background-color: #b54845'><span style='color: #FFFFFF'> - " + parts[0]
+                                + "</span></span><span style='color: #000000'>  <big><big><big><big><big><span>&#10132;" +
+                                "</span></big></big></big></big></big>  </span> "
+                                + "<span style='background-color:#2cab13'><span style='color: #FFFFFF'>+ " + parts[1] +
+                                "</span></span></span></H4>"
+                                + "<pre>  </pre><pre>   </pre>");
                     channel.write(ByteBuffer.wrap((change + "\n").getBytes()));
                 }
             } catch (Exception e) {
@@ -160,7 +157,7 @@ public class DiffSearchWebServer extends Thread {
         }
     }
 
-    protected StringBuilder getPostDataStringBuilder(BufferedReader in, int postDataI) throws IOException {
+    protected static StringBuilder getPostDataStringBuilder(BufferedReader in, int postDataI) throws IOException {
         StringBuilder postData = new StringBuilder();
         for (int i = 0; i < postDataI; i++) {
             int intParser = in.read();
@@ -169,10 +166,10 @@ public class DiffSearchWebServer extends Thread {
         return postData;
     }
 
-    protected int getPostDataIndex(BufferedReader in) throws IOException {
+    protected static int getPostDataIndex(BufferedReader in) throws IOException {
         String line;
         int postDataI = -1;
-        while ((line = in.readLine()) != null && (line.length() != 0)) {
+        while ((line = in.readLine()) != null && (!line.isEmpty())) {
             if (line.contains("Content-Length:")) {
                 postDataI = Integer.parseInt(line
                         .substring(
@@ -186,9 +183,9 @@ public class DiffSearchWebServer extends Thread {
     protected void writeNoMatchingCodeFound(PrintWriter out, long durationMatching, String result, FileChannel chan)
             throws IOException {
         out.println("<center><H3><span style='color: #000000'>" +
-                "No Matching Code changes found in <span style='color: #0071e3'>" +
-                durationMatching / 1000.0 +
-                " seconds</span>.</span></H3></center>");
+                    "No Matching Code changes found in <span style='color: #0071e3'>" +
+                    durationMatching / 1000.0 +
+                    " seconds</span>.</span></H3></center>");
 
         chan.write(ByteBuffer.wrap(
                 (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()) + "\n").getBytes()));
@@ -196,25 +193,26 @@ public class DiffSearchWebServer extends Thread {
 
         chan.write(ByteBuffer.wrap(
                 ("No Matching Code changes found in <span style='color: #0071e3'>" +
-                        durationMatching / 1000.0 + " seconds </span>\n").getBytes()));
+                 durationMatching / 1000.0 + " seconds </span>\n").getBytes()));
 
         chan.write(ByteBuffer.wrap(("=========================================================" +
-                "==================================" +
-                "================================" +
-                "============================================================\n\n").getBytes()));
+                                    "==================================" +
+                                    "================================" +
+                                    "============================================================\n\n").getBytes()));
     }
 
-    protected String getQuery(StringBuilder postData) {
-        return URLDecoder.decode(postData.toString()
+    protected static String getQuery(StringBuilder postData) {
+        return QueryUtil.formatQuery(URLDecoder.decode(postData.toString()
                 .replaceAll("Text1=", "")
-                .replaceAll("&Text2=", "-->"), StandardCharsets.UTF_8);
+                .replaceAll("&Text2=", "-->"), StandardCharsets.UTF_8));
     }
 
-    protected List<String> performSearch(String query) {
+    protected List<CodeChangeWeb> performSearch(String query) {
         try {
-            return run_test_noGUI(query
-                    .replaceAll("\r", "")
-                    .replaceAll("\n", ""), socketFaiss);
+            return new MatchingPipeline(Config.PROGRAMMING_LANGUAGE)
+                    .processSync(
+                            FilePathUtils.getCodeChanges(
+                                    FilePathUtils.CANDIDATE_CHANGES, FilePathUtils.CANDIDATE_CHANGES_INFO, query));
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
             e.printStackTrace();
@@ -257,7 +255,7 @@ public class DiffSearchWebServer extends Thread {
         out.println("<body style=\"background-color:#E8E8E8;\">");
         out.println("<center><H1><span style='color: #000000'><span style='color: #0071e3'>Diff</span>Search</span></H1></center>");
         out.println("<center><H2><span style='color: #000000'>Insert your query for matching <span style='color: #0071e3'>" +
-                    Config.PROGRAMMING_LANGUAGE.name() +"</span> code changes</span></H2></center>");
+                    Config.PROGRAMMING_LANGUAGE.toString() + "</span> code changes</span></H2></center>");
         //  out.println("<H2>Post->"+postData+ "</H2>");
         out.println("<form name=\"input\" action=\"imback\" method=\"post\">");
     }

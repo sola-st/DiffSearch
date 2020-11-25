@@ -4,10 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.*;
 import research.diffsearch.main.App;
+import research.diffsearch.util.FilePathUtils;
+import research.diffsearch.util.ProgrammingLanguage;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
 
 public class ScalabilityPipeline {
 
@@ -19,13 +20,13 @@ public class ScalabilityPipeline {
             int delay = 5;
 
             BufferedWriter buffWriterFeatures =
-                    getBufferedWriterForFeatures(getScalabilityCSVFilePath(programmingLanguage));
+                    getBufferedWriterForFeatures(FilePathUtils.getScalabilityCSVFilePath(programmingLanguage));
 
             logger.info("Start scalability pipeline");
             for (int i : changes) {
                 logger.info("\n" + i + "");
                 // TODO maybe replace with indexing candidate changes new
-                Pipeline.indexing_candidate_changes(i);
+                PipelineOld.indexing_candidate_changes(i);
 
                 /* ************************************************
                  * SEARCH PYTHON STAGE (FAISS)
@@ -34,12 +35,12 @@ public class ScalabilityPipeline {
                 // Skip FAISS stage if the dataset is small
                 App.startPythonServer(delay++);
                 Socket socket = new Socket(Config.host, Config.port);
-                List<String> allLines = Pipeline.getAllLines(getScalabilityInputPath(programmingLanguage));
+                Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.getScalabilityInputPath(programmingLanguage));
 
                 buffWriterFeatures.write(i + ",");
 
                 for (String queryInput : allLines) {
-                    Object treeQuery = Pipeline.queryFeatureExtraction(queryInput, programmingLanguage);
+                    Object treeQuery = FeatureExtractionPipelineOld.queryFeatureExtraction(queryInput, programmingLanguage);
                     if (treeQuery == null) {
                         logger.error("The query is not correct, please try again.\n" + queryInput);
                         return;
@@ -76,44 +77,14 @@ public class ScalabilityPipeline {
             /* *
              * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
              * */
-            long startTime_matching = System.currentTimeMillis();
+            long startTimeMatching = System.currentTimeMillis();
             OfflinePipeline.diffsearchOffline(treeQuery, socket, programmingLanguage);
 
-            long duration_matching = (System.currentTimeMillis() - startTime_matching);
-            logger.info("final matching time: " + duration_matching / 1000.0);
+            long durationMatching = (System.currentTimeMillis() - startTimeMatching);
+            logger.info("final matching time: " + durationMatching / 1000.0);
 
-            buffWriterFeatures.write(timePython + "," + duration_matching / 1000.0 + ",");
+            buffWriterFeatures.write(timePython + "," + durationMatching / 1000.0 + ",");
         }
-    }
-
-    protected static String getScalabilityInputPath(ProgrammingLanguage programmingLanguage) {
-        String inputPath = "";
-        switch (programmingLanguage) {
-            case JAVA:
-                inputPath = "./src/main/resources/scalability/Java/input.txt";
-                break;
-            case JAVASCRIPT:
-                inputPath = "./src/main/resources/scalability/JavaScript/input.txt";
-                break;
-            default:
-                inputPath = "./src/main/resources/scalability/Python/input.txt";
-        }
-        return inputPath;
-    }
-
-    protected static String getScalabilityCSVFilePath(ProgrammingLanguage programmingLanguage) {
-        String scalabilityFilePath;
-        switch (programmingLanguage) {
-            case JAVASCRIPT:
-                scalabilityFilePath = "./src/main/resources/scalability/JavaScript/scalability_javaScript.csv";
-                break;
-            case JAVA:
-                scalabilityFilePath = "./src/main/resources/scalability/Java/scalability_java.csv";
-                break;
-            default:
-                scalabilityFilePath = "./src/main/resources/scalability/Python/scalability_python.csv";
-        }
-        return scalabilityFilePath;
     }
 
     private static BufferedWriter getBufferedWriterForFeatures(String s)

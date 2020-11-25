@@ -1,5 +1,7 @@
 package research.diffsearch;
 
+import research.diffsearch.util.ProgrammingLanguage;
+
 public class Config {
 
     //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
@@ -20,6 +22,13 @@ public class Config {
     public static boolean QUERY_MODE = false;
     public static boolean MEASURE_RECALL = false;
     public static String query = "";
+
+    // TODO use
+    public static int k = 1000;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 1024;
+    public static boolean SILENT = false;
+    public static boolean CORPUS_FEATURE_EXTRACTION = false;
+    public static boolean BATCH = false;
 
     // socket
     public static int port_web = 8843;

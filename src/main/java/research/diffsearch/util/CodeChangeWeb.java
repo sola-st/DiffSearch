@@ -3,10 +3,19 @@ package research.diffsearch.util;
 import java.util.Objects;
 
 public class CodeChangeWeb {
-    public String url;
-    public String hunkLines;
+    public String url = "";
+    public String hunkLines = "";
     public String codeChangeOld;
     public String codeChangeNew;
+    public String query = "";
+
+    public CodeChangeWeb(String url, String hunkLines, String codeChangeOld, String codeChangeNew, String query) {
+        this.url = url;
+        this.hunkLines = hunkLines;
+        this.codeChangeOld = codeChangeOld;
+        this.codeChangeNew = codeChangeNew;
+        this.query = query;
+    }
 
     public CodeChangeWeb(String urlCandidate,
                          String lineCandidate,
@@ -16,6 +25,12 @@ public class CodeChangeWeb {
         hunkLines = lineCandidate;
         codeChangeOld = codeChangeOldCandidate;
         codeChangeNew = codeChangeNewCandidate;
+    }
+
+    public CodeChangeWeb(String codeChangeOld, String codeChangeNew, String query) {
+        this.codeChangeNew = codeChangeNew;
+        this.codeChangeOld = codeChangeOld;
+        this.query = query;
     }
 
     @Override

@@ -4,9 +4,8 @@ import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.Config;
 import research.diffsearch.Java_Tree;
 import research.diffsearch.Matching_Methods;
-import research.diffsearch.TreeUtils;
+import research.diffsearch.util.TreeUtils;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;

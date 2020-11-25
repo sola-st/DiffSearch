@@ -17,13 +17,13 @@ public class Java_Tree {
     private ParseTree parsetree;
     private ParserRuleContext ctx;
     public boolean error;
-    public int [] features;
+    public int[] features;
 
-    public Java_Tree(String change){
+    public Java_Tree(String change) {
         error = false;
         change_string = change;
         try {
-        lexer = new JavaLexer(CharStreams.fromString(change));
+            lexer = new JavaLexer(CharStreams.fromString(change));
         } catch (RecognitionException e) {
             error = true;
             System.out.println("LEXER ERROR " + change);
@@ -37,8 +37,8 @@ public class Java_Tree {
         });
 
         try {
-        tokens = new CommonTokenStream(lexer);
-        parser = new JavaParser(tokens);
+            tokens = new CommonTokenStream(lexer);
+            parser = new JavaParser(tokens);
         } catch (RecognitionException e) {
             error = true;
             System.out.println("NEW PARSER ERROR " + change);
@@ -52,7 +52,7 @@ public class Java_Tree {
             }
         });
 
-        if(parser.getNumberOfSyntaxErrors() > 0)
+        if (parser.getNumberOfSyntaxErrors() > 0)
             error = true;
 
         try {
@@ -62,7 +62,7 @@ public class Java_Tree {
             System.out.println("PARSER ERROR " + change);
         }
 
-        features = new int[Integer.MAX_VALUE/1048576]; //4096
+        features = new int[Integer.MAX_VALUE / 1048576]; //4096
     }
 
     String get_change_string() {
@@ -89,7 +89,9 @@ public class Java_Tree {
         return parsetree;
     }
 
-    ParserRuleContext get_ast() {return ctx;}
+    ParserRuleContext get_ast() {
+        return ctx;
+    }
 
     public boolean isError() {
         return error;
@@ -125,8 +127,8 @@ public class Java_Tree {
 
     private void explore(RuleContext ctx, int indentation) {
         boolean toBeIgnored = ignoringWrappers
-                && ctx.getChildCount() == 1
-                && ctx.getChild(0) instanceof ParserRuleContext;
+                              && ctx.getChildCount() == 1
+                              && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
             String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
@@ -134,10 +136,10 @@ public class Java_Tree {
             }
             System.out.println(ruleName);
         }
-        for (int i=0;i<ctx.getChildCount();i++) {
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree element = ctx.getChild(i);
             if (element instanceof RuleContext) {
-                explore((RuleContext)element, indentation + (toBeIgnored ? 0 : 1));
+                explore((RuleContext) element, indentation + (toBeIgnored ? 0 : 1));
             }
         }
     }

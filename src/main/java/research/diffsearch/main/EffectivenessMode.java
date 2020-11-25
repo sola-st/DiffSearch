@@ -3,10 +3,9 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.Java_Tree;
-import research.diffsearch.Pipeline;
-import research.diffsearch.ProgrammingLanguage;
-import research.diffsearch.pipeline.OfflinePipeline;
+import research.diffsearch.PipelineOld;
+import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.pipeline.FeatureExtractionPipelineOld;
 
 import java.io.*;
 import java.net.Socket;
@@ -59,7 +58,7 @@ public class EffectivenessMode extends App {
                 logger.debug("INDEXING STARTED.\n");
                 // Pipeline.indexing_candidate_changes((int) real_changes);
                 //Pipeline.indexing_candidate_changes(4568580);//4568580
-                Pipeline.indexing_candidate_changes_effectiveness(array[sub], 0);//4568580
+                PipelineOld.indexing_candidate_changes_effectiveness(array[sub], 0);//4568580
                 logger.debug("INDEXING DONE.\n");
             } catch (Exception e) {
                 logger.error(e.getLocalizedMessage());
@@ -71,7 +70,7 @@ public class EffectivenessMode extends App {
              * ********************************/
             try {
                 logger.info("CLOSING PORT.\n");
-                Pipeline.port_close(Config.port);
+                PipelineOld.port_close(Config.port);
             } catch (Exception e) {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();
@@ -79,7 +78,7 @@ public class EffectivenessMode extends App {
 
             try {
                 logger.info("INDEX LOADING.\n");
-                new Thread(Pipeline::search_candidate_changes).start();
+                new Thread(PipelineOld::search_candidate_changes).start();
             } catch (Exception e) {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();
@@ -119,11 +118,11 @@ public class EffectivenessMode extends App {
             };
 
 
-            BufferedWriter buff_writer_results = null;
+            BufferedWriter buffWriterResults = null;
             int i;
 
             try {
-                buff_writer_results = new BufferedWriter(
+                buffWriterResults = new BufferedWriter(
                         new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS" + sub + ".log"));
             } catch (IOException e) {
                 logger.error(e.getLocalizedMessage());
@@ -132,7 +131,7 @@ public class EffectivenessMode extends App {
 
             for (int j = 1; j < 13; j++) {
                 int counter = 0;
-                Java_Tree tree_query = null;
+                Object treeQuery = null;
                 List<String> allLines;
 
                 try {
@@ -145,23 +144,24 @@ public class EffectivenessMode extends App {
                 }
 
                 try {
-                    assert buff_writer_results != null;
-                    buff_writer_results.write("PATTERN: " + j + "\n\n");
+                    assert buffWriterResults != null;
+                    buffWriterResults.write("PATTERN: " + j + "\n\n");
                 } catch (IOException e) {
                     logger.error(e.getLocalizedMessage());
                     e.printStackTrace();
                 }
 
-                for (String query_input : allLines) {
+                for (String queryInput : allLines) {
 
                     try {
-                        tree_query = Pipeline.query_feature_extraction_java(query_input);
+                        treeQuery = FeatureExtractionPipelineOld.queryFeatureExtraction(queryInput, Config.PROGRAMMING_LANGUAGE);
+                        
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    if (tree_query == null) {
-                        logger.error("The query is not correct, please try again.\n" + query_input);
+                    if (treeQuery == null) {
+                        logger.error("The query is not correct, please try again.\n" + queryInput);
                         continue;
                     }
 
@@ -192,11 +192,11 @@ public class EffectivenessMode extends App {
                     long number_matching = -1;*/
                     try {
 
-                        List<String> output = diffsearchOffline(tree_query, socket, ProgrammingLanguage.JAVA);
+                        List<String> output = diffsearchOffline(treeQuery, socket, ProgrammingLanguage.JAVA);
 
                         for (String temp : output) {
                             try {
-                                buff_writer_results.write(temp + "\n\n");
+                                buffWriterResults.write(temp + "\n\n");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -209,7 +209,7 @@ public class EffectivenessMode extends App {
                         logger.error(e.getLocalizedMessage());
                         e.printStackTrace();
                     }
-                    logger.debug(counter + " DONE with query: " + query_input);
+                    logger.debug(counter + " DONE with query: " + queryInput);
 
 
                 }
@@ -222,7 +222,7 @@ public class EffectivenessMode extends App {
 
             }
             try {
-                buff_writer_results.close();
+                buffWriterResults.close();
             } catch (IOException e) {
                 logger.error(e.getLocalizedMessage());
                 e.printStackTrace();

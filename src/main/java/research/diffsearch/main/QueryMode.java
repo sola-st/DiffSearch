@@ -3,31 +3,30 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.DiffSearchWebServer;
-import research.diffsearch.Pipeline;
-import research.diffsearch.WebServerGUI;
+import research.diffsearch.pipeline.OnlinePipeline;
+import research.diffsearch.pipeline.RecallPipeline;
+import research.diffsearch.util.Util;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
 public class QueryMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(QueryMode.class);
+
     @Override
     public void run() {
         startPythonServer();
+        logger.info("DiffSearch in Query mode");
 
         Socket socketFaiss = getFaissSocket();
         if (socketFaiss == null) {
             return;
         }
 
-        logger.info("Processing {}", Config.query);
         long currentTime = System.currentTimeMillis();
-        List<String> result = Pipeline.run_test_noGUI(Config.query, socketFaiss);
-        DiffSearchWebServer.printOutputList(result, System.currentTimeMillis() - currentTime);
+        new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE))
+                .peek(result -> Util.printOutputList(result, System.currentTimeMillis() - currentTime))
+                .processSync(Config.query);
     }
 }

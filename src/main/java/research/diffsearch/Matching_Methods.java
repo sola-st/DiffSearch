@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static research.diffsearch.Pipeline.escapeSpecialCharacters;
-
 public class Matching_Methods {
 
     /**

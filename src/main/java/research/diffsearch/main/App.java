@@ -1,5 +1,6 @@
 package research.diffsearch.main;
 
+import com.google.gson.internal.bind.util.ISO8601Utils;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.cli.*;
@@ -7,14 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.Java_Tree;
-import research.diffsearch.Pipeline;
-import research.diffsearch.ProgrammingLanguage;
+import research.diffsearch.PipelineOld;
+import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.util.ProgrammingLanguage;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -31,7 +35,7 @@ public abstract class App implements Runnable {
         if (!Config.ONLY_JAVA) {
             logger.info("FAISS SEARCHING STAGE STARTED.");
             try {
-                new Thread(Pipeline::search_candidate_changes).start();
+                new Thread(PipelineOld::search_candidate_changes).start();
                 TimeUnit.SECONDS.sleep(timeout);
             } catch (InterruptedException e) {
                 logger.error(e.getLocalizedMessage());
@@ -44,7 +48,7 @@ public abstract class App implements Runnable {
         }
     }
 
-    protected ServerSocket getServerSocket() {
+    protected static ServerSocket getServerSocket() {
         ServerSocket server;
         try {
             server = new ServerSocket(Config.port_web);
@@ -57,7 +61,7 @@ public abstract class App implements Runnable {
         return server;
     }
 
-    protected FileOutputStream getServerLog() {
+    protected static FileOutputStream getServerLog() {
         try {
             return new FileOutputStream(Config.server_log_file, true);
         } catch (IOException e) {
@@ -67,7 +71,7 @@ public abstract class App implements Runnable {
         }
     }
 
-    protected Socket getFaissSocket() {
+    protected static Socket getFaissSocket() {
         try {
             return new Socket(Config.host, Config.port);
         } catch (IOException e1) {
@@ -90,7 +94,8 @@ public abstract class App implements Runnable {
                 .addOption("r", "recall", false, "measure recall of queries (slow!)")
                 .addOption("py_port", true, "set the port for the python server")
                 .addOption("lang", "language", true, "the programming language (python, javascript or java")
-                .addOption("q", "query", true, "process a query");
+                .addOption("q", "query", true, "process a query")
+                .addOption("fe", "extract features from the corpus");
     }
 
     private static void parseArgs(String[] args) {
@@ -107,6 +112,8 @@ public abstract class App implements Runnable {
             Config.LOG_FILE = commandLine.hasOption("l");
             Config.QUERY_MODE = commandLine.hasOption("q");
             Config.MEASURE_RECALL = commandLine.hasOption("r");
+            Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
+
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
             }
@@ -129,7 +136,7 @@ public abstract class App implements Runnable {
     public static void main(String[] args) {
         logger.debug(System.getProperty("java.vendor"));
         parseArgs(args);
-        logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.name());
+        logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
 
         App app = null;
         if (Config.WEB_GUI) {
@@ -144,14 +151,40 @@ public abstract class App implements Runnable {
             app = new EffectivenessMode();
         } else if (Config.QUERY_MODE) {
             app = new QueryMode();
+        } else if (Config.CORPUS_FEATURE_EXTRACTION) {
+            app = new FeatureExtractionMode();
         }
+/*
+        Pipeline<Integer, Integer> pipeline = new Pipeline<>() {
+            @Override
+            public void process(Integer input, int index, BiConsumer<Integer, Integer> outputConsumer) {
+                try {
+                    System.out.println("Starting to sleep now");
+                    Thread.sleep(input);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                outputConsumer.accept(input, index);
+            }
+
+            @Override
+            public void after() {
+                System.out.println("Finished!");
+            }
+        };
+        System.out.println("Starting pipleline test");
+        pipeline.parallel()
+                .peek((x, index) -> System.out.println(index + " " + x))
+                .synchronize()
+                .peek((x, index) -> System.out.println("second " + index + " " + x))
+                .execute(List.of(500, 500, 1000, 200));*/
 
         if (app != null) {
             app.run();
         }
     }
 
-    public static boolean run_junit(String query, String candidate) {
+    public static boolean runJunit(String query, String candidate) {
         Java_Tree queryJavaTree = new Java_Tree(query);
 
         ParseTree queryTree = queryJavaTree.get_parsetree();

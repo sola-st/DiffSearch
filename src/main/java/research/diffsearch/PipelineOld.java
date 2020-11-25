@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class Pipeline {
+public class PipelineOld {
 
     static AtomicInteger number_matching = new AtomicInteger(0);
 
@@ -968,7 +968,6 @@ public class Pipeline {
                 " ", " ", " "));
     }
 
-
     public static BufferedReader getInfoReader() throws FileNotFoundException {
         return new BufferedReader(
                 new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
@@ -991,6 +990,7 @@ public class Pipeline {
 
     public static boolean writeAndCheckLanguage(Socket socket) {
         try {
+            Objects.requireNonNull(socket);
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.print("PYTHON" + "\r\n");
@@ -1001,20 +1001,21 @@ public class Pipeline {
             String in = stdIn.readLine();
 
             if (!in.equals("JAVA"))
-                return true;
+                return false;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return true;
     }
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline() {
         var pipeline = new BaseFeatureExtractionPipeline();
-        // TODO add to config
-        pipeline.setSingleFeatureVectorLength(1024);
-        pipeline.addFeatureExtractor(new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, 1024));
-        pipeline.addFeatureExtractor(new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, 1024));
+        pipeline.setSingleFeatureVectorLength(Config.SINGLE_FEATURE_VECTOR_LENGTH);
+        pipeline.addFeatureExtractor(
+                new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
+        pipeline.addFeatureExtractor(
+                new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
         return pipeline;
     }
 

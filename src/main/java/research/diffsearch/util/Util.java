@@ -1,14 +1,13 @@
 package research.diffsearch.util;
 
 import research.diffsearch.Config;
-import research.diffsearch.DiffSearchWebServer;
 
 import java.util.List;
 
 public class Util {
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    public static void printOutputList(List<CodeChangeWeb> output, long durationMatching) {
+    public static void printOutputList(List<CodeChangeWeb> output, long startTimeStamp) {
         final String ANSI_RED = "\u001B[31m";
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_GREEN = "\u001B[32m";
@@ -36,5 +35,15 @@ public class Util {
             }
         }
 
+    }
+
+    public static String featureVectorToString(int[] vector) {
+        StringBuilder builder = new StringBuilder();
+
+        for (int element : vector) {
+            builder.append(element);
+            builder.append(",");
+        }
+        return builder.toString();
     }
 }

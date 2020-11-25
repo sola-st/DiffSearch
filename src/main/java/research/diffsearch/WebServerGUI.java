@@ -1,18 +1,18 @@
 package research.diffsearch;
 
 import com.google.gson.Gson;
+import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.util.QueryUtil;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static research.diffsearch.Pipeline.run_test;
+import static research.diffsearch.pipeline.OnlinePipeline.runDiffsearchOnline;
 
 public class WebServerGUI extends Thread {
     protected Socket socket;
@@ -49,7 +49,7 @@ public class WebServerGUI extends Thread {
             line = "";
             // looks for post data
             int postDataI = -1;
-            while ((line = in.readLine()) != null && (line.length() != 0)) {
+            while ((line = in.readLine()) != null && (!line.isEmpty())) {
                 if (line.contains("Content-Length:")) {
                     postDataI = Integer.parseInt(line
                             .substring(
@@ -81,7 +81,7 @@ public class WebServerGUI extends Thread {
 
                 try {
 
-                    output_list = run_test(result.replaceAll("\r","").replaceAll("\n",""), socket_faiss);
+                    output_list = runDiffsearchOnline(QueryUtil.formatQuery(result), socket_faiss);
                     JSON_output = new Gson().toJson(output_list);
                 }catch (Exception e) {
                     e.printStackTrace();
