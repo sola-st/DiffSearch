@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-q \"ID<1>(ID<2>, LT<3>);-->ID<1>(LT<3>, ID<2>);\" -oj"
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-w -oj"

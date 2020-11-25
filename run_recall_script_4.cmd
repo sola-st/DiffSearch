@@ -1,0 +1,5 @@
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-oj -r -q \"EXPR.ID<0>(EXPR<0>, EXPR<1>,EXPR<2>, EXPR<3>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<2>);\""
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-oj -r -q \"<...> ID(<...>) throws ID { --> <...> ID(<...>) {\""
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-oj -r -q \"ID<1>.ID<0>(<...>) unOP --> ID<1>.ID<0>(<...>) unOP\""
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-oj -r -q \"ID<0>() --> ID<0>(EXPR)\""
+mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-oj -r -q \"if (ID<0>) --> if (EXPR || ID<0>)\""
