@@ -1,12 +1,11 @@
-package research.diffsearch;
+package research.diffsearch.util;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
+import research.diffsearch.Config;
 
 public class TreeUtils {
 
@@ -18,7 +17,7 @@ public class TreeUtils {
      * @param list_parent_child: list of the couple parent-child found
      * @param features:          binary feature vector ("it is the return value of the function")
      */
-    static void pairs_parent_childAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
+    public static void pairs_parent_childAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
@@ -39,7 +38,7 @@ public class TreeUtils {
      * @param list_hash_sum: list of the hash of nodes
      * @param features:      binary feature vector ("it is the return value of the function")
      */
-    static void tree_hash_sumAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
+    public static void tree_hash_sumAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
         int sum = 0;
         int i;
 
@@ -68,7 +67,7 @@ public class TreeUtils {
      * @param list_parent_child: list of the couple parent-child found
      * @param features:          binary feature vector ("it is the return value of the function")
      */
-    static void pairs_parent_childAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
+    public static void pairs_parent_childAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
@@ -92,11 +91,12 @@ public class TreeUtils {
      * @param list_parent_child: list of the couple parent-child found
      * @param features:          binary feature vector ("it is the return value of the function")
      */
-    static void pairs_parent_childAST_javascript(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
+    public static void pairs_parent_childAST_javascript(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int[] features) {
 
         for (int i = 0; i < t.getChildCount(); i++) {
             list_parent_child.add((Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode());
-            features[Math.abs(Integer.MAX_VALUE / 2097152 + (Trees.getNodeText(t, ruleNames) + ' ' + Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 2097152)] = 1;
+            features[Math.abs(Integer.MAX_VALUE / 2097152 + (Trees.getNodeText(t, ruleNames) + ' ' +
+                                                             Trees.getNodeText(t.getChild(i), ruleNames)).hashCode() / 2097152)] = 1;
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
@@ -116,7 +116,7 @@ public class TreeUtils {
      * @param list_hash_sum: list of the hash of nodes
      * @param features:      binary feature vector ("it is the return value of the function")
      */
-    static void tree_hash_sumAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
+    public static void tree_hash_sumAST_java(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
         int sum = 0;
         int i;
 
@@ -148,7 +148,7 @@ public class TreeUtils {
      * @param list_hash_sum: list of the hash of nodes
      * @param features:      binary feature vector ("it is the return value of the function")
      */
-    static void tree_hash_sumAST_javascript(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
+    public static void tree_hash_sumAST_javascript(final Tree t, final List<String> ruleNames, final List<Integer> list_hash_sum, int[] features) {
         int sum = 0;
         int i;
 
@@ -462,7 +462,7 @@ public class TreeUtils {
      * @param change_ruleNames: rule names of the change AST
      * @return two trees are equal or not
      */
-    static boolean deep_tree_comparison_javascript2(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
+    public static boolean deep_tree_comparison_javascript2(final Tree query_tree, final List<String> query_ruleNames, final Tree change_tree, final List<String> change_ruleNames, PrintWriter writer) {
         int i;
 
         try {
@@ -639,13 +639,13 @@ public class TreeUtils {
     }
 
     //Node count method
-    static int node_count(final Tree query_tree, final List<String> query_ruleNames, int n) {
+    public static int nodeCount(final Tree query_tree, final List<String> query_ruleNames, int n) {
         n++;
 
         try {
 
             for (int i = 0; i < query_tree.getChildCount(); i++) {
-                n = node_count(query_tree.getChild(i), query_ruleNames, n);
+                n = nodeCount(query_tree.getChild(i), query_ruleNames, n);
             }
 
         } catch (Exception e) {

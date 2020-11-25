@@ -1,7 +1,10 @@
-package research.diffsearch;
+package research.diffsearch.util;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
+import research.diffsearch.Java_Tree;
+import research.diffsearch.Javascript_Tree;
+import research.diffsearch.Python3_Tree;
 
 public class TreeObjectUtils {
 
@@ -48,5 +51,20 @@ public class TreeObjectUtils {
                 parseTree = ((Python3_Tree) queryTree).get_parsetree();
         }
         return parseTree;
+    }
+
+    public static boolean isError(Object tree, ProgrammingLanguage language) {
+        boolean error;
+        switch (language) {
+            case JAVA:
+                error = ((Java_Tree) tree).isError();
+                break;
+            case JAVASCRIPT:
+                error = ((Javascript_Tree) tree).isError();
+                break;
+            default:
+                error = ((Python3_Tree) tree).isError();
+        }
+        return error;
     }
 }
