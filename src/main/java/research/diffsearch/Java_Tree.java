@@ -16,7 +16,7 @@ public class Java_Tree {
     private JavaParser parser;
     private ParseTree parsetree;
     private ParserRuleContext ctx;
-    boolean error;
+    public boolean error;
     public int [] features;
 
     public Java_Tree(String change){

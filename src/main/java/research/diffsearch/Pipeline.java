@@ -1,18 +1,18 @@
 package research.diffsearch;
 
-import ProgrammingLanguage.Java.JavaParserBaseListener;
-import ProgrammingLanguage.JavaScript.ECMAScriptBaseListener;
-import ProgrammingLanguage.Python.Python3BaseListener;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.Tree;
 import org.apache.commons.lang3.StringUtils;
-import research.diffsearch.pipeline.OnlinePipeline;
+import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
+import research.diffsearch.pipeline.feature.ParentChildFeatureExtractor;
+import research.diffsearch.pipeline.feature.BaseFeatureExtractionPipeline;
+import research.diffsearch.pipeline.feature.TriangleFeatureExtractor;
+import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.util.FilePathUtils;
+import research.diffsearch.util.TreeUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,7 +67,11 @@ public class Pipeline {
                 //equal3 = TreeUtils.deep_tree_comparison_partial(query_new, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(2), Arrays.asList(change.get_parser().getRuleNames()), writer, false);
 
                 //  equal = TreeUtils.deep_tree_comparison_python(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
-                equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(),
+                        Arrays.asList(tree_query.get_parser().getRuleNames()),
+                        change.get_parsetree(),
+                        Arrays.asList(change.get_parser().getRuleNames()),
+                        writer);
             } catch (Exception e) {
 
                 return;
@@ -454,215 +458,6 @@ public class Pipeline {
 
     }
 
-    public static Object queryFeatureExtraction(String queryInput, ProgrammingLanguage programmingLanguage) {
-        switch (programmingLanguage) {
-            case PYTHON:
-                return query_feature_extraction_python(queryInput);
-            case JAVA:
-                return query_feature_extraction_java(queryInput);
-            default:
-                return query_feature_extraction_js(queryInput);
-        }
-    }
-
-    /**
-     * Creation of the query tree and extraction of its features.
-     *
-     * @param query_input: String of the query
-     * @return AST of the query
-     */
-    public static Java_Tree query_feature_extraction_java(String query_input) {
-        Java_Tree tree_query = null;
-        //Python3_Tree tree_query = null;
-
-        //Creating the tree for the query string
-        try {
-            tree_query = new Java_Tree(query_input);
-            // tree_query = new Javascript_Tree(query_input);
-            //  tree_query = new Python3_Tree(query_input);
-            if (TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
-                tree_query.isError() || tree_query.error)
-                return null;
-
-            //Declaring query variables
-            List<Integer> list_parent_child = new ArrayList<Integer>();
-            List<Integer> list_hash_sum = new ArrayList<Integer>();
-            // ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
-            //Python3BaseListener listener = new Python3BaseListener();
-            JavaParserBaseListener listener = new JavaParserBaseListener();
-
-
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(listener, tree_query.get_parsetree());
-            List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
-
-            //Computing hash sum and pairs parent child
-            // TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            // TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            //TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-            list_hash_sum.addAll(list_parent_child);
-
-            //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
-
-            // Writing the feature vector in a csv file
-            StringBuilder str_builder = new StringBuilder();
-
-            for (int element : tree_query.features) {
-                str_builder.append(element);
-                str_builder.append(",");
-            }
-            str_builder.append("\n");
-
-            buff_writer.write(str_builder.toString());
-            buff_writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
-
-        return tree_query;
-    }
-
-    /**
-     * Creation of the query tree and extraction of its features.
-     *
-     * @param query_input: String of the query
-     * @return AST of the query
-     */
-    public static Javascript_Tree query_feature_extraction_js(String query_input) {
-        Javascript_Tree tree_query = null;
-        //Python3_Tree tree_query = null;
-
-        //Creating the tree for the query string
-        try {
-            //tree_query = new Java_Tree(query_input);
-            tree_query = new Javascript_Tree(query_input);
-            //  tree_query = new Python3_Tree(query_input);
-            if (TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
-                tree_query.isError() || tree_query.error)
-                return null;
-
-            //Declaring query variables
-            List<Integer> list_parent_child = new ArrayList<Integer>();
-            List<Integer> list_hash_sum = new ArrayList<Integer>();
-            ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
-            //Python3BaseListener listener = new Python3BaseListener();
-            //JavaParserBaseListener listener = new JavaParserBaseListener();
-
-
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(listener, tree_query.get_parsetree());
-            List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
-
-            //Computing hash sum and pairs parent child
-            TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            //TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            // TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-            list_hash_sum.addAll(list_parent_child);
-
-            //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
-
-            // Writing the feature vector in a csv file
-            StringBuilder str_builder = new StringBuilder();
-
-            for (int element : tree_query.features) {
-                str_builder.append(element);
-                str_builder.append(",");
-            }
-            str_builder.append("\n");
-
-            buff_writer.write(str_builder.toString());
-            buff_writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
-
-        return tree_query;
-    }
-
-    /**
-     * Creation of the query tree and extraction of its features.
-     *
-     * @param query_input: String of the query
-     * @return AST of the query
-     */
-    public static Python3_Tree query_feature_extraction_python(String query_input) {
-        //Javascript_Tree tree_query = null;
-        Python3_Tree tree_query = null;
-
-        //Creating the tree for the query string
-        try {
-            //tree_query = new Java_Tree(query_input);
-            // tree_query = new Javascript_Tree(query_input);
-            tree_query = new Python3_Tree(query_input);
-            if (TreeUtils.node_count(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), 0) <= 5 ||
-                tree_query.isError() || tree_query.error)
-                return null;
-
-            //Declaring query variables
-            List<Integer> list_parent_child = new ArrayList<Integer>();
-            List<Integer> list_hash_sum = new ArrayList<Integer>();
-            // ECMAScriptBaseListener listener = new ECMAScriptBaseListener();
-            Python3BaseListener listener = new Python3BaseListener();
-            //JavaParserBaseListener listener = new JavaParserBaseListener();
-
-
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(listener, tree_query.get_parsetree());
-            List<String> ruleNamesList = Arrays.asList(tree_query.get_parser().getRuleNames());
-
-            //Computing hash sum and pairs parent child
-            //TreeUtils.tree_hash_sumAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_javascript(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            TreeUtils.tree_hash_sumAST_python(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            TreeUtils.pairs_parent_childAST_python(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-
-            // TreeUtils.tree_hash_sumAST_java(tree_query.get_parsetree(), ruleNamesList, list_hash_sum, tree_query.features);
-            //TreeUtils.pairs_parent_childAST_java(tree_query.get_parsetree(), ruleNamesList, list_parent_child, tree_query.features);
-            list_hash_sum.addAll(list_parent_child);
-
-            //Creation of a buffered writer
-            BufferedWriter buff_writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/query_feature_vectors.csv"));
-
-            // Writing the feature vector in a csv file
-            StringBuilder str_builder = new StringBuilder();
-
-            for (int element : tree_query.features) {
-                str_builder.append(element);
-                str_builder.append(",");
-            }
-            str_builder.append("\n");
-
-            buff_writer.write(str_builder.toString());
-            buff_writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // System.out.println("QUERY TREE AND FEATURES COMPUTATION DONE");
-
-        return tree_query;
-    }
-
     /**
      * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
      */
@@ -816,51 +611,45 @@ public class Pipeline {
      * @return number of matching changes found
      */
     public static long final_matching(Java_Tree tree_query) {
+        Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.CANDIDATE_CHANGES);
+
+        int length = tree_query.features.length;
+        double threshold = 0.2;
+        long number_matching = 0;
+
+        PrintWriter writer = null;
         try {
-            List<String> allLines = null;
-            allLines = getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
-
-            int length = tree_query.features.length;
-            double threshold = 0.2;
-            long number_matching = 0;
-
-            PrintWriter writer = null;
-            try {
-                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/candidate_changes_filtered.txt", "UTF-8");
-            } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            for (String candidate : allLines) {
-                Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
-                //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
-                //Computing hash sum of changes
-                List<Integer> list_change_hash_sum = new ArrayList<Integer>();
-                List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-
-                //Computing list change parent child
-                List<Integer> list_change_parent_child = new ArrayList<Integer>();
-                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-
-                double score = Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
-
-                if (score >= threshold) {
-                    number_matching++;
-                    assert writer != null;
-                    writer.println(candidate.replace("\n", "$$") + "\n");
-                    System.out.println(candidate.replace("$$", "\n") + " score: " + score);
-                }
-            }
-
-            assert writer != null;
-            writer.close();
-
-            return number_matching;
-        } catch (IOException e) {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/candidate_changes_filtered.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
-            return 0;
         }
+
+        for (String candidate : allLines) {
+            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+            //Computing hash sum of changes
+            List<Integer> list_change_hash_sum = new ArrayList<Integer>();
+            List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
+            TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+
+            //Computing list change parent child
+            List<Integer> list_change_parent_child = new ArrayList<Integer>();
+            TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+
+            double score = Matching_Methods.cosineSimilarity(tree_query.features, change.features, length);
+
+            if (score >= threshold) {
+                number_matching++;
+                assert writer != null;
+                writer.println(candidate.replace("\n", "$$") + "\n");
+                System.out.println(candidate.replace("$$", "\n") + " score: " + score);
+            }
+        }
+
+        assert writer != null;
+        writer.close();
+
+        return number_matching;
     }
 
     /**
@@ -872,201 +661,195 @@ public class Pipeline {
      * @return number of matching changes found
      */
     public static long final_comparison(Java_Tree tree_query, long change_number, Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string) {
+        BufferedWriter buff_writer_features = null;
+        BufferedWriter buff_writer_features_candidate = null;
         try {
-            List<String> allLines = null;
-            BufferedWriter buff_writer_features = null;
-            BufferedWriter buff_writer_features_candidate = null;
+            Writer writer =
+                    new OutputStreamWriter(
+                            new FileOutputStream("./src/main/resources/Features_Vectors/deepbugs.csv"), StandardCharsets.UTF_8);
+            //buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/deepbugs.csv"), "UTF-8");
+            buff_writer_features = new BufferedWriter(writer);
+
+            buff_writer_features_candidate = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_candidates.csv"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.CANDIDATE_CHANGES);
+
+        long number_matching = 0;
+
+        List<String> list_query_nodes = new ArrayList<>();
+        TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
+
+        List<String> list_query_old_leaves = new ArrayList<>();
+        List<String> list_query_new_leaves = new ArrayList<>();
+
+        TreeUtils.query_leaves_extraction(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_old_leaves);
+
+        boolean new_code = false;
+
+        for (String str : list_query_old_leaves) {
+            if (str.equals("-->") || str.equals("<EOF>")) {
+                new_code = true;
+            } else {
+                if (new_code) {
+                    list_query_new_leaves.add(str);
+                }
+            }
+        }
+
+        String[] array_query_old_nodes = new String[list_query_old_leaves.size()];
+        array_query_old_nodes = list_query_old_leaves.toArray(array_query_old_nodes);
+
+        String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
+        array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
+
+        Scanner scanner2 = null;
+        try {
+            scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (String candidate : allLines) {
+
+            String info = scanner2.nextLine();
+
+            Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
+            //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
+
+            //CANDIDATE CSV!!!
+            int xx = Integer.MAX_VALUE / 2097152;
+            //Computing hash sum of changes
+            List<Integer> list_change_hash_sum = new ArrayList<Integer>();
+            List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
+            TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+            //   TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+
+            //Computing list change parent child
+            List<Integer> list_change_parent_child = new ArrayList<Integer>();
+            TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+            // TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+
+            // Writing the feature vector in a csv file
+            StringBuilder str_builder = new StringBuilder();
+
+            for (int element : change.features) {
+                str_builder.append(element);
+                str_builder.append(",");
+            }
+            str_builder.append("\n");
+
             try {
-                Writer writer =
-                        new OutputStreamWriter(
-                                new FileOutputStream("./src/main/resources/Features_Vectors/deepbugs.csv"), StandardCharsets.UTF_8);
-                //buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/deepbugs.csv"), "UTF-8");
-                buff_writer_features = new BufferedWriter(writer);
-
-                buff_writer_features_candidate = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_candidates.csv"));
-
+                buff_writer_features_candidate.write(str_builder.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            allLines = getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
+            /////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////
 
-            long number_matching = 0;
 
-            List<String> list_query_nodes = new ArrayList<>();
-            TreeUtils.query_extraction_nodes(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_nodes);
+            List<String> list_change_nodes = new ArrayList<>();
+            TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
 
-            List<String> list_query_old_leaves = new ArrayList<>();
-            List<String> list_query_new_leaves = new ArrayList<>();
-
-            TreeUtils.query_leaves_extraction(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), list_query_old_leaves);
-
-            boolean new_code = false;
-
-            for (String str : list_query_old_leaves) {
-                if (str.equals("-->") || str.equals("<EOF>")) {
-                    new_code = true;
-                } else {
-                    if (new_code) {
-                        list_query_new_leaves.add(str);
-                    }
-                }
-            }
-
-            String[] array_query_old_nodes = new String[list_query_old_leaves.size()];
-            array_query_old_nodes = list_query_old_leaves.toArray(array_query_old_nodes);
-
-            String[] array_query_new_nodes = new String[list_query_new_leaves.size()];
-            array_query_new_nodes = list_query_new_leaves.toArray(array_query_new_nodes);
-
-            Scanner scanner2 = null;
+            PrintWriter writer = null;
             try {
-                scanner2 = new Scanner(new File("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
-            } catch (FileNotFoundException e) {
+                writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
 
-            for (String candidate : allLines) {
-
-                String info = scanner2.nextLine();
-
-                Java_Tree change = new Java_Tree(candidate.replace("$$", "\n"));
-                //  Python3_Tree change = new Python3_Tree(candidate.replace("$$", "\n"));
-
-                //CANDIDATE CSV!!!
-                int xx = Integer.MAX_VALUE / 2097152;
-                //Computing hash sum of changes
-                List<Integer> list_change_hash_sum = new ArrayList<Integer>();
-                List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-                //   TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-
-                //Computing list change parent child
-                List<Integer> list_change_parent_child = new ArrayList<Integer>();
-                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-                // TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-
-                // Writing the feature vector in a csv file
-                StringBuilder str_builder = new StringBuilder();
-
-                for (int element : change.features) {
-                    str_builder.append(element);
-                    str_builder.append(",");
+            boolean equal2 = false;
+            boolean equal3 = false;
+            boolean equal = false;
+            try {
+                if (query_old != null && query_new != null) {
+                    equal2 = TreeUtils.deep_tree_comparison_partial(query_old, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(0), Arrays.asList(change.get_parser().getRuleNames()), writer, false, candidate.replace("$$", "\n"));
+                    equal3 = TreeUtils.deep_tree_comparison_partial(query_new, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(2), Arrays.asList(change.get_parser().getRuleNames()), writer, false, candidate.replace("$$", "\n"));
                 }
-                str_builder.append("\n");
+                //  equal = TreeUtils.deep_tree_comparison_python(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                //equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
+                equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
 
-                try {
-                    buff_writer_features_candidate.write(str_builder.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
 
-                /////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////
+                continue;
+            }
+            assert writer != null;
+            writer.close();
 
-
-                List<String> list_change_nodes = new ArrayList<>();
-                TreeUtils.query_extraction_nodes(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_nodes);
-
-                PrintWriter writer = null;
-                try {
-                    writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/log_file.txt", "UTF-8");
-                } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                boolean equal2 = false;
-                boolean equal3 = false;
-                boolean equal = false;
-                try {
-                    if (query_old != null && query_new != null) {
-                        equal2 = TreeUtils.deep_tree_comparison_partial(query_old, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(0), Arrays.asList(change.get_parser().getRuleNames()), writer, false, candidate.replace("$$", "\n"));
-                        equal3 = TreeUtils.deep_tree_comparison_partial(query_new, Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree().getChild(2), Arrays.asList(change.get_parser().getRuleNames()), writer, false, candidate.replace("$$", "\n"));
-                    }
-                    //  equal = TreeUtils.deep_tree_comparison_python(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
-                    //equal = TreeUtils.deep_tree_comparison_javascript2(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
-                    equal = TreeUtils.deep_tree_comparison_java(tree_query.get_parsetree(), Arrays.asList(tree_query.get_parser().getRuleNames()), change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), writer);
-
-                } catch (Exception e) {
-
-                    continue;
-                }
-                assert writer != null;
-                writer.close();
-
-                if (equal || (equal2 && equal3)) {
-                    List<String> list_change_old_leaves = new ArrayList<>();
-                    List<String> list_change_new_leaves = new ArrayList<>();
+            if (equal || (equal2 && equal3)) {
+                List<String> list_change_old_leaves = new ArrayList<>();
+                List<String> list_change_new_leaves = new ArrayList<>();
 
 
-                    TreeUtils.query_leaves_extraction(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
+                TreeUtils.query_leaves_extraction(change.get_parsetree(), Arrays.asList(change.get_parser().getRuleNames()), list_change_old_leaves);
 
 
-                    new_code = false;
+                new_code = false;
 
-                    for (String str : list_change_old_leaves) {
-                        if (str.equals("->") || str.equals("<EOF>")) {
-                            new_code = true;
-                        } else {
-                            if (new_code) {
-                                list_change_new_leaves.add(str);
-                            }
+                for (String str : list_change_old_leaves) {
+                    if (str.equals("->") || str.equals("<EOF>")) {
+                        new_code = true;
+                    } else {
+                        if (new_code) {
+                            list_change_new_leaves.add(str);
                         }
                     }
+                }
 
-                    String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
-                    array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
+                String[] array_change_old_nodes = new String[list_change_old_leaves.size()];
+                array_change_old_nodes = list_change_old_leaves.toArray(array_change_old_nodes);
 
-                    String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
-                    array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
+                String[] array_change_new_nodes = new String[list_change_new_leaves.size()];
+                array_change_new_nodes = list_change_new_leaves.toArray(array_change_new_nodes);
 
-                    boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes, query_string, candidate.replace("$$", "\n"));
+                boolean final_matching = Matching_Methods.leaves_final_matching(array_query_old_nodes, array_query_new_nodes, array_change_old_nodes, array_change_new_nodes, query_string, candidate.replace("$$", "\n"));
 
-                    if (final_matching) {
+                if (final_matching) {
 
 
-                        List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
-                        String ss = list.get(1).substring(1, list.get(1).length() - 1).replace("if (", "if(");
-                        String ss22 = list.get(0).replace("if (", "if(");
-                        if (!ss.equals(ss22)) {
-                            number_matching++;
-                            if (Config.EFFECTIVENESS || Config.NORMAL) {
-                                System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n" + info);
-                                List<String> items = Arrays.asList(info.split("\\s*@@\\s*"));
-                                String s1 = items.get(2).substring(items.get(2).indexOf("/") + 1).trim();
+                    List<String> list = Arrays.asList(candidate.replace("$$", "\n").split("->"));
+                    String ss = list.get(1).substring(1, list.get(1).length() - 1).replace("if (", "if(");
+                    String ss22 = list.get(0).replace("if (", "if(");
+                    if (!ss.equals(ss22)) {
+                        number_matching++;
+                        if (Config.EFFECTIVENESS || Config.NORMAL) {
+                            System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n" + info);
+                            List<String> items = Arrays.asList(info.split("\\s*@@\\s*"));
+                            String s1 = items.get(2).substring(items.get(2).indexOf("/") + 1).trim();
 
-                                try {
-                                    //    buff_writer_features.write("\" " + list.get(0) + " \" , " + "\" " + list.get(1) + " \" , " + " \" " + s1 + " \" , " + " \" " + items.get(0).replaceAll("commit ", "") + "\" , " + "\"" + items.get(1) + "\"\n");
-                                    buff_writer_features.write(escapeSpecialCharacters(list.get(0)) + "," + escapeSpecialCharacters(list.get(1)) + "," + escapeSpecialCharacters(s1) + ","
-                                                               + escapeSpecialCharacters(items.get(0).replaceAll("commit ", "")) + "," + escapeSpecialCharacters(items.get(1)) + "\n");
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                            try {
+                                //    buff_writer_features.write("\" " + list.get(0) + " \" , " + "\" " + list.get(1) + " \" , " + " \" " + s1 + " \" , " + " \" " + items.get(0).replaceAll("commit ", "") + "\" , " + "\"" + items.get(1) + "\"\n");
+                                buff_writer_features.write(escapeSpecialCharacters(list.get(0)) + "," + escapeSpecialCharacters(list.get(1)) + "," + escapeSpecialCharacters(s1) + ","
+                                                           + escapeSpecialCharacters(items.get(0).replaceAll("commit ", "")) + "," + escapeSpecialCharacters(items.get(1)) + "\n");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                                 /*try {
                                     buff_writer_results.write("- " + list.get(0) + "\n+ " + list.get(1) + "\n\n");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }*/
-                            }
                         }
                     }
                 }
             }
+        }
 
-            try {
-                buff_writer_features.close();
-                buff_writer_features_candidate.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //  }
-            // System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
-            return number_matching;
+        try {
+            buff_writer_features.close();
+            buff_writer_features_candidate.close();
         } catch (IOException e) {
             e.printStackTrace();
-            return 0;
         }
+
+        //  }
+        // System.out.println("Total changes in Final Matching: " + allLines.size() + "\n");
+        return number_matching;
     }
 
     /**
@@ -1079,7 +862,6 @@ public class Pipeline {
      */
     public static long final_comparison_multithreading(Javascript_Tree tree_query, long change_number, Tree query_old, Tree query_new, BufferedWriter buff_writer_results) {
         try {
-            List<String> allLines = null;
             BufferedWriter buff_writer_features = null;
             try {
                 Writer writer =
@@ -1091,7 +873,7 @@ public class Pipeline {
                 e.printStackTrace();
             }
 
-            allLines = getAllLines("./src/main/resources/Features_Vectors/candidate_changes.txt");
+            Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.CANDIDATE_CHANGES);
 
             //long number_matching = 0;
             //AtomicInteger number_matching = new AtomicInteger(0);
@@ -1176,53 +958,20 @@ public class Pipeline {
     }
 
 
-    public static List<CodeChangeWeb> run_test(String query, Socket socket_python) {
-        Java_Tree javaTree = query_feature_extraction_java(query);
-        List<CodeChangeWeb> outputList = handleNullQuery(javaTree);
-        if (outputList == null) {
-            outputList = OnlinePipeline.diffsearchOnline(javaTree, query, socket_python);
-        }
-        return outputList;
+    public static boolean isNotEqualCodeChange(String candidate) {
+        List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+        return !list.get(1).equals(list.get(0));
     }
 
-    protected static List<CodeChangeWeb> handleNullQuery(Java_Tree treeQuery) {
-        if (treeQuery == null) {
-            List<CodeChangeWeb> outputList = new ArrayList<>();
-            CodeChangeWeb temp = new CodeChangeWeb("The query is not correct, please try again.",
-                    " ", " ", " ");
-            outputList.add(temp);
-            return outputList;
-        }
-        return null;
-    }
-
-
-    public static List<String> run_test_noGUI(String query, Socket socketPython) {
-        Java_Tree treeQuery = query_feature_extraction_java(query);
-        List<String> outputList = handleNullQueryString(treeQuery);
-        if (outputList != null) return outputList;
-
-        return OnlinePipeline.diffsearchOnlineNoGUI(treeQuery, socketPython, Config.PROGRAMMING_LANGUAGE);
-    }
-
-    protected static List<String> handleNullQueryString(Java_Tree tree_query) {
-        if (tree_query == null) {
-
-            List<String> output_list = new ArrayList<>();
-            output_list.add("The query is not correct, please try again.");
-            return output_list;
-        }
-        return null;
+    public static List<CodeChangeWeb> getErrorResult() {
+        return List.of(new CodeChangeWeb("The query is not correct, please try again.",
+                " ", " ", " "));
     }
 
 
     public static BufferedReader getInfoReader() throws FileNotFoundException {
         return new BufferedReader(
-                    new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
-    }
-
-    public static List<String> getAllLines(String path) throws IOException {
-        return Files.readAllLines(Paths.get(path));
+                new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
     }
 
     public static void updateOutputList(List<String> outputList, String candidate, String candidateUrl,
@@ -1258,6 +1007,15 @@ public class Pipeline {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline() {
+        var pipeline = new BaseFeatureExtractionPipeline();
+        // TODO add to config
+        pipeline.setSingleFeatureVectorLength(1024);
+        pipeline.addFeatureExtractor(new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, 1024));
+        pipeline.addFeatureExtractor(new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, 1024));
+        return pipeline;
     }
 
     public static String computeCandidateUrl(String candidate) {

@@ -16,10 +16,10 @@ public class Javascript_Tree {
     private ECMAScriptParser parser;
     private ParseTree parsetree;
     private ParserRuleContext ctx;
-    boolean error;
+    public boolean error;
     public int [] features;
 
-    Javascript_Tree(String change){
+    public Javascript_Tree(String change){
         error = false;
         change_string = change;
         try {
@@ -89,11 +89,11 @@ public class Javascript_Tree {
         return tokens;
     }
 
-    ECMAScriptParser get_parser() {
+    public ECMAScriptParser get_parser() {
         return parser;
     }
 
-    ParseTree get_parsetree() {
+    public ParseTree get_parsetree() {
         return parsetree;
     }
 

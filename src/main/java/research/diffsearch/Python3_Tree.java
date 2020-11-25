@@ -17,10 +17,10 @@ public class Python3_Tree{
     private Python3Parser parser;
     private  ParseTree parsetree;
     private  ParserRuleContext ctx;
-    boolean error;
+    public boolean error;
     public int [] features;
 
-    Python3_Tree(String change){
+    public Python3_Tree(String change){
         error = false;
         change_string = change;
         lexer = new Python3Lexer(CharStreams.fromString(change));
@@ -71,11 +71,11 @@ public class Python3_Tree{
         return tokens;
     }
 
-    Python3Parser get_parser() {
+    public Python3Parser get_parser() {
         return parser;
     }
 
-    ParseTree get_parsetree() {
+    public ParseTree get_parsetree() {
         return parsetree;
     }
 

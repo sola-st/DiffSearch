@@ -1,4 +1,4 @@
-package research.diffsearch;
+package research.diffsearch.util;
 
 public enum ProgrammingLanguage {
 

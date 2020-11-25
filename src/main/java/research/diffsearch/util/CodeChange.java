@@ -1,4 +1,4 @@
-package research.diffsearch;
+package research.diffsearch.util;
 
 public class CodeChange {
     public String codeChange;
