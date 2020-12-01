@@ -2,12 +2,16 @@ package research.diffsearch.pipeline;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.*;
+import research.diffsearch.Config;
+import research.diffsearch.PipelineOld;
 import research.diffsearch.main.App;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ScalabilityPipeline {
@@ -25,7 +29,6 @@ public class ScalabilityPipeline {
             logger.info("Start scalability pipeline");
             for (int i : changes) {
                 logger.info("\n" + i + "");
-                // TODO maybe replace with indexing candidate changes new
                 PipelineOld.indexing_candidate_changes(i);
 
                 /* ************************************************
@@ -33,7 +36,8 @@ public class ScalabilityPipeline {
                  **************************************************/
 
                 // Skip FAISS stage if the dataset is small
-                App.startPythonServer(delay++);
+                PipelineOld.port_close(Config.port);
+                App.startPythonServer();
                 Socket socket = new Socket(Config.host, Config.port);
                 Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.getScalabilityInputPath(programmingLanguage));
 
@@ -57,23 +61,16 @@ public class ScalabilityPipeline {
             }
             buffWriterFeatures.close();
         } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
     protected static void processScalabilityStep(ProgrammingLanguage programmingLanguage,
                                                  BufferedWriter buffWriterFeatures,
                                                  Socket socket, Object treeQuery) throws IOException {
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        out.print("PYTHON" + "\r\n");
-        out.flush();
-
-        double timePython = Double.parseDouble(stdIn.readLine().substring(0, 5));
-
-        String in = stdIn.readLine();
-        if (in.equals("JAVA")) {
+        long time = System.currentTimeMillis();
+        if (OnlinePipeline.sendMessageToPythonServer(socket)) {
+            double timePython = (System.currentTimeMillis() - time) / 1000.0;
             /* *
              * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
              * */

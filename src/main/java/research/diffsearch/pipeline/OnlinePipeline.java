@@ -1,22 +1,24 @@
 package research.diffsearch.pipeline;
 
-import matching.Matching;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.*;
+import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.pipeline.feature.BaseFeatureExtractionPipeline;
-import research.diffsearch.util.*;
+import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
+import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.ProgrammingLanguageDependent;
+import research.diffsearch.util.QueryUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import static research.diffsearch.util.FilePathUtils.*;
 
@@ -34,135 +36,61 @@ public class OnlinePipeline implements
         this.language = language;
     }
 
-    /**
-     * Performs a diff search on the given query.
-     *
-     * @param query        : the search query.
-     * @param socketPython : the python server socket.
-     * @return a list of found code changes.
-     */
-    public static List<CodeChangeWeb> runDiffsearchOnline(String query,
-                                                          Socket socketPython) {
-        return runDiffsearchOnline(query, socketPython, Config.PROGRAMMING_LANGUAGE, Integer.MAX_VALUE);
-    }
-
-    /**
-     * Performs a diff search on the given query.
-     *
-     * @param query         : the search query.
-     * @param socketPython  : the python server socket.
-     * @param language      : the programming language
-     * @param matchingLimit : maximum amount of results, all other results will be capped.
-     * @return a list of found code changes.
-     */
-    public static List<CodeChangeWeb> runDiffsearchOnline(String query,
-                                                          Socket socketPython,
-                                                          ProgrammingLanguage language,
-                                                          int matchingLimit) {
-        Object tree = FeatureExtractionPipelineOld.queryFeatureExtraction(query, language);
-        if (tree == null) {
-            logger.error("Illegal Query: {}", query);
-            return PipelineOld.getErrorResult();
-        }
-        logger.info("Running diffsearch for query {}", query);
-        return diffsearchOnline(tree, query, socketPython, language, matchingLimit);
-    }
-
-    /**
-     * Method that implements a deep recursive comparison between query tree and change trees to find
-     * matching changes.
-     *
-     * @param treeQuery     : query Tree
-     * @param socket        : python server socket
-     * @param language      : the programming language
-     * @param matchingLimit : maximum amount of results, all other results will be capped.
-     * @return number of matching changes found
-     */
-    static List<CodeChangeWeb> diffsearchOnline(Object treeQuery, String query, Socket socket,
-                                                ProgrammingLanguage language,
-                                                int matchingLimit) {
+    public static boolean sendMessageToPythonServer(Socket socket) {
         try {
-            if (!PipelineOld.writeAndCheckLanguage(socket)) return Collections.emptyList();
+            Objects.requireNonNull(socket);
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.print("PYTHON" + "\r\n");
+            out.flush();
 
-            /* *******************************
-             * FINAL MATCHING STAGE:  Deep tree comparison as final matching.
-             * */
+            // double timePython = Double.parseDouble(stdIn.readLine().substring(0, 5));
 
-            return processCandidates(treeQuery, query, language, matchingLimit);
+            String in = stdIn.readLine();
+
+            if (!in.equals("JAVA"))
+                return false;
+
         } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
-            return Collections.emptyList();
+            logger.error(e.getMessage(), e);
+            return false;
         }
+        return true;
     }
 
-    public static List<CodeChangeWeb> processCandidates(Object queryTree, String query,
-                                                        ProgrammingLanguage language,
-                                                        int matchingLimit) throws IOException {
-        int matchingCounter = 0;
-        ParseTree parseTreeQuery = TreeObjectUtils.getParseTree(queryTree, language);
-
-        List<CodeChangeWeb> outputList = new ArrayList<>();
-        Iterable<String> allLines = getAllLines(CANDIDATE_CHANGES);
-        BufferedReader infoReader = PipelineOld.getInfoReader();
-
-        for (String candidate : allLines) {
-            String candidateUrl = infoReader.readLine();
-
-            Object changeTree = TreeObjectUtils.getChangeTree(candidate, language);
-            ParseTree changeParseTree = TreeObjectUtils.getParseTree(changeTree, language);
-
-            Matching matching = new Matching(parseTreeQuery, TreeObjectUtils.getParser(queryTree, language));
-
-            if (matching.isMatch(changeParseTree, TreeObjectUtils.getParser(changeTree, language))) {
-                List<String> list = Arrays.asList(candidate.split("-->"));
-
-                if (PipelineOld.isNotEqualCodeChange(candidate)) {
-                    String[] urlLine =
-                            PipelineOld.computeCandidateUrl(candidateUrl).split("-->");
-                    CodeChangeWeb codeChangeWeb = new CodeChangeWeb(urlLine[0], urlLine[1],
-                            list.get(0), list.get(1), query);
-                    outputList.add(codeChangeWeb);
-
-                    matchingCounter++;
-
-                    if (matchingCounter == matchingLimit) {
-                        return outputList;
-                    }
-                }
+    public List<CodeChangeWeb> runDiffSearch(String input) {
+        try {
+            logger.info("Processing query " + input);
+            // write feature vector to file
+            var featureVector = Pipeline.from(QueryUtil::formatQuery)
+                    .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
+                    .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline())
+                    .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
+                    .collect(input);
+            // query was invalid:
+            if (featureVector.isEmpty()) {
+                return List.of(CodeChangeWeb.INVALID_QUERY_CODE_CHANGE);
             }
+
+            // matching in this pipeline
+            if (sendMessageToPythonServer(pythonSocket)) {
+                return new MatchingPipeline(getProgrammingLanguage())
+                                .parallelUntilHere(16)
+                                .collect(getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO, input))
+                                .orElse(Collections.emptyList());
+            } else {
+                logger.error("Connection with python failed.");
+            }
+
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
-        return outputList;
+        return List.of(CodeChangeWeb.ERROR_CODE_CHANGE);
     }
 
     @Override
-    public void process(String input, int index, BiConsumer<List<CodeChangeWeb>, Integer> resultConsumer) {
-        try {
-            // write feature vector to file
-            Pipeline.from(QueryUtil::formatQuery)
-                    .connect(PipelineOld.getDefaultFeatureExtractionPipeline())
-                    .connect(Util::featureVectorToString)
-                    .connect(getStringFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
-                    .processSync(input);
-
-            // matching/measurements in this pipeline
-            if (PipelineOld.writeAndCheckLanguage(pythonSocket)) {
-                resultConsumer.accept(
-                        new MatchingPipeline(getProgrammingLanguage())
-                                .processSync(getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO, input)),
-                        index);
-            } else {
-                resultConsumer.accept(new ArrayList<>(0), index);
-            }
-
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public Socket getPythonSocket() {
-        return pythonSocket;
+    public void process(String input, int index, IndexedConsumer<List<CodeChangeWeb>> resultConsumer) {
+        resultConsumer.accept(runDiffSearch(input), index);
     }
 
     @Override

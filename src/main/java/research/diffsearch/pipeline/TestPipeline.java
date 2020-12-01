@@ -2,9 +2,9 @@ package research.diffsearch.pipeline;
 
 import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.Config;
-import research.diffsearch.Java_Tree;
 import research.diffsearch.Matching_Methods;
-import research.diffsearch.util.TreeUtils;
+import research.diffsearch.tree.Java_Tree;
+import research.diffsearch.tree.TreeUtils;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class TestPipeline {
     /*public static void small_test(Java_Tree tree_query, Tree query_old, Tree query_new, BufferedWriter buff_writer_results, String query_string) {
         String candidate = "if(x>0){<...>} --> if(x<0){<...>} ";

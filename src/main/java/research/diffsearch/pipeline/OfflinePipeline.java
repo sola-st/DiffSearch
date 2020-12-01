@@ -4,15 +4,17 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.PipelineOld;
+import research.diffsearch.tree.TreeObjectUtils;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.TreeObjectUtils;
+import research.diffsearch.util.Util;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,14 +26,15 @@ public class OfflinePipeline {
         try {
             logger.debug("Starting offline pipeline [{}]", language.name());
             List<String> outputList = new ArrayList<>();
-            if (!PipelineOld.writeAndCheckLanguage(socket)) {
+            if (!OnlinePipeline.sendMessageToPythonServer(socket)) {
                 return outputList;
             }
 
             /* FINAL MATCHING STAGE:  Deep tree comparison as final matching. */
             Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.CANDIDATE_CHANGES);
             ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, language);
-            BufferedReader infoReader = PipelineOld.getInfoReader();
+            BufferedReader infoReader = new BufferedReader(
+                    new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
 
             for (String candidate : allLines) {
                 String candidateUrl = infoReader.readLine();
@@ -40,14 +43,18 @@ public class OfflinePipeline {
                 ParseTree changeParseTree = TreeObjectUtils.getParseTree(changeTree, language);
                 Matching matching = new Matching(parseTree, TreeObjectUtils.getParser(queryTree, language));
 
-                PipelineOld.updateOutputList(outputList, candidate, candidateUrl,
-                        matching.isMatch(changeParseTree, TreeObjectUtils.getParser(changeTree, language)), true);
+                if (matching.isMatch(changeParseTree, TreeObjectUtils.getParser(changeTree, language))) {
+                    List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+
+                    if (!list.get(1).equals(list.get(0))) {
+                        outputList.add(candidate + " [url] " + Util.computeCandidateUrl(candidateUrl));
+                    }
+                }
             }
 
             return outputList;
         } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return Collections.emptyList();
     }
