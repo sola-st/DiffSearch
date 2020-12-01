@@ -1,8 +1,9 @@
 import json
 import os
 import re
-import time
+
 import pygit2 as git
+
 
 def repo_cloning(filenameInput: str, pathOutput: str) -> None:
     with open(filenameInput) as fh:
@@ -29,5 +30,3 @@ def repo_cloning(filenameInput: str, pathOutput: str) -> None:
             except Exception as e:
                 print('[Error] cloning repository:', str(e))
                 continue
-
-

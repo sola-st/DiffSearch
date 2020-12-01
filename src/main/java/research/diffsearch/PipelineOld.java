@@ -1,25 +1,23 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.Tree;
-import org.apache.commons.lang3.StringUtils;
-import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
-import research.diffsearch.pipeline.feature.ParentChildFeatureExtractor;
-import research.diffsearch.pipeline.feature.BaseFeatureExtractionPipeline;
-import research.diffsearch.pipeline.feature.TriangleFeatureExtractor;
-import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.tree.Java_Tree;
+import research.diffsearch.tree.Javascript_Tree;
+import research.diffsearch.tree.TreeUtils;
 import research.diffsearch.util.FilePathUtils;
-import research.diffsearch.util.TreeUtils;
 
 import java.io.*;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+@SuppressWarnings("ALL")
 public class PipelineOld {
 
     static AtomicInteger number_matching = new AtomicInteger(0);
@@ -458,45 +456,6 @@ public class PipelineOld {
 
     }
 
-    /**
-     * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
-     */
-    public static double search_candidate_changes() {
-        Process python_Nearest_Neighbor_Search;
-        String line = null;
-        double ret = -1;
-        long startTime_gitdiff = System.currentTimeMillis();
-
-        try {
-
-            python_Nearest_Neighbor_Search = Runtime
-                    .getRuntime().exec(Config.PYTHON_CMD +
-                                       " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
-
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
-
-            int exitCode = python_Nearest_Neighbor_Search.waitFor();
-            if (exitCode != 0) {
-
-                System.out.println("Here is the standard error of the command:\n");
-                String s;
-                while ((s = stdError.readLine()) != null) {
-                    System.out.println(s);
-                }
-                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
-            }
-
-            python_Nearest_Neighbor_Search.destroy();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
-        System.out.println("INDEX LOADED in " + gitdiff_extraction / 1000 + " seconds.\n");
-
-        return ret;
-    }
 
     public static void port_close(int port) {
         Process python_Nearest_Neighbor_Search;
@@ -566,40 +525,6 @@ public class PipelineOld {
 
         long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
         System.out.println("INDEX LOADED in " + gitdiff_extraction / 1000 + " seconds.\n");
-
-        return ret;
-    }
-
-    /**
-     * Method that creates a new process that launches Python script containing the FAISS Framework, that clusters changes with query.
-     */
-    public static double search_candidate_changes_new() {
-        Process python_Nearest_Neighbor_Search;
-        String line = null;
-        double ret = -1;
-
-        try {
-            python_Nearest_Neighbor_Search = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py");
-
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(python_Nearest_Neighbor_Search.getErrorStream()));
-
-            int exitCode = python_Nearest_Neighbor_Search.waitFor();
-            if (exitCode != 0) {
-
-                System.out.println("Here is the standard error of the command:\n");
-                String s;
-                while ((s = stdError.readLine()) != null) {
-                    System.out.println(s);
-                }
-                throw new IOException("FAISS_Nearest_Neighbor_Search.py exited with error " + exitCode + ".\n");
-            }
-
-            python_Nearest_Neighbor_Search.destroy();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         return ret;
     }
@@ -955,84 +880,6 @@ public class PipelineOld {
         }
 
         return escapedData;
-    }
-
-
-    public static boolean isNotEqualCodeChange(String candidate) {
-        List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
-        return !list.get(1).equals(list.get(0));
-    }
-
-    public static List<CodeChangeWeb> getErrorResult() {
-        return List.of(new CodeChangeWeb("The query is not correct, please try again.",
-                " ", " ", " "));
-    }
-
-    public static BufferedReader getInfoReader() throws FileNotFoundException {
-        return new BufferedReader(
-                new FileReader("./src/main/resources/Features_Vectors/candidate_changes_info.txt"));
-    }
-
-    public static void updateOutputList(List<String> outputList, String candidate, String candidateUrl,
-                                        boolean match, boolean addUrl) {
-        if (match) {
-            List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
-
-            if (!list.get(1).equals(list.get(0))) {
-                if (addUrl) {
-                    outputList.add(candidate + " [url] " + computeCandidateUrl(candidateUrl));
-                } else {
-                    outputList.add(candidate);
-                }
-            }
-        }
-    }
-
-    public static boolean writeAndCheckLanguage(Socket socket) {
-        try {
-            Objects.requireNonNull(socket);
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.print("PYTHON" + "\r\n");
-            out.flush();
-
-            Double.parseDouble(stdIn.readLine().substring(0, 5));
-
-            String in = stdIn.readLine();
-
-            if (!in.equals("JAVA"))
-                return false;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline() {
-        var pipeline = new BaseFeatureExtractionPipeline();
-        pipeline.setSingleFeatureVectorLength(Config.SINGLE_FEATURE_VECTOR_LENGTH);
-        pipeline.addFeatureExtractor(
-                new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-        pipeline.addFeatureExtractor(
-                new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-        return pipeline;
-    }
-
-    public static String computeCandidateUrl(String candidate) {
-        String candidate_url = "https://github.com/";
-        String repository = "";
-        String commit = "";
-
-        List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
-        if (items.size() > 2) {
-            commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
-            // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
-            repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("-", "/");
-        } else {
-            return "";
-        }
-        return candidate_url + repository + "/commit/" + commit + "-->" + items.get(1);
     }
 
 }

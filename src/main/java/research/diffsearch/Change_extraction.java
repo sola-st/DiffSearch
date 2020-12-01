@@ -1,7 +1,8 @@
 package research.diffsearch;
 
 import com.google.gson.Gson;
-import difflib.*;
+import difflib.DiffUtils;
+import difflib.Patch;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
+@SuppressWarnings("ALL")
 public class Change_extraction {
     /**
      * Cloning and git diff computation of a git repository (not complete)
