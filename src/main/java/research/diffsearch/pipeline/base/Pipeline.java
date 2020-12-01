@@ -1,37 +1,109 @@
 package research.diffsearch.pipeline.base;
 
-import java.sql.SQLOutput;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public interface Pipeline<I, O> {
 
-    void process(I input, int index, BiConsumer<O, Integer> outputConsumer);
-
-    default void execute(Iterable<I> inputs, BiConsumer<O, Integer> outputConsumer) {
-        int index = 0;
-        for (I input : inputs) {
-            process(input, index, outputConsumer);
-            index++;
-        }
-        after();
-    }
+    void process(I input, int index, IndexedConsumer<O> outputConsumer);
 
     default void execute(Iterable<I> inputs) {
-        execute(inputs, (o, integer) -> {
+        Object sync = new Object();
+        var executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            int index = 0;
+            var inputsList = StreamSupport.stream(inputs.spliterator(), false).collect(Collectors.toList());
+            int size = inputsList.size();
+            AtomicInteger processed = new AtomicInteger(0);
+
+            for (I input : inputsList) {
+                process(input, index, (result, index1) -> {
+                    processed.getAndIncrement();
+                    if (processed.get() == size) {
+                        synchronized (sync) {
+                            sync.notifyAll();
+                        }
+                    }
+                }
+
+                );
+                index++;
+            }
         });
+
+        synchronized (sync) {
+            try {
+                sync.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        after();
+        executor.shutdown();
+    }
+
+    default void execute(I input) {
+        execute(List.of(input));
+    }
+
+    default Optional<O> collect(I input) {
+        return collect(List.of(input)).stream().findFirst();
+    }
+
+    default List<O> collect(Iterable<I> inputs) {
+        Object sync = new Object();
+
+        var collectedResults = new ArrayList<O>();
+        var executor = Executors.newSingleThreadExecutor();
+
+        executor.submit(() -> {
+            int index = 0;
+
+            var inputsList = StreamSupport.stream(inputs.spliterator(), false).collect(Collectors.toList());
+            int size = inputsList.size();
+            AtomicInteger processed = new AtomicInteger(0);
+
+            for (I input : inputsList) {
+                process(input, index, (result, index1) -> {
+                    synchronized (collectedResults) {
+                        processed.getAndIncrement();
+                        if (result != null) {
+                            collectedResults.add(result);
+                        }
+                        if (processed.get() == size) {
+                            synchronized (sync) {
+                                sync.notifyAll();
+                            }
+                        }
+                    }
+                });
+                index++;
+            }
+        });
+
+        synchronized (sync) {
+            try {
+                sync.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        after();
+        executor.shutdown();
+        return collectedResults;
     }
 
     default <N> Pipeline<I, N> connect(Pipeline<O, N> otherPipeline) {
         return new Pipeline<>() {
             @Override
-            public void process(I input, int index, BiConsumer<N, Integer> outputConsumer) {
+            public void process(I input, int index, IndexedConsumer<N> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) ->
                         otherPipeline.process(firstOutput, index2, outputConsumer));
             }
@@ -40,11 +112,6 @@ public interface Pipeline<I, O> {
             public void after() {
                 Pipeline.this.after();
                 otherPipeline.after();
-            }
-
-            @Override
-            public int getSize() {
-                return Pipeline.this.getSize();
             }
         };
     }
@@ -65,12 +132,22 @@ public interface Pipeline<I, O> {
         return connect(Pipeline.from(function));
     }
 
+    default Pipeline<I, O> filter(Predicate<O> predicate) {
+        return connect(getFilter(predicate));
+    }
+
+    default Pipeline<I, O> filter(BiPredicate<O, Integer> predicate) {
+        return connect(getFilter(predicate));
+    }
+
     default Pipeline<I, O> peek(Consumer<O> watcher) {
         return new Pipeline<>() {
             @Override
-            public void process(I input, int index, BiConsumer<O, Integer> outputConsumer) {
+            public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) -> {
-                    watcher.accept(firstOutput);
+                    if (input != null) {
+                        watcher.accept(firstOutput);
+                    }
                     outputConsumer.accept(firstOutput, index2);
                 });
             }
@@ -78,11 +155,6 @@ public interface Pipeline<I, O> {
             @Override
             public void after() {
                 Pipeline.this.after();
-            }
-
-            @Override
-            public int getSize() {
-                return Pipeline.this.getSize();
             }
         };
     }
@@ -90,9 +162,11 @@ public interface Pipeline<I, O> {
     default Pipeline<I, O> peek(BiConsumer<O, Integer> watcher) {
         return new Pipeline<>() {
             @Override
-            public void process(I input, int index, BiConsumer<O, Integer> outputConsumer) {
+            public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) -> {
-                    watcher.accept(firstOutput, index2);
+                    if (input != null) {
+                        watcher.accept(firstOutput, index2);
+                    }
                     outputConsumer.accept(firstOutput, index2);
                 });
             }
@@ -101,132 +175,58 @@ public interface Pipeline<I, O> {
             public void after() {
                 Pipeline.this.after();
             }
-
-            @Override
-            public int getSize() {
-                return Pipeline.this.getSize();
-            }
         };
     }
 
-    default Pipeline<I, O> parallel() {
-        return new Pipeline<>() {
-            private final ExecutorService executorService = Executors.newCachedThreadPool();
-            private volatile int size = 0;
-
-            @Override
-            public synchronized void process(I input, int index, BiConsumer<O, Integer> outputConsumer) {
-
-                if (index > size) {
-                    size = index;
-                }
-
-                var future = executorService.submit(() -> {
-                    Pipeline.this.process(input, index, outputConsumer);
-                });
-
-                if (index % 1000 == 0 && index != 0) {
-                    try {
-                        future.get();
-                        TimeUnit.SECONDS.sleep(30);
-                    } catch (InterruptedException | ExecutionException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-
-            @Override
-            public void after() {
-                Pipeline.this.after();
-            }
-
-            @Override
-            public synchronized int getSize() {
-                return size;
-            }
-        };
+    default Pipeline<I, O> parallelUntilHere() {
+        return parallelUntilHere(4);
     }
 
-    default Pipeline<I, O> synchronize() {
-        return new Pipeline<>() {
-            private final Map<Integer, O> queue = new ConcurrentHashMap<>();
-            private volatile int currentIndex;
-            private volatile boolean isFinished = false;
-            private volatile boolean afterWasCalled = false;
-
-            @Override
-            public synchronized void process(I input, int index, BiConsumer<O, Integer> outputConsumer) {
-                Pipeline.this.process(input, index, new BiConsumer<>() {
-                    @Override
-                    public synchronized void accept(O o, Integer innerIndex) {
-                        if (innerIndex == currentIndex) {
-                            outputConsumer.accept(o, innerIndex);
-                            currentIndex++;
-                            if (afterWasCalled && innerIndex == Pipeline.this.getSize()) {
-                                isFinished = true;
-                                after();
-                            }
-                        } else {
-                            if (queue.size() % 1000 == 0 && !queue.isEmpty()) {
-                                System.out.println("WArning, large queue with size " + queue.size());
-                            }
-                            queue.put(innerIndex, o);
-                        }
-
-
-                        for (Map.Entry<Integer, O> entry : queue.entrySet()) {
-                            Integer key = entry.getKey();
-                            if (key == currentIndex) {
-                                accept(entry.getValue(), key);
-                            }
-                        }
-                        queue.remove(currentIndex);
-                    }
-                });
-            }
-
-            @Override
-            public int getSize() {
-                return Pipeline.this.getSize();
-            }
-
-            @Override
-            public synchronized void after() {
-                afterWasCalled = true;
-                if (isFinished) {
-                    Pipeline.this.after();
-                    // prevent multiple calls to this method
-                    isFinished = false;
-                }
-            }
-        };
+    default Pipeline<I, O> parallelUntilHere(int threadCount) {
+        return new ParallelPipeline<>(this, threadCount);
     }
 
     default void after() {
 
     }
 
-    default O processSync(I input, int index) {
-        final Object[] result = new Object[]{null};
-        process(input, index, (o, integer) -> result[0] = o);
-        after();
-        //noinspection unchecked
-        return (O) result[0];
+    static <T> Pipeline<T, T> getFilter(Predicate<T> predicate) {
+        return (input, index, outputConsumer) -> {
+            if (predicate.test(input)) {
+                outputConsumer.accept(input, index);
+            } else {
+                outputConsumer.skip(index);
+            }
+        };
     }
 
-    default O processSync(I input) {
-        return processSync(input, 0);
-    }
-
-    default int getSize() {
-        return -1;
+    static <T> Pipeline<T, T> getFilter(BiPredicate<T, Integer> predicate) {
+        return (input, index, outputConsumer) -> {
+            if (predicate.test(input, index)) {
+                outputConsumer.accept(input, index);
+            } else {
+                outputConsumer.skip(index);
+            }
+        };
     }
 
     static <T, R> Pipeline<T, R> from(Function<T, R> function) {
-        return (input, index, outputConsumer) -> outputConsumer.accept(function.apply(input), index);
+        return (input, index, outputConsumer) -> {
+            if (input != null) {
+                outputConsumer.accept(function.apply(input), index);
+            } else {
+                outputConsumer.skip(index);
+            }
+        };
     }
 
     static <T, R> Pipeline<T, R> from(BiFunction<T, Integer, R> function) {
-        return (input, index, outputConsumer) -> outputConsumer.accept(function.apply(input, index), index);
+        return (input, index, outputConsumer) -> {
+            if (input != null) {
+                outputConsumer.accept(function.apply(input, index), index);
+            } else {
+                outputConsumer.skip(index);
+            }
+        };
     }
 }
