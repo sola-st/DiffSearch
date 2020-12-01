@@ -1,8 +1,12 @@
 package research.diffsearch.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Util {
 
@@ -38,12 +42,28 @@ public class Util {
     }
 
     public static String featureVectorToString(int[] vector) {
-        StringBuilder builder = new StringBuilder();
+        return Arrays.stream(vector)
+                .mapToObj(Integer::toString)
+                .collect(Collectors.joining(","));
+    }
 
-        for (int element : vector) {
-            builder.append(element);
-            builder.append(",");
+    public static String formatDuration(long startTime, long endTime) {
+        return DurationFormatUtils.formatDuration(endTime - startTime, "mm'm':ss's':SSS'ms'");
+    }
+
+    public static String computeCandidateUrl(String candidate) {
+        String candidateUrl = "https://github.com/";
+        String repository = "";
+        String commit = "";
+
+        List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
+        if (items.size() > 2) {
+            commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
+            // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
+            repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("-", "/");
+        } else {
+            return "";
         }
-        return builder.toString();
+        return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
     }
 }
