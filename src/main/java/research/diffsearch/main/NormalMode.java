@@ -4,11 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.PipelineOld;
-import research.diffsearch.pipeline.FeatureExtractionPipelineOld;
+import research.diffsearch.tree.Python3_Tree;
+import research.diffsearch.util.QueryUtil;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
+@SuppressWarnings("ALL")
 public class NormalMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(NormalMode.class);
@@ -31,7 +36,7 @@ public class NormalMode extends App {
             logger.info("FEATURE EXTRACTION STARTED.\n");
             realChanges = PipelineOld.feature_extraction(500000);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
+            logger.error(e.getMessage(), e);
             e.printStackTrace();
         }
 
@@ -44,7 +49,7 @@ public class NormalMode extends App {
             logger.info("INDEXING STARTED.\n");
             PipelineOld.indexing_candidate_changes((int) realChanges);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
+            logger.error(e.getMessage(), e);
             e.printStackTrace();
         }
 
@@ -65,11 +70,11 @@ public class NormalMode extends App {
 
         int i = 1;
 
-            /*while (true) {
+            while (true) {
                 //Java_Tree tree_query = null;
                 Python3_Tree tree_query = null;
                 //Javascript_Tree tree_query = null;
-                String query_input = null;
+                String queryInput = null;
                 try {
                     System.out.print("Enter ONLY the old code (blank line for the next step or END to end the program):\n");
                     Scanner input = new Scanner(System.in);
@@ -94,8 +99,8 @@ public class NormalMode extends App {
                         lineNew2 = input2.nextLine();
                         if (lineNew2.equals("END")) {
                             //removing useless files
-                          //  if(Config.CLEANUP)
-                           //     Pipeline.files_cleanup();
+                            //  if(Config.CLEANUP)
+                            //     Pipeline.files_cleanup();
                             logger.info("\n================================\nProgram finished successfully.");
                             return;
                         }
@@ -104,35 +109,26 @@ public class NormalMode extends App {
                         }
                         new_code.add(lineNew2);
                     }
-                    query_input = String.join(System.lineSeparator(), old_code) + "-->" + String.join(System.lineSeparator(), new_code);
+                    queryInput = String.join(System.lineSeparator(), old_code) + "-->" + String.join(System.lineSeparator(), new_code);
 
-                    //query_input = "ID binOP<0> LT; --> ID binOP<1> LT;";
-                   // tree_query = Pipeline.query_feature_extraction(query_input);
+                    //queryInput = "ID binOP<0> LT; --> ID binOP<1> LT;";
+                    // tree_query = Pipeline.query_feature_extraction(queryInput);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
 
-        String old_test_example = "ID<1>(ID<2>, LT<3>);";
-        String new_test_example = "ID<1>(LT<3>, ID<2>);";
+                if (QueryUtil.checkIfQueryIsValid(queryInput)) {
+                    logger.error("The query is not correct, please try again.\n");
+                    return;
+                }
 
-        String query_input;
-        query_input = String.join(System.lineSeparator(), old_test_example) + "-->"
-                + String.join(System.lineSeparator(), new_test_example);
-        var tree_query = FeatureExtractionPipelineOld.queryFeatureExtraction(query_input, Config.PROGRAMMING_LANGUAGE);
+                logger.info("QUERY CORRECT, START SEARCHING CODE CHANGES\n");
+                //List<String> output = diffsearch_online(tree_query, queryInput, socket_python);
 
-        if (tree_query == null) {
+                //logger.info(output.size() + " CODE CHANGES FOUND.\n");
 
-            logger.error("The query is not correct, please try again.\n");
-            return;
-            //continue;
-        }
-
-        logger.info("QUERY CORRECT, START SEARCHING CODE CHANGES\n");
-        //List<String> output = diffsearch_online(tree_query, query_input, socket_python);
-
-        //logger.info(output.size() + " CODE CHANGES FOUND.\n");
-
-        //return;
+                //return;
+            }
 
     }
 }

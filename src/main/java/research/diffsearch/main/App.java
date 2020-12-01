@@ -1,24 +1,21 @@
 package research.diffsearch.main;
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.Java_Tree;
-import research.diffsearch.PipelineOld;
-import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.server.PythonRunner;
+import research.diffsearch.tree.Java_Tree;
+import research.diffsearch.util.CliUtil;
 import research.diffsearch.util.ProgrammingLanguage;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -27,81 +24,48 @@ public abstract class App implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    protected static void startPythonServer() {
-        startPythonServer(30);
-    }
-
-    public static void startPythonServer(long timeout) {
+    public static void startPythonServer() {
         if (!Config.ONLY_JAVA) {
-            logger.info("FAISS SEARCHING STAGE STARTED.");
             try {
-                new Thread(PipelineOld::search_candidate_changes).start();
-                TimeUnit.SECONDS.sleep(timeout);
-            } catch (InterruptedException e) {
-                logger.error(e.getLocalizedMessage());
-                e.printStackTrace();
+                new PythonRunner("./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py",
+                        "./src/main/resources/Features_Vectors/faiss_java.index",
+                        Integer.toString(Config.k),
+                        Config.host,
+                        Integer.toString(Config.port))
+                .waitUntil(input -> input.toLowerCase().contains("server started"));
+            } catch (IOException | InterruptedException exception) {
+                logger.error(exception.getMessage(), exception);
             }
 
-            logger.info("FAISS SEARCHING STAGE DONE.");
         } else {
             logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
         }
     }
 
-    protected static ServerSocket getServerSocket() {
+    protected static ServerSocket getServerSocket() throws IOException {
         ServerSocket server;
-        try {
-            server = new ServerSocket(Config.port_web);
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
-            return null;
-        }
+        server = new ServerSocket(Config.port_web);
         logger.info("DiffSearch Server active on port " + Config.port_web);
         return server;
     }
 
-    protected static FileOutputStream getServerLog() {
-        try {
-            return new FileOutputStream(Config.server_log_file, true);
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
-            return null;
-        }
+    protected static FileOutputStream getServerLog() throws FileNotFoundException {
+        return new FileOutputStream(Config.server_log_file, true);
     }
 
-    protected static Socket getFaissSocket() {
-        try {
-            return new Socket(Config.host, Config.port);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-            logger.error("\nCONNECTION WITH SERVER FAISS FAILED.\n");
-            return null;
-        }
-    }
-
-    private static Options buildCLIOptions() {
-        return new Options()
-                .addOption("oj", "only-java", false, "does not start the python server")
-                .addOption("n", "normal", false, "launch DiffSearch in normal mode")
-                .addOption("s", "scalability", false, "launch DiffSearch in scalability mode")
-                .addOption("e", "effectiveness", false, "launch DiffSearch in effectiveness mode")
-                .addOption("g", "web-gui", false, "launch in web GUI mode")
-                .addOption("w", "web", false, "launch DiffSearch with web interface")
-                .addOption("l", "log", false, "save log to file")
-                .addOption("p", "port", true, "set the port for the web interface")
-                .addOption("r", "recall", false, "measure recall of queries (slow!)")
-                .addOption("py_port", true, "set the port for the python server")
-                .addOption("lang", "language", true, "the programming language (python, javascript or java")
-                .addOption("q", "query", true, "process a query")
-                .addOption("fe", "extract features from the corpus");
+    protected static Socket getFaissSocket() throws IOException {
+        return new Socket(Config.host, Config.port);
     }
 
     private static void parseArgs(String[] args) {
         CommandLineParser parser = new DefaultParser();
         try {
-            CommandLine commandLine = parser.parse(buildCLIOptions(), args);
+            Options options = CliUtil.buildCLIOptions();
+            CommandLine commandLine = parser.parse(options, args);
+
+            if (commandLine.hasOption("help")) {
+                new HelpFormatter().printHelp("dfs", options);
+            }
 
             Config.ONLY_JAVA = commandLine.hasOption("oj");
             Config.NORMAL = commandLine.hasOption("n");
@@ -113,6 +77,7 @@ public abstract class App implements Runnable {
             Config.QUERY_MODE = commandLine.hasOption("q");
             Config.MEASURE_RECALL = commandLine.hasOption("r");
             Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
+            Config.SILENT = commandLine.hasOption("silent");
 
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
@@ -127,9 +92,11 @@ public abstract class App implements Runnable {
                 Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.valueOf(
                         commandLine.getOptionValue("lang").toUpperCase());
             }
+            if (commandLine.hasOption("k")) {
+                Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
+            }
         } catch (ParseException | NumberFormatException exception) {
-            logger.error(exception.getLocalizedMessage());
-            exception.printStackTrace();
+            logger.error(exception.getMessage());
         }
     }
 
@@ -154,30 +121,6 @@ public abstract class App implements Runnable {
         } else if (Config.CORPUS_FEATURE_EXTRACTION) {
             app = new FeatureExtractionMode();
         }
-/*
-        Pipeline<Integer, Integer> pipeline = new Pipeline<>() {
-            @Override
-            public void process(Integer input, int index, BiConsumer<Integer, Integer> outputConsumer) {
-                try {
-                    System.out.println("Starting to sleep now");
-                    Thread.sleep(input);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                outputConsumer.accept(input, index);
-            }
-
-            @Override
-            public void after() {
-                System.out.println("Finished!");
-            }
-        };
-        System.out.println("Starting pipleline test");
-        pipeline.parallel()
-                .peek((x, index) -> System.out.println(index + " " + x))
-                .synchronize()
-                .peek((x, index) -> System.out.println("second " + index + " " + x))
-                .execute(List.of(500, 500, 1000, 200));*/
 
         if (app != null) {
             app.run();

@@ -7,6 +7,7 @@ import research.diffsearch.pipeline.OnlinePipeline;
 import research.diffsearch.pipeline.RecallPipeline;
 import research.diffsearch.util.Util;
 
+import java.io.IOException;
 import java.net.Socket;
 
 public class QueryMode extends App {
@@ -15,18 +16,20 @@ public class QueryMode extends App {
 
     @Override
     public void run() {
-        startPythonServer();
-        logger.info("DiffSearch in Query mode");
+        try {
+            startPythonServer();
+            logger.info("DiffSearch in Query mode");
 
-        Socket socketFaiss = getFaissSocket();
-        if (socketFaiss == null) {
-            return;
+            Socket socketFaiss = getFaissSocket();
+
+            long currentTime = System.currentTimeMillis();
+            new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                    .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE))
+                    .peek(result -> logger.info("Found {} results", result.size()))
+                    .peek(result -> Util.printOutputList(result, System.currentTimeMillis() - currentTime))
+                    .execute(Config.query);
+        } catch (IOException exception) {
+            logger.error(exception.getMessage(), exception);
         }
-
-        long currentTime = System.currentTimeMillis();
-        new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
-                .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE))
-                .peek(result -> Util.printOutputList(result, System.currentTimeMillis() - currentTime))
-                .processSync(Config.query);
     }
 }

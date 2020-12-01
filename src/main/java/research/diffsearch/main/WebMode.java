@@ -3,7 +3,7 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.DiffSearchWebServer;
+import research.diffsearch.server.DiffSearchWebServer;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,15 +18,19 @@ public class WebMode extends App {
     public void run() {
         startPythonServer();
 
-        Socket socketFaiss = getFaissSocket();
+        Socket socketFaiss;
         Socket socket;
-        ServerSocket server = getServerSocket();
+        ServerSocket server;
 
-        if (server == null || socketFaiss == null) {
+        FileOutputStream serverLog;
+        try {
+            serverLog = getServerLog();
+            server = getServerSocket();
+            socketFaiss = getFaissSocket();
+        } catch (IOException exception) {
+            logger.error(exception.getMessage(), exception);
             return;
         }
-
-        FileOutputStream serverLog = getServerLog();
 
         while (true) {
             try {
@@ -35,8 +39,7 @@ public class WebMode extends App {
                 DiffSearchWebServer client = new DiffSearchWebServer(socket, socketFaiss, serverLog);
                 client.start();
             } catch (IOException e) {
-                logger.error(e.getLocalizedMessage());
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
