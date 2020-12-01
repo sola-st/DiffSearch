@@ -1,1 +1,1 @@
-python3 target/classes/Python/FAISS_Nearest_Neighbor_Search.py
+python3 src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py
