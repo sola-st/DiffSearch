@@ -1,29 +1,34 @@
-package research.diffsearch;
+package research.diffsearch.tree;
 
-import ProgrammingLanguage.Python.Python3Lexer;
-import ProgrammingLanguage.Python.Python3Parser;
+import ProgrammingLanguage.JavaScript.ECMAScriptLexer;
+import ProgrammingLanguage.JavaScript.ECMAScriptParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /* Antlr4 command to create java classes using the terminal with Linux:
-java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java Python3.g4
+java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java ECMAScript.g4
 */
 
-/* Python3 AST class with some useful methods.*/
-public class Python3_Tree{
+@SuppressWarnings("ALL")
+public class Javascript_Tree {
     public String change_string;
-    private Python3Lexer lexer;
-    private  CommonTokenStream tokens;
-    private Python3Parser parser;
-    private  ParseTree parsetree;
-    private  ParserRuleContext ctx;
+    private ECMAScriptLexer lexer;
+    private CommonTokenStream tokens;
+    private ECMAScriptParser parser;
+    private ParseTree parsetree;
+    private ParserRuleContext ctx;
     public boolean error;
     public int [] features;
 
-    public Python3_Tree(String change){
+    public Javascript_Tree(String change){
         error = false;
         change_string = change;
-        lexer = new Python3Lexer(CharStreams.fromString(change));
+        try {
+            lexer = new  ECMAScriptLexer(CharStreams.fromString(change));
+        } catch (RecognitionException e) {
+            error = true;
+            System.out.println("LEXER ERROR " + change);
+        }
         lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
@@ -32,8 +37,13 @@ public class Python3_Tree{
             }
         });
 
-        tokens = new CommonTokenStream(lexer);
-        parser = new Python3Parser(tokens);
+        try {
+            tokens = new CommonTokenStream(lexer);
+            parser = new ECMAScriptParser(tokens);
+        } catch (RecognitionException e) {
+            error = true;
+            System.out.println("NEW PARSER ERROR " + change);
+        }
 
         parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
@@ -50,8 +60,17 @@ public class Python3_Tree{
             parsetree = parser.program();
         } catch (RecognitionException e) {
             error = true;
+            System.out.println("PARSER ERROR " + change);
         }
+/*
+        try {
+            CompletableFuture.runAsync(() -> parsetree = parser.program())
+                    .get(1, TimeUnit.SECONDS);
 
+        }catch(TimeoutException | InterruptedException | ExecutionException e) {
+            error = true;
+        }
+*/
         features = new int[Integer.MAX_VALUE/1048576]; //4096
     }
 
@@ -63,7 +82,7 @@ public class Python3_Tree{
         return parsetree.toStringTree(parser);
     }
 
-    Python3Lexer get_lexer() {
+    ECMAScriptLexer get_lexer() {
         return lexer;
     }
 
@@ -71,7 +90,7 @@ public class Python3_Tree{
         return tokens;
     }
 
-    public Python3Parser get_parser() {
+    public ECMAScriptParser get_parser() {
         return parser;
     }
 
@@ -89,7 +108,7 @@ public class Python3_Tree{
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;
 
         if (!toBeIgnored) {
-            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName =  ECMAScriptParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }
@@ -118,7 +137,7 @@ public class Python3_Tree{
                 && ctx.getChildCount() == 1
                 && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
-            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName =  ECMAScriptParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }

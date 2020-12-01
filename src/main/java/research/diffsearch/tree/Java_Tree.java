@@ -1,29 +1,30 @@
-package research.diffsearch;
+package research.diffsearch.tree;
 
-import ProgrammingLanguage.JavaScript.ECMAScriptLexer;
-import ProgrammingLanguage.JavaScript.ECMAScriptParser;
+import ProgrammingLanguage.Java.JavaLexer;
+import ProgrammingLanguage.Java.JavaParser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /* Antlr4 command to create java classes using the terminal with Linux:
-java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java ECMAScript.g4
+java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java JavaLexer.g4 JavaParser.g4
 */
 
-public class Javascript_Tree {
+@SuppressWarnings("ALL")
+public class Java_Tree {
     public String change_string;
-    private ECMAScriptLexer lexer;
+    private JavaLexer lexer;
     private CommonTokenStream tokens;
-    private ECMAScriptParser parser;
+    private JavaParser parser;
     private ParseTree parsetree;
     private ParserRuleContext ctx;
     public boolean error;
-    public int [] features;
+    public int[] features;
 
-    public Javascript_Tree(String change){
+    public Java_Tree(String change) {
         error = false;
         change_string = change;
         try {
-            lexer = new  ECMAScriptLexer(CharStreams.fromString(change));
+            lexer = new JavaLexer(CharStreams.fromString(change));
         } catch (RecognitionException e) {
             error = true;
             System.out.println("LEXER ERROR " + change);
@@ -38,7 +39,7 @@ public class Javascript_Tree {
 
         try {
             tokens = new CommonTokenStream(lexer);
-            parser = new ECMAScriptParser(tokens);
+            parser = new JavaParser(tokens);
         } catch (RecognitionException e) {
             error = true;
             System.out.println("NEW PARSER ERROR " + change);
@@ -52,7 +53,7 @@ public class Javascript_Tree {
             }
         });
 
-        if(parser.getNumberOfSyntaxErrors() > 0)
+        if (parser.getNumberOfSyntaxErrors() > 0)
             error = true;
 
         try {
@@ -61,19 +62,11 @@ public class Javascript_Tree {
             error = true;
             System.out.println("PARSER ERROR " + change);
         }
-/*
-        try {
-            CompletableFuture.runAsync(() -> parsetree = parser.program())
-                    .get(1, TimeUnit.SECONDS);
 
-        }catch(TimeoutException | InterruptedException | ExecutionException e) {
-            error = true;
-        }
-*/
-        features = new int[Integer.MAX_VALUE/1048576]; //4096
+        features = new int[Integer.MAX_VALUE / 1048576]; //4096
     }
 
-    String get_change_string() {
+    public String get_change_string() {
         return change_string;
     }
 
@@ -81,7 +74,7 @@ public class Javascript_Tree {
         return parsetree.toStringTree(parser);
     }
 
-    ECMAScriptLexer get_lexer() {
+    JavaLexer get_lexer() {
         return lexer;
     }
 
@@ -89,7 +82,7 @@ public class Javascript_Tree {
         return tokens;
     }
 
-    public ECMAScriptParser get_parser() {
+    public JavaParser get_parser() {
         return parser;
     }
 
@@ -97,7 +90,9 @@ public class Javascript_Tree {
         return parsetree;
     }
 
-    ParserRuleContext get_ast() {return ctx;}
+    ParserRuleContext get_ast() {
+        return ctx;
+    }
 
     public boolean isError() {
         return error;
@@ -107,7 +102,7 @@ public class Javascript_Tree {
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;
 
         if (!toBeIgnored) {
-            String ruleName =  ECMAScriptParser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }
@@ -133,19 +128,19 @@ public class Javascript_Tree {
 
     private void explore(RuleContext ctx, int indentation) {
         boolean toBeIgnored = ignoringWrappers
-                && ctx.getChildCount() == 1
-                && ctx.getChild(0) instanceof ParserRuleContext;
+                              && ctx.getChildCount() == 1
+                              && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
-            String ruleName =  ECMAScriptParser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }
             System.out.println(ruleName);
         }
-        for (int i=0;i<ctx.getChildCount();i++) {
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree element = ctx.getChild(i);
             if (element instanceof RuleContext) {
-                explore((RuleContext)element, indentation + (toBeIgnored ? 0 : 1));
+                explore((RuleContext) element, indentation + (toBeIgnored ? 0 : 1));
             }
         }
     }

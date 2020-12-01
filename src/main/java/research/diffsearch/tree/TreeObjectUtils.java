@@ -1,24 +1,26 @@
-package research.diffsearch.util;
+package research.diffsearch.tree;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
-import research.diffsearch.Java_Tree;
-import research.diffsearch.Javascript_Tree;
-import research.diffsearch.Python3_Tree;
+import research.diffsearch.util.ProgrammingLanguage;
 
 public class TreeObjectUtils {
 
     public static Object getChangeTree(String candidate, ProgrammingLanguage language) {
-        Object changeTree;
-        switch (language) {
-            case JAVA:
-                changeTree = new Java_Tree(candidate);
-                break;
-            case JAVASCRIPT:
-                changeTree = new Javascript_Tree(candidate);
-                break;
-            default:
-                changeTree = new Python3_Tree(candidate);
+        Object changeTree = null;
+        try {
+            switch (language) {
+                case JAVA:
+                    changeTree = new Java_Tree(candidate);
+                    break;
+                case JAVASCRIPT:
+                    changeTree = new Javascript_Tree(candidate);
+                    break;
+                default:
+                    changeTree = new Python3_Tree(candidate);
+            }
+        } catch (Exception e) {
+            // do nothing
         }
         return changeTree;
     }
