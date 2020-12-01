@@ -3,8 +3,8 @@ package research.diffsearch.pipeline.feature;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
+import research.diffsearch.tree.TreeObjectUtils;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.TreeObjectUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,18 +26,18 @@ public class TriangleFeatureExtractor extends AbstractFeatureExtractor {
 
     public void extractFeaturesRecursive(Tree t, int[] completeFeatureVector,
                                          int startPosition, List<String> ruleNames) {
-        int sum = 0;
-        sum += Trees.getNodeText(t, ruleNames).hashCode();
+        StringBuilder sum = new StringBuilder();
+        sum.append(Trees.getNodeText(t, ruleNames));
 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
-            sum += Trees.getNodeText(t.getChild(i), ruleNames).hashCode();
+            sum.append(Trees.getNodeText(t.getChild(i), ruleNames));
         }
 
-        // TODO change hash function
-
-        if (i > t.getChildCount()) {
-            completeFeatureVector[Math.abs(sum / 2097152)] = 1;
+        if (i > 0) {
+            int index = getFeatureVectorIndex(startPosition, sum.toString().hashCode(),
+                    getFeatureVectorLength());
+            completeFeatureVector[index]++;
         }
 
         for (i = 0; i < t.getChildCount(); i++) {

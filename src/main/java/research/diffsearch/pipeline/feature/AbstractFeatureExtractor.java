@@ -2,9 +2,6 @@ package research.diffsearch.pipeline.feature;
 
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 public abstract class AbstractFeatureExtractor implements FeatureExtractor {
 
     private final ProgrammingLanguage programmingLanguage;
@@ -15,6 +12,10 @@ public abstract class AbstractFeatureExtractor implements FeatureExtractor {
         this.featureVectorLength = featureVectorLength;
     }
 
+    public int getFeatureVectorIndex(int startIndex, int hashValue, double vectorLength) {
+        return Math.abs((int) (startIndex + (hashValue / (Integer.MAX_VALUE / vectorLength))));
+    }
+
     @Override
     public int getFeatureVectorLength() {
         return featureVectorLength;
@@ -23,12 +24,6 @@ public abstract class AbstractFeatureExtractor implements FeatureExtractor {
     @Override
     public ProgrammingLanguage getProgrammingLanguage() {
         return programmingLanguage;
-    }
-
-    public int hashFunction(String... input) {
-        return Arrays.stream(input)
-                .mapToInt(Object::hashCode)
-                .sum() % getFeatureVectorLength();
     }
 
 }
