@@ -1,11 +1,11 @@
-package research.diffsearch;
+package research.diffsearch.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.pipeline.MatchingPipeline;
+import research.diffsearch.Config;
 import research.diffsearch.pipeline.OnlinePipeline;
+import research.diffsearch.pipeline.RecallPipeline;
 import research.diffsearch.util.CodeChangeWeb;
-import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.QueryUtil;
 import research.diffsearch.util.Util;
 
@@ -20,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static research.diffsearch.pipeline.OnlinePipeline.runDiffsearchOnline;
 
 public class DiffSearchWebServer extends Thread {
 
@@ -49,12 +47,11 @@ public class DiffSearchWebServer extends Thread {
             handleRequest();
 
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             try {
                 socket.close();
             } catch (IOException ioException) {
-                ioException.printStackTrace();
+                logger.error(ioException.getMessage(), ioException);
             }
         }
     }
@@ -68,20 +65,21 @@ public class DiffSearchWebServer extends Thread {
 
         List<CodeChangeWeb> outputList = new ArrayList<>();
 
-        long durationMatching = 0;
+        long durationMatching;
         boolean flagFirstConnection = false;
 
         String query = "";
 
+        long startTimeMatching = System.currentTimeMillis();
         if (postDataI > 0) {
             flagFirstConnection = true;
             query = getQuery(postData);
 
-            long startTimeMatching = System.currentTimeMillis();
             outputList = performSearch(query);
             Util.printOutputList(outputList, startTimeMatching);
         }
 
+        durationMatching = System.currentTimeMillis() - startTimeMatching;
         writeHeader(out);
         splitQuery(out, query);
 
@@ -98,7 +96,7 @@ public class DiffSearchWebServer extends Thread {
         logger.trace("Connection closed with thread " + Thread.currentThread().getId());
     }
 
-    protected static void writeOutput(PrintWriter out,
+    protected void writeOutput(PrintWriter out,
                                       List<CodeChangeWeb> outputList,
                                       long durationMatching,
                                       String result,
@@ -114,7 +112,7 @@ public class DiffSearchWebServer extends Thread {
                                        "====================================================================\n\n").getBytes()));
     }
 
-    protected static void writeOutputList(PrintWriter out,
+    protected void writeOutputList(PrintWriter out,
                                           List<CodeChangeWeb> outputList,
                                           long durationMatching,
                                           FileChannel channel) {
@@ -151,8 +149,7 @@ public class DiffSearchWebServer extends Thread {
                     channel.write(ByteBuffer.wrap((change + "\n").getBytes()));
                 }
             } catch (Exception e) {
-                logger.error(e.getLocalizedMessage());
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
@@ -209,13 +206,11 @@ public class DiffSearchWebServer extends Thread {
 
     protected List<CodeChangeWeb> performSearch(String query) {
         try {
-            return new MatchingPipeline(Config.PROGRAMMING_LANGUAGE)
-                    .processSync(
-                            FilePathUtils.getCodeChanges(
-                                    FilePathUtils.CANDIDATE_CHANGES, FilePathUtils.CANDIDATE_CHANGES_INFO, query));
+            return new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                    .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, query))
+                    .collect(query).orElseGet(Collections::emptyList);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return Collections.emptyList();
     }
