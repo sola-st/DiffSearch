@@ -1,33 +1,30 @@
-package research.diffsearch;
+package research.diffsearch.tree;
 
-import ProgrammingLanguage.Java.JavaLexer;
-import ProgrammingLanguage.Java.JavaParser;
+import ProgrammingLanguage.Python.Python3Lexer;
+import ProgrammingLanguage.Python.Python3Parser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /* Antlr4 command to create java classes using the terminal with Linux:
-java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java JavaLexer.g4 JavaParser.g4
+java -Xmx500M -cp /usr/local/lib/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Java Python3.g4
 */
 
-public class Java_Tree{
+/* Python3 AST class with some useful methods.*/
+@SuppressWarnings("ALL")
+public class Python3_Tree{
     public String change_string;
-    private JavaLexer lexer;
-    private CommonTokenStream tokens;
-    private JavaParser parser;
-    private ParseTree parsetree;
-    private ParserRuleContext ctx;
-    boolean error;
+    private Python3Lexer lexer;
+    private  CommonTokenStream tokens;
+    private Python3Parser parser;
+    private  ParseTree parsetree;
+    private  ParserRuleContext ctx;
+    public boolean error;
     public int [] features;
 
-    Java_Tree(String change){
+    public Python3_Tree(String change){
         error = false;
         change_string = change;
-        try {
-        lexer = new JavaLexer(CharStreams.fromString(change));
-        } catch (RecognitionException e) {
-            error = true;
-            System.out.println("LEXER ERROR " + change);
-        }
+        lexer = new Python3Lexer(CharStreams.fromString(change));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
@@ -36,13 +33,8 @@ public class Java_Tree{
             }
         });
 
-        try {
         tokens = new CommonTokenStream(lexer);
-        parser = new JavaParser(tokens);
-        } catch (RecognitionException e) {
-            error = true;
-            System.out.println("NEW PARSER ERROR " + change);
-        }
+        parser = new Python3Parser(tokens);
 
         parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
@@ -59,7 +51,6 @@ public class Java_Tree{
             parsetree = parser.program();
         } catch (RecognitionException e) {
             error = true;
-            System.out.println("PARSER ERROR " + change);
         }
 
         features = new int[Integer.MAX_VALUE/1048576]; //4096
@@ -73,7 +64,7 @@ public class Java_Tree{
         return parsetree.toStringTree(parser);
     }
 
-    JavaLexer get_lexer() {
+    Python3Lexer get_lexer() {
         return lexer;
     }
 
@@ -81,11 +72,11 @@ public class Java_Tree{
         return tokens;
     }
 
-    JavaParser get_parser() {
+    public Python3Parser get_parser() {
         return parser;
     }
 
-    ParseTree get_parsetree() {
+    public ParseTree get_parsetree() {
         return parsetree;
     }
 
@@ -99,7 +90,7 @@ public class Java_Tree{
         boolean toBeIgnored = !verbose && ctx.getChildCount() == 1 && ctx.getChild(0) instanceof ParserRuleContext;
 
         if (!toBeIgnored) {
-            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }
@@ -128,7 +119,7 @@ public class Java_Tree{
                 && ctx.getChildCount() == 1
                 && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
-            String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }

@@ -1,15 +1,8 @@
-package research.diffsearch;
+package research.diffsearch.server;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
+import research.diffsearch.Config;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -17,7 +10,8 @@ import java.util.StringTokenizer;
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable{
+@SuppressWarnings("ALL")
+public class JavaHTTPServer implements Runnable {
 
     static final File WEB_ROOT = new File("./src/main/resources/WebInterface");
     static final String DEFAULT_FILE = "main.html";

@@ -28,7 +28,7 @@ public class NodeUtil {
     private static Set<String> placeholderNames = new HashSet<>(Arrays.asList("LT", "ID", "binOP", "OP", "unOP", "EXPR"));
 
     public enum Kind {
-        UNNAMED_PLACEHOLDER, NAMED_PLACEHOLDER, NORMAL, WILDCARD, EMPTY;
+        UNNAMED_PLACEHOLDER, NAMED_PLACEHOLDER, NORMAL, WILDCARD, EMPTY
     }
 
     public Kind getKind(ParseTree t) {

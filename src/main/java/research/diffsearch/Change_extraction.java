@@ -1,11 +1,14 @@
 package research.diffsearch;
 
 import com.google.gson.Gson;
-import difflib.*;
+import difflib.DiffUtils;
+import difflib.Patch;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import research.diffsearch.util.CodeChange;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -13,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
+@SuppressWarnings("ALL")
 public class Change_extraction {
     /**
      * Cloning and git diff computation of a git repository (not complete)
@@ -88,17 +92,17 @@ public class Change_extraction {
                     String line = scanner.nextLine() + "  ";
 
                     //manage -old change
-                    if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
+                    if ((line.charAt(0) == '-') && (line.charAt(1) != '-')) {
 
                         //Manage sequential change without interruption: -old +new -old +new
-                        if (flag && temporary_list_old.size() > 0) {
+                        if (flag && !temporary_list_old.isEmpty()) {
                             ArrayList<String> change = new ArrayList<String>();
 
-                            if (temporary_list_new.size() == 0) {
+                            if (temporary_list_new.isEmpty()) {
                                 change.add(temporary_list_old.toString());
                                 change.add("_\n");
                             } else {
-                                if (temporary_list_old.size() == 0) {
+                                if (temporary_list_old.isEmpty()) {
                                     change.add("_\n");
                                     change.add(temporary_list_new.toString());
                                 } else {
@@ -107,16 +111,7 @@ public class Change_extraction {
                                 }
                             }
 
-                            if (change.get(0).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else if (change.get(1).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            }
+                            writeChange(writer, change);
                             change_number++;
 
                             temporary_list_old.clear();
@@ -160,16 +155,7 @@ public class Change_extraction {
                                 }
 
                                 //changes_list.add(change);
-                                if (change.get(0).equals("_\n")) {
-                                    assert writer != null;
-                                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                } else if (change.get(1).equals("_\n")) {
-                                    assert writer != null;
-                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                } else {
-                                    assert writer != null;
-                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                }
+                                writeChange(writer, change);
 
                                 change_number++;
 
@@ -182,7 +168,7 @@ public class Change_extraction {
 
                 //Last change
                 if (flag) {
-                    ArrayList<String> change = new ArrayList<String>();
+                    ArrayList<String> change = new ArrayList<>();
                     change.add(temporary_list_old.toString());
                     change.add(temporary_list_new.toString());
 
@@ -211,6 +197,19 @@ public class Change_extraction {
         writer.close();
 
         return change_number;
+    }
+
+    private static void writeChange(PrintWriter writer, ArrayList<String> change) {
+        if (change.get(0).equals("_\n")) {
+            assert writer != null;
+            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+        } else if (change.get(1).equals("_\n")) {
+            assert writer != null;
+            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+        } else {
+            assert writer != null;
+            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+        }
     }
 
     /**
@@ -265,16 +264,7 @@ public class Change_extraction {
                             }
                         }
 
-                        if (change.get(0).equals("_\n")) {
-                            assert writer != null;
-                            writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                        } else if (change.get(1).equals("_\n")) {
-                            assert writer != null;
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                        } else {
-                            assert writer != null;
-                            writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                        }
+                        writeChange(writer, change);
                         change_number++;
 
                         temporary_list_old.clear();
@@ -318,16 +308,7 @@ public class Change_extraction {
                             }
 
                             //changes_list.add(change);
-                            if (change.get(0).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else if (change.get(1).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            }
+                            writeChange(writer, change);
 
                             change_number++;
 
@@ -428,16 +409,7 @@ public class Change_extraction {
                                 }
                             }
 
-                            if (change.get(0).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else if (change.get(1).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            }
+                            writeChange(writer, change);
                             change_number++;
 
                             temporary_list_old.clear();
@@ -481,16 +453,7 @@ public class Change_extraction {
                                 }
 
                                 //changes_list.add(change);
-                                if (change.get(0).equals("_\n")) {
-                                    assert writer != null;
-                                    writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                } else if (change.get(1).equals("_\n")) {
-                                    assert writer != null;
-                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                } else {
-                                    assert writer != null;
-                                    writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                                }
+                                writeChange(writer, change);
 
                                 change_number++;
 
@@ -622,16 +585,7 @@ public class Change_extraction {
                                 }
                             }
 
-                            if (change.get(0).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else if (change.get(1).equals("_\n")) {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            } else {
-                                assert writer != null;
-                                writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
-                            }
+                            writeChange(writer, change);
                             change_number++;
 
                             temporary_list_old.clear();

@@ -1,16 +1,27 @@
 Same example of queries that return results:
 
-ID<1>(ID<2>, LT<3>);
-ID<1>(LT<3>, ID<2>);
+ID<1>(ID<2>, LT<3>);-->ID<1>(LT<3>, ID<2>);
 
-EXPR = ID<1>(<...>);
-EXPR = ID<1>(<...>);
+EXPR = ID<1>(<...>);-->EXPR = ID<1>(<...>);
 
-ID<1>(ID<2>, ID<3>);
-ID<1>(ID<3>, ID<2>);
+ID<1>(ID<2>, ID<3>);-->ID<1>(ID<3>, ID<2>);
 
-ID<1>(ID<2>, ID<3>);
-ID<1>(ID<3>, ID<2>);
+ID<1>(ID<2>, ID<3>);-->ID<1>(ID<3>, ID<2>);
 
-ID<0>.ID<1>(ID, LT)
-ID<0>.ID<1>(ID, LT)
+ID<0>.ID<1>(ID, LT)-->ID<0>.ID<1>(ID, LT)
+
+LT-->LT binOP LT
+
+return;-->return ID;
+
+System.out.println(EXPR);-->_
+
+ID<0> * ID<1>;-->ID<0> + ID<1>;
+
+EXPR = LT;-->EXPR = ID;
+
+_-->import java.io.ID;
+
+if (EXPR != null) {-->if (EXPR == null) {
+
+EXPR-->try {EXPR;} catch (ID ID) {<...>}

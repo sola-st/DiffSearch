@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static research.diffsearch.Pipeline.escapeSpecialCharacters;
-
+@SuppressWarnings("ALL")
 public class Matching_Methods {
 
     /**
@@ -20,7 +19,7 @@ public class Matching_Methods {
      * @param array_change_new_nodes : Array of new tokens in change tree
      * @return True if there is a match
      */
-    static boolean leaves_final_matching(String[] array_query_old_nodes, String[] array_query_new_nodes, String[] array_change_old_nodes, String[] array_change_new_nodes, String query_string, String candidate){
+    public static boolean leaves_final_matching(String[] array_query_old_nodes, String[] array_query_new_nodes, String[] array_change_old_nodes, String[] array_change_new_nodes, String query_string, String candidate){
         for(int i = 0; i < array_query_new_nodes.length; i++){
             switch(array_query_old_nodes[i]) {
 
