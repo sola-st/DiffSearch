@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,30 +13,35 @@ public class Util {
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printOutputList(List<CodeChangeWeb> output, long startTimeStamp) {
+        printOutputList(output, startTimeStamp, System.out);
+    }
+
+    public static void printOutputList(List<CodeChangeWeb> output, long startTimeStamp, PrintStream out) {
         final String ANSI_RED = "\u001B[31m";
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_GREEN = "\u001B[32m";
         if (!Config.SILENT) {
             if (!output.isEmpty()) {
-                System.out.println("************************** " + output.size() + " RESULTS ************************");
-                System.out.println("*");
+                out.println("*** " + output.size()
+                            + " RESULTS  for " + output.get(0) .query + "***");
+                out.println("*");
                 for (var change : output) {
                     for (var oldLine : change.codeChangeOld.split("\n")) {
-                        System.out.print("*  - ");
-                        System.out.println(ANSI_RED + oldLine + ANSI_RESET);
+                        out.print("*  - ");
+                        out.println(ANSI_RED + oldLine + ANSI_RESET);
                     }
                     for (var newLine : change.codeChangeNew.split("\n")) {
-                        System.out.print("*  + ");
-                        System.out.println(ANSI_GREEN + newLine + ANSI_RESET);
+                        out.print("*  + ");
+                        out.println(ANSI_GREEN + newLine + ANSI_RESET);
                     }
-                    System.out.print("*       ");
-                    System.out.println("at " + change.url);
-                    System.out.println("*       " + change.hunkLines);
-                    System.out.println("*");
+                    out.print("*       ");
+                    out.println("at " + change.url);
+                    out.println("*       " + change.hunkLines);
+                    out.println("*");
                 }
-                System.out.println("*********************************************************************************");
+                out.println("***");
             } else {
-                System.out.println("****************** No results found. **************");
+                out.println("*** No results found. ***");
             }
         }
 

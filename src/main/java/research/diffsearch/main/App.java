@@ -78,6 +78,7 @@ public abstract class App implements Runnable {
             Config.MEASURE_RECALL = commandLine.hasOption("r");
             Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
             Config.SILENT = commandLine.hasOption("silent");
+            Config.BATCH = commandLine.hasOption("b");
 
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
@@ -94,6 +95,15 @@ public abstract class App implements Runnable {
             }
             if (commandLine.hasOption("k")) {
                 Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
+            }
+            if (commandLine.hasOption("b")) {
+                var params = commandLine.getOptionValues("b");
+                if (params != null && params.length > 0) {
+                    Config.batchFilePath = params[0];
+                    if (params.length > 1) {
+                        Config.batchOutput = params[1];
+                    }
+                }
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());
@@ -120,6 +130,8 @@ public abstract class App implements Runnable {
             app = new QueryMode();
         } else if (Config.CORPUS_FEATURE_EXTRACTION) {
             app = new FeatureExtractionMode();
+        } else if (Config.BATCH) {
+            app = new BatchMode();
         }
 
         if (app != null) {

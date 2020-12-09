@@ -4,6 +4,7 @@ import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.StartedProcess;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 import research.diffsearch.Config;
 import research.diffsearch.util.Util;
@@ -25,6 +26,7 @@ import java.util.function.Predicate;
 public class PythonRunner {
 
     private final List<String> args = new ArrayList<>();
+    private StartedProcess pythonProcess;
 
     private final Logger logger;
 
@@ -59,7 +61,7 @@ public class PythonRunner {
         long startTime = System.currentTimeMillis();
 
         var waiter = new Object();
-        var pythonIndexing = new ProcessExecutor()
+        pythonProcess = new ProcessExecutor()
                 .command(args.toArray(new String[0]))
                 .redirectOutput(new LogOutputStream() {
                     @Override
@@ -75,7 +77,7 @@ public class PythonRunner {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
-            var ret = pythonIndexing.getFuture().get();
+            var ret = pythonProcess.getFuture().get();
             synchronized (waiter) {
                 waiter.notifyAll();
             }
@@ -87,8 +89,14 @@ public class PythonRunner {
             waiter.wait();
         }
         var endTime = System.currentTimeMillis();
-        logger.info("Python file returned in " + Util.formatDuration(startTime, endTime));
+        LoggerFactory.getLogger(getClass()).info("Python file returned in " + Util.formatDuration(startTime, endTime));
         executor.shutdown();
+    }
+
+    public void shutDownProcess() {
+        if (pythonProcess != null) {
+            pythonProcess.getProcess().destroy();
+        }
     }
 
     private void logPythonEvent(String pythonLogEvent) {

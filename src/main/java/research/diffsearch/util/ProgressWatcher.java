@@ -28,9 +28,10 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
     public void process(T input, int index, IndexedConsumer<T> outputConsumer) {
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
+            logger.info("{} started", progressName);
         }
         if (currentStepIndex < steps.length) {
-            if (index / (double) size > steps[currentStepIndex]) {
+            if (index / (double) size >= steps[currentStepIndex]) {
                 logger.info("{}: {}% ({}/{})", progressName, Math.round(steps[currentStepIndex] * 100), index, size);
                 currentStepIndex++;
             }

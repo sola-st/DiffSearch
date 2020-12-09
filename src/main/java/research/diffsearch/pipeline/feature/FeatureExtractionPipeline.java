@@ -56,15 +56,39 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
 
     @Override
     public void process(String input, int index, IndexedConsumer<int[]> outputConsumer) {
-        outputConsumer.accept(extractFeatures(input), index);
+        if (input != null) {
+            outputConsumer.accept(extractFeatures(input), index);
+        } else {
+            outputConsumer.skip(index);
+        }
     }
 
-    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline() {
+    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline();
         pipeline.addFeatureExtractor(
-                new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
+                new SplitFeatureExtractor(
+                        new TriangleFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery),
+                        SplitFeatureExtractor.SplitMode.ONLY_FIRST)
+        );
         pipeline.addFeatureExtractor(
-                new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
+                new SplitFeatureExtractor(
+                        new ParentChildFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery),
+                        SplitFeatureExtractor.SplitMode.ONLY_FIRST)
+        );
+        pipeline.addFeatureExtractor(
+                new SplitFeatureExtractor(
+                        new TriangleFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery),
+                        SplitFeatureExtractor.SplitMode.ONLY_SECOND)
+        );
+        pipeline.addFeatureExtractor(
+                new SplitFeatureExtractor(
+                        new ParentChildFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery),
+                        SplitFeatureExtractor.SplitMode.ONLY_SECOND)
+        );
         return pipeline;
     }
 }

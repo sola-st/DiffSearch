@@ -64,11 +64,14 @@ public class OnlinePipeline implements
             // write feature vector to file
             var featureVector = Pipeline.from(QueryUtil::formatQuery)
                     .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
-                    .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline())
+                    .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
+                    //.connect(new RemoveCollisionPipeline())
+                    //.connect(this::multiplyVector)
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .collect(input);
             // query was invalid:
             if (featureVector.isEmpty()) {
+                logger.warn("Invalid query:" + input);
                 return List.of(CodeChangeWeb.INVALID_QUERY_CODE_CHANGE);
             }
 
@@ -86,6 +89,15 @@ public class OnlinePipeline implements
             logger.error(e.getMessage(), e);
         }
         return List.of(CodeChangeWeb.ERROR_CODE_CHANGE);
+    }
+
+    private int[] multiplyVector(int[] vector) {
+        for (int i = 0; i < vector.length; i++) {
+            if (vector[i] == 0) {
+                vector[i] = 1;
+            }
+        }
+        return vector;
     }
 
     @Override

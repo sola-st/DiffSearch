@@ -7,20 +7,16 @@ import research.diffsearch.util.ProgrammingLanguage;
 public class TreeObjectUtils {
 
     public static Object getChangeTree(String candidate, ProgrammingLanguage language) {
-        Object changeTree = null;
-        try {
-            switch (language) {
-                case JAVA:
-                    changeTree = new Java_Tree(candidate);
-                    break;
-                case JAVASCRIPT:
-                    changeTree = new Javascript_Tree(candidate);
-                    break;
-                default:
-                    changeTree = new Python3_Tree(candidate);
-            }
-        } catch (Exception e) {
-            // do nothing
+        Object changeTree;
+        switch (language) {
+            case JAVA:
+                changeTree = new Java_Tree(candidate);
+                break;
+            case JAVASCRIPT:
+                changeTree = new Javascript_Tree(candidate);
+                break;
+            default:
+                changeTree = new Python3_Tree(candidate);
         }
         return changeTree;
     }

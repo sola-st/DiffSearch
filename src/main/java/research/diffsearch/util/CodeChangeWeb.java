@@ -9,43 +9,11 @@ public class CodeChangeWeb {
     public String codeChangeNew;
     public String query = "";
     public String fullChangeString = null;
+    public int rank = 0;
 
     public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
         this.codeChangeNew = codeChangeNew;
-    }
-
-    public CodeChangeWeb(String url, String hunkLines, String codeChangeOld, String codeChangeNew, String query) {
-        this.url = url;
-        this.hunkLines = hunkLines;
-        this.codeChangeOld = codeChangeOld;
-        this.codeChangeNew = codeChangeNew;
-        this.query = query;
-    }
-
-    public CodeChangeWeb(String url,
-                         String hunkLines,
-                         String codeChangeOld,
-                         String codeChangeNew,
-                         String query,
-                         String fullChangeString) {
-        this.url = url;
-        this.hunkLines = hunkLines;
-        this.codeChangeOld = codeChangeOld;
-        this.codeChangeNew = codeChangeNew;
-        this.query = query;
-        this.fullChangeString = fullChangeString;
-    }
-
-    public CodeChangeWeb(String urlCandidate,
-                         String lineCandidate,
-                         String codeChangeOldCandidate,
-                         String codeChangeNewCandidate) {
-        url = urlCandidate;
-        hunkLines = lineCandidate;
-        codeChangeOld = codeChangeOldCandidate;
-        codeChangeNew = codeChangeNewCandidate;
-        fullChangeString = codeChangeOldCandidate + " --> " + codeChangeNewCandidate;
     }
 
     @Override
@@ -120,6 +88,15 @@ public class CodeChangeWeb {
 
     public CodeChangeWeb setFullChangeString(String fullChangeString) {
         this.fullChangeString = fullChangeString;
+        return this;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public CodeChangeWeb setRank(int rank) {
+        this.rank = rank;
         return this;
     }
 

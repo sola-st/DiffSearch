@@ -24,7 +24,7 @@ public class QueryMode extends App {
 
             long currentTime = System.currentTimeMillis();
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
-                    .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE))
+                    .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, Config.query))
                     .peek(result -> logger.info("Found {} results", result.size()))
                     .peek(result -> Util.printOutputList(result, System.currentTimeMillis() - currentTime))
                     .execute(Config.query);

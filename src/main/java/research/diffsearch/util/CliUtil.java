@@ -1,5 +1,6 @@
 package research.diffsearch.util;
 
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 public class CliUtil {
@@ -20,6 +21,11 @@ public class CliUtil {
                 .addOption("k", true, "set value for k")
                 .addOption("fe", "extract features from the corpus")
                 .addOption("help", "show help")
+                .addOption(Option.builder("b")
+                        .longOpt("batch")
+                        .numberOfArgs(2)
+                        .optionalArg(true)
+                        .build())
                 .addOption("silent", "don't output results in console");
     }
 }

@@ -25,9 +25,11 @@ public class Config {
     public static boolean SILENT = false;
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
-    public static int k = 5000;
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 2048;
+    public static int k = 1000;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 128;
     public static boolean BATCH = false;
+    public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
+    public static String batchOutput = "./src/main/resources/batchOutput.txt";
 
     // socket
     public static int port_web = 8843;

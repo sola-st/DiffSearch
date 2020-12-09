@@ -1,10 +1,9 @@
 package research.diffsearch.pipeline.base;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
@@ -202,7 +201,7 @@ public interface Pipeline<I, O> {
 
     static <T> Pipeline<T, T> getFilter(BiPredicate<T, Integer> predicate) {
         return (input, index, outputConsumer) -> {
-            if (predicate.test(input, index)) {
+            if (input != null && predicate.test(input, index)) {
                 outputConsumer.accept(input, index);
             } else {
                 outputConsumer.skip(index);
