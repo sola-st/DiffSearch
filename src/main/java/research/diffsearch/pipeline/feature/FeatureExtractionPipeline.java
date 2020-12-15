@@ -63,8 +63,8 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
         var pipeline = new FeatureExtractionPipeline();
         pipeline.addFeatureExtractor(
                 new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-        pipeline.addFeatureExtractor(
+        /*pipeline.addFeatureExtractor( //Uncomment after new indexing
                 new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-        return pipeline;
+       */ return pipeline;
     }
 }

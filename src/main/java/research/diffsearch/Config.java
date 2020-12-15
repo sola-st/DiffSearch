@@ -5,7 +5,7 @@ import research.diffsearch.util.ProgrammingLanguage;
 public class Config {
 
     //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
-    public static String PYTHON_CMD = "wsl python3";
+    public static String PYTHON_CMD = "python3";
     public static String GITDIFF_FILE = "";
 
     //Programming language supported: PYTHON3, JAVA
@@ -26,7 +26,7 @@ public class Config {
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
     public static int k = 5000;
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 2048;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 2047; //1024
     public static boolean BATCH = false;
 
     // socket
