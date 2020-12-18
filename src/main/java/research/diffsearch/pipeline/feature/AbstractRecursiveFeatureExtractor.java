@@ -52,10 +52,9 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
     }
 
     protected boolean isQueryKeyword(String nodeText) {
-        /*var keywords = List.of("ID", "EXPR", "binOP", "upOP", "OP", "LT", "<...>");
+        var keywords = List.of("ID", "EXPR", "binOP", "upOP", "OP", "LT", "<...>");
         return keywords
                 .stream()
-                .anyMatch(nodeText::startsWith);*/
-        return false;
+                .anyMatch(nodeText::startsWith);
     }
 }

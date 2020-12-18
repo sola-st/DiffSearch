@@ -27,25 +27,34 @@ public class FilePathUtils {
 
     public static String getChangesFilePath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return CHANGES_STRINGS_PYTHON;
-            case JAVASCRIPT: return CHANGES_STRINGS_JS;
-            default: return CHANGES_STRINGS_JAVA;
+            case PYTHON:
+                return CHANGES_STRINGS_PYTHON;
+            case JAVASCRIPT:
+                return CHANGES_STRINGS_JS;
+            default:
+                return CHANGES_STRINGS_JAVA;
         }
     }
 
     public static String getChangesInfoFilePath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
-            case JAVASCRIPT: return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
-            default: return "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
         }
     }
 
     public static String getFeatureCSVPath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
-            case JAVASCRIPT: return "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
-            default: return "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
         }
     }
 
@@ -85,7 +94,14 @@ public class FilePathUtils {
                         .setRank(index + 1);
             }
         };
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+        var result = StreamSupport
+                .stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
+        var length = result.size();
+        if (length > 0) {
+            result.forEach(codeChangeWeb -> codeChangeWeb.numberOfCandidateChanges = length);
+        }
+        return result;
     }
 
     public static BufferedWriter getWriter(String path) throws IOException {
@@ -102,6 +118,7 @@ public class FilePathUtils {
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Objects::toString);
     }
+
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path, Function<T, String> mapper) throws IOException {
         return new Pipeline<>() {
             private final BufferedWriter writer = getWriter(path);

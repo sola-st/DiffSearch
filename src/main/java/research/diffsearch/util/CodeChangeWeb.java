@@ -10,6 +10,7 @@ public class CodeChangeWeb {
     public String query = "";
     public String fullChangeString = null;
     public int rank = 0;
+    public int numberOfCandidateChanges = 0;
 
     public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
@@ -97,6 +98,15 @@ public class CodeChangeWeb {
 
     public CodeChangeWeb setRank(int rank) {
         this.rank = rank;
+        return this;
+    }
+
+    public int getNumberOfCandidateChanges() {
+        return numberOfCandidateChanges;
+    }
+
+    public CodeChangeWeb setNumberOfCandidateChanges(int numberOfCandidateChanges) {
+        this.numberOfCandidateChanges = numberOfCandidateChanges;
         return this;
     }
 

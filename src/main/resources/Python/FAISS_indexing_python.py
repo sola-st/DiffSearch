@@ -18,7 +18,7 @@ def indexing(feature_in, index_out, dimension):
     changes_feature_vectors = dd.read_csv('./src/main/resources/' + str(feature_in), header=None)
     changes_feature_vectors = changes_feature_vectors.iloc[:, :]
     # changes_feature_vectors = changes_feature_vectors.values[0:, :-1]
-    changes_feature_vectors = changes_feature_vectors.astype('uint8')
+    changes_feature_vectors = changes_feature_vectors.astype('float32')
 
 
     #######################################################################
@@ -30,9 +30,9 @@ def indexing(feature_in, index_out, dimension):
     # n = len(changes_feature_vectors)               # number of vectors
     logger.debug("Dimension: " + str(dimension))
     logger.info("Starting indexing")
-    nlist = 8
-    quantiser = faiss.IndexBinaryFlat(dimension)
-    index = faiss.IndexBinaryIVF(quantiser, dimension, nlist)
+    nlist = 10
+    quantiser = faiss.IndexFlatL2(dimension)
+    index = faiss.IndexIVFFlat(quantiser, dimension, nlist, faiss.METRIC_L2)
 
     np_array = np.ascontiguousarray(changes_feature_vectors)
     # print(faiss.MatrixStats(np_array).comments)

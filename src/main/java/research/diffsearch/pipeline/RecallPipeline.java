@@ -3,7 +3,6 @@ package research.diffsearch.pipeline;
 import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.util.CodeChangeWeb;
@@ -76,13 +75,14 @@ public class RecallPipeline implements
             logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
 
             String query = input.isEmpty() ? this.queries.get(index) : input.get(0).query;
+            int numOfCandidates = input.isEmpty() ? 1 : input.get(0).numberOfCandidateChanges;
             double expected = 1; // by default recall will result in 0%
             if (query != null) {
                 expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
             }
 
             computeAndSaveRecall(input, query, expected);
-            computeAndSaveCandidatePrecision(input, query, expected);
+            computeAndSaveCandidatePrecision(input, query, expected, numOfCandidates);
             computeAndSaveReciprocalRank(input, query);
 
             resultConsumer.accept(input, index);
@@ -91,8 +91,7 @@ public class RecallPipeline implements
         }
     }
 
-    private void computeAndSaveCandidatePrecision(List<CodeChangeWeb> input, String query, double expected) {
-        var k = Config.k;
+    private void computeAndSaveCandidatePrecision(List<CodeChangeWeb> input, String query, double expected, int k) {
         var precision = input.size() / (Math.min(expected, k));
         logger.info("Candidate changes precision: {}", precision);
         candidatePrecisionValues.put(query, precision);
