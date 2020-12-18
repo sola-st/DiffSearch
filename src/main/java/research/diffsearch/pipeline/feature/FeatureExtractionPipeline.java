@@ -56,15 +56,23 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
 
     @Override
     public void process(String input, int index, IndexedConsumer<int[]> outputConsumer) {
-        outputConsumer.accept(extractFeatures(input), index);
+        if (input != null) {
+            outputConsumer.accept(extractFeatures(input), index);
+        } else {
+            outputConsumer.skip(index);
+        }
     }
 
-    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline() {
+    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline();
         pipeline.addFeatureExtractor(
-                new TriangleFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-        /*pipeline.addFeatureExtractor( //Uncomment after new indexing
-                new ParentChildFeatureExtractor(Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH));
-       */ return pipeline;
+                        new TriangleFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+        );
+        pipeline.addFeatureExtractor(
+                        new ParentChildFeatureExtractor(
+                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+        );
+        return pipeline;
     }
 }

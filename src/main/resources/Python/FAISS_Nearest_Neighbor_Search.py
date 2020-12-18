@@ -1,19 +1,17 @@
 #! /usr/bin/python3
 import logging
-import sys
+import socket
 
+import faiss  # make faiss available
 import numpy as np
 import pandas as pd
+import sys
 import time
-import socket
 
 #######################################################################
 # FAISS Installation:
 # CPU version only
 # pip3 install faiss-cpu --no-cache
-
-
-import faiss  # make faiss available
 
 logging.basicConfig()
 logger = logging.getLogger()
@@ -65,6 +63,11 @@ def searching(index_path, k, host, port):
                 # Reading csv feature vectors files
                 query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv',
                                                     header=None).iloc[:, :].values.astype('float32')
+                # np_array = np.ascontiguousarray(query_feature_vectors)
+                # norm = np.linalg.norm(np_array)
+                # if norm != 0:
+                #     np_array = np_array / norm
+                #     # print(str(np_array))
 
                 with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
                     changes_strings = f.readlines()
@@ -72,7 +75,13 @@ def searching(index_path, k, host, port):
                 with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
                     changes_info = f.readlines()
 
-                distances, indices = index.search(query_feature_vectors, k)
+                limits, distances, indices = index.range_search(query_feature_vectors, 5)
+
+                if len(indices) < k:
+                    distances, indices = index.search(query_feature_vectors, k)
+                if len(indices) > 100 * k:
+                    distances = distances[:100 * k]
+                    indices = indices[:100 * k]
 
                 logger.info('Searching finished')
 

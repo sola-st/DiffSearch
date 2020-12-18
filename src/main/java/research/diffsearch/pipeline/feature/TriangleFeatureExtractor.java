@@ -1,51 +1,43 @@
 package research.diffsearch.pipeline.feature;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
-import research.diffsearch.tree.TreeObjectUtils;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class TriangleFeatureExtractor extends AbstractFeatureExtractor {
-    public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
-        super(language, featureVectorLength);
+public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor {
+    public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength, boolean isQuery) {
+        super(language, featureVectorLength, isQuery);
     }
 
     @Override
-    public int[] extractFeatures(String codeChange, int[] completeFeatureVector, int startPosition) {
-        Object queryTree = TreeObjectUtils.getChangeTree(codeChange, getProgrammingLanguage());
-        String[] ruleNames = TreeObjectUtils.getParser(queryTree, getProgrammingLanguage()).getRuleNames();
-        ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, getProgrammingLanguage());
-
-        extractFeaturesRecursive(parseTree, completeFeatureVector, startPosition, Arrays.asList(ruleNames));
-        return completeFeatureVector;
-    }
-
     public void extractFeaturesRecursive(Tree t, int[] completeFeatureVector,
-                                         int startPosition, List<String> ruleNames) {
+                                         int startPosition, List<String> ruleNames, int depth) {
         StringBuilder sum = new StringBuilder();
         sum.append(Trees.getNodeText(t, ruleNames));
 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
-            sum.append(Trees.getNodeText(t.getChild(i), ruleNames));
+            String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
+            if (!isQuery() || !isQueryKeyword(childNodeText)) {
+                sum.append(childNodeText);
+            }
         }
 
-        if (i > 0) {
+        if (!sum.toString().isBlank() && i > 0) {
             int index = getFeatureVectorIndex(startPosition, sum.toString().hashCode(),
                     getFeatureVectorLength());
-            completeFeatureVector[index]++;
+            completeFeatureVector[index] = depth;
         }
 
         for (i = 0; i < t.getChildCount(); i++) {
-            if (Trees.getNodeText(t.getChild(i), ruleNames).contains("literal")) {
+            String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
+            if (childNodeText.contains("literal")) {
                 continue;
             }
 
-            extractFeaturesRecursive(t.getChild(i), completeFeatureVector, startPosition, ruleNames);
+            extractFeaturesRecursive(t.getChild(i), completeFeatureVector, startPosition, ruleNames, depth + 1);
         }
     }
 }

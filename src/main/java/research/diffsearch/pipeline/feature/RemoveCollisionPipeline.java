@@ -36,7 +36,7 @@ public class RemoveCollisionPipeline implements Pipeline<int[], int[]> {
 
     @Override
     public void after() {
-        logger.debug("Average non zero columns per vector: {}", sum / (double) maxIndex);
-        logger.debug("Average collisions per vector: {}", collisions / (double) maxIndex);
+        logger.debug("Average non zero columns per vector: {}", sum / (double) (maxIndex + 1));
+        logger.debug("Average collisions per vector: {}", collisions / (double) (maxIndex + 1));
     }
 }

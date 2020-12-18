@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.ParseException;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -96,7 +95,7 @@ public abstract class App implements Runnable {
             if (commandLine.hasOption("k")) {
                 Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
             }
-        } catch (NumberFormatException | org.apache.commons.cli.ParseException exception) {
+        } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());
         }
     }

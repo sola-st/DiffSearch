@@ -52,7 +52,6 @@ public class MatchingPipeline
     @Override
     public void process(List<CodeChangeWeb> input, int index, IndexedConsumer<List<CodeChangeWeb>> outputConsumer) {
         List<CodeChangeWeb> outputList = new ArrayList<>();
-        logger.debug("Matching started");
         try {
             outputList = Pipeline
                     .getFilter(this::checkCandidate)
@@ -94,6 +93,10 @@ public class MatchingPipeline
 
     public static boolean isNotEqualCodeChange(String candidate) {
         List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
-        return !list.get(1).equals(list.get(0));
+        if (list.size() >= 2) {
+            return !list.get(1).equals(list.get(0));
+        } else {
+            return false;
+        }
     }
 }

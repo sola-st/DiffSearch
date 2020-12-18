@@ -27,25 +27,34 @@ public class FilePathUtils {
 
     public static String getChangesFilePath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return CHANGES_STRINGS_PYTHON;
-            case JAVASCRIPT: return CHANGES_STRINGS_JS;
-            default: return CHANGES_STRINGS_JAVA;
+            case PYTHON:
+                return CHANGES_STRINGS_PYTHON;
+            case JAVASCRIPT:
+                return CHANGES_STRINGS_JS;
+            default:
+                return CHANGES_STRINGS_JAVA;
         }
     }
 
     public static String getChangesInfoFilePath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
-            case JAVASCRIPT: return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
-            default: return "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
         }
     }
 
     public static String getFeatureCSVPath(ProgrammingLanguage language) {
         switch (language) {
-            case PYTHON: return "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
-            case JAVASCRIPT: return "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
-            default: return "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
         }
     }
 
@@ -62,6 +71,8 @@ public class FilePathUtils {
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
             final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
 
+            int index = -1;
+
             @Override
             public boolean hasNext() {
                 return codeChangeIterator.hasNext() && infoIterator.hasNext();
@@ -74,31 +85,53 @@ public class FilePathUtils {
                 List<String> list = Arrays.asList(candidate.split("-->"));
                 String[] urlLine =
                         Util.computeCandidateUrl(candidateUrl).split("-->");
-                return new CodeChangeWeb(urlLine[0], urlLine[1],
-                        list.get(0).trim(), list.get(1).trim(), query, candidate);
+                index++;
+                return new CodeChangeWeb(list.get(0).trim(), list.get(1).trim())
+                        .setUrl(urlLine[0])
+                        .setHunkLines(urlLine[1])
+                        .setQuery(query)
+                        .setFullChangeString(candidate)
+                        .setRank(index + 1);
             }
         };
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+        var result = StreamSupport
+                .stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
+        var length = result.size();
+        if (length > 0) {
+            result.forEach(codeChangeWeb -> codeChangeWeb.numberOfCandidateChanges = length);
+        }
+        return result;
     }
 
     public static BufferedWriter getWriter(String path) throws IOException {
         return new BufferedWriter(new FileWriter(path));
     }
 
+    public static List<String[]> readCSV(String path, String delim) {
+        return getAllLines(path)
+                .stream()
+                .map(s -> s.split(delim))
+                .collect(Collectors.toList());
+    }
+
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Objects::toString);
     }
+
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path, Function<T, String> mapper) throws IOException {
         return new Pipeline<>() {
             private final BufferedWriter writer = getWriter(path);
 
             @Override
             public void process(T input, int index, IndexedConsumer<T> outputConsumer) {
-                try {
-                    writer.write(mapper.apply(input) + "\n");
-                } catch (IOException e) {
-                    LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
-                    throw new RuntimeException(e);
+                if (input != null) {
+                    try {
+                        writer.write(mapper.apply(input) + "\n");
+                    } catch (IOException e) {
+                        LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
+                        throw new RuntimeException(e);
+                    }
                 }
                 outputConsumer.accept(input, index);
             }
