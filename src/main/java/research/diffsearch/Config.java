@@ -5,7 +5,7 @@ import research.diffsearch.util.ProgrammingLanguage;
 public class Config {
 
     //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
-    public static String PYTHON_CMD = "wsl python3";
+    public static String PYTHON_CMD = "python3";
     public static String GITDIFF_FILE = "";
 
     //Programming language supported: PYTHON3, JAVA
