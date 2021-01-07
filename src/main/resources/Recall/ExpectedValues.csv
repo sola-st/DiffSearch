@@ -1,0 +1,70 @@
+ID<1>(ID<2>, LT<3>);-->ID<1>(LT<3>, ID<2>);$9
+EXPR = ID<1>(<...>);-->EXPR = ID<1>(<...>);$1160
+EXPR = ID<1>(<...>)-->EXPR = ID<1>(<...>)$1554
+ID<1>(ID<2>, ID<3>);-->ID<1>(ID<3>, ID<2>);$28
+ID<0>.ID<1>(ID, LT)-->ID<0>.ID<1>(ID, LT)$553
+LT-->LT binOP LT$431
+LT-->LT$97768
+return;-->return ID;$28
+return ID;-->return ID;$1554
+return;-->return EXPR;$123
+return EXPR;-->return EXPR;$40485
+return null;-->return EXPR;$388
+_-->return;$577
+<...>;-->_$142
+_--><...>$158355
+System.out.println(EXPR);-->_$323
+System.out.print(EXPR);-->_$5
+System.out.print(EXPR);-->System.out.print(EXPR);$13
+_-->System.out.println(<...>);$158
+_-->System.out.println(<...>)$247
+EXPR = ID(ID);-->EXPR = ID(ID);$83
+EXPR = ID();-->EXPR = ID(ID);$16
+EXPR = ID()-->EXPR = ID(ID)$24
+EXPR = LT;-->EXPR = ID;$35
+EXPR = LT-->EXPR = ID$88
+continue;-->_;$80
+break;-->_;$66
+break;-->return EXPR;$15
+_-->continue;$332
+if (EXPR) {-->EXPR;$39
+if (LT) {-->if (ID) {$1
+if (ID) {-->if (EXPR) {$431
+if (ID) {-->if (ID()) {$40
+if (ID<0>) {-->if (ID<1>()) {$40
+<...>-->} else {$70752
+_-->import java.io.ID;$1776
+_-->import java.ID.ID;$9902
+_-->import org.ID.ID.ID;$5365
+_-->import org.ID.ID.ID.ID;$7322
+import ID.ID.ID.ID;-->import org.ID.ID.ID;$760
+import java.util.ID;-->_$2379
+if (EXPR != null) {-->if (EXPR == null) {$5
+if (EXPR == null) {-->if (EXPR != null) {$7
+<...> ID(<...>) throws ID { --> <...> ID(<...>) {$859
+<...> ID() { --> <...> ID() {$4043
+public static void ID() { -->public static void ID() {$11
+public static void ID(<...>) { -->public static void ID(<...>) {$670
+public void ID(<...>) { -->public static void ID(<...>) {$21
+package ID;-->package ID;$2
+EXPR-->try {EXPR;} catch (ID ID) {<...>}$38
+EXPR;-->try {EXPR;} catch (ID ID) {<...>}$34
+EXPR;-->try {EXPR;} finally {<...>}$4
+int ID;-->int ID = LT;$5
+double ID;-->double ID = EXPR;$1
+boolean ID = EXPR;-->boolean ID = EXPR;$89
+while (EXPR) {-->while (EXPR) {$290
+while (LT) {-->while (EXPR) {$3
+for (<...>) {-->for (<...>) {$2955
+_-->for (ID ID: ID) {$554
+ID<2>.add(ID<0>);-->ID<2>.addAll(ID<1>);$5
+ID.toString()-->ID.toString()$1003
+ID.hashCode()-->ID.hashCode()$95
+list.add(ID);--><...>$5
+ID binOP ID-->ID binOP ID$4079
+ID unOP;-->ID unOP;$50
+_-->ID unOP$2505
+ID<0>() --> ID<0>(EXPR)$3
+EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<2>);$13
+EXPR.ID<0>(EXPR<0>, EXPR<1>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>);$1763
+EXPR.ID<0>(EXPR<0>); --> EXPR.ID<0>(EXPR<0>);$2917
