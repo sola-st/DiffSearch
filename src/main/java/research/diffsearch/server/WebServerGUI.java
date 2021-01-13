@@ -2,7 +2,10 @@ package research.diffsearch.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
+
+import research.diffsearch.Config;
 import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
 import java.io.*;
@@ -43,12 +46,12 @@ public class WebServerGUI extends DiffSearchWebServer {
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		String line = "";
 		String auxLine = "";
+		String lang = "";
 		// looks for post data
 		while ((line = in.readLine()) != null && (line.length() != 0)) {
-			// System.out.println(line);
+		    // System.out.println(line);
 			if (line.contains("GET /api?")) {
 				auxLine = line.substring(9, line.indexOf(" HTTP/1.1"));
-				// System.out.println(auxLine);
 			}
 		}
 		StringBuilder postData = new StringBuilder();
@@ -59,11 +62,21 @@ public class WebServerGUI extends DiffSearchWebServer {
 		
 		String query = "";
 		
-		long startTimeMatching = System.currentTimeMillis();
-		for (int i = 0; i < auxLine.length(); i++) {
+		lang = auxLine.substring(auxLine.lastIndexOf("=") + 1, auxLine.length());
+		// for (int i = 0; i < auxLine.length());
+		for (int i = 0; i < auxLine.length() - lang.length() - "&Language=".length(); i++) {
 			postData.append((char) auxLine.charAt(i));
 		}
-
+		
+		if (lang.equals("Java")) {
+			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+		} else if (lang.equals("Python")) {
+			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
+		} else if (lang.equals("JavaScript")) {
+			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
+		} // else Config is not changed
+		
+		long startTimeMatching = System.currentTimeMillis();
 		if (auxLine.length() > 0) {
 			flagFirstConnection = true;
 			logger.info("Search started.");
@@ -112,7 +125,6 @@ public class WebServerGUI extends DiffSearchWebServer {
     @Override
     protected void writeOutputList(PrintWriter out, List<CodeChangeWeb> outputList, long durationMatching,
 			FileChannel channel) {
-		boolean flag = true;
 		boolean incorrect = false;
 		for (CodeChangeWeb change : outputList) {
 			try {
