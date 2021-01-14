@@ -19,5 +19,5 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      *                                 results.
      * @return the complete feature vector.
      */
-    int[] extractFeatures(String codeChange, int[] completeFeatureVector, int startPosition);
+    FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition);
 }

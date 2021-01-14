@@ -1,21 +1,20 @@
 package research.diffsearch.util;
 
+import com.google.common.collect.Iterators;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.pipeline.feature.FeatureVector;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class FilePathUtils {
     public static final String CANDIDATE_CHANGES = "./src/main/resources/Features_Vectors/candidate_changes.txt";
@@ -58,16 +57,58 @@ public class FilePathUtils {
         }
     }
 
-    public static List<String> getAllLines(String path) {
+    public static Collection<String> getAllLines(String path, int numberOfLines) {
+        return new AbstractCollection<>() {
+            @Override
+            public Iterator<String> iterator() {
+                try {
+                    return FileUtils.lineIterator(new File(path));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public int size() {
+                return numberOfLines;
+            }
+        };
+    }
+
+    public static Iterable<String> getAllLines(String path) {
+        return () -> {
+            try {
+                return FileUtils.lineIterator(new File(path));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    public static int getNumberOfLines(String filePath) {
         try {
-            return Files.lines(Path.of(path)).collect(Collectors.toList());
+            return Iterators.size(FileUtils.lineIterator(new File(filePath)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static List<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath, String query) {
-        Iterable<CodeChangeWeb> iterable = () -> new Iterator<>() {
+    public static Collection<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath, int size) {
+        return new AbstractCollection<>() {
+            @Override
+            public Iterator<CodeChangeWeb> iterator() {
+                return getCodeChanges(codeChangeFilePath, infoFilePath).iterator();
+            }
+
+            @Override
+            public int size() {
+                return size;
+            }
+        };
+    }
+
+    public static Iterable<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
+        return () -> new Iterator<>() {
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
             final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
 
@@ -82,26 +123,17 @@ public class FilePathUtils {
             public CodeChangeWeb next() {
                 String candidateUrl = infoIterator.next();
                 String candidate = codeChangeIterator.next();
-                List<String> list = Arrays.asList(candidate.split("-->"));
+                String[] candidateParts = candidate.split("-->");
                 String[] urlLine =
                         Util.computeCandidateUrl(candidateUrl).split("-->");
                 index++;
-                return new CodeChangeWeb(list.get(0).trim(), list.get(1).trim())
+                return new CodeChangeWeb(candidateParts[0].trim(), candidateParts[1].trim())
                         .setUrl(urlLine[0])
                         .setHunkLines(urlLine[1])
-                        .setQuery(query)
                         .setFullChangeString(candidate)
                         .setRank(index + 1);
             }
         };
-        var result = StreamSupport
-                .stream(iterable.spliterator(), false)
-                .collect(Collectors.toList());
-        var length = result.size();
-        if (length > 0) {
-            result.forEach(codeChangeWeb -> codeChangeWeb.numberOfCandidateChanges = length);
-        }
-        return result;
     }
 
     public static BufferedWriter getWriter(String path) throws IOException {
@@ -109,10 +141,11 @@ public class FilePathUtils {
     }
 
     public static List<String[]> readCSV(String path, String delim) {
-        return getAllLines(path)
-                .stream()
-                .map(s -> s.split(delim))
-                .collect(Collectors.toList());
+        var result = new ArrayList<String[]>();
+        for (var line : getAllLines(path)) {
+            result.add(line.split(delim));
+        }
+        return result;
     }
 
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path) throws IOException {
@@ -152,12 +185,12 @@ public class FilePathUtils {
                 .collect(Collectors.joining("\n")));
     }
 
-    public static Pipeline<int[], int[]> getVectorFileWriterPipeline(String path) throws IOException {
+    public static Pipeline<FeatureVector, FeatureVector> getVectorFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Util::featureVectorToString);
     }
 
     public static String getScalabilityInputPath(ProgrammingLanguage programmingLanguage) {
-        String inputPath = "";
+        String inputPath;
         switch (programmingLanguage) {
             case JAVA:
                 inputPath = "./src/main/resources/scalability/Java/input.txt";

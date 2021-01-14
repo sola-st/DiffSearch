@@ -1,4 +1,4 @@
-package research.diffsearch.util;
+package research.diffsearch.pipeline.base;
 
 import java.util.Objects;
 
@@ -7,10 +7,8 @@ public class CodeChangeWeb {
     public String hunkLines = "";
     public String codeChangeOld;
     public String codeChangeNew;
-    public String query = "";
     public String fullChangeString = null;
     public int rank = 0;
-    public int numberOfCandidateChanges = 0;
 
     public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
@@ -74,15 +72,6 @@ public class CodeChangeWeb {
         return this;
     }
 
-    public String getQuery() {
-        return query;
-    }
-
-    public CodeChangeWeb setQuery(String query) {
-        this.query = query;
-        return this;
-    }
-
     public String getFullChangeString() {
         return fullChangeString;
     }
@@ -100,22 +89,4 @@ public class CodeChangeWeb {
         this.rank = rank;
         return this;
     }
-
-    public int getNumberOfCandidateChanges() {
-        return numberOfCandidateChanges;
-    }
-
-    public CodeChangeWeb setNumberOfCandidateChanges(int numberOfCandidateChanges) {
-        this.numberOfCandidateChanges = numberOfCandidateChanges;
-        return this;
-    }
-
-    /**
-     * This object gets returned when an error occurs.
-     */
-    public static final CodeChangeWeb ERROR_CODE_CHANGE
-            = new CodeChangeWeb("error", "error");
-
-    public static final CodeChangeWeb INVALID_QUERY_CODE_CHANGE
-            = new CodeChangeWeb("invalid query", "invalid query");
 }

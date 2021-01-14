@@ -4,9 +4,10 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
@@ -14,6 +15,7 @@ import research.diffsearch.util.ProgressWatcher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static research.diffsearch.tree.TreeObjectUtils.*;
 
@@ -21,7 +23,7 @@ import static research.diffsearch.tree.TreeObjectUtils.*;
  * Pipeline to check if some candidate code change actually matches a query.
  */
 public class MatchingPipeline
-        implements Pipeline<List<CodeChangeWeb>, List<CodeChangeWeb>>, ProgrammingLanguageDependent {
+        implements Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(MatchingPipeline.class);
 
@@ -50,24 +52,23 @@ public class MatchingPipeline
     }
 
     @Override
-    public void process(List<CodeChangeWeb> input, int index, IndexedConsumer<List<CodeChangeWeb>> outputConsumer) {
+    public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> outputConsumer) {
         List<CodeChangeWeb> outputList = new ArrayList<>();
         try {
             outputList = Pipeline
-                    .getFilter(this::checkCandidate)
+                    .getFilter((Predicate<CodeChangeWeb>) codeChange -> checkCandidate(codeChange, input.getQuery()))
                     .parallelUntilHere(16)
-                    .connect(new ProgressWatcher<>(input.size(), "Matching"))
-                    .collect(input);
+                    .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
+                    .collect(input.getResults());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 
-        outputConsumer.accept(outputList, index);
+        outputConsumer.accept(input.setResults(outputList), index);
     }
 
-    private boolean checkCandidate(CodeChangeWeb candidateChange) {
+    private boolean checkCandidate(CodeChangeWeb candidateChange, String query) {
         try {
-            String query = candidateChange.query;
             Object queryTree = getChangeTree(query, language);
             ParseTree parseTreeQuery = getParseTree(queryTree, language);
             String candidate = candidateChange.toString();

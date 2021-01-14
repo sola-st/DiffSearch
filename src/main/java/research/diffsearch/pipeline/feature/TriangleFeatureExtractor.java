@@ -12,7 +12,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, int[] completeFeatureVector,
+    public void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
                                          int startPosition, List<String> ruleNames, int depth) {
         StringBuilder sum = new StringBuilder();
         sum.append(Trees.getNodeText(t, ruleNames));
@@ -28,7 +28,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         if (!sum.toString().isBlank() && i > 0) {
             int index = getFeatureVectorIndex(startPosition, sum.toString().hashCode(),
                     getFeatureVectorLength());
-            completeFeatureVector[index] = depth;
+            completeFeatureVector.addFeature("Triangle", sum.toString(), index);
         }
 
         for (i = 0; i < t.getChildCount(); i++) {

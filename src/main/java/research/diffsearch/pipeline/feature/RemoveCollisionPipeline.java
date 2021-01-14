@@ -8,7 +8,7 @@ import research.diffsearch.pipeline.base.Pipeline;
 /**
  * Removes and measures collisions in the feature vectors.
  */
-public class RemoveCollisionPipeline implements Pipeline<int[], int[]> {
+public class RemoveCollisionPipeline implements Pipeline<FeatureVector, FeatureVector> {
 
     private final Logger logger = LoggerFactory.getLogger(RemoveCollisionPipeline.class);
     private int sum = 0;
@@ -16,13 +16,13 @@ public class RemoveCollisionPipeline implements Pipeline<int[], int[]> {
     private int collisions = 0;
 
     @Override
-    public void process(int[] input, int index, IndexedConsumer<int[]> outputConsumer) {
+    public void process(FeatureVector input, int index, IndexedConsumer<FeatureVector> outputConsumer) {
         try {
-            for (int i = 0; i < input.length; i++) {
-                if (input[i] >= 1) {
+            for (int i = 0; i < input.getVector().length; i++) {
+                if (input.getVector()[i] >= 1) {
                     sum += 1;
-                    collisions += input[i] - 1;
-                    input[i] = 1;
+                    collisions += input.getVector()[i] - 1;
+                    input.getVector()[i] = 1;
                 }
             }
             if (index > maxIndex) {

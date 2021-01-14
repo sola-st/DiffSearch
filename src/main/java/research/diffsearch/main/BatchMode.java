@@ -1,5 +1,6 @@
 package research.diffsearch.main;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -26,11 +27,14 @@ public class BatchMode extends App {
             Socket socketFaiss = getFaissSocket();
 
             long currentTime = System.currentTimeMillis();
-            var queries = FilePathUtils.getAllLines(Config.batchFilePath);
+            var queries = Lists.newArrayList(FilePathUtils.getAllLines(Config.batchFilePath));
 
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, queries))
-                    .peek(result -> Util.printOutputList(result, System.currentTimeMillis() - currentTime,
+                    .peek(result -> Util.printOutputList(
+                            result.getResults(),
+                            result.getPerformance().orElse(System.currentTimeMillis() - currentTime),
+                            result.getQuery(),
                             new PrintStream(outputStream, true)))
                     .execute(queries);
 

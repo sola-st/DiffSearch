@@ -16,18 +16,19 @@ public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtract
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, int[] completeFeatureVector,
+    public void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
                                          int startPosition, List<String> ruleNames, int depth) {
         for (int i = 0; i < t.getChildCount(); i++) {
             var child = t.getChild(i);
             var childNodeText = Trees.getNodeText(child, ruleNames);
             if (!isQuery() || !isQueryKeyword(childNodeText)) {
-                int index = getFeatureVectorIndex(startPosition,
-                        ((Trees.getNodeText(t, ruleNames) + ' ' +
-                          Trees.getNodeText(t.getChild(i), ruleNames)).hashCode()),
+                var feature = Trees.getNodeText(t, ruleNames) + ' ' +
+                  Trees.getNodeText(t.getChild(i), ruleNames);
+
+                int index = getFeatureVectorIndex(startPosition, feature.hashCode(),
                         getFeatureVectorLength());
 
-                completeFeatureVector[index] = depth;
+                completeFeatureVector.addFeature("Parent-child", feature, index);
             }
         }
 

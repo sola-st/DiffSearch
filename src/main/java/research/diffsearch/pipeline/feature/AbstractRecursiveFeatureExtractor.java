@@ -20,15 +20,15 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         this.isQuery = isQuery;
     }
 
-    public int getFeatureVectorIndex(int startIndex, int hashValue, double vectorLength) {
-        return Math.abs((int) (startIndex + (hashValue % vectorLength)));
+    public int getFeatureVectorIndex(int startIndex, int hashValue, long vectorLength) {
+        return (int) (startIndex + Math.abs(hashValue % vectorLength));
     }
 
-    public abstract void extractFeaturesRecursive(Tree t, int[] completeFeatureVector,
-                                         int startPosition, List<String> ruleNames, int depth);
+    public abstract void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
+                                                  int startPosition, List<String> ruleNames, int depth);
 
     @Override
-    public int[] extractFeatures(String codeChange, int[] completeFeatureVector, int startPosition) {
+    public FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition) {
         Object queryTree = TreeObjectUtils.getChangeTree(codeChange, getProgrammingLanguage());
         String[] ruleNames = TreeObjectUtils.getParser(queryTree, getProgrammingLanguage()).getRuleNames();
         ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, getProgrammingLanguage());

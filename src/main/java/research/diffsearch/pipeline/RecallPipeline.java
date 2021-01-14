@@ -3,9 +3,10 @@ package research.diffsearch.pipeline;
 import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -20,7 +21,7 @@ import static research.diffsearch.util.FilePathUtils.*;
  * This process is very slow as it matches all the code changes of the corpus.
  */
 public class RecallPipeline implements
-        Pipeline<List<CodeChangeWeb>, List<CodeChangeWeb>>, ProgrammingLanguageDependent {
+        Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(RecallPipeline.class);
     private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/ExpectedValues.csv";
@@ -51,17 +52,21 @@ public class RecallPipeline implements
         this(language, new ArrayList<>());
     }
 
-    int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
+    private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
         if (!expectedValues.containsKey(query)) {
             logger.debug("Need to calculate expected value");
 
             // load all code changes from file
             var codeChanges = getCodeChanges(
-                    getChangesFilePath(language), getChangesInfoFilePath(language), query);
+                    getChangesFilePath(language), getChangesInfoFilePath(language),
+                    getNumberOfLines(getChangesFilePath(language)));
+
+            var dfsResult = new DiffsearchResult(query, codeChanges);
 
             var expectedValue = new MatchingPipeline(language)
-                    .collect(codeChanges)
-                    .map(List::size)
+                    .collect(dfsResult)
+                    .map(DiffsearchResult::getResults)
+                    .map(Collection::size)
                     .orElse(0);
 
             expectedValues.put(query, expectedValue);
@@ -70,19 +75,22 @@ public class RecallPipeline implements
     }
 
     @Override
-    public void process(List<CodeChangeWeb> input, int index, IndexedConsumer<List<CodeChangeWeb>> resultConsumer) {
+    public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> resultConsumer) {
         try {
             logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
 
-            String query = input.isEmpty() ? this.queries.get(index) : input.get(0).query;
-            int numOfCandidates = input.isEmpty() ? 1 : input.get(0).numberOfCandidateChanges;
-            double expected = 1; // by default recall will result in 0%
+            String query = input.getQuery();
+            int numOfCandidates = input.getCandidateChangeCount().orElse(0);
+            int expected = 1; // by default recall will result in 0%
             if (query != null) {
                 expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
             }
+            input.setExpectedValueCount(expected);
 
-            computeAndSaveRecall(input, query, expected);
-            computeAndSaveCandidatePrecision(input, query, expected, numOfCandidates);
+            computeAndSaveRecall(input.getResults().size(), query, expected);
+
+            computeAndSaveCandidatePrecision(input, expected, input.getResults().size(), numOfCandidates);
+
             computeAndSaveReciprocalRank(input, query);
 
             resultConsumer.accept(input, index);
@@ -91,26 +99,30 @@ public class RecallPipeline implements
         }
     }
 
-    private void computeAndSaveCandidatePrecision(List<CodeChangeWeb> input, String query, double expected, int k) {
-        var precision = input.size() / (Math.min(expected, k));
+    private void computeAndSaveCandidatePrecision(DiffsearchResult result, double expected, int actual, int k) {
+        var precision = actual / (Math.min(expected, k));
+        candidatePrecisionValues.put(result.getQuery(), precision);
+
         logger.info("Candidate changes precision: {}", precision);
-        candidatePrecisionValues.put(query, precision);
+
+        result.setCandidateChangePrecision(precision);
     }
 
-    private void computeAndSaveReciprocalRank(List<CodeChangeWeb> input, String query) {
-        var rRank = input.stream()
+    private void computeAndSaveReciprocalRank(DiffsearchResult input, String query) {
+        var rRank = input.getResults().stream()
                 .mapToInt(CodeChangeWeb::getRank)
                 .min()
                 .stream()
                 .mapToDouble(rank -> 1.0 / rank)
                 .findAny()
                 .orElse(0.0);
+
         logger.info("Reciprocal rank: {}", rRank);
         reciprocalRankValues.put(query, rRank);
+        input.setReciprocalRank(rRank);
     }
 
-    private void computeAndSaveRecall(List<CodeChangeWeb> input, String query, double expected) {
-        int actualResults = input.size();
+    private void computeAndSaveRecall(int actualResults, String query, double expected) {
         logger.debug("Expected {} results.", expected);
         actualValues.put(query, actualResults);
 
@@ -131,10 +143,9 @@ public class RecallPipeline implements
     }
 
     @SafeVarargs
-    private static void writeValuesToFile(String path,
-                                          Map<String, ?> map, Map<String, ?>... additionalMaps)
+    private static void writeValuesToFile(Map<String, ?> map, Map<String, ?>... additionalMaps)
             throws IOException {
-        writeValuesToFile(null, path, map, additionalMaps);
+        writeValuesToFile(null, RecallPipeline.EXPECTED_VALUES_FILE, map, additionalMaps);
     }
 
     @SafeVarargs
@@ -167,7 +178,7 @@ public class RecallPipeline implements
     @Override
     public void after() {
         try {
-            writeValuesToFile(EXPECTED_VALUES_FILE, expectedValues);
+            writeValuesToFile(expectedValues);
             writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, recallValues,
                     candidatePrecisionValues, reciprocalRankValues);
             logger.debug("Recall results saved.");

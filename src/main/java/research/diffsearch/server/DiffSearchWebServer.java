@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.OnlinePipeline;
 import research.diffsearch.pipeline.RecallPipeline;
-import research.diffsearch.util.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.QueryUtil;
 import research.diffsearch.util.Util;
 
@@ -18,8 +19,8 @@ import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class DiffSearchWebServer extends Thread {
 
@@ -63,7 +64,7 @@ public class DiffSearchWebServer extends Thread {
         int postDataI = getPostDataIndex(in);
         StringBuilder postData = getPostDataStringBuilder(in, postDataI);
 
-        List<CodeChangeWeb> outputList = new ArrayList<>();
+        Collection<CodeChangeWeb> outputList = new ArrayList<>();
 
         long durationMatching;
         boolean flagFirstConnection = false;
@@ -76,7 +77,7 @@ public class DiffSearchWebServer extends Thread {
             query = getQuery(postData);
 
             outputList = performSearch(query);
-            Util.printOutputList(outputList, startTimeMatching);
+            Util.printOutputList(outputList, query, startTimeMatching);
         }
 
         durationMatching = System.currentTimeMillis() - startTimeMatching;
@@ -97,7 +98,7 @@ public class DiffSearchWebServer extends Thread {
     }
 
     protected void writeOutput(PrintWriter out,
-                                      List<CodeChangeWeb> outputList,
+                                      Collection<CodeChangeWeb> outputList,
                                       long durationMatching,
                                       String result,
                                       FileChannel channel) throws IOException {
@@ -113,7 +114,7 @@ public class DiffSearchWebServer extends Thread {
     }
 
     protected void writeOutputList(PrintWriter out,
-                                          List<CodeChangeWeb> outputList,
+                                          Collection<CodeChangeWeb> outputList,
                                           long durationMatching,
                                           FileChannel channel) {
         boolean flag = true;
@@ -204,11 +205,13 @@ public class DiffSearchWebServer extends Thread {
                 .replaceAll("&Text2=", "-->"), StandardCharsets.UTF_8));
     }
 
-    protected List<CodeChangeWeb> performSearch(String query) {
+    protected Collection<CodeChangeWeb> performSearch(String query) {
         try {
             return new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, query))
-                    .collect(query).orElseGet(Collections::emptyList);
+                    .collect(query)
+                    .map(DiffsearchResult::getResults)
+                    .orElseGet(Collections::emptyList);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

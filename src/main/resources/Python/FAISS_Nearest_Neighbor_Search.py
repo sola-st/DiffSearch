@@ -75,13 +75,13 @@ def searching(index_path, k, host, port):
                 with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
                     changes_info = f.readlines()
 
-                limits, distances, indices = index.range_search(query_feature_vectors, 5)
+                # limits, distances, indices = index.range_search(query_feature_vectors, 5)
 
-                if len(indices) < k:
-                    distances, indices = index.search(query_feature_vectors, k)
-                if len(indices) > 100 * k:
-                    distances = distances[:100 * k]
-                    indices = indices[:100 * k]
+                # if len(indices) < k:
+                distances, indices = index.search(query_feature_vectors, k)
+                # if len(indices) > 10 * k:
+                  #   distances = distances[:10 * k]
+                  #indices = indices[:10 * k]
 
                 logger.info('Searching finished')
 

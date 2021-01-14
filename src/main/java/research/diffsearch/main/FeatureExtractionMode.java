@@ -1,5 +1,6 @@
 package research.diffsearch.main;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -49,7 +50,7 @@ public class FeatureExtractionMode extends App {
     }
 
     protected static void extractFeaturesToFile() throws IOException {
-        List<String> changesLines = getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
+        List<String> changesLines = Lists.newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
         Pipeline.from(QueryUtil::formatQuery)
                 .connect(getDefaultFeatureExtractionPipeline(false))
                 .parallelUntilHere(16)

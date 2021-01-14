@@ -3,7 +3,6 @@ package research.diffsearch.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.PipelineOld;
 import research.diffsearch.tree.Python3_Tree;
 import research.diffsearch.util.QueryUtil;
 
@@ -34,7 +33,6 @@ public class NormalMode extends App {
         /* CHANGES TREE AND FEATURES COMPUTATION */
         try {
             logger.info("FEATURE EXTRACTION STARTED.\n");
-            realChanges = PipelineOld.feature_extraction(500000);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             e.printStackTrace();
@@ -47,7 +45,6 @@ public class NormalMode extends App {
 
         try {
             logger.info("INDEXING STARTED.\n");
-            PipelineOld.indexing_candidate_changes((int) realChanges);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             e.printStackTrace();

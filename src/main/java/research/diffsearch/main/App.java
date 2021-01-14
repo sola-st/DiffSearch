@@ -69,7 +69,6 @@ public abstract class App implements Runnable {
 
             Config.ONLY_JAVA = commandLine.hasOption("oj");
             Config.NORMAL = commandLine.hasOption("n");
-            Config.SCALABILITY = commandLine.hasOption("s");
             Config.EFFECTIVENESS = commandLine.hasOption("e");
             Config.WEB_GUI = commandLine.hasOption("g");
             Config.WEB = commandLine.hasOption("w");
@@ -122,8 +121,6 @@ public abstract class App implements Runnable {
             app = new WebMode();
         } else if (Config.NORMAL) {
             app = new NormalMode();
-        } else if (Config.SCALABILITY) {
-            app = new ScalabilityMode();
         } else if (Config.EFFECTIVENESS) {
             app = new EffectivenessMode();
         } else if (Config.QUERY_MODE) {

@@ -13,7 +13,6 @@ public class Config {
 
     //Constants that enable/disable part of the tool
     public static boolean LOG_FILE  = false;
-    public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
     public static boolean NORMAL  = false;
     public static boolean WEB  = true;
@@ -26,7 +25,7 @@ public class Config {
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
     public static int k = 1000;
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 256;
     public static boolean BATCH = false;
     public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
     public static String batchOutput = "./src/main/resources/batchOutput.txt";

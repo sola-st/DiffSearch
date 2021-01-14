@@ -24,7 +24,7 @@ public class SplitFeatureExtractor implements FeatureExtractor {
     }
 
     @Override
-    public int[] extractFeatures(String codeChange, int[] completeFeatureVector, int startPosition) {
+    public FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition) {
         Object queryTree = TreeObjectUtils.getChangeTree(codeChange, getProgrammingLanguage());
         String[] ruleNames = TreeObjectUtils.getParser(queryTree, getProgrammingLanguage()).getRuleNames();
         ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, getProgrammingLanguage());

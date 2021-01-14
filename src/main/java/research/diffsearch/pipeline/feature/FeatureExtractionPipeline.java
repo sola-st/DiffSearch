@@ -12,12 +12,14 @@ import java.util.List;
 /**
  * Extracts features from code changes.
  */
-public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
+public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector> {
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
-
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
 
+    /**
+     * Adds a new extractor to the pipeline.
+     */
     public void addFeatureExtractor(FeatureExtractor extractor) {
         extractorList.add(extractor);
     }
@@ -38,8 +40,8 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
      *
      * @param codeChange the code change.
      */
-    public int[] extractFeatures(String codeChange) {
-        int[] featureVector = new int[getTotalFeatureVectorLength()];
+    public FeatureVector extractFeatures(String codeChange) {
+        FeatureVector featureVector = new FeatureVector(codeChange, getTotalFeatureVectorLength());
         try {
             var startPosition = 0;
 
@@ -55,7 +57,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
     }
 
     @Override
-    public void process(String input, int index, IndexedConsumer<int[]> outputConsumer) {
+    public void process(String input, int index, IndexedConsumer<FeatureVector> outputConsumer) {
         if (input != null) {
             outputConsumer.accept(extractFeatures(input), index);
         } else {
@@ -66,12 +68,12 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline();
         pipeline.addFeatureExtractor(
-                        new TriangleFeatureExtractor(
-                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+                new SplitFeatureExtractor(new TriangleFeatureExtractor(
+                        Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery))
         );
         pipeline.addFeatureExtractor(
-                        new ParentChildFeatureExtractor(
-                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+                new SplitFeatureExtractor(new ParentChildFeatureExtractor(
+                        Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery))
         );
         return pipeline;
     }

@@ -8,7 +8,6 @@ public class CliUtil {
         return new Options()
                 .addOption("oj", "only-java", false, "does not start the python server")
                 .addOption("n", "normal", false, "launch DiffSearch in normal mode")
-                .addOption("s", "scalability", false, "launch DiffSearch in scalability mode")
                 .addOption("e", "effectiveness", false, "launch DiffSearch in effectiveness mode")
                 .addOption("g", "web-gui", false, "launch in web GUI mode")
                 .addOption("w", "web", false, "launch DiffSearch with web interface")

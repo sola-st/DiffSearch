@@ -1,28 +1,25 @@
 package research.diffsearch.pipeline.base;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public interface Pipeline<I, O> {
 
     void process(I input, int index, IndexedConsumer<O> outputConsumer);
 
-    default void execute(Iterable<I> inputs) {
+    default void execute(Iterable<I> inputs, int size) {
         Object sync = new Object();
         var executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             int index = 0;
-            var inputsList = StreamSupport.stream(inputs.spliterator(), false).collect(Collectors.toList());
-            int size = inputsList.size();
             AtomicInteger processed = new AtomicInteger(0);
 
-            for (I input : inputsList) {
+            for (I input : inputs) {
                 process(input, index, (result, index1) -> {
                     processed.getAndIncrement();
                     if (processed.get() == size) {
@@ -48,6 +45,10 @@ public interface Pipeline<I, O> {
         executor.shutdown();
     }
 
+    default void execute(Collection<I> inputs) {
+        execute(inputs, inputs.size());
+    }
+
     default void execute(I input) {
         execute(List.of(input));
     }
@@ -56,7 +57,10 @@ public interface Pipeline<I, O> {
         return collect(List.of(input)).stream().findFirst();
     }
 
-    default List<O> collect(Iterable<I> inputs) {
+    default List<O> collect(Collection<I> inputs) {
+        return collect(inputs, inputs.size());
+    }
+    default List<O> collect(Iterable<I> inputs, int size) {
         Object sync = new Object();
 
         var collectedResults = new ArrayList<O>();
@@ -65,11 +69,9 @@ public interface Pipeline<I, O> {
         executor.submit(() -> {
             int index = 0;
 
-            var inputsList = StreamSupport.stream(inputs.spliterator(), false).collect(Collectors.toList());
-            int size = inputsList.size();
             AtomicInteger processed = new AtomicInteger(0);
 
-            for (I input : inputsList) {
+            for (I input : inputs) {
                 process(input, index, (result, index1) -> {
                     synchronized (collectedResults) {
                         processed.getAndIncrement();
