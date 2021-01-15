@@ -141,31 +141,36 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 - [FAISS 1.6.1](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> pip3 install faiss-cpu --no-cache
 
 **How to run**
+
 FOR THE DIFFSEARCH SERVER:
 
   - clone the repository: https://github.com/lucaresearch/DiffSearch.git
-  - Type the commands:
-      virtualenv -p /usr/bin/python3 diffsearch-env
-      source diffsearch-env/bin/activate
-      pip3 install faiss-cpu
-      pip3 install numpy
-      pip3 install pandas
+  - Type the commands:  
+      - virtualenv -p /usr/bin/python3 diffsearch-env     
+      - source diffsearch-env/bin/activate  
+      - pip3 install faiss-cpu 
+      - pip3 install numpy     
+      - pip3 install pandas
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
   - Copy the file "faiss.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
   - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
 
-  - Then:
-      mvn compile
-      mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g"
+  - Then:   
+      - mvn compile  
+      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g"
 
   - Extra:
-      If you received the error: " OSError: [Errno 98] Address already in use"
-      Use the following commands:
+      
+      - If you received the error: " OSError: [Errno 98] Address already in use"
+      
+      - Use the following commands:
+           
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
 
 FOR THE GUI:
-    - clone the repository: https://github.com/sola-st/DiffSearch-UI
-    - Run the command: ng serve --proxy-config src/proxy.conf.json
-    - Go in "http://localhost:4200/diffsearch" with your browser 
+
+- clone the repository: https://github.com/sola-st/DiffSearch-UI
+- Run the command: ng serve --proxy-config src/proxy.conf.json
+- Go in "http://localhost:4200/diffsearch" with your browser 
