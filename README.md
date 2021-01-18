@@ -160,7 +160,7 @@ FOR THE DIFFSEARCH SERVER:
 
   - Then:   
       - mvn compile  
-      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g"
+      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"
 
   - Extra:
       
