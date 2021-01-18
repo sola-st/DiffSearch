@@ -2,10 +2,12 @@ package research.diffsearch.pipeline;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
+import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.QueryUtil;
@@ -61,8 +63,11 @@ public class OnlinePipeline implements
             long startTime = System.currentTimeMillis();
             // write feature vector to file
             var featureVector = Pipeline.from(QueryUtil::formatQuery)
+                    // validate query
                     .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
+                    // transform to binary vector if configured
+                    .connectIf(!Config.USE_COUNT_VECTORS_QUERY, new RemoveCollisionPipeline())
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .collect(input);
             // query was invalid:
@@ -71,7 +76,9 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
-            Util.printFeatureVectorAnalysis(featureVector.get());
+            if (!Config.SILENT) {
+                Util.printFeatureVectorAnalysis(featureVector.get());
+            }
 
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {
@@ -104,7 +111,11 @@ public class OnlinePipeline implements
 
     @Override
     public void process(String input, int index, IndexedConsumer<DiffsearchResult> resultConsumer) {
-        resultConsumer.accept(runDiffSearch(input), index);
+        if (input != null) {
+            resultConsumer.accept(runDiffSearch(input), index);
+        } else {
+            resultConsumer.skip(index);
+        }
     }
 
     @Override

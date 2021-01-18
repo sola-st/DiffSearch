@@ -67,14 +67,31 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline();
-        pipeline.addFeatureExtractor(
-                new SplitFeatureExtractor(new TriangleFeatureExtractor(
-                        Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery))
-        );
-        pipeline.addFeatureExtractor(
-                new SplitFeatureExtractor(new ParentChildFeatureExtractor(
-                        Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery))
-        );
+        if (Config.SPLIT_EXTRACTORS) {
+            pipeline.addFeatureExtractor(
+                    new SplitFeatureExtractor(
+                            new TriangleFeatureExtractor(
+                                    Config.PROGRAMMING_LANGUAGE,
+                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
+                                    isQuery))
+            );
+            pipeline.addFeatureExtractor(
+                    new SplitFeatureExtractor(
+                            new ParentChildFeatureExtractor(
+                                    Config.PROGRAMMING_LANGUAGE,
+                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
+                                    isQuery))
+            );
+        } else {
+            pipeline.addFeatureExtractor(
+                    new TriangleFeatureExtractor(
+                            Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+            );
+            pipeline.addFeatureExtractor(
+                    new ParentChildFeatureExtractor(
+                            Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
+            );
+        }
         return pipeline;
     }
 }

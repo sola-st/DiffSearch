@@ -2,6 +2,7 @@ package research.diffsearch.pipeline.feature;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
+import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtract
         for (int i = 0; i < t.getChildCount(); i++) {
             var child = t.getChild(i);
             var childNodeText = Trees.getNodeText(child, ruleNames);
-            if (!isQuery() || !isQueryKeyword(childNodeText)) {
+            if ( !isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(childNodeText)) {
                 var feature = Trees.getNodeText(t, ruleNames) + ' ' +
                   Trees.getNodeText(t.getChild(i), ruleNames);
 

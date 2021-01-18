@@ -38,12 +38,16 @@ public class FeatureExtractionMode extends App {
 
     protected static void runPythonIndexing(int maxLines) throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
-            var pythonExecutor = new PythonRunner(
+
+            var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
                     "Features_Vectors/changes_feature_vectors_java.csv",
                     "Features_Vectors/faiss_java.index",
-                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()));
-            pythonExecutor.waitUntilEnd();
+                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
+                    Integer.toString(Config.nlist));
+
+            pythonRunner.runAndWaitUntilEnd();
+
         } else {
             logger.warn("Running in ONLY_JAVA mode. Python indexing must be started separately.");
         }
@@ -54,7 +58,7 @@ public class FeatureExtractionMode extends App {
         Pipeline.from(QueryUtil::formatQuery)
                 .connect(getDefaultFeatureExtractionPipeline(false))
                 .parallelUntilHere(16)
-                .connect(new RemoveCollisionPipeline())
+                .connectIf(!Config.USE_COUNT_VECTORS_CORPUS, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
                 .connect(new ProgressWatcher<>(changesLines.size(), "Feature extraction"))
                 .execute(changesLines);

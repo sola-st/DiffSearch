@@ -2,6 +2,7 @@ package research.diffsearch.pipeline.feature;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
+import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
-            if (!isQuery() || !isQueryKeyword(childNodeText)) {
+            if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(childNodeText)) {
                 sum.append(childNodeText);
             }
         }

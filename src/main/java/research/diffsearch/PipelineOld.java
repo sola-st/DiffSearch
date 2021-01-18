@@ -114,7 +114,7 @@ public class PipelineOld {
                     String ss22 = list.get(0).replace("if (", "if(");
                     if (!ss.equals(ss22)) {
                         ///////////////////////////////number_matching++;
-                        if (Config.EFFECTIVENESS || Config.NORMAL) {
+                        if (Config.NORMAL) {
                             System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n" + info);
                             List<String> items = Arrays.asList(info.split("\\s*@@\\s*"));
                             String s1 = items.get(2).substring(items.get(2).indexOf("/") + 1).trim();
@@ -355,7 +355,7 @@ public class PipelineOld {
                     String ss22 = list.get(0).replace("if (", "if(");
                     if (!ss.equals(ss22)) {
                         number_matching++;
-                        if (Config.EFFECTIVENESS || Config.NORMAL) {
+                        if (Config.NORMAL) {
                             System.out.println("- " + list.get(0) + "\n+ " + list.get(1) + "\n" + info);
                             List<String> items = Arrays.asList(info.split("\\s*@@\\s*"));
                             String s1 = items.get(2).substring(items.get(2).indexOf("/") + 1).trim();
