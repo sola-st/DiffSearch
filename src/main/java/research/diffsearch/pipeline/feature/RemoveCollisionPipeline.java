@@ -6,7 +6,8 @@ import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 
 /**
- * Removes and measures collisions in the feature vectors.
+ * Removes and measures collisions in the feature vectors. In other words,
+ * converts count vectors to binary vectors.
  */
 public class RemoveCollisionPipeline implements Pipeline<FeatureVector, FeatureVector> {
 

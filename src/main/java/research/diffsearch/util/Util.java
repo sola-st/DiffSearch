@@ -56,6 +56,7 @@ public class Util {
                 .collect(Collectors.joining(","));
     }
 
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printFeatureVectorAnalysis(FeatureVector vector) {
         System.out.println("Feature vector analysis");
         for (String category : vector.getCategories()) {
@@ -72,8 +73,8 @@ public class Util {
 
     public static String computeCandidateUrl(String candidate) {
         String candidateUrl = "https://github.com/";
-        String repository = "";
-        String commit = "";
+        String repository;
+        String commit;
 
         List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
         if (items.size() > 2) {

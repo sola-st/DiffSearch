@@ -8,6 +8,8 @@ import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
+import research.diffsearch.tree.ExtendedParseTree;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.QueryUtil;
@@ -78,6 +80,8 @@ public class OnlinePipeline implements
 
             if (!Config.SILENT) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
+                System.out.println(ExtendedParseTree.fromParseTree(
+                        TreeFactory.getChangeTree(input, getProgrammingLanguage()).getParseTree()));
             }
 
             // matching in this pipeline

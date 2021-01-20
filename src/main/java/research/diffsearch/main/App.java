@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
-import research.diffsearch.tree.Java_Tree;
+import research.diffsearch.tree.JavaTree;
 import research.diffsearch.util.CommandLineUtil;
 
 import java.io.FileNotFoundException;
@@ -82,15 +82,15 @@ public abstract class App implements Runnable {
     }
 
     public static boolean runJunit(String query, String candidate) {
-        Java_Tree queryJavaTree = new Java_Tree(query);
+        JavaTree queryJavaTree = new JavaTree(query);
 
-        ParseTree queryTree = queryJavaTree.get_parsetree();
+        ParseTree queryTree = queryJavaTree.getParseTree();
 
-        Java_Tree changeJavaTree = new Java_Tree(candidate);
-        ParseTree changeTree = changeJavaTree.get_parsetree();
+        JavaTree changeJavaTree = new JavaTree(candidate);
+        ParseTree changeTree = changeJavaTree.getParseTree();
 
-        Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
+        Matching matching = new Matching(queryTree, queryJavaTree.getParser());
 
-        return matching.isMatch(changeTree, changeJavaTree.get_parser());
+        return matching.isMatch(changeTree, changeJavaTree.getParser());
     }
 }

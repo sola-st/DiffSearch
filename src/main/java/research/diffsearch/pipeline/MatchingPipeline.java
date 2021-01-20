@@ -8,6 +8,7 @@ import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static research.diffsearch.tree.TreeObjectUtils.*;
+import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
 /**
  * Pipeline to check if some candidate code change actually matches a query.
@@ -69,17 +70,17 @@ public class MatchingPipeline
 
     private boolean checkCandidate(CodeChangeWeb candidateChange, String query) {
         try {
-            Object queryTree = getChangeTree(query, language);
-            ParseTree parseTreeQuery = getParseTree(queryTree, language);
+            AbstractTree queryTree = getChangeTree(query, language);
+            ParseTree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
 
-            Object changeTree = getChangeTree(candidate, language);
-            ParseTree changeParseTree = getParseTree(changeTree, language);
+            AbstractTree changeTree = getChangeTree(candidate, language);
+            ParseTree changeParseTree = changeTree.getParseTree();
 
-            Matching matching = new Matching(parseTreeQuery, getParser(queryTree, language));
+            Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
 
             if (matchingCounter < matchingLimit &&
-                matching.isMatch(changeParseTree, getParser(changeTree, language))) {
+                matching.isMatch(changeParseTree, changeTree.getParser())) {
 
                 if (isNotEqualCodeChange(candidate)) {
                     matchingCounter++;

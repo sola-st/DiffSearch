@@ -1,7 +1,7 @@
 package research.diffsearch.util;
 
 import research.diffsearch.Config;
-import research.diffsearch.tree.TreeObjectUtils;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
 import java.util.Arrays;
@@ -16,11 +16,10 @@ public class QueryUtil {
     }
 
     public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
-        var queryTree = TreeObjectUtils.getChangeTree(query, language);
-        var parseTree = TreeObjectUtils.getParseTree(queryTree, language);
-        var parser = TreeObjectUtils.getParser(queryTree, language);
-        var error = TreeObjectUtils.isError(queryTree, language);
+        var queryTree = TreeFactory.getChangeTree(query, language);
+        var parseTree = queryTree.getParseTree();
+        var parser = queryTree.getParser();
 
-        return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || error);
+        return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
     }
 }

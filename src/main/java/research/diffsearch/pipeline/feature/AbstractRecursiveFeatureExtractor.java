@@ -1,8 +1,8 @@
 package research.diffsearch.pipeline.feature;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
-import research.diffsearch.tree.TreeObjectUtils;
+import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.Arrays;
@@ -29,11 +29,11 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
 
     @Override
     public FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition) {
-        Object queryTree = TreeObjectUtils.getChangeTree(codeChange, getProgrammingLanguage());
-        String[] ruleNames = TreeObjectUtils.getParser(queryTree, getProgrammingLanguage()).getRuleNames();
-        ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, getProgrammingLanguage());
+        AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
+        String[] ruleNames = queryTree.getParser().getRuleNames();
 
-        extractFeaturesRecursive(parseTree, completeFeatureVector, startPosition, Arrays.asList(ruleNames), 0);
+        extractFeaturesRecursive(queryTree.getParseTree(), completeFeatureVector, startPosition,
+                Arrays.asList(ruleNames), 0);
         return completeFeatureVector;
     }
 

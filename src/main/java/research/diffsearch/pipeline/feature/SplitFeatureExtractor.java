@@ -1,7 +1,8 @@
 package research.diffsearch.pipeline.feature;
 
 import org.antlr.v4.runtime.tree.ParseTree;
-import research.diffsearch.tree.TreeObjectUtils;
+import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.Arrays;
@@ -25,9 +26,9 @@ public class SplitFeatureExtractor implements FeatureExtractor {
 
     @Override
     public FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition) {
-        Object queryTree = TreeObjectUtils.getChangeTree(codeChange, getProgrammingLanguage());
-        String[] ruleNames = TreeObjectUtils.getParser(queryTree, getProgrammingLanguage()).getRuleNames();
-        ParseTree parseTree = TreeObjectUtils.getParseTree(queryTree, getProgrammingLanguage());
+        AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
+        String[] ruleNames = queryTree.getParser().getRuleNames();
+        ParseTree parseTree = queryTree.getParseTree();
 
         if (parseTree.getChildCount() == 3) {
             if (splitMode.ordinal() <= BOTH.ordinal()) {
