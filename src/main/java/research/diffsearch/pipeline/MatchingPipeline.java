@@ -16,7 +16,6 @@ import research.diffsearch.util.ProgressWatcher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
@@ -31,6 +30,7 @@ public class MatchingPipeline
     private final int matchingLimit;
     private final ProgrammingLanguage language;
     private int matchingCounter = 0;
+    private AbstractTree queryTree = null;
 
     public MatchingPipeline(ProgrammingLanguage language) {
         this(language, Integer.MAX_VALUE);
@@ -55,10 +55,15 @@ public class MatchingPipeline
     @Override
     public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> outputConsumer) {
         List<CodeChangeWeb> outputList = new ArrayList<>();
+
+        if (queryTree == null) {
+            queryTree = getChangeTree(input.getQuery(), language);
+        }
+
         try {
             outputList = Pipeline
-                    .getFilter((Predicate<CodeChangeWeb>) codeChange -> checkCandidate(codeChange, input.getQuery()))
-                    .parallelUntilHere(16)
+                    .getFilter(this::checkCandidate)
+                    .parallelUntilHere(14)
                     .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
                     .collect(input.getResults());
         } catch (Exception e) {
@@ -68,9 +73,8 @@ public class MatchingPipeline
         outputConsumer.accept(input.setResults(outputList), index);
     }
 
-    private boolean checkCandidate(CodeChangeWeb candidateChange, String query) {
+    private boolean checkCandidate(CodeChangeWeb candidateChange) {
         try {
-            AbstractTree queryTree = getChangeTree(query, language);
             ParseTree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
 
@@ -100,5 +104,10 @@ public class MatchingPipeline
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void after() {
+        queryTree = null;
     }
 }

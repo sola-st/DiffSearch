@@ -22,12 +22,16 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
             if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(childNodeText)) {
-                sum.append(childNodeText);
+                sum.append(childNodeText).append(" ");
+            } else {
+                // set sum empty if query keyword was detected.
+//                sum = new StringBuilder();
+//                break;
             }
         }
 
         if (!sum.toString().isBlank() && i > 0) {
-            int index = getFeatureVectorIndex(startPosition, sum.toString().hashCode(),
+            int index = getFeatureVectorIndex(startPosition, sum.toString().trim().hashCode(),
                     getFeatureVectorLength());
             completeFeatureVector.addFeature("Triangle", sum.toString(), index);
         }

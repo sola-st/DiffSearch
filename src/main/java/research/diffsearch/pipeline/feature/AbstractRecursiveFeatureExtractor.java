@@ -20,7 +20,7 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         this.isQuery = isQuery;
     }
 
-    public int getFeatureVectorIndex(int startIndex, int hashValue, long vectorLength) {
+    public static int getFeatureVectorIndex(int startIndex, int hashValue, long vectorLength) {
         return (int) (startIndex + Math.abs(hashValue % vectorLength));
     }
 
@@ -51,10 +51,20 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         return isQuery;
     }
 
-    protected boolean isQueryKeyword(String nodeText) {
-        var keywords = List.of("ID", "EXPR", "binOP", "upOP", "OP", "LT", "<...>");
+    protected static boolean isQueryKeyword(String nodeText) {
+        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>");
         return keywords
                 .stream()
-                .anyMatch(nodeText::startsWith);
+                .anyMatch(nodeText::contains);
+    }
+
+    protected static String getQueryKeywordIdentifier(String nodeText) {
+        var startIndex = nodeText.indexOf('<');
+        var endIndex = nodeText.indexOf('>', startIndex);
+
+        if (startIndex == -1 || endIndex == -1) {
+            return null;
+        }
+        return nodeText.substring(startIndex + 1, endIndex);
     }
 }

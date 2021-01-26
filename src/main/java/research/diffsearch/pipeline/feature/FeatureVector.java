@@ -7,16 +7,26 @@ public class FeatureVector {
     private final int[] vector;
     private final String codeChange;
     private final Map<String, List<Feature>> typeToFeaturesMap = new HashMap<>();
+    private final int countBits;
 
-    public FeatureVector(String codeChange, int size) {
+    public FeatureVector(String codeChange, int size, int countBits) {
         this.codeChange = codeChange;
-        this.vector = new int[size];
+        this.vector = new int[size * countBits];
+        this.countBits = countBits;
     }
 
     public void addFeature(String category, String feature, int index) {
-        vector[index]++;
+        int actualIndex = index;
+        for (var offset = 0; offset < countBits; offset++) {
+            if (vector[countBits * index + offset] == 0 || offset == countBits - 1) {
+                actualIndex = countBits * index + offset;
+                vector[actualIndex] = 1;
+                break;
+            }
+        }
+
         var list = typeToFeaturesMap.getOrDefault(category, new ArrayList<>());
-        list.add(new Feature(feature, index));
+        list.add(new Feature(feature, actualIndex));
         typeToFeaturesMap.put(category, list);
     }
 

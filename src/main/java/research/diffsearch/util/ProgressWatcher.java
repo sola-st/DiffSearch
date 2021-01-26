@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 
+import java.text.MessageFormat;
+import java.util.stream.IntStream;
+
 public class ProgressWatcher<T> implements Pipeline<T, T> {
 
     private final int size;
@@ -21,7 +24,7 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
     }
 
     public ProgressWatcher(int size, String progressName) {
-        this(size, progressName, 0.25, 0.50, 0.75);
+        this(size, progressName, IntStream.range(1, 1000).mapToDouble(i -> i / 1000.0).toArray());
     }
 
     @Override
@@ -32,7 +35,16 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
         }
         if (currentStepIndex < steps.length) {
             if (index / (double) size >= steps[currentStepIndex]) {
-                logger.info("{}: {}% ({}/{})", progressName, Math.round(steps[currentStepIndex] * 100), index, size);
+                var percent = Math.round(steps[currentStepIndex] * 100);
+
+                System.out.print("[ ");
+                System.out.print("█".repeat((int) (percent / 5)));
+                System.out.print("░".repeat((int) (20 - (percent / 5))));
+                System.out.print(" ] ");
+                System.out.print(MessageFormat.format("{0}: {1}% ({2}/{3})", progressName, percent, index, size));
+
+                System.out.print("\r");
+
                 currentStepIndex++;
             }
         }

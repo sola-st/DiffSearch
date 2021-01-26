@@ -92,7 +92,12 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 256;
+
+    /**
+     * The number of bits per feature that are used for unary counting
+     */
+    public static byte COUNT_BITS = 4;
 
     /**
      * Port of the web server.
@@ -123,7 +128,7 @@ public class Config {
     /**
      * If true, count feature vectors will be used for the query instead of binary vectors.
      */
-    public static boolean USE_COUNT_VECTORS_QUERY = true;
+    public static boolean USE_COUNT_VECTORS_QUERY = false;
 
     /**
      * If true, count feature vectors will be used for the corpus instead of binary vectors.
@@ -137,8 +142,17 @@ public class Config {
     public static boolean EXTRACT_QUERY_KEYWORDS = false;
 
     /**
+     * Query vectors get multiplied by this factor.
+     */
+    public static int QUERY_FEATURE_VECTOR_MULTIPLIER = 513;
+
+    /**
      * FAISS parameter, number of clusters of the index.
      */
-    public static int nlist = 3;
+    public static int nlist = 3650;
 
+    /**
+     * FAISS parameter, number of clusters considers while performing nearest neighbor search.
+     */
+    public static int ngroup = 240;
 }

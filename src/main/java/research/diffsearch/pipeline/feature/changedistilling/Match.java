@@ -2,23 +2,31 @@ package research.diffsearch.pipeline.feature.changedistilling;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import research.diffsearch.tree.ExtendedParseTree;
+import research.diffsearch.tree.ParseTreeNode;
+
+import java.util.StringJoiner;
 
 public class Match {
 
-    private final ExtendedParseTree oldNode, newNode;
+    private final ParseTreeNode oldNode, newNode;
+    private final double similarity;
 
-    public Match(ExtendedParseTree oldNode, ExtendedParseTree newNode) {
+    public Match(ParseTreeNode oldNode, ParseTreeNode newNode, double similarity) {
         this.oldNode = oldNode;
         this.newNode = newNode;
+        this.similarity = similarity;
     }
 
-    public ExtendedParseTree getOldNode() {
+    public ParseTreeNode getOldNode() {
         return oldNode;
     }
 
-    public ExtendedParseTree getNewNode() {
+    public ParseTreeNode getNewNode() {
         return newNode;
+    }
+
+    public double getSimilarity() {
+        return similarity;
     }
 
     @Override
@@ -41,5 +49,12 @@ public class Match {
         return new HashCodeBuilder(17, 37).append(oldNode).append(newNode).toHashCode();
     }
 
-
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", "(", ")")
+                .add(oldNode.getNodeLabel())
+                .add(newNode.getNodeLabel())
+                .add(Double.toString(similarity))
+                .toString();
+    }
 }

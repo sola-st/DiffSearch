@@ -26,6 +26,7 @@ public class FeatureExtractionMode extends App {
 
         try {
             extractFeaturesToFile();
+            System.gc();
             runPythonIndexing();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -57,7 +58,7 @@ public class FeatureExtractionMode extends App {
         List<String> changesLines = Lists.newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
         Pipeline.from(QueryUtil::formatQuery)
                 .connect(getDefaultFeatureExtractionPipeline(false))
-                .parallelUntilHere(16)
+                .parallelUntilHere(12)
                 .connectIf(!Config.USE_COUNT_VECTORS_CORPUS, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
                 .connect(new ProgressWatcher<>(changesLines.size(), "Feature extraction"))

@@ -26,7 +26,7 @@ public abstract class App implements Runnable {
         if (!Config.ONLY_JAVA) {
             try {
                 var runner = new PythonRunner("./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py",
-                        "./src/main/resources/Features_Vectors/faiss_java.index",
+                        "./src/main/resources/Features_Vectors/faiss_java3.index",
                         Integer.toString(Config.k),
                         Config.host,
                         Integer.toString(Config.port));

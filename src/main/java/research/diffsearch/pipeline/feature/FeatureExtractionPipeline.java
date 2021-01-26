@@ -16,6 +16,11 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
+    private final byte countBits;
+
+    public FeatureExtractionPipeline(byte countBits) {
+        this.countBits = countBits;
+    }
 
     /**
      * Adds a new extractor to the pipeline.
@@ -41,7 +46,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
      * @param codeChange the code change.
      */
     public FeatureVector extractFeatures(String codeChange) {
-        FeatureVector featureVector = new FeatureVector(codeChange, getTotalFeatureVectorLength());
+        FeatureVector featureVector = new FeatureVector(codeChange, getTotalFeatureVectorLength(), countBits);
         try {
             var startPosition = 0;
 
@@ -66,15 +71,9 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     }
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
-        var pipeline = new FeatureExtractionPipeline();
+        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS);
         if (Config.SPLIT_EXTRACTORS) {
-            pipeline.addFeatureExtractor(
-                    new SplitFeatureExtractor(
-                            new TriangleFeatureExtractor(
-                                    Config.PROGRAMMING_LANGUAGE,
-                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
-                                    isQuery))
-            );
+
             pipeline.addFeatureExtractor(
                     new SplitFeatureExtractor(
                             new ParentChildFeatureExtractor(
@@ -82,6 +81,14 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
                                     Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
                                     isQuery))
             );
+            pipeline.addFeatureExtractor(
+                    new SplitFeatureExtractor(
+                            new NodeExtractor(
+                                    Config.PROGRAMMING_LANGUAGE,
+                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
+                                    isQuery))
+            );
+
         } else {
             pipeline.addFeatureExtractor(
                     new TriangleFeatureExtractor(

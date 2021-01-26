@@ -78,10 +78,12 @@ def searching(index_path, k, host, port):
                 # limits, distances, indices = index.range_search(query_feature_vectors, 5)
 
                 # if len(indices) < k:
+                index.nprobe = 240
+                logger.debug(f"nprobe = {index.nprobe}")
                 distances, indices = index.search(query_feature_vectors, k)
                 # if len(indices) > 10 * k:
-                  #   distances = distances[:10 * k]
-                  #indices = indices[:10 * k]
+                #   distances = distances[:10 * k]
+                # indices = indices[:10 * k]
 
                 logger.info('Searching finished')
 

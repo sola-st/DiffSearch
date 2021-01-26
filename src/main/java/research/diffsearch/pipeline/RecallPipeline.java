@@ -26,10 +26,7 @@ public class RecallPipeline implements
 
     private static final Logger logger = LoggerFactory.getLogger(RecallPipeline.class);
     private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/ExpectedValues.csv";
-    private static final String ACTUAL_VALUES_FILE = "./src/main/resources/Recall/ActualValues.csv";
     private static final String RECALL_VALUES_FILE = "./src/main/resources/Recall/RecallResults.csv";
-    private static final String PRECISION_VALUES_FILE = "./src/main/resources/Recall/PrecisionResults.csv";
-    private static final String RECIPROCAL_RANK_VALUES_FILE = "./src/main/resources/Recall/ReciprocalRankResults.csv";
 
     private final ProgrammingLanguage language;
     private final List<String> queries;
