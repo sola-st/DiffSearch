@@ -51,6 +51,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 		while ((line = in.readLine()) != null && (line.length() != 0)) {
 		    // System.out.println(line);
 			if (line.contains("GET /api?")) {
+				logger.info(line);
 				auxLine = line.substring(9, line.indexOf(" HTTP/1.1"));
 			}
 		}
@@ -77,9 +78,11 @@ public class WebServerGUI extends DiffSearchWebServer {
 		} // else Config is not changed
 		
 		long startTimeMatching = System.currentTimeMillis();
+		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		if (auxLine.length() > 0) {
 			flagFirstConnection = true;
 			logger.info("Search started.");
+			logger.info(postData.toString());
 			query = getQuery(postData);
 
 			try {

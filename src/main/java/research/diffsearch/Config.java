@@ -8,6 +8,7 @@ public class Config {
     public static String PYTHON_CMD = "python3";
     public static String GITDIFF_FILE = "";
 
+
     //Programming language supported: PYTHON3, JAVA
     public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
@@ -16,8 +17,8 @@ public class Config {
     public static boolean SCALABILITY  = false;
     public static boolean EFFECTIVENESS  = false;
     public static boolean NORMAL  = false;
-    public static boolean WEB  = true;
-    public static boolean WEB_GUI  = false;
+    public static boolean WEB  = false;
+    public static boolean WEB_GUI  = true;
     public static boolean ONLY_JAVA = false;
     public static boolean QUERY_MODE = false;
     public static boolean MEASURE_RECALL = false;
