@@ -50,8 +50,11 @@ public class WebServerGUI extends DiffSearchWebServer {
 		// looks for post data
 		while ((line = in.readLine()) != null && (line.length() != 0)) {
 		    // System.out.println(line);
-			if (line.contains("GET /api?")) {
-				auxLine = line.substring(9, line.indexOf(" HTTP/1.1"));
+			// if (line.contains("GET /api?")) {
+			if (line.contains("?Text1=") && line.contains("Text2=")) {
+				logger.info(line);
+				// auxLine = line.substring(9, line.indexOf(" HTTP/1.1"));
+				auxLine = line.substring(line.indexOf("?Text1=") + 1, line.indexOf(" HTTP/1.1"));
 			}
 		}
 		StringBuilder postData = new StringBuilder();
@@ -76,10 +79,12 @@ public class WebServerGUI extends DiffSearchWebServer {
 			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
 		} // else Config is not changed
 		
+		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		long startTimeMatching = System.currentTimeMillis();
 		if (auxLine.length() > 0) {
 			flagFirstConnection = true;
 			logger.info("Search started.");
+			logger.info(postData.toString());
 			query = getQuery(postData);
 
 			try {
@@ -186,6 +191,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 		// out.print("Date: .....\r\n");
 		out.print("Server: MINISERVER/1.0\r\n");
 		out.print("Content-type: text/html; charset=utf-8\r\n");
+		// out.print("Access-Control-Allow-Origin: http://localhost:4200\r\n");  // Angular development server
+		out.print("Access-Control-Allow-Origin: " + Config.web_url + "\r\n");
 		out.print("\r\n"); // End of headers
     }
 	
