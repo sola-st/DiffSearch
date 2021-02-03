@@ -95,6 +95,10 @@ public abstract class App implements Runnable {
             if (commandLine.hasOption("k")) {
                 Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
             }
+            
+            if (commandLine.hasOption("gurl")) {
+                Config.web_url = commandLine.getOptionValue("gurl");
+            }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());
         }
