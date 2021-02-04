@@ -78,6 +78,7 @@ public abstract class App implements Runnable {
             Config.MEASURE_RECALL = commandLine.hasOption("r");
             Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
             Config.SILENT = commandLine.hasOption("silent");
+            Config.DATASET_CREATION = commandLine.hasOption("d");
 
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
@@ -120,6 +121,8 @@ public abstract class App implements Runnable {
             app = new QueryMode();
         } else if (Config.CORPUS_FEATURE_EXTRACTION) {
             app = new FeatureExtractionMode();
+        }else if (Config.DATASET_CREATION) {
+            app = new DatasetCreationMode();
         }
 
         if (app != null) {

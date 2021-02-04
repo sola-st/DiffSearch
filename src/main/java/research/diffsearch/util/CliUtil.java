@@ -26,6 +26,7 @@ public class CliUtil {
                         .numberOfArgs(2)
                         .optionalArg(true)
                         .build())
-                .addOption("silent", "don't output results in console");
+                .addOption("silent", "don't output results in console")
+                .addOption("d", "dataset", false, "create a new dataset from GitHub repositories.");
     }
 }

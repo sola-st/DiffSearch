@@ -25,12 +25,14 @@ public class Config {
     public static String query = "";
     public static boolean SILENT = false;
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
+    public static boolean DATASET_CREATION = false;
 
     public static int k = 1000;
     public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
     public static boolean BATCH = false;
     public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
     public static String batchOutput = "./src/main/resources/batchOutput.txt";
+    public static String githubJava = "./src/main/resources/GitHub_Java";
 
     // socket
     public static int port_web = 8843;

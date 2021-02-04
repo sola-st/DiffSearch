@@ -1,8 +1,11 @@
 package research.diffsearch;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import difflib.DiffUtils;
 import difflib.Patch;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,7 +25,7 @@ public class Change_extraction {
      * Cloning and git diff computation of a git repository (not complete)
      *
      */
-    static void git_diff(){
+    public static void git_diff(){
         Process git_diff_python;
         try {
             git_diff_python = Runtime.getRuntime().exec("python ./src/main/resources/Python/git_functions.py");
@@ -709,6 +712,253 @@ public class Change_extraction {
         return change_number;
     }
 
+    /**
+     * Extraction of the changes from a git diff file. Each change is transformed in the form:
+     * old code -> new code
+     *
+     * @return A list of changes in the form: old code -> new code
+     */
+    public static long analyze_diff_file_fixed() {
+        List<String> temporary_list_old = new ArrayList<String>();
+        List<String> temporary_list_new = new ArrayList<String>();
+        long change_number = 0;
+        List<String> allLines = null;
+        Gson gson = new Gson();
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/corpus_diff.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        PrintWriter writer_prop = null;
+        try {
+            writer_prop = new PrintWriter(System.getProperty("user.dir") + "/src/main/resources/Features_Vectors/corpus_diff_prop.txt", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        writer_prop.println("[");
+
+        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/java_patch");
+
+        int www = 0;
+        List<CodeChange> codechanges_list = new ArrayList<>();
+
+        for (File f : list_files) {
+            System.out.println(++www + " " + f.toString());
+
+            if(www == 57 || www == 58)
+                continue;
+
+            boolean flag = false;
+
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                String commit = null;
+                String position = null;
+                CodeChange cc = new CodeChange();
+                cc.url = f.toString();
+                cc.projectname = f.toString();
+                String fixPatch = "";
+
+                while (scanner.hasNext()) {
+                    String line = scanner.nextLine() + "  ";
+                    if(line.contains("submittedNode.get"))
+                        System.out.println("okay");
+                    if(line.length() > 3 && line.substring(0, 4).equals("diff"))
+                        fixPatch += line.substring(0, line.length() - 2);
+                    int ggg = 0;
+                    if(line.contains("footerEl.remove();"))
+                        ggg++;
+
+                    if(line.length() > 7 && line.substring(0, 7).equals("commit ")){
+                        commit = line;
+                        cc.commit = line.replace("commit ", "");
+                    }
+                    else
+                    if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
+                        position = line;
+                        cc.line = line;
+                    }
+                    else
+                        //manage -old change
+                        if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
+
+                            //Manage sequential change without interruption: -old +new -old +new
+                            if (flag && temporary_list_old.size() > 0) {
+                                ArrayList<String> change = new ArrayList<String>();
+
+                                if (temporary_list_new.size() == 0) {
+                                    change.add(temporary_list_old.toString());
+                                    change.add("_\n");
+                                } else {
+                                    if (temporary_list_old.size() == 0) {
+                                        change.add("_\n");
+                                        change.add(temporary_list_new.toString());
+                                    } else {
+                                        change.add(temporary_list_old.toString());
+                                        change.add(temporary_list_new.toString());
+                                    }
+                                }
+
+                                writeChange(writer, change);
+                                change_number++;
+
+                                temporary_list_old.clear();
+                                temporary_list_new.clear();
+                                flag = false;
+                            }
+
+                            //Add -old in a  temporary list, managing the case: all whitespace
+                            if (line.substring(1, line.length() - 1).trim().length() > 0)
+                                temporary_list_old.add(line.substring(1, line.length() - 1) + "\n");
+                            else
+                                temporary_list_old.add("_\n");
+
+                        } else
+                            //manage +new change, managing the case: all whitespace
+                            if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
+                                if (line.substring(1, line.length() - 1).trim().length() > 0)
+                                    temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
+                                else
+                                    temporary_list_new.add("_\n");
+
+                                flag = true;//-old +new is complete
+                            } else {
+                                // merge old and new code in the same list
+                                if (flag || temporary_list_old.size() > 0) {
+                                    ArrayList<String> change = new ArrayList<String>();
+
+                                    //manage -old only
+                                    if (temporary_list_new.size() == 0) {
+                                        change.add(temporary_list_old.toString());
+                                        change.add("_\n");
+                                    } else {
+                                        //manage +new only
+                                        if (temporary_list_old.size() == 0) {
+                                            change.add("_\n");
+                                            change.add(temporary_list_new.toString());
+                                        } else {
+                                            change.add(temporary_list_old.toString());
+                                            change.add(temporary_list_new.toString());
+                                        }
+                                    }
+
+                                    //changes_list.add(change);
+                                    if (change.get(0).equals("_\n")) {
+                                        assert writer != null;
+                                        writer.println((change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                        cc.codeChange = (change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                                        assert writer_prop != null;
+                                        writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+
+                                    } else if (change.get(1).equals("_\n")) {
+                                        assert writer != null;
+                                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                        cc.codeChange = (change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                                        assert writer_prop != null;
+                                        writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+
+                                    } else {
+                                        assert writer != null;
+                                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                                        cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                                        assert writer_prop != null;
+                                        writer_prop.println(commit + " " + position + " " + f.toString());// (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+
+                                    }
+
+                                    //                            writer_prop.close();
+                                    change_number++;
+                                    cc.fixPatch = fixPatch;
+                                    codechanges_list.add(cc);
+
+                                    cc = new CodeChange();
+                                    cc.url = f.toString();
+                                    cc.projectname = f.toString();
+
+                                    fixPatch = "";
+
+                                    temporary_list_old.clear();
+                                    temporary_list_new.clear();
+                                    flag = false;
+                                }
+                            }
+                }
+
+                //Last change
+                if (flag) {
+                    ArrayList<String> change = new ArrayList<String>();
+                    change.add(temporary_list_old.toString());
+                    change.add(temporary_list_new.toString());
+
+                    if (change.get(0).equals("_\n")) {
+                        assert writer != null;
+                        writer.println((change.get(0).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
+                        cc.codeChange = (change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->");
+                        assert writer_prop != null;
+                        writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->"));
+
+                    } else if (change.get(1).equals("_\n")) {
+                        assert writer != null;
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                        cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                        assert writer_prop != null;
+                        writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+
+                    } else {
+                        assert writer != null;
+                        writer.println((change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "-->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+                        cc.codeChange = (change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$";
+                        writer_prop.println(commit + " " + position + " " + f.toString());//(change.get(0).substring(1, change.get(0).length() - 1).replace("\n,", "\n") + "->" + change.get(1).substring(1, change.get(1).length() - 1).replace("\n,", "\n")).replace("\n->", "->") + "$$$");
+
+                    }
+
+                    //gson.toJson(cc, writer_prop);
+                    cc.fixPatch = fixPatch;
+                    codechanges_list.add(cc);
+                    change_number++;
+
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        assert writer != null;
+        writer.close();
+        //  writer_prop.println("]");
+        writer_prop.close();
+
+        // create a new Gson instance
+        Gson gson_list = new GsonBuilder().setPrettyPrinting().create();
+        // convert your list to json
+        String jsonChangesList = gson_list.toJson(codechanges_list);
+        // print your generated json
+
+        try {
+            FileWriter myWriter = new FileWriter("./src/main/resources/Features_Vectors/dataset.json");
+            myWriter.write(jsonChangesList);
+            myWriter.close();
+            //System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+
+        return change_number;
+    }
+
 
     /**
      * Extraction of the changes from a git diff file. Each change is transformed in the form:
@@ -1129,6 +1379,20 @@ public class Change_extraction {
 
 
         return number;//list_files.size();
+    }
+
+    public static boolean clone_GitHub_repositories(){
+
+        try {
+            Git git = Git.cloneRepository()
+                    .setURI( "https://github.com/Activiti/Activiti.git" )
+                    .setDirectory(new File(Config.githubJava))
+                    .call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 }
 

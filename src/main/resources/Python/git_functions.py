@@ -22,13 +22,13 @@ with open('./src/main/resources/GitHub/python.json') as fh:
 article_urls = [article['html_url'] for article in articles]
 """
 
-dirlist = [item for item in os.listdir("./src/main/resources/GitHub_Python/") if
-                 os.path.isdir(os.path.join("./src/main/resources/GitHub_Python/", item))]
+dirlist = [item for item in os.listdir("./src/main/resources/GitHub_Java/") if
+                 os.path.isdir(os.path.join("./src/main/resources/GitHub_Java/", item))]
 
 i = 0
 for link in dirlist:
     print(i, link)
 
-    command = "git --git-dir ./src/main/resources/GitHub_Python/" + link + "/.git log -p > ./src/main/resources/python_patch/" + link + ".patch"
+    command = "git --git-dir ./src/main/resources/GitHub_Java/" + link + "/.git log -p > ./src/main/resources/java_patch/" + link + ".patch"
     os.system(command)
     i = i + 1
