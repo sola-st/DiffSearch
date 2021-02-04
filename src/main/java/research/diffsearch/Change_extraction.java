@@ -746,16 +746,16 @@ public class Change_extraction {
         List<CodeChange> codechanges_list = new ArrayList<>();
 
         for (File f : list_files) {
+            int line_num = 0;
             System.out.println(++www + " " + f.toString());
-
-            if(www == 57 || www == 58)
-                continue;
 
             boolean flag = false;
 
             Scanner scanner = null;
+            BufferedReader br = null;
             try {
-                scanner = new Scanner(f);
+                scanner = new Scanner(new FileInputStream(f), "UTF-8");
+                //br = new BufferedReader(new FileReader(f));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -768,10 +768,15 @@ public class Change_extraction {
                 cc.projectname = f.toString();
                 String fixPatch = "";
 
-                while (scanner.hasNext()) {
-                    String line = scanner.nextLine() + "  ";
-                    if(line.contains("submittedNode.get"))
-                        System.out.println("okay");
+
+                String line = null;
+                while (scanner.hasNextLine()) {
+               // while ((line = br.readLine()) != null) {
+                   // line += "  ";
+                    System.out.print(line_num++ + "\n");
+                    line = scanner.nextLine() + "  ";
+                    //if(line.contains("submittedNode.get"))
+                      //  System.out.println("okay");
                     if(line.length() > 3 && line.substring(0, 4).equals("diff"))
                         fixPatch += line.substring(0, line.length() - 2);
                     int ggg = 0;
@@ -932,6 +937,8 @@ public class Change_extraction {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            scanner.close();
+            System.out.println(line_num );
         }
 
         assert writer != null;
