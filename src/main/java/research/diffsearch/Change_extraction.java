@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import difflib.DiffUtils;
 import difflib.Patch;
+import org.antlr.v4.runtime.misc.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jsoup.Jsoup;
@@ -11,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import research.diffsearch.util.CodeChange;
+import research.diffsearch.util.Util;
 
 import java.io.*;
 import java.net.URL;
@@ -764,6 +767,7 @@ public class Change_extraction {
                 String commit = null;
                 String position = null;
                 CodeChange cc = new CodeChange();
+
                 cc.url = f.toString();
                 cc.projectname = f.toString();
                 String fixPatch = "";
@@ -773,7 +777,7 @@ public class Change_extraction {
                 while (scanner.hasNextLine()) {
                // while ((line = br.readLine()) != null) {
                    // line += "  ";
-                    System.out.print(line_num++ + "\n");
+                   // System.out.print(line_num++ + "\n");
                     line = scanner.nextLine() + "  ";
                     //if(line.contains("submittedNode.get"))
                       //  System.out.println("okay");
@@ -881,12 +885,15 @@ public class Change_extraction {
                                     }
 
                                     //                            writer_prop.close();
+                                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                                    List<String> items = Arrays.asList(info_url_line.split("-->"));
+                                    cc.url = items.get(0);
+                                    cc.line = items.get(1);
                                     change_number++;
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
 
                                     cc = new CodeChange();
-                                    cc.url = f.toString();
                                     cc.projectname = f.toString();
 
                                     fixPatch = "";
@@ -927,6 +934,10 @@ public class Change_extraction {
                     }
 
                     //gson.toJson(cc, writer_prop);
+                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                    List<String> items = Arrays.asList(info_url_line.split("-->"));
+                    cc.url = items.get(0);
+                    cc.line = items.get(1);
                     cc.fixPatch = fixPatch;
                     codechanges_list.add(cc);
                     change_number++;
