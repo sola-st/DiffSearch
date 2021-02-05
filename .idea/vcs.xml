@@ -447,6 +447,8 @@
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub_Python/ytdl-org-youtube-dl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub_Python/yunjey-pytorch-tutorial" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub_Python/zulip-zulip" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub_java/iluwatar-java-design-patterns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/main/resources/GitHub_java/spring-projects-spring-boot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Python/java-design-patterns" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/Python/spring-boot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/resources/patch_java/Angel-ML-angel" vcs="Git" />

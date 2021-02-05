@@ -4,8 +4,8 @@ import re
 
 import pygit2 as git
 
-filenameInput = "../Input/topJavaMavenProjects.txt"
-pathOutput = "../GitHub_Java/"
+filenameInput = "./src/main/resources/Input/topJavaMavenProjects.txt"
+pathOutput = "./src/main/resources/GitHub_Java/"
 
 #with open(filenameInput) as fh:
  #   articles = json.load(fh)
@@ -27,9 +27,10 @@ for link in article_urls:
 
         continue
 
-    else:
+    else:   
         print(str(i) + ') Cloning ' + link)
         try:
+            os.mkdir(pathOutput + '/' + out)
             git.clone_repository(link, pathOutput + '/' + out)
         except Exception as e:
             print('[Error] cloning repository:', str(e))

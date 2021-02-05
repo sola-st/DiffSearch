@@ -151,6 +151,7 @@ FOR THE DIFFSEARCH SERVER:
       - pip3 install faiss-cpu 
       - pip3 install numpy     
       - pip3 install pandas
+      - pip3 install pygit2
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
   - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
