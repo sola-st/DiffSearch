@@ -750,7 +750,7 @@ public class Change_extraction {
 
         for (File f : list_files) {
             int line_num = 0;
-            System.out.println(++www + " " + f.toString());
+            //System.out.println(++www + " " + f.toString());
 
             boolean flag = false;
 
