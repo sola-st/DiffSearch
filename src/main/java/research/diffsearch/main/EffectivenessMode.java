@@ -53,7 +53,7 @@ public class EffectivenessMode extends App {
             int[] array = {1000000, 1000000, 1000000, 1000000, 568580};
 
             List<CodeChangeWeb> json_final = new ArrayList<>();
-            for (int sub = 0; sub < 1; sub++) {
+            for (int sub = 0; sub < 4; sub++) {
                 logger.debug("INDEXING STARTED.\n");
                 FeatureExtractionMode.runPythonIndexing(array[sub]);
 

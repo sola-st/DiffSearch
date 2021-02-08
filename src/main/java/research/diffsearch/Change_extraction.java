@@ -959,14 +959,14 @@ public class Change_extraction {
         writer_prop.close();
 
         // create a new Gson instance
-        Gson gson_list = new GsonBuilder().setPrettyPrinting().create();
+       // Gson gson_list = new GsonBuilder().setPrettyPrinting().create();
         // convert your list to json
-        String jsonChangesList = gson_list.toJson(codechanges_list);
+        //String jsonChangesList = gson_list.toJson(codechanges_list);
         // print your generated json
 
         try {
             FileWriter myWriter = new FileWriter("./src/main/resources/Features_Vectors/dataset.json");
-            myWriter.write(jsonChangesList);
+          //  myWriter.write(jsonChangesList);
             myWriter.close();
             //System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
