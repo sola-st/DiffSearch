@@ -757,8 +757,8 @@ public class Change_extraction {
             Scanner scanner = null;
             BufferedReader br = null;
             try {
-                //scanner = new Scanner(new FileInputStream(f), "UTF-8");
-                scanner = new Scanner(f, "UTF-8");
+                scanner = new Scanner(new FileInputStream(f), "UTF-8");
+                //scanner = new Scanner(f, "UTF-8");
                 //br = new BufferedReader(new FileReader(f));
             } catch (IOException e) {
                 e.printStackTrace();
