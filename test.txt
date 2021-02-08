@@ -1,0 +1,501 @@
+** 553 RESULTS  for ID<0>.ID<1>(ID, LT)-->ID<0>.ID<1>(ID, LT)***
+*
+*  - [31mthis.submitted = registry.counter(MetricRegistry.name(name, "submitted"));[0m
+*  + [32mthis.submitted = registry.meter(MetricRegistry.name(name, "submitted"));[0m
+*       at https://github.com/dropwizard/metrics/commit/f261b49f2d430569b4769fff66559676d65ae038
+*       -22,7 +22,7
+*
+*  - [31mthis.created = registry.counter(MetricRegistry.name(name, "created"));[0m
+*  + [32mthis.created = registry.meter(MetricRegistry.name(name, "created"));[0m
+*       at https://github.com/dropwizard/metrics/commit/f261b49f2d430569b4769fff66559676d65ae038
+*       -13,9 +13,9
+*
+*  - [31mthis.finished = registry.counter(MetricRegistry.name(name, "finished"));[0m
+*  + [32mthis.terminated = registry.meter(MetricRegistry.name(name, "terminated"));[0m
+*       at https://github.com/dropwizard/metrics/commit/f261b49f2d430569b4769fff66559676d65ae038
+*       -36,9 +36,9
+*
+*  - [31mthis.completed = registry.counter(MetricRegistry.name(name, "completed"));[0m
+*  + [32mthis.completed = registry.meter(MetricRegistry.name(name, "completed"));[0m
+*       at https://github.com/dropwizard/metrics/commit/ed901dea81abe01b390e5dc09a70a0e8a3722496
+*       -25,7 +25,7
+*
+*  - [31mfs.delete(tmpOutPath, true);[0m
+*  + [32mif(!fs.delete(tmpOutPath, true)) { LOG.error("Failed to cleanup staging dir " + tmpOutDir); }[0m
+*       at https://github.com/Angel/ML/angel/commit/23b0f5fe301546a053ef796af461f91f52a63930
+*       -90,4 +101,10
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -1,7 +1,26
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -6,6 +24,7
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -1,7 +1,26
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -6,6 +24,7
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -1,7 +1,26
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -6,6 +24,7
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -1,7 +1,26
+*
+*  - [31mthis(dim, Math.min(64, Math.max(dim, 0)));[0m
+*  + [32mthis(dim, (int) Math.min(64, Math.max(dim, 0)));[0m
+*       at https://github.com/Angel/ML/angel/commit/7eff409d9e168c9ac0a7002220df008df3d4d88d
+*       -6,6 +24,7
+*
+*  - [31mVectorUtils.dot(louvainPSModel.community2weightPSVector, louvainPSModel.community2weightPSVector ) / math.pow(totalWeights, 2)[0m
+*  + [32mlouvainPSModel.sumOfSquareOfCommunityWeights / math.pow(totalWeights, 2)[0m
+*       at https://github.com/Angel/ML/angel/commit/4de6f193468a78e5e931063d8827af6fa2e75939
+*       -118,10 +145,12
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -89,27 +89,23
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -89,27 +89,23
+*
+*  - [31mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -89,27 +89,23
+*
+*  - [31mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -89,27 +89,23
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -131,27 +127,23
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -131,27 +127,23
+*
+*  - [31mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -131,27 +127,23
+*
+*  - [31mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(attached(i), mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*       at https://github.com/Angel/ML/angel/commit/582573021a508532351eb88cf1c894dfc2edcfd8
+*       -131,27 +127,23
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 3)))[0m
+*       at https://github.com/Angel/ML/angel/commit/6744285c08395cfb5b39cac0270ee0a8ce5be52c
+*       -121,13 +133,25
+*
+*  - [31mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(SoftmaxPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/6744285c08395cfb5b39cac0270ee0a8ce5be52c
+*       -121,13 +133,25
+*
+*  - [31mresData.put(GraphPredictResult(i, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/95584615a30ce1d44413392bfbd56c113e916c18
+*       -116,25 +116,27
+*
+*  - [31mresData.put(GraphPredictResult(i, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/95584615a30ce1d44413392bfbd56c113e916c18
+*       -116,25 +116,27
+*
+*  - [31mresData.put(GraphPredictResult(i, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/36185a521e23820c235a551654a8d9260851c9a4
+*       -88,14 +89,16
+*
+*  - [31mresData.put(GraphPredictResult(i, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*  + [32mresData.put(GraphPredictResult(VectorUtils.getFloat(labels, i).toLong, mat.get(i, 0), mat.get(i, 1), mat.get(i, 2)))[0m
+*       at https://github.com/Angel/ML/angel/commit/36185a521e23820c235a551654a8d9260851c9a4
+*       -88,14 +89,16
+*
+*  - [31mhadoopConf.setInt(ANGEL_PSAGENT_CACHE_SYNC_TIMEINTERVAL_MS, 10000000)[0m
+*  + [32mhadoopConf.setInt(ANGEL_PSAGENT_CACHE_SYNC_TIMEINTERVAL_MS, 100000000) hadoopConf.set(ANGEL_LOG_PATH, tempPath)[0m
+*       at https://github.com/Angel/ML/angel/commit/b71f22893030b9e3fb1373edf9e33acdac03f214
+*       -338,30 +345,23
+*
+*  - [31mfs.delete(outputPath, false);[0m
+*  + [32mfs.delete(outputPath, true);[0m
+*       at https://github.com/Angel/ML/angel/commit/230b9e5022380d64dd28c9df867c80abc0cd0829
+*       -1,3 +1,19
+*
+*  - [31mhadoopConf.set(ANGEL_PS_HEARTBEAT_INTERVAL_MS, "1000")[0m
+*  + [32mhadoopConf.set(ANGEL_PS_HEARTBEAT_INTERVAL_MS, "200")[0m
+*       at https://github.com/Angel/ML/angel/commit/230b9e5022380d64dd28c9df867c80abc0cd0829
+*       -255,7 +243,10
+*
+*  - [31mhadoopConf.set(ANGEL_PS_HEARTBEAT_INTERVAL_MS, "100")[0m
+*  + [32mhadoopConf.set(ANGEL_PS_HEARTBEAT_INTERVAL_MS, "1000")[0m
+*       at https://github.com/Angel/ML/angel/commit/ba4e983fce95b01a71805977b9c5b8acb269a973
+*       -258,8 +258,8
+*
+*  - [31mFSDataInputStream input = fs.open(snapshots, 4096); PSContext.get().getMatrixPartitionManager().parseMatricesFromInput(input);[0m
+*  + [32mlong startTs = System.currentTimeMillis(); FSDataInputStream input = fs.open(snapshots, 65536); try{ PSContext.get().getMatrixPartitionManager().readSnapshot(input); LOG.info("read snapshot use time=" + (System.currentTimeMillis() - startTs) + " ms "); } finally { input.close(); }[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -154,13 +164,13
+*
+*  - [31mTDoubleVector vec_4 = vec_1.plus(vec_2, 2);[0m
+*  + [32mTIntDoubleVector vec_4 = vec_1.plus(vec_2, 2);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -300,20 +298,20
+*
+*  - [31mTDoubleVector vec_5 = vec_1.plus(vec_2, 2.0);[0m
+*  + [32mTIntDoubleVector vec_5 = vec_1.plus(vec_2, 2.0);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -300,20 +298,20
+*
+*  - [31mTDoubleVector vec_3 = vec.plus(vec_1, 0.5);[0m
+*  + [32mTIntDoubleVector vec_3 = vec.plus(vec_1, 0.5);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -366,10 +364,10
+*
+*  - [31mTDoubleVector vec_4 = vec.plus(vec_1, 3);[0m
+*  + [32mTIntDoubleVector vec_4 = vec.plus(vec_1, 3);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -377,7 +375,7
+*
+*  - [31mTDoubleVector vec_3 = vec.plus(vec_1, 0.5);[0m
+*  + [32mTIntDoubleVector vec_3 = vec.plus(vec_1, 0.5);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -412,11 +410,11
+*
+*  - [31mTDoubleVector vec_3 = vec.plus(vec_1, 3);[0m
+*  + [32mTIntDoubleVector vec_3 = vec.plus(vec_1, 3);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -83,19 +82,19
+*
+*  - [31mTDoubleVector vec_3 = vec.plus(vec_1, 4);[0m
+*  + [32mTIntDoubleVector vec_3 = vec.plus(vec_1, 4);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -115,19 +114,19
+*
+*  - [31mTDoubleVector vec_3 = vec.plus(vec_1, 5);[0m
+*  + [32mTIntDoubleVector vec_3 = vec.plus(vec_1, 5);[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -147,19 +146,19
+*
+*  - [31mlearner.train(trainDataBlock, null)[0m
+*  + [32mlearner.train(taskDataBlock, null)[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -45,12 +45,13
+*
+*  - [31mlearner.train(trainDataBlock, null)[0m
+*  + [32mlearner.train(taskDataBlock, null)[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -37,10 +39,10
+*
+*  - [31mconf.set(ML_DATAFORMAT, "libsvm")[0m
+*  + [32mconf.set(ML_DATA_FORMAT, "libsvm")[0m
+*       at https://github.com/Angel/ML/angel/commit/8415f243a239398702605e5f68b95f881e7b48ef
+*       -61,7 +61,7
+*
+*  - [31mconf.setBoolean(SAVE_WORD_TOPIC, false)[0m
+*  + [32mconf.setBoolean(SAVE_WORD_TOPIC, true)[0m
+*       at https://github.com/Angel/ML/angel/commit/e170beb399fb07b2fd3dae05b66a67f362bcac73
+*       -69,18 +74,18
+*
+*  - [31mif(fs.exists(matrixFilePath)){ fs.delete(matrixFilePath, false); fs.rename(tmpPath, matrixFilePath); } else { fs.rename(tmpPath, matrixFilePath); if(lastMatrixMetaFilePath != null) { fs.delete(lastMatrixMetaFilePath, false); }[0m
+*  + [32mHdfsUtil.rename(tmpPath, matrixFilePath, fs); if (lastMatrixMetaFilePath != null) { fs.delete(lastMatrixMetaFilePath, false);[0m
+*       at https://github.com/Angel/ML/angel/commit/d02ba0f924ba96eb060603e52b82dd58f9272982
+*       -216,16 +212,12
+*
+*  - [31mfs.delete(outputPath, true);[0m
+*  + [32mfs.delete(outputPath, false); } if (!fs.rename(tmpCombinePath, outputPath)) { throw new IOException("rename from " + tmpCombinePath + " to " + outputPath + " failed");[0m
+*       at https://github.com/Angel/ML/angel/commit/d02ba0f924ba96eb060603e52b82dd58f9272982
+*       -143,7 +144,7
+*
+*  - [31mTFloatVector vec_6 = vec_1.plus(vec_2, 2.0f);[0m
+*  + [32mTFloatVector vec_6 = (TFloatVector)vec_1.plus(vec_2, 2.0f);[0m
+*       at https://github.com/Angel/ML/angel/commit/b04b087c443a4063c49e9164aea8f764a296e430
+*       -125,27 +103,27
+*
+*  - [31mTFloatVector vec_7 = vec_1.plus(vec_3, 2.0);[0m
+*  + [32mTFloatVector vec_7 = (TFloatVector)vec_1.plus(vec_3, 2.0);[0m
+*       at https://github.com/Angel/ML/angel/commit/b04b087c443a4063c49e9164aea8f764a296e430
+*       -125,27 +103,27
+*
+*  - [31mTFloatVector vec_8 = vec_1.plus(vec_3, 2);[0m
+*  + [32mTFloatVector vec_8 = (TFloatVector)vec_1.plus(vec_3, 2);[0m
+*       at https://github.com/Angel/ML/angel/commit/b04b087c443a4063c49e9164aea8f764a296e430
+*       -125,27 +103,27
+*
+*  - [31mlearner.train(dataBlock, null)[0m
+*  + [32mlearner.train(trainDataBlock, null)[0m
+*       at https://github.com/Angel/ML/angel/commit/d1e5e6e37d89cf8c59075345b3abb69286999d78
+*       -44,17 +44,18
+*
+*  - [31mheadTr.th(_TH, "taskid1").th(_TH, "state").th(_TH, "current clock") .th(_TH, "current clock progressbar").th(_TH, "current iteration progress") .th(_TH, "current iteration progressbar").th(_TH, "taskcounters");[0m
+*  + [32mheadTr.th(_TH, "taskid").th(_TH, "state").th(_TH, "current iteration") .th(_TH, "current iteration bar").th(_TH, "current progress") .th(_TH, "current progress bar").th(_TH, "taskcounters");[0m
+*       at https://github.com/Angel/ML/angel/commit/64b4f9701fd4769a54618dade954617fb3f456a5
+*       -8,10 +8,10
+*
+*  - [31mLog.d(LOG_TAG, "Main activity is null");[0m
+*  + [32mif (Log.isLoggable(LOG_TAG, Log.DEBUG)) { Log.d(LOG_TAG, "Main activity is null"); }[0m
+*       at https://github.com/leolin310148/ShortcutBadger/commit/9c5673021dcb6f897cd30b47aec6627e237ae3b2
+*       -64,7 +64,9
+*
+*  - [31mShortcutBadger.applyCount(context, 0);[0m
+*  + [32mShortcutBadger.applyCount(context, 0); //for 1.1.4 ShortcutBadger.with(getApplicationContext()).count(0); //for 1.1.3[0m
+*       at https://github.com/leolin310148/ShortcutBadger/commit/0ecb73653d14f4e196854e348c626270ce47d235
+*       -91,14 +91,17
+*
+*  - [31mtry { mediaPlayer.setSpeed(speed, 1); } catch (Exception e) { e.printStackTrace();[0m
+*  + [32mif (mediaPlayer != null) { try { mediaPlayer.setSpeed(speed, 1); } catch (Exception e) { e.printStackTrace(); }[0m
+*       at https://github.com/CarGuo/GSYVideoPlayer/commit/a459aa96b2ef302e45ba697ed3c4588f31148d53
+*       -1,67 +1,17
+*
+*  - [31mtry { mediaPlayer.setSpeed(speed, 1); } catch (Exception e) { e.printStackTrace();[0m
+*  + [32mif (mediaPlayer != null) { try { mediaPlayer.setSpeed(speed, 1); } catch (Exception e) { e.printStackTrace(); }[0m
+*       at https://github.com/CarGuo/GSYVideoPlayer/commit/a459aa96b2ef302e45ba697ed3c4588f31148d53
+*       -427,6 +435,13
+*
+*  - [31mmSeekBarImageTimer.schedule(mShowSeekBarImageTimerTask, 10);[0m
+*  + [32mmSeekBarImageTimer.schedule(mShowSeekBarImageTimerTask, 0);[0m
+*       at https://github.com/CarGuo/GSYVideoPlayer/commit/37f49e7ea86e5759110263ce13375d90bf3d6bd3
+*       -87,22 +91,34
+*
+*  - [31mJBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();[0m
+*  + [32mJBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var().plus("=")))._then();[0m
+*       at https://github.com/androidannotations/androidannotations/commit/503da93330890495a7d35d2b0bd9c5f799a6b380
+*       -99,6 +102,7
+*
+*  - [31mJVar view = block.decl(viewClass, "view_" + idRef.name(), findViewExpression); if (viewClass.isParameterized()) { codeModelHelper.addSuppressWarnings(view, "unchecked");[0m
+*  + [32mIJAssignmentTarget foundView = fieldRef; if (foundView == null) { JVar view = block.decl(viewClass, "view_" + idRef.name(), findViewExpression); if (viewClass.isParameterized()) { codeModelHelper.addSuppressWarnings(view, "unchecked"); } foundView = view; } else { block.add(foundView.assign(findViewExpression));[0m
+*       at https://github.com/androidannotations/androidannotations/commit/1c2575cf0ec67872aee13229bc4c3b84f6f6e2bf
+*       -127,16 +128,20
+*
+*  - [31mif (partFound && fieldFound) { validation.addError(element, "Only one of @Part and @Field annotations can be used on the same method's parameters, not both.");[0m
+*  + [32mif (numberOfRequestEntityFound > 1) { validation.addError(element, "Only one of @Part, @Field and @Body annotations can be used on the same method's parameters, not both.");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/63933b4bb61f58bac4bf0450a4b8adfd306ce538
+*       -392,82 +392,37
+*
+*  - [31mbody.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));[0m
+*  + [32mblock.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));[0m
+*       at https://github.com/androidannotations/androidannotations/commit/e9dcd6fd9e44125a385396ff11ac869b618de40d
+*       -267,8 +299,15
+*
+*  - [31mJVar newConfig = method.param(configurationClass, "newConfig"); getRoboGuiceDelegate().newConfig = newConfig;[0m
+*  + [32monConfigurationChangedNewConfigParam = method.param(configurationClass, "newConfig");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/3fb74f3865c076bf429a08b69de5c8bcc3e79106
+*       -198,44 +214,89
+*
+*  - [31mbody.invoke(fragment, "setArguments").arg(ref("args"));[0m
+*  + [32mbody.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);[0m
+*       at https://github.com/androidannotations/androidannotations/commit/661f6588bba0c42c7a9fdc310eef1132d74ee4b1
+*       -109,6 +110,7
+*
+*  - [31mbody.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);[0m
+*  + [32mbody.invoke(fragment, "setArguments").arg(ref("args"));[0m
+*       at https://github.com/androidannotations/androidannotations/commit/89a21f75e0955a747ded1700e35a7d295907c7cd
+*       -110,7 +109,6
+*
+*  - [31mannotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor");[0m
+*  + [32mannotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor or be annotated with @EBean");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/73a6212fa64e50a3c8be43f00e6413623f16b818
+*       -1104,6 +1104,9
+*
+*  - [31mannotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");[0m
+*  + [32mannotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/fc8af0774a89211d0a00b6f96d68f534b6433f99
+*       -876,30 +876,32
+*
+*  - [31mJVar fragmentParam = method.param(fragmentSupportClass, "fragment");[0m
+*  + [32mJVar fragmentParam = method.param(fragmentSupportClass, "supportFragment");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/f0865bbfb99a2c90c7db2bebd4b78d5298666e9a
+*       -58,20 +58,20
+*
+*  - [31mannotationHelper.printAnnotationError(element, "%s can only be used on an interface that does not extend other interfaces");[0m
+*  + [32mannotationHelper.printAnnotationError(element, "%s interfaces can only extend EnhancedRestInterface");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/a3c7200352b5331b6be092f861cb2e8bf5d5780b
+*       -131,10 +132,15
+*
+*  - [31mbody.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParams.get(urlVariable));[0m
+*  + [32mJVar urlValue = methodParams.get(urlVariable); body.invoke(hashMapVar, "put").arg(urlVariable).arg(urlValue);[0m
+*       at https://github.com/androidannotations/androidannotations/commit/100146a50bcd2f1321ef66804dd21bb1f5606d12
+*       -127,13 +129,14
+*
+*  - [31mannotationHelper.printAnnotationError(element, "The requestCode must be positive and inferior or equal to 32767");[0m
+*  + [32mannotationHelper.printAnnotationError(element, "Due to a restriction in the fragment API, the requestCode has to be a positive integer inferior or equal to 0xFFFF");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/f704b3c41807a9232582e7a8faa1a30a22c89d9e
+*       -68,12 +68,12
+*
+*  - [31mJFieldVar mAlreadyInflated_ = holder.eBean.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);[0m
+*  + [32mJFieldVar mAlreadyInflated_ = holder.generatedClass.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);[0m
+*       at https://github.com/androidannotations/androidannotations/commit/88ebcd50542ef7e6dc3f8b8ef1249e0527d8a3e0
+*       -94,33 +93,36
+*
+*  - [31mJFieldVar mAlreadyInflated_ = holder.eBean.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);[0m
+*  + [32mJFieldVar mAlreadyInflated_ = holder.generatedClass.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);[0m
+*       at https://github.com/androidannotations/androidannotations/commit/88ebcd50542ef7e6dc3f8b8ef1249e0527d8a3e0
+*       -85,33 +84,35
+*
+*  - [31mannotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You parameter name must be 'progress'.");[0m
+*  + [32mannotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'progress'.");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/b3db34e098d39535629be82100e5b78f29a835d4
+*       -64,43 +65,43
+*
+*  - [31mannotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You parameter name must be 'fromUser'.");[0m
+*  + [32mannotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'fromUser'.");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/b3db34e098d39535629be82100e5b78f29a835d4
+*       -64,43 +65,43
+*
+*  - [31mbody.invoke(menuInflater, "inflate").arg(optionsMenuId).arg(menuParam);[0m
+*  + [32mfor (JFieldRef optionsMenuRefId : fieldRefs) { body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam); }[0m
+*       at https://github.com/androidannotations/androidannotations/commit/6de57bc41818d235c68ec9f67b9a6d3081409f62
+*       -72,11 +72,7
+*
+*  - [31mString parameterTypeQualifiedName = parameterType.toString(); itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));[0m
+*  + [32mitemSelectedCall.arg(JExpr.cast(holder.refClass(secondParameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));[0m
+*       at https://github.com/androidannotations/androidannotations/commit/cc93da5d0d4f21cffc2346639a868ea37f15f5b9
+*       -83,17 +81,23
+*
+*  - [31mJVar activityParam = constructor.param(activityClass, "activity");[0m
+*  + [32mJVar contextParam = constructor.param(contextClass, "context"); JMethod getLocalClassName = getLocalClassName(helperClass, codeModel);[0m
+*       at https://github.com/androidannotations/androidannotations/commit/4ac1c10c89605dc49fefdc4acae3ded2881b0b0b
+*       -142,18 +147,21
+*
+*  - [31mannotationHelper.printAnnotationError(element, "%s annotated methods should not declare throwing any exception");[0m
+*  + [32mannotationHelper.printAnnotationError(element, "%s annotated methods cannot declare throwing any exception");[0m
+*       at https://github.com/androidannotations/androidannotations/commit/921f622ac95d871fc65292fd56a929c0521c2043
+*       -136,12 +151,117
+*
+*  - [31mTreeFileArtifact child1 = TreeFileArtifact.createTreeOutput(treeArtifact, "child1"); TreeFileArtifact child2 = TreeFileArtifact.createTreeOutput(treeArtifact, "child2"); assertThat(child1.getPath().exists()).isTrue(); assertThat(child2.getPath().exists()).isTrue();[0m
+*  + [32mTreeFileArtifact child = TreeFileArtifact.createTreeOutput(treeArtifact, "child");[0m
+*       at https://github.com/bazelbuild/bazel/commit/848c4ee64e13f36f903821acd5e3098e64fb186f
+*       -401,16 +401,11
+*
+*  - [31mpublic void testBlacklistedPackage() throws Exception { scratch.file("blacklisted/subdir/BUILD"); scratch.file("blacklisted/BUILD"); Path blacklist = scratch.overwriteFile(BLACKLISTED_PACKAGE_PREFIXES_FILE_PATH_STRING, "blacklisted");[0m
+*  + [32mpublic void testIgnoredPackage() throws Exception { scratch.file("ignored/subdir/BUILD"); scratch.file("ignored/BUILD"); Path ignored = scratch.overwriteFile(IGNORED_PACKAGE_PREFIXES_FILE_PATH_STRING, "ignored");[0m
+*       at https://github.com/bazelbuild/bazel/commit/1847a01b9a84a3384f2fa3425dc5d225fc2a9fb2
+*       -134,9 +133,9
+*
+*  - [31mif (Allowlist.hasAllowlist(ruleContext, "multiple_proto_rule_types_in_deps_whitelist") && !Allowlist.isAvailable(ruleContext, "multiple_proto_rule_types_in_deps_whitelist")) {[0m
+*  + [32mif (Allowlist.hasAllowlist(ruleContext, "multiple_proto_rule_types_in_deps_allowlist") && !Allowlist.isAvailable(ruleContext, "multiple_proto_rule_types_in_deps_allowlist")) {[0m
+*       at https://github.com/bazelbuild/bazel/commit/1812cafbe4c7deb36228b1d8af798295e66af319
+*       -171,7 +171,7
+*
+*  - [31mArtifact.DerivedArtifact output = new Artifact.DerivedArtifact(ArtifactRoot.asDerivedRoot(root, "out"), execPath, ALL_OWNER);[0m
+*  + [32mDerivedArtifact output = new DerivedArtifact(ArtifactRoot.asDerivedRoot(root, "out"), execPath, ALL_OWNER);[0m
+*       at https://github.com/bazelbuild/bazel/commit/72d648a4e3ac9ad930a540e8858dbe4e893719c6
+*       -355,10 +356,10
+*
+*  - [31mreturn new SpecialArtifact( ArtifactRoot.asDerivedRoot(execRoot, "out"), execPath, ActionsTestUtil.NULL_ARTIFACT_OWNER, SpecialArtifactType.TREE);[0m
+*  + [32mreturn ActionsTestUtil.createTreeArtifactWithGeneratingAction( ArtifactRoot.asDerivedRoot(execRoot, "out"), execPath);[0m
+*       at https://github.com/bazelbuild/bazel/commit/1d8d138183995ee41bbdb5b7ee8b6c023e558fba
+*       -28,7 +28,6
+*
+*  - [31mreturn new SpecialArtifact( ArtifactRoot.asDerivedRoot(execRoot, "out"), execPath, ActionsTestUtil.NULL_ARTIFACT_OWNER, SpecialArtifactType.TREE);[0m
+*  + [32mreturn ActionsTestUtil.createTreeArtifactWithGeneratingAction( ArtifactRoot.asDerivedRoot(execRoot, "out"), execPath);[0m
+*       at https://github.com/bazelbuild/bazel/commit/1d8d138183995ee41bbdb5b7ee8b6c023e558fba
+*       -23,7 +23,6
+*
+*  - [31mSpecialArtifact treeArtifact = new SpecialArtifact( ArtifactRoot.asDerivedRoot(rootDirectory, "out"), PathFragment.create("out/" + path), ActionsTestUtil.NULL_ARTIFACT_OWNER, SpecialArtifactType.TREE); assertThat(treeArtifact.isTreeArtifact()).isTrue(); return treeArtifact;[0m
+*  + [32mreturn ActionsTestUtil.createTreeArtifactWithGeneratingAction( ArtifactRoot.asDerivedRoot(rootDirectory, "out"), PathFragment.create("out/" + path));[0m
+*       at https://github.com/bazelbuild/bazel/commit/1d8d138183995ee41bbdb5b7ee8b6c023e558fba
+*       -191,7 +190,7
+*
+*  - [31mattributes.put(Attribute.getSkylarkName(attribute), Starlark.fromJava(val, null));[0m
+*  + [32mattributes.put(Attribute.getStarlarkName(attribute), Starlark.fromJava(val, null));[0m
+*       at https://github.com/bazelbuild/bazel/commit/d7c1cefc8c082fd7119470436f366c618d1eea06
+*       -78,7 +78,7
+*
+*  - [31mDepset( ElementType elemType, NestedSet<?> set, ImmutableList<Object> items, ImmutableList<NestedSet<?>> transitiveItems) { this.elemType = Preconditions.checkNotNull(elemType, "type cannot be null");[0m
+*  + [32mDepset(ElementType elemType, NestedSet<?> set) { this.elemType = Preconditions.checkNotNull(elemType, "element type cannot be null");[0m
+*       at https://github.com/bazelbuild/bazel/commit/a17420d3106b2e418ed14b30109c46ef094d0cf2
+*       -89,66 +89,45
+*
+*  - [31mthis.contentType = Preconditions.checkNotNull(contentType, "type cannot be null");[0m
+*  + [32mthis.elemType = Preconditions.checkNotNull(elemType, "type cannot be null");[0m
+*       at https://github.com/bazelbuild/bazel/commit/379eaefcbb6ba27f184f0985f8436dd2e15b2409
+*       -86,18 +87,18
+*
+*  - [31mActionResult actionResult = remoteCache.downloadActionResult(actionKey, /* inlineOutErr= */ true);[0m
+*  + [32mActionResult actionResult; try (SilentCloseable c = Profiler.instance().profile(ProfilerTask.REMOTE_CACHE_CHECK, "check cache hit")) { actionResult = remoteCache.downloadActionResult(actionKey, /* inlineOutErr= */ true); }[0m
+*       at https://github.com/bazelbuild/bazel/commit/6f988483ce7e94afeaa1616c10a77d2ff70c238f
+*       -66,21 +69,24
+*
+*  - [31mpublic Builder setSkylarkTestable() { Preconditions.checkState(skylark, "Cannot set skylarkTestable on a non-Starlark rule"); skylarkTestable = true;[0m
+*  + [32mpublic Builder setStarlarkTestable() { Preconditions.checkState(starlark, "Cannot set starlarkTestable on a non-Starlark rule"); starlarkTestable = true;[0m
+*       at https://github.com/bazelbuild/bazel/commit/74d84d43b0b810e7eb2c8f866694fa2dcf209baa
+*       -985,7 +985,7
+*
+*  - [31mExitCode exitCode = aqueryBuildTool.processRequest(request, null).getExitCondition(); return BlazeCommandResult.exitCode(exitCode);[0m
+*  + [32mDetailedExitCode detailedExitCode = aqueryBuildTool.processRequest(request, null).getDetailedExitCode(); return BlazeCommandResult.detailedExitCode(detailedExitCode);[0m
+*       at https://github.com/bazelbuild/bazel/commit/854bb903fe7621f95931506615be48198cbf9bd6
+*       -31,6 +31,7
+*
+*  - [31mmHandler.sendEmptyMessageDelayed(MSG_SHOW_PROGRESS, 1000);[0m
+*  + [32mmHandler.sendEmptyMessageDelayed(SHOW_PROGRESS, 1000);[0m
+*       at https://github.com/yixia/VitamioBundle/commit/025327a00194cd41550bc0322aa0efe899cf1d83
+*       -720,60 +455,57
+*
+*  - [31mmHandler.sendEmptyMessageDelayed(SHOW_PROGRESS, 1000);[0m
+*  + [32mmHandler.sendEmptyMessageDelayed(MSG_SHOW_PROGRESS, 1000);[0m
+*       at https://github.com/yixia/VitamioBundle/commit/7b798c16171f86ec4fcfbfa9699da80f50bf1704
+*       -457,57 +702,60
+*
+*  - [31mreturn name -> { if ("".equals(name)) { throw UserError.abort("Initializing the whole hierarchy at run time is currently not supported. Initialize individual packages from the application with: " + SubstrateOptionsParser.commandArgument(ClassInitializationFeature.Options.ClassInitialization, "<package>", "initialize-at-run-time")); } support.initializeAtRunTime(name, "from the command line"); };[0m
+*  + [32mreturn name -> support.initializeAtRunTime(name, "from the command line");[0m
+*       at https://github.com/oracle/graal/commit/15b2dc60ad3167820125089be4149de0ed710aba
+*       -30,9 +30,6
+*
+*  - [31mstate = TypeState.forSubtraction(bigbang, state, declaredType.getTypeFlow(bigbang, true).getState()); if (!state.isEmpty()) {[0m
+*  + [32mTypeState declaredTypeState = declaredType.getTypeFlow(bigbang, true).getState(); parameterState = TypeState.forSubtraction(bigbang, parameterState, declaredTypeState); if (!parameterState.isEmpty()) {[0m
+*       at https://github.com/oracle/graal/commit/2f694f78be17dd6f683653bf440138e591055a4d
+*       -1396,15 +1396,17
+*
+*  - [31mif (!sources.containsKey(source)) { sources.put(source, null); sourcesList.add(source); if (newSources != null) { newSources.add(source);[0m
+*  + [32mfor (Source src : newSourcesList) { if (!sources.containsKey(src)) { sources.put(src, null); sourcesList.add(src); if (globalNewSources != null) { globalNewSources.add(src); }[0m
+*       at https://github.com/oracle/graal/commit/b1cca55ec1717676b5903d87f5f6e577093512d6
+*       -1350,34 +1317,99
+*
+*  - [31mAlignedHeapChunk.dirtyCardForObjectOfAlignedHeapChunk(holderObject, false);[0m
+*  + [32mAlignedHeapChunk.dirtyCardForObject(holderObject, false);[0m
+*       at https://github.com/oracle/graal/commit/a52a85789f0cf92b9de7895a52892b53ff8fae4e
+*       -211,7 +202,7
+*
+*  - [31mUnalignedHeapChunk.dirtyCardForObjectOfUnalignedHeapChunk(holderObject, false);[0m
+*  + [32mUnalignedHeapChunk.dirtyCardForObject(holderObject, false);[0m
+*       at https://github.com/oracle/graal/commit/a52a85789f0cf92b9de7895a52892b53ff8fae4e
+*       -278,10 +269,10
+*
+*  - [31mObjects.requireNonNull(providers, "Providers must be non null.");[0m
+*  + [32mObjects.requireNonNull(engine, "Engine must be non null.");[0m
+*       at https://github.com/oracle/graal/commit/8e4b8573c21062232180bf1ed4043068247da400
+*       -151,38 +151,44
+*
+*  - [31mSource source = Source.create(ID, "ROOT(MATERIALIZE_CHILD_STMT_AND_EXPR(MATERIALIZE_CHILD_STMT_AND_EXPR(EXPRESSION(EXPRESSION))))");[0m
+*  + [32mSource source = Source.create(ID, "ROOT(MATERIALIZE_CHILD_STMT_AND_EXPR(EXPRESSION(EXPRESSION)))");[0m
+*       at https://github.com/oracle/graal/commit/5d194ca985e3eb9a5e2149ac591cb08ee4ae523e
+*       -492,7 +492,7

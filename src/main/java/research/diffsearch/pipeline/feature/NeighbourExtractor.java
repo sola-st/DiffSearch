@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.QueryUtil;
 
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class NeighbourExtractor extends AbstractRecursiveFeatureExtractor {
 
             if (!isQuery()
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !isQueryKeyword(childNodeText)
-                || !isQueryKeyword(child2NodeText)) {
+                || !QueryUtil.isQueryKeyword(childNodeText)
+                || !QueryUtil.isQueryKeyword(child2NodeText)) {
 
                 var feature = Trees.getNodeText(child, ruleNames) + ' ' +
                               Trees.getNodeText(child2, ruleNames);

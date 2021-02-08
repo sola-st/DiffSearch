@@ -80,7 +80,8 @@ public class FilePathUtils {
             try {
                 return FileUtils.lineIterator(new File(path));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return Collections.emptyIterator();
+                // throw new RuntimeException(e);
             }
         };
     }

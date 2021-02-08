@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.QueryUtil;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     public void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
                                          int startPosition, List<String> ruleNames, int depth) {
         var nodeText = Trees.getNodeText(t, ruleNames);
-        if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(nodeText)) {
+        if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !QueryUtil.isQueryKeyword(nodeText)) {
             int index = getFeatureVectorIndex(startPosition, nodeText.hashCode(),
                     getFeatureVectorLength());
 

@@ -51,13 +51,6 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         return isQuery;
     }
 
-    protected static boolean isQueryKeyword(String nodeText) {
-        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>");
-        return keywords
-                .stream()
-                .anyMatch(nodeText::contains);
-    }
-
     protected static String getQueryKeywordIdentifier(String nodeText) {
         var startIndex = nodeText.indexOf('<');
         var endIndex = nodeText.indexOf('>', startIndex);

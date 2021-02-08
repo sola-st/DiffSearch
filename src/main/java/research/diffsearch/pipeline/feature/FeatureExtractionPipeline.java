@@ -17,9 +17,11 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
     private final byte countBits;
+    private final int quadraticProbingMaxCount;
 
-    public FeatureExtractionPipeline(byte countBits) {
+    public FeatureExtractionPipeline(byte countBits, int quadraticProbingMaxCount) {
         this.countBits = countBits;
+        this.quadraticProbingMaxCount = quadraticProbingMaxCount;
     }
 
     /**
@@ -37,7 +39,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
      * @return the length of the resulting feature vector.
      */
     public int getTotalFeatureVectorLength() {
-        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorLength).sum();
+        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorLength).sum() * countBits;
     }
 
     /**
@@ -46,7 +48,10 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
      * @param codeChange the code change.
      */
     public FeatureVector extractFeatures(String codeChange) {
-        FeatureVector featureVector = new FeatureVector(codeChange, getTotalFeatureVectorLength(), countBits);
+        FeatureVector featureVector = new FeatureVector(codeChange,
+                getTotalFeatureVectorLength(),
+                countBits,
+                quadraticProbingMaxCount);
         try {
             var startPosition = 0;
 
@@ -71,7 +76,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     }
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
-        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS);
+        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT);
         if (Config.SPLIT_EXTRACTORS) {
 
             pipeline.addFeatureExtractor(
@@ -88,6 +93,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
                                     Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
                                     isQuery))
             );
+
 
         } else {
             pipeline.addFeatureExtractor(

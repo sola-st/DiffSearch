@@ -8,20 +8,32 @@ public class FeatureVector {
     private final String codeChange;
     private final Map<String, List<Feature>> typeToFeaturesMap = new HashMap<>();
     private final int countBits;
+    private final int quadraticProbingMaxCount;
 
-    public FeatureVector(String codeChange, int size, int countBits) {
+    public FeatureVector(String codeChange, int size, int countBits, int quadraticProbingMaxCount) {
         this.codeChange = codeChange;
         this.vector = new int[size * countBits];
         this.countBits = countBits;
+        this.quadraticProbingMaxCount = quadraticProbingMaxCount;
     }
 
     public void addFeature(String category, String feature, int index) {
         int actualIndex = index;
-        for (var offset = 0; offset < countBits; offset++) {
-            if (vector[countBits * index + offset] == 0 || offset == countBits - 1) {
-                actualIndex = countBits * index + offset;
-                vector[actualIndex] = 1;
-                break;
+
+        // quadratic probing
+        outer: for (var probingFactor = 0; probingFactor < quadraticProbingMaxCount; probingFactor++) {
+            int probingOffset = probingFactor * probingFactor;
+            actualIndex = (actualIndex + probingOffset) % vector.length;
+
+            // use count bits
+            // TODO use count bits before probing
+            for (var offset = 0; offset < countBits; offset++) {
+                actualIndex = (countBits * actualIndex + offset) % vector.length;
+                if (vector[actualIndex] == 0 || offset == countBits - 1) {
+
+                    vector[actualIndex] = 1;
+                    break outer;
+                }
             }
         }
 

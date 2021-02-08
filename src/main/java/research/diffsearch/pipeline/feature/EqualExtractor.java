@@ -10,8 +10,8 @@ import java.util.EnumMap;
 import java.util.List;
 
 import static research.diffsearch.pipeline.feature.AbstractRecursiveFeatureExtractor.getFeatureVectorIndex;
-import static research.diffsearch.pipeline.feature.AbstractRecursiveFeatureExtractor.isQueryKeyword;
 import static research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation.Type.EQUAL;
+import static research.diffsearch.util.QueryUtil.isQueryKeyword;
 
 public class EqualExtractor implements FeatureExtractor {
 

@@ -10,8 +10,12 @@ import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
+import research.diffsearch.util.Util;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -27,6 +31,7 @@ public class RecallPipeline implements
     private static final Logger logger = LoggerFactory.getLogger(RecallPipeline.class);
     private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/ExpectedValues.csv";
     private static final String RECALL_VALUES_FILE = "./src/main/resources/Recall/RecallResults.csv";
+    private static final String EXPECTED_RESULTS_FILE = "./src/main/resources/Recall/expected.txt";
 
     private final ProgrammingLanguage language;
     private final List<String> queries;
@@ -51,21 +56,39 @@ public class RecallPipeline implements
         this(language, new ArrayList<>());
     }
 
+    private static void printOutputToFile(DiffsearchResult result) {
+
+        try (var printStream = new PrintStream(
+                new FileOutputStream(EXPECTED_RESULTS_FILE, true))) {
+
+            Util.printOutputList(
+                    result.getResults(),
+                    result.getQuery(), 0,
+                    printStream);
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
         if (!expectedValues.containsKey(query)) {
             logger.debug("Need to calculate expected value");
 
             // load all code changes from file
+            var corpusSize = getNumberOfLines(getChangesFilePath(language));
             var codeChanges = getCodeChanges(
-                    getChangesFilePath(language), getChangesInfoFilePath(language),
-                    getNumberOfLines(getChangesFilePath(language)));
+                    getChangesFilePath(language),
+                    getChangesInfoFilePath(language),
+                    corpusSize);
 
-            var dfsResult = new DiffsearchResult(query, codeChanges);
+            var dfsResult = new DiffsearchResult(query, codeChanges)
+                    .setCandidateChangeCount(corpusSize);
 
             var expectedValue = new MatchingPipeline(language)
+                    .peek(RecallPipeline::printOutputToFile)
+                    .connect(DiffsearchResult::getResults)
+                    .connect(Collection::size)
                     .collect(dfsResult)
-                    .map(DiffsearchResult::getResults)
-                    .map(Collection::size)
                     .orElse(0);
 
             expectedValues.put(query, expectedValue);

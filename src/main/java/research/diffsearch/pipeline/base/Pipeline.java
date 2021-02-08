@@ -1,9 +1,6 @@
 package research.diffsearch.pipeline.base;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
@@ -13,6 +10,10 @@ public interface Pipeline<I, O> {
     void process(I input, int index, IndexedConsumer<O> outputConsumer);
 
     default void execute(Iterable<I> inputs, int size) {
+        if (!inputs.iterator().hasNext()) {
+            return;
+        }
+
         Object sync = new Object();
         var executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
@@ -60,7 +61,11 @@ public interface Pipeline<I, O> {
     default List<O> collect(Collection<I> inputs) {
         return collect(inputs, inputs.size());
     }
+
     default List<O> collect(Iterable<I> inputs, int size) {
+        if (!inputs.iterator().hasNext()) {
+            return Collections.emptyList();
+        }
         Object sync = new Object();
 
         var collectedResults = new ArrayList<O>();

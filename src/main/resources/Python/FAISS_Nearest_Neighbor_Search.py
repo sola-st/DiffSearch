@@ -19,7 +19,7 @@ logger.setLevel(logging.DEBUG)
 logger.info("Starting python")
 
 
-def searching(index_path, k, host, port):
+def searching(index_path, k, host, port, nprobe=1, range_search=False):
     index = faiss.read_index(index_path)
 
     logger.debug("Index read.")
@@ -34,6 +34,13 @@ def searching(index_path, k, host, port):
 
     serversocket.listen(5)
     logger.info('Server started and listening')
+
+    with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
+        changes_strings = f.readlines()
+
+    with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
+        changes_info = f.readlines()
+
     while 1:
         logger.debug('WAITING A NEW CONNECTION.. ')
         (clientsocket, address) = serversocket.accept()
@@ -69,21 +76,26 @@ def searching(index_path, k, host, port):
                 #     np_array = np_array / norm
                 #     # print(str(np_array))
 
-                with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
-                    changes_strings = f.readlines()
-
-                with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
-                    changes_info = f.readlines()
-
                 # limits, distances, indices = index.range_search(query_feature_vectors, 5)
 
                 # if len(indices) < k:
-                index.nprobe = 240
+                index.nprobe = nprobe
                 logger.debug(f"nprobe = {index.nprobe}")
-                distances, indices = index.search(query_feature_vectors, k)
-                # if len(indices) > 10 * k:
-                #   distances = distances[:10 * k]
-                # indices = indices[:10 * k]
+                if not range_search:
+                    distances, indices = index.search(query_feature_vectors, k)
+                    # if len(indices) > 10 * k:
+                    #   distances = distances[:10 * k]
+                    # indices = indices[:10 * k]
+                else:
+                    search_range: int = 0
+                    for vector in query_feature_vectors:
+                        for feature in vector:
+                            search_range += (feature - 1) ** 2
+
+                    # search_range *= 2
+
+                    logger.debug(f"range={search_range}")
+                    limits, distances, indices = index.range_search(query_feature_vectors, search_range)
 
                 logger.info('Searching finished')
 

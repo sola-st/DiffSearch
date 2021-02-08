@@ -16,10 +16,10 @@ public class Util {
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printOutputList(Collection<CodeChangeWeb> output, String query, long startTimeStamp) {
-        printOutputList(output, startTimeStamp, query, System.out);
+        printOutputList(output, query, startTimeStamp, System.out);
     }
 
-    public static void printOutputList(Collection<CodeChangeWeb> output, long startTimeStamp, String query, PrintStream out) {
+    public static void printOutputList(Collection<CodeChangeWeb> output, String query, long startTimeStamp, PrintStream out) {
         final String ANSI_RED = "\u001B[31m";
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_GREEN = "\u001B[32m";
@@ -47,7 +47,7 @@ public class Util {
                 out.println("*** No results found. ***");
             }
         }
-
+        out.flush();
     }
 
     public static String featureVectorToString(FeatureVector vector) {

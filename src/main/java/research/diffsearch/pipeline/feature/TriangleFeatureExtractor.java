@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.QueryUtil;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
-            if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(childNodeText)) {
+            if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !QueryUtil.isQueryKeyword(childNodeText)) {
                 sum.append(childNodeText).append(" ");
             } else {
                 // set sum empty if query keyword was detected.

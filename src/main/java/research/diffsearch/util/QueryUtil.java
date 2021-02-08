@@ -5,6 +5,7 @@ import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class QueryUtil {
     public static String formatQuery(String result) {
@@ -21,5 +22,12 @@ public class QueryUtil {
         var parser = queryTree.getParser();
 
         return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
+    }
+
+    public static boolean isQueryKeyword(String nodeText) {
+        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>");
+        return keywords
+                .stream()
+                .anyMatch(nodeText::contains);
     }
 }

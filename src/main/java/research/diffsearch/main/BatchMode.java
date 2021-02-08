@@ -33,8 +33,7 @@ public class BatchMode extends App {
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, queries))
                     .peek(result -> Util.printOutputList(
                             result.getResults(),
-                            result.getPerformance().orElse(System.currentTimeMillis() - currentTime),
-                            result.getQuery(),
+                            result.getQuery(), result.getPerformance().orElse(System.currentTimeMillis() - currentTime),
                             new PrintStream(outputStream, true)))
                     .execute(queries);
 

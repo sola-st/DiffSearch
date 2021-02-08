@@ -92,12 +92,17 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 256;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
 
     /**
      * The number of bits per feature that are used for unary counting
      */
-    public static byte COUNT_BITS = 4;
+    public static byte COUNT_BITS = 1;
+
+    /**
+     * Maximum number of times a feature can be counted using quadratic probing.
+     */
+    public static int FEATURE_MAX_COUNT = 32;
 
     /**
      * Port of the web server.
@@ -149,10 +154,10 @@ public class Config {
     /**
      * FAISS parameter, number of clusters of the index.
      */
-    public static int nlist = 3650;
+    public static int nlist = 1;
 
     /**
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
-    public static int ngroup = 240;
+    public static int nprobe = 240;
 }
