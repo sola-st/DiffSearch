@@ -20,7 +20,7 @@ for link in article_urls:
     i += 1
 
     # out = link.rsplit('/', 1)[-1].replace('.git', '')
-    out = re.sub('https://github.com/', '', link).replace('/', '-')
+    out = re.sub('https://github.com/', '', link).replace('/', '.')
 
     if os.path.isdir(pathOutput + '/' + out):
         print(str(i) + ') Already cloned', link)
