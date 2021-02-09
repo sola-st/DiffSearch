@@ -153,10 +153,10 @@ public class PipelineOld {
 
         try {
             //Creation of a buffered writer for the features and the change in a string form (for print)
-            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_python.csv"));
+            BufferedWriter buff_writer_features = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv"));
             // Writing the string change in a file (ONLY FOR TESTING)
-            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_python.txt");
-            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop_python.txt");
+            FileWriter writer = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_java.txt");
+            FileWriter writer2 = new FileWriter("./src/main/resources/Features_Vectors/changes_strings_prop_java.txt");
             BufferedWriter bw = new BufferedWriter(writer);
             BufferedWriter bw2 = new BufferedWriter(writer2);
 

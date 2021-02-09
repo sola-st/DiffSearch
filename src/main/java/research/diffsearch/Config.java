@@ -28,7 +28,7 @@ public class Config {
     public static boolean DATASET_CREATION = false;
 
     public static int k = 1000;
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 2048;
     public static boolean BATCH = false;
     public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
     public static String batchOutput = "./src/main/resources/batchOutput.txt";

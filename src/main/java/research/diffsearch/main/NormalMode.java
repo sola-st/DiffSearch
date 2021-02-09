@@ -34,7 +34,7 @@ public class NormalMode extends App {
         /* CHANGES TREE AND FEATURES COMPUTATION */
         try {
             logger.info("FEATURE EXTRACTION STARTED.\n");
-            realChanges = PipelineOld.feature_extraction(500000);
+            realChanges = PipelineOld.feature_extraction(667395);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             e.printStackTrace();

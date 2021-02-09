@@ -47,7 +47,7 @@ public class OfflinePipeline {
                     List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
 
                     if (!list.get(1).equals(list.get(0))) {
-                        outputList.add(candidate + " [url] " + Util.computeCandidateUrl(candidateUrl));
+                        outputList.add(candidate + " [url] " + candidateUrl);
                     }
                 }
             }

@@ -83,8 +83,7 @@ public class FilePathUtils {
                 String candidateUrl = infoIterator.next();
                 String candidate = codeChangeIterator.next();
                 List<String> list = Arrays.asList(candidate.split("-->"));
-                String[] urlLine =
-                        Util.computeCandidateUrl(candidateUrl).split("-->");
+                String[] urlLine = Util.computeCandidateUrl_effectiveness(candidateUrl).split("-->");
                 index++;
                 return new CodeChangeWeb(list.get(0).trim(), list.get(1).trim())
                         .setUrl(urlLine[0])

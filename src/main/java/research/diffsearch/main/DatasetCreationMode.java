@@ -23,7 +23,7 @@ public class DatasetCreationMode extends App{
 
         logger.info("EXTRACTION FROM REPOSITORIES STARTED.\n");
 
-        change_number = Change_extraction.analyze_diff_file_fixed();
+        change_number = Change_extraction.analyze_diff_file_effectiveness();
 
         logger.info("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
 

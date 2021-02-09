@@ -72,4 +72,20 @@ public class Util {
         }
         return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
     }
+
+    public static String computeCandidateUrl_effectiveness(String candidate) {
+        String candidateUrl = "https://github.com/";
+        String repository = "";
+        String commit = "";
+
+        List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
+        if (items.size() > 2) {
+            commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
+            // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
+            repository = StringUtils.substringBetween(items.get(2), "java/", ".patch");
+        } else {
+            return "";
+        }
+        return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
+    }
 }
