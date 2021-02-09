@@ -23,7 +23,7 @@ for code_change in dataset:
         myFile = open("../java_patch/dataset.patch", 'a')
         myFile.write("#@#@!$%#@#@!$%" + commit + "$$$$" + parent_commit + "@@" + projectName + "\n")
         myFile.close()
-        command = "git --git-dir ../GitHub_Java/" + projectName + "/.git diff " + commit + " " + parent_commit + " >> ../java_patch/dataset.patch"
+        command = "git --git-dir ../GitHub_Java/" + projectName + "/.git diff " + parent_commit + " " + commit + " >> ../java_patch/dataset.patch"
         os.system(command)
         #print(command)
     except:

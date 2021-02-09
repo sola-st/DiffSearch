@@ -86,6 +86,6 @@ public class Util {
         } else {
             return "";
         }
-        return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
+        return candidateUrl + repository.replace(".","/") + "/commit/" + commit + "-->" + items.get(1);
     }
 }

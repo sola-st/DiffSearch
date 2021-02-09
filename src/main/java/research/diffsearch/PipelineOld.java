@@ -168,8 +168,6 @@ public class PipelineOld {
                 //         || i == 3200000 || i == 4200000 || i == 5200000 || i == 6200000)
                 System.out.println(i + " with " + real_changes);
 
-                if (i == 1676)
-                    i++;
 
                 if (!scanner.hasNext())
                     break;
