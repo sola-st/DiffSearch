@@ -84,7 +84,7 @@ public class Util {
             // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
             repository = StringUtils.substringBetween(items.get(2), "java/", ".patch");
         } else {
-            return "";
+            return "errorUrl --> errorUrl";
         }
         return candidateUrl + repository.replace(".","/") + "/commit/" + commit + "-->" + items.get(1);
     }

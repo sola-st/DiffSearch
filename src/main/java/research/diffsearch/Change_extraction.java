@@ -1042,7 +1042,7 @@ public class Change_extraction {
                 while (scanner.hasNextLine()) {
                     // while ((line = br.readLine()) != null) {
                     // line += "  ";
-                    System.out.print(line_num++ + " / 7293111 \n");
+                    System.out.print(line_num++ + " / 7292917 \n");
                     line = scanner.nextLine() + "  ";
                     //if(line.contains("submittedNode.get"))
                     //  System.out.println("okay");

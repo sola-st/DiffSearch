@@ -50,7 +50,7 @@ public class EffectivenessMode extends App {
 
         /* INDEXING PYTHON STAGE (FAISS) */
         try {
-            int[] array = {49266, 1000000, 1000000, 1000000, 568580}; // entries 667395/49267
+            int[] array = {50207, 1000000, 1000000, 1000000, 568580}; // entries 667395/49267
 
             List<CodeChangeWeb> json_final = new ArrayList<>();
             for (int sub = 0; sub < 1; sub++) {
@@ -85,7 +85,7 @@ public class EffectivenessMode extends App {
                 buffWriterResults = new BufferedWriter(
                         new FileWriter("./src/main/resources/Effectiveness/EFFECTIVENESS" + sub + ".log"));
 
-                for (int j = 1; j < 3; j++) {
+                for (int j = 1; j < 13; j++) {
                     int counter = 0;
                     Object treeQuery;
                     List<String> allLines;
