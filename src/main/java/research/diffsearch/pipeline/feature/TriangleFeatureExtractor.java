@@ -21,7 +21,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
             if (!isQuery() || !isQueryKeyword(childNodeText)) {
-                sum.append(childNodeText);
+                sum.append(childNodeText); //Spcae missing
             }
         }
 

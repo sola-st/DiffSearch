@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
+import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import static research.diffsearch.util.FilePathUtils.*;
+import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
 
 public class OnlinePipeline implements
         Pipeline<String, List<CodeChangeWeb>>,
@@ -61,26 +63,37 @@ public class OnlinePipeline implements
     public List<CodeChangeWeb> runDiffSearch(String input) {
         try {
             logger.info("Processing query " + input);
-            // write feature vector to file
-            var featureVector = Pipeline.from(QueryUtil::formatQuery)
-                    .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
-                    .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
-                    //.connect(new RemoveCollisionPipeline())
-                    //.connect(this::multiplyVector)
-                    .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
-                    .collect(input);
-            // query was invalid:
-            if (featureVector.isEmpty()) {
+
+            if(checkIfQueryIsValid(input)) {
+                // write feature vector to file
+                var featureVector = Pipeline.from(QueryUtil::formatQuery)
+                        .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
+                        .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
+                        .connect(new RemoveCollisionPipeline()) // Binary Query
+                        //.connect(this::multiplyVector)
+                        .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
+                        .collect(input);
+                // query was invalid:
+                if (featureVector.isEmpty()) {
+                    logger.warn("Invalid query:" + input);
+                    return List.of(CodeChangeWeb.INVALID_QUERY_CODE_CHANGE);
+                }
+            }else{
                 logger.warn("Invalid query:" + input);
                 return List.of(CodeChangeWeb.INVALID_QUERY_CODE_CHANGE);
             }
 
+
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {
-                return new MatchingPipeline(getProgrammingLanguage())
-                                .parallelUntilHere(16)
-                                .collect(getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO, input))
-                                .orElse(Collections.emptyList());
+                try {
+                    return new MatchingPipeline(getProgrammingLanguage())
+                            .parallelUntilHere(16)
+                            .collect(getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO, input))
+                            .orElse(Collections.emptyList());
+                }catch (Exception e){
+                    return null;
+                }
             } else {
                 logger.error("Connection with python failed.");
             }

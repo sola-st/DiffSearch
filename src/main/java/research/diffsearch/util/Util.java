@@ -26,6 +26,10 @@ public class Util {
                             + " RESULTS  for " + output.get(0) .query + "***");
                 out.println("*");
                 for (var change : output) {
+                    if(change.codeChangeOld.equals("invalid query") && change.codeChangeNew.equals("invalid query")){
+                        out.println("*** Query not valid. ***");
+                        break;
+                    }
                     for (var oldLine : change.codeChangeOld.split("\n")) {
                         out.print("*  - ");
                         out.println(ANSI_RED + oldLine + ANSI_RESET);
@@ -84,7 +88,8 @@ public class Util {
             // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
             repository = StringUtils.substringBetween(items.get(2), "java/", ".patch");
         } else {
-            return "errorUrl --> errorUrl";
+            //return "errorUrl --> errorUrl";
+            return "";
         }
         return candidateUrl + repository.replace(".","/") + "/commit/" + commit + "-->" + items.get(1);
     }

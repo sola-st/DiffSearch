@@ -550,4 +550,10 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
+    public void test67() throws Exception {
+        String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
+        String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
+        assertTrue(App.runJunit(query, candidate));
+    }
+
 }

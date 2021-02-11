@@ -98,15 +98,21 @@ public class EffectivenessMode extends App {
                         /* FINAL MATCHING STAGE:  Deep tree comparison as final matching.*/
                         /*long startTime_matching = System.currentTimeMillis();
                         long number_matching = -1;*/
-                        List<CodeChangeWeb> output = new OnlinePipeline(socket, Config.PROGRAMMING_LANGUAGE)
-                                .collect(queryInput)
-                                .orElseThrow();
+                        try {
+                            List<CodeChangeWeb> output = new OnlinePipeline(socket, Config.PROGRAMMING_LANGUAGE)
+                                    .collect(queryInput)
+                                    .orElseThrow();
 
-                        for (CodeChangeWeb temp : output) {
-                            buffWriterResults.write(temp.toString() + "\n\n");
+                            for (CodeChangeWeb temp : output) {
+                                buffWriterResults.write(temp.toString() + "\n\n");
+                            }
+                            counter += output.size();
+                            json_final.addAll(output);
+
                         }
-                        counter += output.size();
-                        json_final.addAll(output);
+                        catch (Exception e){
+                            continue;
+                        }
 
                         logger.debug(counter + " DONE with query: " + queryInput);
                     }

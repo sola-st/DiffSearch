@@ -53,7 +53,13 @@ public interface Pipeline<I, O> {
     }
 
     default Optional<O> collect(I input) {
-        return collect(List.of(input)).stream().findFirst();
+        try {
+            return collect(List.of(input)).stream().findFirst();
+        }
+        catch(Exception e){
+            return Optional.empty();
+        }
+
     }
 
     default List<O> collect(Iterable<I> inputs) {
@@ -89,7 +95,7 @@ public interface Pipeline<I, O> {
 
         synchronized (sync) {
             try {
-                sync.wait();
+                sync.wait(20000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
