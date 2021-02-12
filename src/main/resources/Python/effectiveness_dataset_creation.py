@@ -20,8 +20,10 @@ for code_change in dataset:
         commit = code_change['fixCommitSHA1']
         parent_commit = code_change['fixCommitParentSHA1']
         projectName = code_change['projectName']
+        oldline = code_change['bugLineNum']
+        newline = code_change['fixLineNum']
         myFile = open("../java_patch/dataset.patch", 'a')
-        myFile.write("#@#@!$%#@#@!$%" + commit + "$$$$" + parent_commit + "@@" + projectName + "\n")
+        myFile.write("#@#@!$%#@#@!$%" + commit + "$$$$" + parent_commit  + "$$$$" + oldline  + "$$$$" + newline + "@@" + projectName + "\n")
         myFile.close()
         command = "git --git-dir ../GitHub_Java/" + projectName + "/.git diff " + parent_commit + " " + commit + " >> ../java_patch/dataset.patch"
         os.system(command)

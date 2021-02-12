@@ -111,10 +111,11 @@ public class EffectivenessMode extends App {
 
                         }
                         catch (Exception e){
+                            logger.debug("Invalid query");
                             continue;
                         }
 
-                        logger.debug(counter + " DONE with query: " + queryInput);
+                        logger.debug(counter + " FOUND with query: " + queryInput);
                     }
                     matrix_results[j - 1][2] = counter;
                     matrix_results[j - 1][3] = counter / matrix_results[j - 1][1] * 100;

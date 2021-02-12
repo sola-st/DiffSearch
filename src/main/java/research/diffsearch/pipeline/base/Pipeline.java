@@ -95,7 +95,7 @@ public interface Pipeline<I, O> {
 
         synchronized (sync) {
             try {
-                sync.wait(20000);
+                sync.wait(25000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

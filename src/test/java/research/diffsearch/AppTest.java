@@ -556,4 +556,16 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
+    public void test68() throws Exception {
+        String query = "ID.ID() binOP LT --> ID.ID() binOP LT";
+        String candidate = "return found.size() == 1 ? found.iterator().next(): null; --> return found.size() >= 1 ? found.iterator().next(): null;  ";
+        assertTrue(App.runJunit(query, candidate));
+    }
+
+    public void test69() throws Exception {
+        String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
+        String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
+        assertTrue(App.runJunit(query, candidate));
+    }
+
 }

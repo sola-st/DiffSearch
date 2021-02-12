@@ -3,3 +3,4 @@ EXPR.ID<0>(EXPR<0>); --> EXPR.ID<0>(EXPR<0>);
 EXPR.ID<0>(EXPR<0>, EXPR<1>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>);
 EXPR.ID<0>(EXPR<0>, EXPR<1>,EXPR<2>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>);
 EXPR.ID<0>(EXPR<0>, EXPR<1>,EXPR<2>, EXPR<3>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<2>);
+ID.ID<0>(<...>); --> ID.ID<0>(<...>);

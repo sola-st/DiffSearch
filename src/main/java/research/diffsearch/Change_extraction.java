@@ -20,6 +20,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("ALL")
@@ -1063,6 +1065,11 @@ public class Change_extraction {
                     else
                         //manage -old change
                         if ((line.substring(0, 1).equals("-")) && (!line.substring(1, 2).equals("-"))) {
+                            Pattern p = Pattern.compile("- *\\/\\/");
+                            Matcher m = p.matcher(line);
+                            if (m.find()){
+                                continue;
+                            }
 
                             //Manage sequential change without interruption: -old +new -old +new
                             if (flag && temporary_list_old.size() > 0) {
@@ -1098,6 +1105,12 @@ public class Change_extraction {
                         } else
                             //manage +new change, managing the case: all whitespace
                             if ((line.substring(0, 1).equals("+")) && (!line.substring(1, 2).equals("+"))) {
+                                Pattern p = Pattern.compile("\\+ *\\/\\/");
+                                Matcher m = p.matcher(line);
+                                if (m.find()){
+                                    continue;
+                                }
+
                                 if (line.substring(1, line.length() - 1).trim().length() > 0)
                                     temporary_list_new.add(line.substring(1, line.length() - 1) + "\n");
                                 else
