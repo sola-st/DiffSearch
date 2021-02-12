@@ -23,7 +23,7 @@ for code_change in dataset:
         oldline = code_change['bugLineNum']
         newline = code_change['fixLineNum']
         myFile = open("../java_patch/dataset.patch", 'a')
-        myFile.write("#@#@!$%#@#@!$%" + commit + "$$$$" + parent_commit  + "$$$$" + oldline  + "$$$$" + newline + "@@" + projectName + "\n")
+        myFile.write("#@#@!$%#@#@!$%" + commit + "$$$$" + parent_commit  + "$$$$" + str(oldline)  + "$$$$" + str(newline) + "@@" + projectName + "\n")
         myFile.close()
         command = "git --git-dir ../GitHub_Java/" + projectName + "/.git diff " + parent_commit + " " + commit + " >> ../java_patch/dataset.patch"
         os.system(command)
