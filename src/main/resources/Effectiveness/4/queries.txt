@@ -33,3 +33,4 @@ if (ID<0>(<...>) binOP<0> ID<1>){ <...>  --> if (EXPR || ID<0>(<...>) binOP<0> I
 if (ID<0> == LT) { -->  if (ID<0> == LT || ID == LT) {
 if (ID<0> == LT) {  -->  if (ID<0> == LT || ID.ID(<...>)) {
 if (ID.ID(<...>)) {  -->  if (ID.ID(<...>) || ID.ID(<...>)) {
+if(EXPR){ --> if(EXPR){

@@ -100,7 +100,10 @@ def searching(index_path, k, host, port):
 
                 with open('./src/main/resources/Features_Vectors/candidate_changes_info.txt', 'w') as f:
                     for item in index_list:
-                        f.write("%s" % changes_info[item])
+                        if len(changes_info) > item + 1:
+                            f.write("%s" % changes_info[item+1])
+                        else:
+                            f.write("%s" % changes_info[item])
 
                 logger.info(f"Searching done in {time.time() - start} seconds")
 

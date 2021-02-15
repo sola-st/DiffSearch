@@ -69,7 +69,7 @@ public class OnlinePipeline implements
                 var featureVector = Pipeline.from(QueryUtil::formatQuery)
                         .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
                         .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
-                        .connect(new RemoveCollisionPipeline()) // Binary Query
+                        //.connect(new RemoveCollisionPipeline()) // Binary Query
                         //.connect(this::multiplyVector)
                         .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                         .collect(input);

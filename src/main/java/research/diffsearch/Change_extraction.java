@@ -1054,6 +1054,8 @@ public class Change_extraction {
                     if(line.length() > 13 && line.substring(0, 14).equals("#@#@!$%#@#@!$%")){
                         String[] parts = line.split("@@");
                         commit = "commit " + parts[0].replace("#@#@!$%#@#@!$%", "");
+                        if (commit.contains("3d3aad91880410164be0372875fe702af44fa279"))
+                                System.out.println(line);
                         projectName = "java/" + parts[1].replace(" ", "") + ".patch";
                         cc.commit = commit.replace("commit ", "");
                     }
