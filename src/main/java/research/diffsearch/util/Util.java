@@ -70,7 +70,7 @@ public class Util {
         if (items.size() > 2) {
             commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
             // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
-            repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("-", "/");
+            repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("\\.", "/");
         } else {
             return "";
         }

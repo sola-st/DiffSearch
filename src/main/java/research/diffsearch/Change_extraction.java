@@ -888,7 +888,12 @@ public class Change_extraction {
                                     }
 
                                     //                            writer_prop.close();
-                                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                                    String info_url_line = " --> ";
+                                    try {
+                                        info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                                    }catch(Exception e){
+                                        info_url_line = "error --> error" ;
+                                    }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                                     cc.url = items.get(0);
                                     cc.line = items.get(1);
@@ -937,7 +942,12 @@ public class Change_extraction {
                     }
 
                     //gson.toJson(cc, writer_prop);
-                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                    String info_url_line = " --> ";
+                    try {
+                        info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                    }catch(Exception e){
+                        info_url_line = "error --> error" ;
+                    }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                     cc.url = items.get(0);
                     cc.line = items.get(1);
@@ -1044,7 +1054,7 @@ public class Change_extraction {
                 while (scanner.hasNextLine()) {
                     // while ((line = br.readLine()) != null) {
                     // line += "  ";
-                    System.out.print(line_num++ + " / 7292917 \n");
+                    System.out.print(line_num++ + " / 22006739 \n"); //7292917
                     line = scanner.nextLine() + "  ";
                     //if(line.contains("submittedNode.get"))
                     //  System.out.println("okay");
@@ -1164,7 +1174,12 @@ public class Change_extraction {
                                     }
 
                                     //                            writer_prop.close();
-                                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                                    String info_url_line = " --> ";
+                                    try {
+                                        info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                                    }catch(Exception e){
+                                        info_url_line = "error --> error" ;
+                                    }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                                     cc.url = items.get(0);
                                     cc.line = items.get(1);
@@ -1213,7 +1228,12 @@ public class Change_extraction {
                     }
 
                     //gson.toJson(cc, writer_prop);
-                    String info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                    String info_url_line = " --> ";
+                    try {
+                        info_url_line = Util.computeCandidateUrl(commit + " " + position + " " + f.toString());
+                    }catch(Exception e){
+                        info_url_line = "error --> error" ;
+                    }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                     cc.url = items.get(0);
                     cc.line = items.get(1);

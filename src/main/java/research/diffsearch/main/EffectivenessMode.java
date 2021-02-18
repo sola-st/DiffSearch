@@ -50,7 +50,7 @@ public class EffectivenessMode extends App {
 
         /* INDEXING PYTHON STAGE (FAISS) */
         try {
-            int[] array = {50214, 1000000, 1000000, 1000000, 568580}; // entries 667395/49267
+            int[] array = {1131080, 1000000, 1000000, 1000000, 568580}; // entries 667395/49267  new:1131080
 
             List<CodeChangeWeb> json_final = new ArrayList<>();
             for (int sub = 0; sub < 1; sub++) {
