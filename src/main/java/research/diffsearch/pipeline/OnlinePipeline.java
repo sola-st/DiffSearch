@@ -88,7 +88,7 @@ public class OnlinePipeline implements
             if (sendMessageToPythonServer(pythonSocket)) {
                 try {
                     return new MatchingPipeline(getProgrammingLanguage())
-                            .parallelUntilHere(16)
+                            //.parallelUntilHere(16)
                             .collect(getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO, input))
                             .orElse(Collections.emptyList());
                 }catch (Exception e){

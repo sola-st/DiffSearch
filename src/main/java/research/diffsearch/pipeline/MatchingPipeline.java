@@ -55,7 +55,7 @@ public class MatchingPipeline
         try {
             outputList = Pipeline
                     .getFilter(this::checkCandidate)
-                    .parallelUntilHere(16)
+                    //.parallelUntilHere(16)
                     .connect(new ProgressWatcher<>(input.size(), "Matching"))
                     .collect(input);
         } catch (Exception e) {
