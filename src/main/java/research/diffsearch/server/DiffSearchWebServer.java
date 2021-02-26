@@ -144,9 +144,9 @@ public class DiffSearchWebServer extends Thread {
                                 + "</span></span><span style='color: #000000'>  <big><big><big><big><big><span>&#10132;" +
                                 "</span></big></big></big></big></big>  </span> "
                                 + "<span style='background-color:#2cab13'><span style='color: #FFFFFF'>+ " + parts[1] +
-                                "</span></span></span></H4>"
-                            + "<a href=" + parts[3] + " style=\"color: #000000\"> Link "+ parts[2] +"</a></span>"
-                                + "<pre>  </pre><pre>   </pre>");
+                                "</span></span></span></H4>");
+                       //     + "<a href=" + parts[3] + " style=\"color: #000000\"> Link "+ parts[2] +"</a></span>"
+                             //   + "<pre>  </pre><pre>   </pre>");
                     channel.write(ByteBuffer.wrap((change + "\n").getBytes()));
                 }
             } catch (Exception e) {
