@@ -62,7 +62,7 @@ public class FeatureExtractionMode extends App {
 
         Pipeline.from(QueryUtil::formatQuery)
                 .connect(getDefaultFeatureExtractionPipeline(false))
-                .parallelUntilHere(12)
+                .parallelUntilHere(Config.threadCount)
                 .connectIf(!Config.USE_COUNT_VECTORS_CORPUS, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
                 .connect(new ProgressWatcher<>(changesLines.size(), "Feature extraction"))

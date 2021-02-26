@@ -4,6 +4,7 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
@@ -64,7 +65,7 @@ public class MatchingPipeline
         try {
             outputList = Pipeline
                     .getFilter(this::checkCandidate)
-                    .parallelUntilHere(14)
+                    .parallelUntilHere(Config.threadCount)
                     .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
                     .collect(input.getResults());
         } catch (Exception e) {

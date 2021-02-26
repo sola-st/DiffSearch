@@ -62,6 +62,11 @@ public class Config {
     public static boolean SILENT = false;
 
     /**
+     * Number of threads to use.
+     */
+    public static int threadCount = 24;
+
+    /**
      * If true, DiffSearch will run in Batch mode. This will process all queries of a text file and
      * save the results to an output file. This will not store results if {@link Config#SILENT} is true.
      */

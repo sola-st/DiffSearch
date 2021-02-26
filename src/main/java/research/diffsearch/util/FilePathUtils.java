@@ -138,8 +138,6 @@ public class FilePathUtils {
     }
 
     public static BufferedWriter getWriter(String path) throws IOException {
-        var file = new File(path);
-        file.createNewFile();
         return new BufferedWriter(new FileWriter(path));
     }
 
