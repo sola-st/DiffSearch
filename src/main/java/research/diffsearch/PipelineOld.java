@@ -1,6 +1,7 @@
 package research.diffsearch;
 
 import org.antlr.v4.runtime.tree.Tree;
+import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.Java_Tree;
 import research.diffsearch.tree.Javascript_Tree;
 import research.diffsearch.tree.TreeUtils;
@@ -16,6 +17,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
 
 @SuppressWarnings("ALL")
 public class PipelineOld {
@@ -189,12 +192,12 @@ public class PipelineOld {
 
 
                 //Python3_Tree change = null;
-                //Javascript_Tree change = null;
-                Java_Tree change = null;
+                Javascript_Tree change = null;
+                //Java_Tree change = null;
                 try {
-                    //change = new Javascript_Tree(change_string);}
+                    change = new Javascript_Tree(change_string);
                     //change = new Python3_Tree(change_string);
-                    change = new Java_Tree(change_string);
+                    //change = new Java_Tree(change_string);
                 } catch (Exception e) {
                     continue;
                 }
@@ -208,9 +211,9 @@ public class PipelineOld {
 
 
                     try {
-                        //change = new Javascript_Tree(change_string);}
+                        change = new Javascript_Tree(change_string);
                         //change = new Python3_Tree(change_string);
-                        change = new Java_Tree(change_string.replace("}", ""));
+                        //change = new Java_Tree(change_string.replace("}", ""));
                     } catch (Exception e) {
                         continue;
                     }
@@ -261,15 +264,15 @@ public class PipelineOld {
                 //Computing hash sum of changes (1 FEATURE)
                 List<Integer> list_change_hash_sum = new ArrayList<Integer>();
                 List<String> ruleNamesList2 = Arrays.asList(change.get_parser().getRuleNames());
-                // TreeUtils.tree_hash_sumAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                TreeUtils.tree_hash_sumAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
                 //TreeUtils.tree_hash_sumAST_python(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
-                TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
+                //TreeUtils.tree_hash_sumAST_java(change.get_parsetree(), ruleNamesList2, list_change_hash_sum, change.features);
 
                 //Computing list change parent child (2 FEATURE)
                 List<Integer> list_change_parent_child = new ArrayList<Integer>();
-                //  TreeUtils.pairs_parent_childAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                TreeUtils.pairs_parent_childAST_javascript(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
                 //TreeUtils.pairs_parent_childAST_python(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
-                TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
+                //TreeUtils.pairs_parent_childAST_java(change.get_parsetree(), ruleNamesList2, list_change_parent_child, change.features);
 
                 // Writing the feature vector in a csv file
                 StringBuilder str_builder = new StringBuilder();
@@ -303,40 +306,16 @@ public class PipelineOld {
      * Method that creates a new process that launches Python script containing the FAISS Framework that indexes all changes.
      */
     public static void indexing_candidate_changes(int n) {
-        Process python_indexing;
-
-        try {
-            long startTime_gitdiff = System.currentTimeMillis();
-            python_indexing = Runtime.getRuntime().exec(Config.PYTHON_CMD + " ./src/main/resources/Python/FAISS_indexing.py " + Integer.toString(n));
-
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(python_indexing.getErrorStream()));
-
-            java.io.InputStream is = python_indexing.getInputStream();
-            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-
-            if (s.hasNext()) {
-                String ret = s.next();
-            }
-
-            int exitCode = python_indexing.waitFor();
-            String st = null;
-            if (exitCode != 0) {
-                // Read any errors from the attempted command
-                System.out.println("Here is the standard error of the command:\n");
-                while ((st = stdError.readLine()) != null) {
-                    System.out.println(s);
-                }
-                throw new IOException("FAISS_indexing.py exited with error " + exitCode + ".\n");
-            }
-            python_indexing.destroy();
-            long gitdiff_extraction = (System.currentTimeMillis() - startTime_gitdiff);
-            System.out.println("Indexing time: " + gitdiff_extraction / 1000 + " seconds.\n");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!Config.ONLY_JAVA) {
+            var pythonExecutor = new PythonRunner(
+                    "./src/main/resources/Python/FAISS_indexing_python.py",
+                    "Features_Vectors/changes_feature_vectors_java.csv",
+                    "Features_Vectors/faiss_java.index",
+                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()));
+            //pythonExecutor.waitUntilEnd();
+        } else {
+            return;
         }
-
-        //  System.out.println("FAISS INDEXING STAGE DONE.\n");
 
     }
 

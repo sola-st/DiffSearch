@@ -74,7 +74,7 @@ public class Javascript_Tree {
         features = new int[Integer.MAX_VALUE/1048576]; //4096
     }
 
-    String get_change_string() {
+    public String get_change_string() {
         return change_string;
     }
 

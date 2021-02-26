@@ -53,7 +53,7 @@ public abstract class App implements Runnable {
         return new FileOutputStream(Config.server_log_file, true);
     }
 
-    protected static Socket getFaissSocket() throws IOException {
+    public static Socket getFaissSocket() throws IOException {
         return new Socket(Config.host, Config.port);
     }
 

@@ -510,7 +510,7 @@ public class Change_extraction {
      *
      * @return A list of changes in the form: old code -> new code
      */
-    static long analyze_diff_file_new_propagation() {
+    public static long analyze_diff_file_new_propagation() {
         List<String> temporary_list_old = new ArrayList<String>();
         List<String> temporary_list_new = new ArrayList<String>();
         long change_number = 0;
@@ -532,7 +532,7 @@ public class Change_extraction {
         }
         writer_prop.println("[");
 
-        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/python_patch");
+        List<File> list_files = listf2(System.getProperty("user.dir") + "/src/main/resources/patch_javascript");
 
         int www = 0;
 
