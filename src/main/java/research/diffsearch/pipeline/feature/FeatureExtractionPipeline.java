@@ -75,6 +75,11 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
         }
     }
 
+    @Override
+    public void after() {
+        logger.info("FEATURE COUNT: " + NodeExtractor.allFeatures.size());
+    }
+
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT);
         if (Config.SPLIT_EXTRACTORS) {

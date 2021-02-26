@@ -26,7 +26,6 @@ public class FeatureVector {
             actualIndex = (actualIndex + probingOffset) % vector.length;
 
             // use count bits
-            // TODO use count bits before probing
             for (var offset = 0; offset < countBits; offset++) {
                 actualIndex = (countBits * actualIndex + offset) % vector.length;
                 if (vector[actualIndex] == 0 || offset == countBits - 1) {

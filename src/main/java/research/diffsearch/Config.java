@@ -8,7 +8,7 @@ public class Config {
     /**
      * The command to run a python file.
      */
-    public static String PYTHON_CMD = "wsl python3";
+    public static String PYTHON_CMD = "python3";
 
     public static String GITDIFF_FILE = "";
 
@@ -87,22 +87,22 @@ public class Config {
      * The number of candidate changes that are used to find results. DiffSearch will consider
      * this number of code changes while processing a query.
      */
-    public static int k = 1000;
+    public static int k = 5000;
 
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 1024;
 
     /**
      * The number of bits per feature that are used for unary counting
      */
-    public static byte COUNT_BITS = 1;
+    public static byte COUNT_BITS = 2;
 
     /**
      * Maximum number of times a feature can be counted using quadratic probing.
      */
-    public static int FEATURE_MAX_COUNT = 32;
+    public static int FEATURE_MAX_COUNT = 10;
 
     /**
      * Port of the web server.
@@ -137,7 +137,7 @@ public class Config {
 
     /**
      * If true, count feature vectors will be used for the corpus instead of binary vectors.
-     * Change required reindexing.
+     * Change requires reindexing.
      */
     public static boolean USE_COUNT_VECTORS_CORPUS = false;
 
@@ -149,7 +149,7 @@ public class Config {
     /**
      * Query vectors get multiplied by this factor.
      */
-    public static int QUERY_FEATURE_VECTOR_MULTIPLIER = 513;
+    public static int QUERY_FEATURE_VECTOR_MULTIPLIER = 2049;
 
     /**
      * FAISS parameter, number of clusters of the index.

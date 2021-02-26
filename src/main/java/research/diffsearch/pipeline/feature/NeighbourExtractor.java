@@ -18,23 +18,25 @@ public class NeighbourExtractor extends AbstractRecursiveFeatureExtractor {
     public void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
                                          int startPosition, List<String> ruleNames, int depth) {
         for (int i = 0; i < t.getChildCount() - 1; i++) {
-            var child = t.getChild(i);
-            var child2 = t.getChild(i + 1);
-            var childNodeText = Trees.getNodeText(child, ruleNames);
-            var child2NodeText = Trees.getNodeText(child2, ruleNames);
+            for (int j = i + 1; j < t.getChildCount(); j++) {
+                var child = t.getChild(i);
+                var child2 = t.getChild(j);
+                var childNodeText = Trees.getNodeText(child, ruleNames);
+                var child2NodeText = Trees.getNodeText(child2, ruleNames);
 
-            if (!isQuery()
-                || Config.EXTRACT_QUERY_KEYWORDS
-                || !QueryUtil.isQueryKeyword(childNodeText)
-                || !QueryUtil.isQueryKeyword(child2NodeText)) {
+                if (!isQuery()
+                    || Config.EXTRACT_QUERY_KEYWORDS
+                    || !QueryUtil.isQueryKeyword(childNodeText)
+                    || !QueryUtil.isQueryKeyword(child2NodeText)) {
 
-                var feature = Trees.getNodeText(child, ruleNames) + ' ' +
-                              Trees.getNodeText(child2, ruleNames);
+                    var feature = Trees.getNodeText(child, ruleNames) + ' ' +
+                                  Trees.getNodeText(child2, ruleNames);
 
-                int index = getFeatureVectorIndex(startPosition, feature.hashCode(),
-                        getFeatureVectorLength());
+                    int index = getFeatureVectorIndex(startPosition, feature.hashCode(),
+                            getFeatureVectorLength());
 
-                completeFeatureVector.addFeature("Neighbour", feature, index);
+                    completeFeatureVector.addFeature("Neighbour", feature, index);
+                }
             }
         }
 

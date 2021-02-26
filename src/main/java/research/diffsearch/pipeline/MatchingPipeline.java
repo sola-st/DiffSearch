@@ -58,6 +58,7 @@ public class MatchingPipeline
 
         if (queryTree == null) {
             queryTree = getChangeTree(input.getQuery(), language);
+            logger.debug(queryTree.getTreeString());
         }
 
         try {

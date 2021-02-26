@@ -56,6 +56,10 @@ public class FeatureExtractionMode extends App {
 
     protected static void extractFeaturesToFile() throws IOException {
         List<String> changesLines = Lists.newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
+
+        logger.debug("Feature vector length: {}",
+                getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength());
+
         Pipeline.from(QueryUtil::formatQuery)
                 .connect(getDefaultFeatureExtractionPipeline(false))
                 .parallelUntilHere(12)
