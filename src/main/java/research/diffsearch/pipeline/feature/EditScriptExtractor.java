@@ -1,6 +1,7 @@
 package research.diffsearch.pipeline.feature;
 
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.feature.FeatureVector.Section;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptCreator;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation;
 import research.diffsearch.tree.ParseTreeNode;
@@ -17,13 +18,11 @@ public class EditScriptExtractor implements FeatureExtractor {
 
     private final ProgrammingLanguage programmingLanguage;
     private final int featureVectorLength;
-    private final boolean isQuery;
     static final EnumMap<EditScriptOperation.Type, Integer> countMap = new EnumMap<>(EditScriptOperation.Type.class);
 
-    public EditScriptExtractor(ProgrammingLanguage programmingLanguage, int featureVectorLength, boolean isQuery) {
+    public EditScriptExtractor(ProgrammingLanguage programmingLanguage, int featureVectorLength) {
         this.programmingLanguage = programmingLanguage;
         this.featureVectorLength = featureVectorLength;
-        this.isQuery = isQuery;
     }
 
     @Override
@@ -32,111 +31,105 @@ public class EditScriptExtractor implements FeatureExtractor {
     }
 
     @Override
-    public FeatureVector extractFeatures(String codeChange,
-                                         FeatureVector completeFeatureVector,
-                                         int startPosition) {
+    public void extractFeatures(String codeChange,
+                                         Section section, boolean isQuery) {
 
         var editScript = new EditScriptCreator(codeChange, programmingLanguage)
                 .calculateEditScript();
-        extractFeatures(editScript, completeFeatureVector, startPosition);
-
-        return completeFeatureVector;
+        extractFeatures(editScript, section, isQuery);
     }
 
-    private void extractFeatures(List<EditScriptOperation> editScriptOperationList,
-                                 FeatureVector vector,
-                                 int startPosition) {
+    private void extractFeatures(List<EditScriptOperation> editScriptOperationList, Section section, boolean isQuery) {
         // first third of the vector
         for (EditScriptOperation editScriptOperation : editScriptOperationList) {
             // exclude root because they are always equal
             if (editScriptOperation.getOldNode() == null || !editScriptOperation.getOldNode().isRoot()) {
-                processEditScriptStep(vector, editScriptOperation, startPosition);
+                processEditScriptStep(section, editScriptOperation, isQuery);
 
             }
         }
     }
 
-    @SuppressWarnings("OverlyLongMethod")
-    private void processEditScriptStep(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                       int startPosition) {
-        int position = startPosition;
+    @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
+    private void processEditScriptStep(Section section, EditScriptOperation editScriptOperation, boolean isQuery) {
+        int position = section.getStartPosition();
         if (editScriptOperation.getType() == EQUAL) {
-            addEqualFeature(vector, editScriptOperation, position);
+            addEqualFeature(section, editScriptOperation, position, isQuery);
             return;
         }
 
         position += featureVectorLength / 3;
 
         if (editScriptOperation.getType() == UPDATE) {
-            addUpdateParentsFeature(vector, editScriptOperation, position);
+            addUpdateParentsFeature(section, editScriptOperation, position, isQuery);
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == UPDATE) {
-            addUpdateFeature(vector, editScriptOperation, position);
+            addUpdateFeature(section, editScriptOperation, position, isQuery);
             return;
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == INSERT) {
-            addInsertParentFeature(vector, editScriptOperation, position);
+            addInsertParentFeature(section, editScriptOperation, position, isQuery);
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == INSERT) {
-            addInsertFeature(vector, editScriptOperation, position);
+            addInsertFeature(section, editScriptOperation, position, isQuery);
             return;
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == DELETE) {
-            addDeleteParentsFeature(vector, editScriptOperation, position);
+            addDeleteParentsFeature(section, editScriptOperation, position, isQuery);
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == DELETE) {
-            addDeleteFeature(vector, editScriptOperation, position);
+            addDeleteFeature(section, editScriptOperation, position, isQuery);
             return;
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == MOVE || editScriptOperation.getType() == ALIGN) {
-            addMoveParentsFeature(vector, editScriptOperation, position);
+            addMoveParentsFeature(section, editScriptOperation, position, isQuery);
         }
 
         position += featureVectorLength / 12;
 
         if (editScriptOperation.getType() == MOVE || editScriptOperation.getType() == ALIGN) {
-            addMoveFeature(vector, editScriptOperation, position);
+            addMoveFeature(section, editScriptOperation, position, isQuery);
         }
     }
 
-    private void addMoveParentsFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                       int position) {
+    private void addMoveParentsFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                       int position, boolean isQuery) {
         // use the parent of moved nodes as features
-        addTwoNodesFeature(vector, position, editScriptOperation.getOldNode()
-                                    .getParent(), editScriptOperation.getNewNode()
-                                            .getParent(), "MOVE_PARENTS");
+        addTwoNodesFeature(section, position, editScriptOperation.getOldNode()
+                .getParent(), editScriptOperation.getNewNode()
+                .getParent(), "MOVE_PARENTS", isQuery);
     }
 
-    private void addMoveFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                       int position) {
+    private void addMoveFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                int position, boolean isQuery) {
         // use the parent of moved nodes as features
-        addTwoNodesFeature(vector, position, editScriptOperation.getOldNode(), editScriptOperation.getNewNode(), "MOVE");
+        addTwoNodesFeature(section, position, editScriptOperation.getOldNode(),
+                editScriptOperation.getNewNode(), "MOVE", isQuery);
     }
 
-    private void addTwoNodesFeature(FeatureVector vector, int position, ParseTreeNode oldNode,
-                                    ParseTreeNode newNode, String category) {
-
+    private void addTwoNodesFeature(FeatureVector.Section section, int position, ParseTreeNode oldNode,
+                                    ParseTreeNode newNode, String category, boolean isQuery) {
         var feature = (oldNode == null ? "" : oldNode.getNodeLabel())
-                            + " "
-                            + (newNode == null ? "" : newNode.getNodeLabel());
+                      + " "
+                      + (newNode == null ? "" : newNode.getNodeLabel());
 
         var index = getFeatureVectorIndex(position,
                 feature.hashCode(),
@@ -144,65 +137,67 @@ public class EditScriptExtractor implements FeatureExtractor {
 
 
         if (!isQuery || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(feature)) {
-            vector.addFeature(category, feature, index);
+            section.addFeature(feature, index);
         }
     }
 
-    private void addDeleteFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                         int position) {
+    private void addDeleteFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                  int position, boolean isQuery) {
         // use the parent of deleted nodes as features
-        addFeature(vector, position, editScriptOperation.getOldNode(),
-                12, "DELETE");
+        addFeature(section, position, editScriptOperation.getOldNode(),
+                12, "DELETE", isQuery);
     }
 
-    private void addDeleteParentsFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                         int position) {
+    private void addDeleteParentsFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                         int position, boolean isQuery) {
         // use the parent of deleted nodes as features
-        addFeature(vector, position, editScriptOperation.getOldNode().getParent(),
-                12, "DELETE_PARENT");
+        addFeature(section, position, editScriptOperation.getOldNode().getParent(),
+                12, "DELETE_PARENT", isQuery);
     }
 
 
-    private void addUpdateParentsFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                         int position) {
+    private void addUpdateParentsFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                         int position, boolean isQuery) {
         // use the parent of updated nodes as features
-        addTwoNodesFeature(vector, position, editScriptOperation.getOldNode()
-                                    .getParent(), editScriptOperation.getNewNode()
-                                            .getParent(), "UPDATE_PARENTS");
+        addTwoNodesFeature(section, position, editScriptOperation.getOldNode()
+                .getParent(), editScriptOperation.getNewNode()
+                .getParent(), "UPDATE_PARENTS", isQuery);
     }
 
-    private void addUpdateFeature(FeatureVector vector, EditScriptOperation editScriptOperation,
-                                  int position) {
+    private void addUpdateFeature(FeatureVector.Section section, EditScriptOperation editScriptOperation,
+                                  int position, boolean isQuery) {
         // use actual updated nodes as features
-        addTwoNodesFeature(vector, position, editScriptOperation.getOldNode(), editScriptOperation.getNewNode(), "UPDATE");
+        addTwoNodesFeature(section, position, editScriptOperation.getOldNode(),
+                editScriptOperation.getNewNode(), "UPDATE", isQuery);
     }
 
-    private void addEqualFeature(FeatureVector vector,
+    private void addEqualFeature(FeatureVector.Section section,
                                  EditScriptOperation editScriptOperation,
-                                 int position) {
+                                 int position, boolean isQuery) {
 
         // each node that is equal is a feature
-        addFeature(vector, position, editScriptOperation.getOldNode(), 3, "EQUAL");
+        addFeature(section, position, editScriptOperation.getOldNode(), 3, "EQUAL", isQuery);
     }
 
-    private void addInsertParentFeature(FeatureVector vector,
+    private void addInsertParentFeature(FeatureVector.Section section,
                                         EditScriptOperation editScriptOperation,
-                                        int position) {
+                                        int position, boolean isQuery) {
 
         // use the parent of updated nodes as features
-        addFeature(vector, position, editScriptOperation.getNewNode().getParent(),
-                12, "INSERT_PARENT");
+        addFeature(section, position, editScriptOperation.getNewNode().getParent(),
+                12, "INSERT_PARENT", isQuery);
     }
 
-    private void addInsertFeature(FeatureVector vector,
+    private void addInsertFeature(FeatureVector.Section section,
                                   EditScriptOperation editScriptOperation,
-                                  int position) {
+                                  int position, boolean isQuery) {
 
         // use actual updated nodes as features
-        addFeature(vector, position, editScriptOperation.getNewNode(), 12, "INSERT");
+        addFeature(section, position, editScriptOperation.getNewNode(), 12, "INSERT", isQuery);
     }
 
-    private void addFeature(FeatureVector vector, int position, ParseTreeNode node, int i, String category) {
+    private void addFeature(FeatureVector.Section section, int position, ParseTreeNode node, int i,
+                            String category, boolean isQuery) {
         var f = node.getNodeLabel();
 
         var index = getFeatureVectorIndex(position,
@@ -210,7 +205,7 @@ public class EditScriptExtractor implements FeatureExtractor {
                 getFeatureVectorLength() / i);
 
         if (!isQuery || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(f)) {
-            vector.addFeature(category, f, index);
+            section.addFeature(f, index);
         }
     }
 

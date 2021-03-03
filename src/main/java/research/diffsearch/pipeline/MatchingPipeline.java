@@ -15,7 +15,6 @@ import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
@@ -88,7 +87,7 @@ public class MatchingPipeline
             if (matchingCounter < matchingLimit &&
                 matching.isMatch(changeParseTree, changeTree.getParser())) {
 
-                if (isNotEqualCodeChange(candidate)) {
+                if (isNotEqualCodeChange(candidateChange)) {
                     matchingCounter++;
                     return true;
                 }
@@ -99,13 +98,8 @@ public class MatchingPipeline
         return false;
     }
 
-    public static boolean isNotEqualCodeChange(String candidate) {
-        List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
-        if (list.size() >= 2) {
-            return !list.get(1).equals(list.get(0));
-        } else {
-            return false;
-        }
+    public static boolean isNotEqualCodeChange(CodeChangeWeb codeChangeWeb) {
+        return !codeChangeWeb.codeChangeNew.equals(codeChangeWeb.codeChangeOld);
     }
 
     @Override

@@ -108,6 +108,10 @@ public class FilePathUtils {
         };
     }
 
+    public static Iterable<CodeChangeWeb> getCodeChanges(ProgrammingLanguage programmingLanguage) {
+        return getCodeChanges(getChangesFilePath(programmingLanguage), getChangesInfoFilePath(programmingLanguage));
+    }
+
     public static Iterable<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
         return () -> new Iterator<>() {
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
@@ -188,35 +192,5 @@ public class FilePathUtils {
 
     public static Pipeline<FeatureVector, FeatureVector> getVectorFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Util::featureVectorToString);
-    }
-
-    public static String getScalabilityInputPath(ProgrammingLanguage programmingLanguage) {
-        String inputPath;
-        switch (programmingLanguage) {
-            case JAVA:
-                inputPath = "./src/main/resources/scalability/Java/input.txt";
-                break;
-            case JAVASCRIPT:
-                inputPath = "./src/main/resources/scalability/JavaScript/input.txt";
-                break;
-            default:
-                inputPath = "./src/main/resources/scalability/Python/input.txt";
-        }
-        return inputPath;
-    }
-
-    public static String getScalabilityCSVFilePath(ProgrammingLanguage programmingLanguage) {
-        String scalabilityFilePath;
-        switch (programmingLanguage) {
-            case JAVASCRIPT:
-                scalabilityFilePath = "./src/main/resources/scalability/JavaScript/scalability_javaScript.csv";
-                break;
-            case JAVA:
-                scalabilityFilePath = "./src/main/resources/scalability/Java/scalability_java.csv";
-                break;
-            default:
-                scalabilityFilePath = "./src/main/resources/scalability/Python/scalability_python.csv";
-        }
-        return scalabilityFilePath;
     }
 }

@@ -9,32 +9,27 @@ import research.diffsearch.util.QueryUtil;
 import java.util.List;
 
 public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor {
-    public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength, boolean isQuery) {
-        super(language, featureVectorLength, isQuery);
+
+    public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
+        super(language, featureVectorLength);
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
-                                         int startPosition, List<String> ruleNames, int depth) {
+    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
+                                         List<String> ruleNames, boolean isQuery) {
         StringBuilder sum = new StringBuilder();
         sum.append(Trees.getNodeText(t, ruleNames));
 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
-            if (!isQuery() || Config.EXTRACT_QUERY_KEYWORDS || !QueryUtil.isQueryKeyword(childNodeText)) {
+            if (isQuery || Config.EXTRACT_QUERY_KEYWORDS || !QueryUtil.isQueryKeyword(childNodeText)) {
                 sum.append(childNodeText).append(" ");
-            } else {
-                // set sum empty if query keyword was detected.
-//                sum = new StringBuilder();
-//                break;
             }
         }
 
         if (!sum.toString().isBlank() && i > 0) {
-            int index = getFeatureVectorIndex(startPosition, sum.toString().trim().hashCode(),
-                    getFeatureVectorLength());
-            completeFeatureVector.addFeature("Triangle", sum.toString(), index);
+            section.addFeature(sum.toString());
         }
 
         for (i = 0; i < t.getChildCount(); i++) {
@@ -43,7 +38,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
                 continue;
             }
 
-            extractFeaturesRecursive(t.getChild(i), completeFeatureVector, startPosition, ruleNames, depth + 1);
+            extractFeaturesRecursive(t.getChild(i), section, ruleNames, isQuery);
         }
     }
 }

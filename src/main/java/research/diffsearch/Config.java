@@ -8,7 +8,7 @@ public class Config {
     /**
      * The command to run a python file.
      */
-    public static String PYTHON_CMD = "python3";
+    public static String PYTHON_CMD = "wsl python3";
 
     public static String GITDIFF_FILE = "";
 
@@ -64,7 +64,7 @@ public class Config {
     /**
      * Number of threads to use.
      */
-    public static int threadCount = 24;
+    public static int threadCount = 12;
 
     /**
      * If true, DiffSearch will run in Batch mode. This will process all queries of a text file and
@@ -89,6 +89,11 @@ public class Config {
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
     /**
+     * Defines the feature extractors that are used.
+     */
+    public static String featureExtractors = "node;sibling";
+
+    /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
      * this number of code changes while processing a query.
      */
@@ -97,17 +102,17 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 1024;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
 
     /**
      * The number of bits per feature that are used for unary counting
      */
-    public static byte COUNT_BITS = 2;
+    public static byte COUNT_BITS = 1;
 
     /**
      * Maximum number of times a feature can be counted using quadratic probing.
      */
-    public static int FEATURE_MAX_COUNT = 10;
+    public static int FEATURE_MAX_COUNT = 1;
 
     /**
      * Port of the web server.
@@ -150,11 +155,6 @@ public class Config {
      * If true, keywords like "ID", "EXPR" will also be extracted in the query feature extraction.
      */
     public static boolean EXTRACT_QUERY_KEYWORDS = false;
-
-    /**
-     * Query vectors get multiplied by this factor.
-     */
-    public static int QUERY_FEATURE_VECTOR_MULTIPLIER = 2049;
 
     /**
      * FAISS parameter, number of clusters of the index.

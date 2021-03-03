@@ -36,7 +36,7 @@ def indexing(feature_in, index_out, dimension, nlist):
     np_array = np.ascontiguousarray(changes_feature_vectors)
     # print(faiss.MatrixStats(np_array).comments)
 
-# norm = np.linalg.norm(np_array)
+    # norm = np.linalg.norm(np_array)
     # if norm != 0:
     #     np_array = np_array / norm
     #     print(str(np_array))

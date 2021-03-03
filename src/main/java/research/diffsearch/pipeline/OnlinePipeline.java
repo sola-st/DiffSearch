@@ -146,7 +146,7 @@ public class OnlinePipeline implements
     private static void multiplyVector(FeatureVector input1, int index, IndexedConsumer<FeatureVector> outputConsumer) {
         if (input1 != null) {
             for (int i = 0; i < input1.getVector().length; i++) {
-                input1.getVector()[i] *= Config.QUERY_FEATURE_VECTOR_MULTIPLIER;
+                input1.getVector()[i] *= input1.getVector().length / 2 + 1;
             }
         }
         outputConsumer.accept(input1, index);

@@ -406,6 +406,7 @@ blockStatement
     : localVariableDeclaration ';' NEWLINE?
     | statement NEWLINE?
     | localTypeDeclaration NEWLINE?
+    | WILDCARD ';'?
     | WILDCARD NEWLINE?
     ;
 

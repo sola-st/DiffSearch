@@ -70,8 +70,14 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
 
     @Override
     public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
-        executorService.submit(() -> basePipeline.process(input, index,
-                (o, innerIndex) -> ParallelPipeline.this.manageQueue(o, innerIndex, outputConsumer)));
+        executorService.submit(() -> {
+            try {
+                basePipeline.process(input, index,
+                        (o, innerIndex) -> ParallelPipeline.this.manageQueue(o, innerIndex, outputConsumer));
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
     }
 
     @Override

@@ -25,7 +25,7 @@ public class QueryUtil {
     }
 
     public static boolean isQueryKeyword(String nodeText) {
-        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>");
+        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>", "querySnippet");
         return keywords
                 .stream()
                 .anyMatch(nodeText::contains);

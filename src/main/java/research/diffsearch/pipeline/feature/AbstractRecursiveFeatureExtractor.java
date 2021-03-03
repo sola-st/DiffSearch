@@ -12,29 +12,27 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
 
     private final ProgrammingLanguage programmingLanguage;
     private final int featureVectorLength;
-    private final boolean isQuery;
 
-    public AbstractRecursiveFeatureExtractor(ProgrammingLanguage language, int featureVectorLength, boolean isQuery) {
+    public AbstractRecursiveFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
         programmingLanguage = language;
         this.featureVectorLength = featureVectorLength;
-        this.isQuery = isQuery;
     }
 
     public static int getFeatureVectorIndex(int startIndex, int hashValue, long vectorLength) {
         return (int) (startIndex + Math.abs(hashValue % vectorLength));
     }
 
-    public abstract void extractFeaturesRecursive(Tree t, FeatureVector completeFeatureVector,
-                                                  int startPosition, List<String> ruleNames, int depth);
+    public abstract void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
+                                                  List<String> ruleNames,
+                                                  boolean isQuery);
 
     @Override
-    public FeatureVector extractFeatures(String codeChange, FeatureVector completeFeatureVector, int startPosition) {
+    public void extractFeatures(String codeChange, FeatureVector.Section section, boolean isQuery) {
         AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
         String[] ruleNames = queryTree.getParser().getRuleNames();
 
-        extractFeaturesRecursive(queryTree.getParseTree(), completeFeatureVector, startPosition,
-                Arrays.asList(ruleNames), 0);
-        return completeFeatureVector;
+        extractFeaturesRecursive(queryTree.getParseTree(), section,
+                Arrays.asList(ruleNames), isQuery);
     }
 
     @Override
@@ -47,17 +45,7 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         return programmingLanguage;
     }
 
-    public boolean isQuery() {
-        return isQuery;
-    }
-
-    protected static String getQueryKeywordIdentifier(String nodeText) {
-        var startIndex = nodeText.indexOf('<');
-        var endIndex = nodeText.indexOf('>', startIndex);
-
-        if (startIndex == -1 || endIndex == -1) {
-            return null;
-        }
-        return nodeText.substring(startIndex + 1, endIndex);
+    protected static boolean isBlacklisted(String nodeText) {
+        return List.of("multipleStatements", "blockStatement", "querySnippet", "statement").contains(nodeText);
     }
 }

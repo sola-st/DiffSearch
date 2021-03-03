@@ -37,6 +37,7 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
 
     with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
         changes_strings = f.readlines()
+        logger.debug(str(len(changes_strings)))
 
     with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
         changes_info = f.readlines()

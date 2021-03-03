@@ -11,30 +11,30 @@ public class CommandLineUtil {
 
     public static Options buildCLIOptions() {
         return new Options()
-                .addOption("oj", "only-java", false, "does not start the python server")
+                .addOption("pyc", "py-command", true, "command to run python")
+                .addOption("lang", "language", true, "the programming language (python, javascript or java")
+                .addOption("l", "log", false, "save log to file")
                 .addOption("n", "normal", false, "launch DiffSearch in normal mode")
                 .addOption("g", "web-gui", false, "launch in web GUI mode")
                 .addOption("w", "web", false, "launch DiffSearch with web interface")
-                .addOption("l", "log", false, "save log to file")
+                .addOption("oj", "only-java", false, "does not start the python server")
                 .addOption("p", "port", true, "set the port for the web interface")
-                .addOption("r", "recall", false, "measure recall of queries (slow!)")
-                .addOption("py_port", true, "set the port for the python server")
-                .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("q", "query", true, "process a query")
+                .addOption("r", "recall", false, "measure recall of queries (slow!)")
+                .addOption("s", "silent", false, "omit large console outputs")
+                .addOption("py_port", true, "set the port for the python server")
                 .addOption("k", true, "set value for k")
                 .addOption("fe", "extract features from the corpus")
+                .addOption("t", "thread-count", true, "number of threads to use")
+                .addOption("vl", "single-feature-vector-length", true, "size a each partition of the feature vectors")
+                .addOption("cb", "count-bits", true, "number of count bits per feature. Must be at least 1.")
+                .addOption("extractors", true, "which feature extractors to use. Syntax: <name>(:<bits>)?, separated with commas")
                 .addOption("help", "show help")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
                         .optionalArg(true)
-                        .build())
-                .addOption(Option.builder("s")
-                        .longOpt("silent")
-                        .optionalArg(true)
-                        .desc("omit large console outputs")
-                        .build()
-                );
+                        .build());
     }
 
     public static void parseArgs(String command) {
@@ -86,6 +86,21 @@ public class CommandLineUtil {
                         Config.batchOutput = params[1];
                     }
                 }
+            }
+            if (commandLine.hasOption("cb")) {
+                Config.COUNT_BITS = Byte.parseByte(commandLine.getOptionValue("cb"));
+            }
+            if (commandLine.hasOption("pyc")) {
+                Config.PYTHON_CMD = commandLine.getOptionValue("pyc");
+            }
+            if (commandLine.hasOption("t")) {
+                Config.threadCount = Integer.parseInt(commandLine.getOptionValue("t"));
+            }
+            if (commandLine.hasOption("vl")) {
+                Config.SINGLE_FEATURE_VECTOR_LENGTH = Integer.parseInt(commandLine.getOptionValue("vl"));
+            }
+            if (commandLine.hasOption("extractors")) {
+                Config.featureExtractors = commandLine.getOptionValue("extractors");
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

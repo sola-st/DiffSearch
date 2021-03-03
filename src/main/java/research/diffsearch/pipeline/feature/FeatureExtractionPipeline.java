@@ -18,10 +18,12 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
     private final byte countBits;
     private final int quadraticProbingMaxCount;
+    private final boolean isQuery;
 
-    public FeatureExtractionPipeline(byte countBits, int quadraticProbingMaxCount) {
+    public FeatureExtractionPipeline(byte countBits, int quadraticProbingMaxCount, boolean isQuery) {
         this.countBits = countBits;
         this.quadraticProbingMaxCount = quadraticProbingMaxCount;
+        this.isQuery = isQuery;
     }
 
     /**
@@ -56,7 +58,9 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
             var startPosition = 0;
 
             for (FeatureExtractor extractor : getFeatureExtractors()) {
-                extractor.extractFeatures(codeChange, featureVector, startPosition);
+                var section = featureVector.getSection(extractor.getClass().getSimpleName(),
+                        startPosition, extractor.getFeatureVectorLength());
+                extractor.extractFeatures(codeChange, section, isQuery);
                 startPosition += extractor.getFeatureVectorLength();
             }
         } catch (Exception e) {
@@ -75,40 +79,12 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
         }
     }
 
-    @Override
-    public void after() {
-        logger.info("FEATURE COUNT: " + NodeExtractor.allFeatures.size());
-    }
-
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
-        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT);
-        if (Config.SPLIT_EXTRACTORS) {
-
-            pipeline.addFeatureExtractor(
-                    new SplitFeatureExtractor(
-                            new ParentChildFeatureExtractor(
-                                    Config.PROGRAMMING_LANGUAGE,
-                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
-                                    isQuery))
-            );
-            pipeline.addFeatureExtractor(
-                    new SplitFeatureExtractor(
-                            new NodeExtractor(
-                                    Config.PROGRAMMING_LANGUAGE,
-                                    Config.SINGLE_FEATURE_VECTOR_LENGTH / 2,
-                                    isQuery))
-            );
-
-
-        } else {
-            pipeline.addFeatureExtractor(
-                    new TriangleFeatureExtractor(
-                            Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
-            );
-            pipeline.addFeatureExtractor(
-                    new ParentChildFeatureExtractor(
-                            Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
-            );
+        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT, isQuery);
+        var extractors = Config.featureExtractors.split(";");
+        for (var extractorDef : extractors) {
+            pipeline.addFeatureExtractor(FeatureExtractor.byDefinition(extractorDef,
+                    Config.SINGLE_FEATURE_VECTOR_LENGTH, Config.PROGRAMMING_LANGUAGE));
         }
         return pipeline;
     }
