@@ -406,8 +406,7 @@ blockStatement
     : localVariableDeclaration ';' NEWLINE?
     | statement NEWLINE?
     | localTypeDeclaration NEWLINE?
-    | WILDCARD ';'?
-    | WILDCARD NEWLINE?
+    | WILDCARD ';'? NEWLINE?
     ;
 
 localVariableDeclaration
@@ -422,16 +421,16 @@ localTypeDeclaration
 
 statement
     : blockLabel=block
-    | ASSERT EXPR (':' EXPR)? ';' //MOD
+   // | ASSERT EXPR (':' EXPR)? ';' //MOD
    // | IF EXPR statement (ELSE statement)?
-    | FOR '(' EXPR (',' EXPR)* ')' statement?
+//    | FOR '(' EXPR (',' EXPR)* ')' statement?
     | FOR '(' WILDCARD ')' statement?
-    | WHILE EXPR statement?
-    | DO statement WHILE EXPR ';'
-    | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
-    | SYNCHRONIZED EXPR block
-    | RETURN EXPR ';'
-    | THROW EXPR ';'
+//    | WHILE EXPR statement?
+//    | DO statement WHILE EXPR ';'
+//    | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
+//    | SYNCHRONIZED EXPR block
+//    | RETURN EXPR ';'
+//    | THROW EXPR ';'
     | ASSERT expression (':' expression)? ';'
     | IF parExpression statement? (ELSE statement)?
     | FOR '(' forControl ')' statement?
@@ -509,11 +508,13 @@ enhancedForControl
 // EXPRESSIONS
 
 parExpression
-    :  '(' EXPR ')' | '(' expression ')' //MOD
+    :  '(' EXPR ')' | '(' expression ')'
+    | EXPR
+    //MOD
     ;
 
 expressionList
-    : WILDCARD | EXPR (',' EXPR)*
+    : WILDCARD
     |  expression (',' expression)*
     ;
 
