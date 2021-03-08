@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class DiffSearchWebServer extends Thread {
 
@@ -64,6 +63,7 @@ public class DiffSearchWebServer extends Thread {
         int postDataI = getPostDataIndex(in);
         StringBuilder postData = getPostDataStringBuilder(in, postDataI);
 
+        DiffsearchResult result = null;
         Collection<CodeChangeWeb> outputList = new ArrayList<>();
 
         long durationMatching;
@@ -76,8 +76,8 @@ public class DiffSearchWebServer extends Thread {
             flagFirstConnection = true;
             query = getQuery(postData);
 
-            outputList = performSearch(query);
-            Util.printOutputList(outputList, query, startTimeMatching);
+            result = performSearch(query);
+            Util.printOutputList(result);
         }
 
         durationMatching = System.currentTimeMillis() - startTimeMatching;
@@ -86,8 +86,8 @@ public class DiffSearchWebServer extends Thread {
 
         FileChannel channel = serverLog.getChannel();
         FileLock lock = channel.lock();
-        if (!outputList.isEmpty()) {
-            writeOutput(out, outputList, durationMatching, query, channel);
+        if (result != null) {
+            writeOutput(out, result, durationMatching, channel);
         } else if (flagFirstConnection) {
             writeNoMatchingCodeFound(out, durationMatching, query, channel);
         }
@@ -98,38 +98,47 @@ public class DiffSearchWebServer extends Thread {
     }
 
     protected void writeOutput(PrintWriter out,
-                                      Collection<CodeChangeWeb> outputList,
-                                      long durationMatching,
-                                      String result,
-                                      FileChannel channel) throws IOException {
+                               DiffsearchResult result,
+                               long durationMatching,
+                               FileChannel channel) throws IOException {
         channel.write(ByteBuffer.wrap((new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
                                                .format(new java.util.Date()) + "\n").getBytes()));
-        channel.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r", "") + "\n").getBytes()));
+        channel.write(ByteBuffer.wrap(("QUERY: " + result.getQuery()
+                .replaceAll("\r", "") + "\n").getBytes()));
 
-        writeOutputList(out, outputList, durationMatching, channel);
+        writeOutputList(out, result, durationMatching, channel);
         channel.write(ByteBuffer.wrap(("=================================================================" +
                                        "=========================="
                                        + "========================" +
-                                       "====================================================================\n\n").getBytes()));
+                                       "====================================================================\n\n")
+                .getBytes()));
     }
 
     protected void writeOutputList(PrintWriter out,
-                                          Collection<CodeChangeWeb> outputList,
-                                          long durationMatching,
-                                          FileChannel channel) {
+                                   DiffsearchResult result,
+                                   long durationMatching,
+                                   FileChannel channel) {
+        var outputList = result.getResults();
         boolean flag = true;
         for (CodeChangeWeb change : outputList) {
             try {
                 String[] parts = {change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url};
 
-                // TODO look into
-                if (parts.length == 1) {
+                if (result.isInvalidQuery()) {
                     out.println("<center><H3><span style='color: #000000'>" +
                                 "The query is not correct, please try again.</span></H3></center>");
 
                     //channel = server_log.getChannel();
                     //lock = channel.lock();
                     channel.write(ByteBuffer.wrap("The query is not correct, please try again.\n".getBytes()));
+                    //lock.release();
+                } else if (result.isInternalError()) {
+                    out.println("<center><H3><span style='color: #000000'>" +
+                                "An internal error occurred while processing the query.</span></H3></center>");
+
+                    //channel = server_log.getChannel();
+                    //lock = channel.lock();
+                    channel.write(ByteBuffer.wrap("An internal error occurred while processing the query.\n".getBytes()));
                     //lock.release();
                 } else {
                     if (flag) {
@@ -205,17 +214,16 @@ public class DiffSearchWebServer extends Thread {
                 .replaceAll("&Text2=", "-->"), StandardCharsets.UTF_8));
     }
 
-    protected Collection<CodeChangeWeb> performSearch(String query) {
+    protected DiffsearchResult performSearch(String query) {
         try {
             return new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, query))
                     .collect(query)
-                    .map(DiffsearchResult::getResults)
-                    .orElseGet(Collections::emptyList);
+                    .orElse(DiffsearchResult.internalError(query));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        return Collections.emptyList();
+        return DiffsearchResult.internalError(query);
     }
 
     protected void splitQuery(PrintWriter out, String query) {

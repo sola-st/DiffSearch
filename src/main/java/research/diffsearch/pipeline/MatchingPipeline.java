@@ -16,6 +16,7 @@ import research.diffsearch.util.ProgressWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
@@ -62,8 +63,8 @@ public class MatchingPipeline
         }
 
         try {
-            outputList = Pipeline
-                    .getFilter(this::checkCandidate)
+            outputList =
+                    ((Pipeline<CodeChangeWeb, CodeChangeWeb>) this::checkCandidateWithTimeout)
                     .parallelUntilHere(Config.threadCount)
                     .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
                     .collect(input.getResults());
@@ -99,11 +100,33 @@ public class MatchingPipeline
     }
 
     public static boolean isNotEqualCodeChange(CodeChangeWeb codeChangeWeb) {
-        return !codeChangeWeb.codeChangeNew.equals(codeChangeWeb.codeChangeOld);
+        return !codeChangeWeb.getCodeChangeNew().trim().equals(codeChangeWeb.getCodeChangeOld().trim());
     }
+
+    private final Timer timer = new Timer();
 
     @Override
     public void after() {
         queryTree = null;
+    }
+
+    private void checkCandidateWithTimeout(CodeChangeWeb input, int index, IndexedConsumer<CodeChangeWeb> consumer) {
+        var foundResultObj = new Object() {
+            public volatile boolean foundResult = false;
+        };
+        /*timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!foundResultObj.foundResult) {
+                    consumer.skip(index);
+                }
+            }
+        }, 5000L);*/
+        if (checkCandidate(input)) {
+            foundResultObj.foundResult = true;
+            consumer.accept(input, index);
+        } else {
+            consumer.skip(index);
+        }
     }
 }

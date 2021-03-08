@@ -88,7 +88,7 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
                     #   distances = distances[:10 * k]
                     # indices = indices[:10 * k]
                 else:
-                    search_range: int = 0
+                    search_range: int = 1
                     for vector in query_feature_vectors:
                         for feature in vector:
                             search_range += (feature - 1) ** 2
@@ -97,6 +97,11 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
 
                     logger.debug(f"range={search_range}")
                     limits, distances, indices = index.range_search(query_feature_vectors, search_range)
+
+                    if len(indices) < k:
+                        distances, indices = index.search(query_feature_vectors, k)
+                    if len(indices) > 20 * k:
+                        distances, indices = distances[:20 * k], indices[:20 * k]
 
                 logger.info('Searching finished')
 

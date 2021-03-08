@@ -83,8 +83,8 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
+            Util.printFeatureVectorAnalysis(featureVector.get());
             if (!Config.SILENT) {
-                Util.printFeatureVectorAnalysis(featureVector.get());
                 var tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
                 var rootNodes = ParseTreeNode.fromTree(tree.getParseTree(),
                         Arrays.asList(tree.getRuleNames()));
@@ -102,7 +102,6 @@ public class OnlinePipeline implements
 
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {
-                // TODO try to use fixed value of candidate changes
                 var numberOfCandidates = getNumberOfLines(CANDIDATE_CHANGES);
 
                 var candidates = getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO,

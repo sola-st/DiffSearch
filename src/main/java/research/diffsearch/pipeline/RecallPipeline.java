@@ -52,48 +52,34 @@ public class RecallPipeline implements
         readExpectedValuesFromFile();
     }
 
-    public RecallPipeline(ProgrammingLanguage language) {
-        this(language, new ArrayList<>());
-    }
+    @SafeVarargs
+    public static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
+                                         Map<String, ?> map, String delim, Map<String, ?>... additionalMaps)
+            throws IOException {
 
-    private static void printOutputToFile(DiffsearchResult result) {
+        try (var writer = getWriter(path)) {
+            var keys = orderedKeys == null ? map.keySet() : orderedKeys;
 
-        try (var printStream = new PrintStream(
-                new FileOutputStream(EXPECTED_RESULTS_FILE, true))) {
-
-            Util.printOutputList(
-                    result.getResults(),
-                    result.getQuery(), 0,
-                    printStream);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            keys.forEach(query -> {
+                try {
+                    writer.write(query);
+                    Stream.concat(Stream.of(map), Stream.of(additionalMaps))
+                            .forEach(valueMap -> {
+                                var expected = valueMap.getOrDefault(query, null);
+                                try {
+                                    writer.write(delim);
+                                    // adjust for german excel
+                                    writer.write(Objects.toString(expected).replace('.', ','));
+                                } catch (IOException exception) {
+                                    throw new RuntimeException(exception);
+                                }
+                            });
+                    writer.newLine();
+                } catch (Exception exception) {
+                    logger.error(exception.getMessage(), exception);
+                }
+            });
         }
-    }
-
-    private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
-        if (!expectedValues.containsKey(query)) {
-            logger.debug("Need to calculate expected value");
-
-            // load all code changes from file
-            var corpusSize = getNumberOfLines(getChangesFilePath(language));
-            var codeChanges = getCodeChanges(
-                    getChangesFilePath(language),
-                    getChangesInfoFilePath(language),
-                    corpusSize);
-
-            var dfsResult = new DiffsearchResult(query, codeChanges)
-                    .setCandidateChangeCount(corpusSize);
-
-            var expectedValue = new MatchingPipeline(language)
-                    .peek(RecallPipeline::printOutputToFile)
-                    .connect(DiffsearchResult::getResults)
-                    .connect(Collection::size)
-                    .collect(dfsResult)
-                    .orElse(0);
-
-            expectedValues.put(query, expectedValue);
-        }
-        return expectedValues.get(query);
     }
 
     @Override
@@ -125,6 +111,43 @@ public class RecallPipeline implements
         } else {
             resultConsumer.skip(index);
         }
+    }
+
+    private static void printOutputToFile(DiffsearchResult result) {
+
+        try (var printStream = new PrintStream(
+                new FileOutputStream(EXPECTED_RESULTS_FILE, true))) {
+
+            Util.printOutputList(result, printStream, false);
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
+        if (!expectedValues.containsKey(query)) {
+            logger.debug("Need to calculate expected value");
+
+            // load all code changes from file
+            var corpusSize = getNumberOfLines(getChangesFilePath(language));
+            var codeChanges = getCodeChanges(
+                    getChangesFilePath(language),
+                    getChangesInfoFilePath(language),
+                    corpusSize);
+
+            var dfsResult = new DiffsearchResult(query, codeChanges)
+                    .setCandidateChangeCount(corpusSize);
+
+            var expectedValue = new MatchingPipeline(language)
+                    .peek(RecallPipeline::printOutputToFile)
+                    .connect(DiffsearchResult::getResults)
+                    .connect(Collection::size)
+                    .collect(dfsResult)
+                    .orElse(0);
+
+            expectedValues.put(query, expectedValue);
+        }
+        return expectedValues.get(query);
     }
 
     private void computeAndSaveCandidatePrecision(DiffsearchResult result, double expected, int actual, int k) {
@@ -169,53 +192,20 @@ public class RecallPipeline implements
     }
 
     private void readExpectedValuesFromFile() {
-        readCSV(EXPECTED_VALUES_FILE, "\\$")
-                .stream()
-                .filter(array -> array.length > 1)
-                .forEach(columns -> expectedValues.put(columns[0], Integer.parseInt(columns[1])));
+        readCSVToMap(EXPECTED_VALUES_FILE, "\\$", expectedValues, Integer::parseInt);
     }
 
     @SafeVarargs
-    private static void writeValuesToFile(Map<String, ?> map, Map<String, ?>... additionalMaps)
+    private static void writeExpectedValuesToFile(Map<String, ?> map, Map<String, ?>... additionalMaps)
             throws IOException {
-        writeValuesToFile(null, RecallPipeline.EXPECTED_VALUES_FILE, map, additionalMaps);
-    }
-
-    @SafeVarargs
-    private static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
-                                          Map<String, ?> map, Map<String, ?>... additionalMaps)
-            throws IOException {
-
-        try (var writer = getWriter(path)) {
-            var keys = orderedKeys == null ? map.keySet() : orderedKeys;
-
-            keys.forEach(query -> {
-                try {
-                    writer.write(query);
-                    Stream.concat(Stream.of(map), Stream.of(additionalMaps))
-                            .forEach(valueMap -> {
-                                var expected = valueMap.getOrDefault(query, null);
-                                try {
-                                    writer.write("$");
-                                    // adjust for german excel
-                                    writer.write(Objects.toString(expected).replace('.', ','));
-                                } catch (IOException exception) {
-                                    throw new RuntimeException(exception);
-                                }
-                            });
-                    writer.newLine();
-                } catch (Exception exception) {
-                    logger.error(exception.getMessage(), exception);
-                }
-            });
-        }
+        writeValuesToFile(null, RecallPipeline.EXPECTED_VALUES_FILE, map, "$", additionalMaps);
     }
 
     @Override
     public void after() {
         try {
-            writeValuesToFile(expectedValues);
-            writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, recallValues,
+            writeExpectedValuesToFile(expectedValues);
+            writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, "$", recallValues,
                     candidatePrecisionValues, reciprocalRankValues, performanceValues);
             logger.debug("Recall results saved.");
         } catch (IOException exception) {

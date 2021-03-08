@@ -3,39 +3,40 @@ package research.diffsearch.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.feature.FeatureVector;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Util {
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    public static void printOutputList(Collection<CodeChangeWeb> output, String query, long startTimeStamp) {
-        printOutputList(output, query, startTimeStamp, System.out);
+    public static void printOutputList(DiffsearchResult result) {
+        printOutputList(result, System.out, true);
     }
 
-    public static void printOutputList(Collection<CodeChangeWeb> output, String query, long startTimeStamp, PrintStream out) {
-        final String ANSI_RED = "\u001B[31m";
-        final String ANSI_RESET = "\u001B[0m";
-        final String ANSI_GREEN = "\u001B[32m";
+    public static void printOutputList(DiffsearchResult result, PrintStream out, boolean colored) {
         if (!Config.SILENT) {
+            String query = result.getQuery();
+            var output = result.getResults();
+
+            final String ANSI_RED = "\u001B[31m";
+            final String ANSI_GREEN = "\u001B[32m";
+
             if (!output.isEmpty()) {
                 out.println("*** " + output.size()
                             + " RESULTS  for " + query + "***");
                 out.println("*");
                 for (var change : output) {
                     for (var oldLine : change.codeChangeOld.split("\n")) {
-                        out.print("*  - ");
-                        out.println(ANSI_RED + oldLine + ANSI_RESET);
+                        printCodeChangePart(out, colored, ANSI_RED, oldLine, "*  - ");
                     }
                     for (var newLine : change.codeChangeNew.split("\n")) {
-                        out.print("*  + ");
-                        out.println(ANSI_GREEN + newLine + ANSI_RESET);
+                        printCodeChangePart(out, colored, ANSI_GREEN, newLine, "*  + ");
                     }
                     out.print("*       ");
                     out.println("at " + change.url);
@@ -46,8 +47,22 @@ public class Util {
             } else {
                 out.println("*** No results found. ***");
             }
+            out.flush();
         }
-        out.flush();
+    }
+
+    private static void printCodeChangePart(PrintStream out, boolean colored, String ansiColor,
+                                            String newLine, String prefix) {
+        final String ANSI_RESET = "\u001B[0m";
+        out.print(prefix);
+        if (colored) {
+            out.print(ansiColor);
+        }
+        out.print(newLine);
+        if (colored) {
+            out.print(ANSI_RESET);
+        }
+        out.println();
     }
 
     public static String featureVectorToString(FeatureVector vector) {
@@ -59,12 +74,17 @@ public class Util {
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printFeatureVectorAnalysis(FeatureVector vector) {
         System.out.println("Feature vector analysis");
-        for (String category : vector.getCategories()) {
-            System.out.println(category + ": ");
-            for (var feature : vector.getFeatureList(category)) {
-                System.out.println("\t" + feature.index + ": " + feature.featureString);
-            }
-        }
+        vector.getCategories()
+                .stream()
+                .sorted()
+                .forEach(category -> {
+                    System.out.println(category + ": ");
+                    vector.getFeatureList(category)
+                            .stream()
+                            .sorted(Comparator.comparing(feature -> feature.index))
+                            .map(feature -> "\t" + feature.index + ": " + feature.featureString)
+                            .forEach(System.out::println);
+                });
     }
 
     public static String formatDuration(long startTime, long endTime) {

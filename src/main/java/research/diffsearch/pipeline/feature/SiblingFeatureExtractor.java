@@ -38,9 +38,8 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
     private static boolean shouldExtractFeature(String nodeText1, String nodeText2, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !QueryUtil.isQueryKeyword(nodeText1)
-                || !QueryUtil.isQueryKeyword(nodeText2)
-               )
+                || (!QueryUtil.isQueryKeyword(nodeText1)
+                    && !QueryUtil.isQueryKeyword(nodeText2)))
                && !isBlacklisted(nodeText1)
                && !isBlacklisted(nodeText2);
     }

@@ -24,7 +24,7 @@ public class WebGUIMode extends App {
             startPythonServer();
 
             socketFaiss = getFaissSocket();
-            server = getServerSocket();
+            server = getDiffSearchServerSocket();
             serverLog = getServerLog();
 
         } catch (IOException exception) {

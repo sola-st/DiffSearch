@@ -1,6 +1,5 @@
 package research.diffsearch.tree;
 
-import ProgrammingLanguage.Python.Python3Parser;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
@@ -74,7 +73,7 @@ public abstract class AbstractTree {
                               && ctx.getChildCount() == 1
                               && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
-            String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName = getRuleNames()[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
                 System.out.print("  ");
             }

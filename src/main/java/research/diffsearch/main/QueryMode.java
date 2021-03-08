@@ -26,10 +26,7 @@ public class QueryMode extends App {
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, Config.query))
                     .peek(result -> logger.info("Found {} results", result.getResults().size()))
-                    .peek(result -> Util.printOutputList(
-                            result.getResults(),
-                            result.getQuery(),
-                            result.getPerformance().orElse(System.currentTimeMillis() - currentTime)))
+                    .peek(Util::printOutputList)
                     .execute(Config.query);
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);

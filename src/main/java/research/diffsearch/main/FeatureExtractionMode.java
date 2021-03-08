@@ -34,10 +34,6 @@ public class FeatureExtractionMode extends App {
     }
 
     protected static void runPythonIndexing() throws IOException, InterruptedException {
-        runPythonIndexing(Integer.MAX_VALUE);
-    }
-
-    protected static void runPythonIndexing(int maxLines) throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
 
             var pythonRunner = new PythonRunner(

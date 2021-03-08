@@ -22,40 +22,6 @@ public abstract class App implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    public static void startPythonServer() {
-        if (!Config.ONLY_JAVA) {
-            try {
-                var runner = new PythonRunner("./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py",
-                        "./src/main/resources/Features_Vectors/faiss_java.index",
-                        Integer.toString(Config.k),
-                        Config.host,
-                        Integer.toString(Config.port));
-
-                runner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
-
-            } catch (IOException | InterruptedException exception) {
-                logger.error(exception.getMessage(), exception);
-            }
-        } else {
-            logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
-        }
-    }
-
-    protected static ServerSocket getServerSocket() throws IOException {
-        ServerSocket server;
-        server = new ServerSocket(Config.port_web);
-        logger.info("DiffSearch Server active on port " + Config.port_web);
-        return server;
-    }
-
-    protected static FileOutputStream getServerLog() throws FileNotFoundException {
-        return new FileOutputStream(Config.server_log_file, true);
-    }
-
-    protected static Socket getFaissSocket() throws IOException {
-        return new Socket(Config.host, Config.port);
-    }
-
     public static void main(String[] args) {
         logger.debug(System.getProperty("java.vendor"));
         CommandLineUtil.parseArgs(args);
@@ -78,7 +44,46 @@ public abstract class App implements Runnable {
 
         if (app != null) {
             app.run();
+        } else {
+            logger.error("No DiffSearch mode selected.");
         }
+    }
+
+    /**
+     * Starts python server for nearest neighbor search.
+     */
+    public static void startPythonServer() {
+        if (!Config.ONLY_JAVA) {
+            try {
+                var runner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
+                        Config.INDEX_FILE,
+                        Integer.toString(Config.k),
+                        Config.host,
+                        Integer.toString(Config.port));
+
+                runner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
+
+            } catch (IOException | InterruptedException exception) {
+                logger.error(exception.getMessage(), exception);
+            }
+        } else {
+            logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
+        }
+    }
+
+    protected static ServerSocket getDiffSearchServerSocket() throws IOException {
+        ServerSocket server;
+        server = new ServerSocket(Config.port_web);
+        logger.info("DiffSearch Server active on port " + Config.port_web);
+        return server;
+    }
+
+    protected static FileOutputStream getServerLog() throws FileNotFoundException {
+        return new FileOutputStream(Config.server_log_file, true);
+    }
+
+    protected static Socket getFaissSocket() throws IOException {
+        return new Socket(Config.host, Config.port);
     }
 
     public static boolean runJunit(String query, String candidate) {

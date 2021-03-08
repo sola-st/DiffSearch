@@ -26,10 +26,14 @@ public class SplitFeatureExtractor implements FeatureExtractor {
 
         if (parseTree.getChildCount() == 3) {
             baseExtractor.extractFeaturesRecursive(parseTree.getChild(0),
-                    section, Arrays.asList(ruleNames), isQuery);
+                    section.getSubsection(baseExtractor.getName() + " [old]",
+                            0, baseExtractor.getFeatureVectorSectionLength()),
+                    Arrays.asList(ruleNames), isQuery);
 
             baseExtractor.extractFeaturesRecursive(parseTree.getChild(2),
-                    section,
+                    section.getSubsection(baseExtractor.getName() + "[new]",
+                            baseExtractor.getFeatureVectorSectionLength(),
+                            baseExtractor.getFeatureVectorSectionLength()),
                     Arrays.asList(ruleNames), isQuery);
         } else {
             baseExtractor.extractFeaturesRecursive(parseTree, section, Arrays.asList(ruleNames), isQuery);
@@ -37,12 +41,17 @@ public class SplitFeatureExtractor implements FeatureExtractor {
     }
 
     @Override
-    public int getFeatureVectorLength() {
-        return baseExtractor.getFeatureVectorLength() * 2;
+    public int getFeatureVectorSectionLength() {
+        return baseExtractor.getFeatureVectorSectionLength() * 2;
     }
 
     @Override
     public ProgrammingLanguage getProgrammingLanguage() {
         return baseExtractor.getProgrammingLanguage();
+    }
+
+    @Override
+    public String getName() {
+        return baseExtractor.getName();
     }
 }

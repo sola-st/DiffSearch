@@ -1,7 +1,7 @@
 package research.diffsearch.server;
 
 import com.google.gson.Gson;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 
 public class WebServerGUI extends DiffSearchWebServer {
 
@@ -18,10 +17,10 @@ public class WebServerGUI extends DiffSearchWebServer {
     }
 
     @Override
-    protected void writeOutput(PrintWriter out, Collection<CodeChangeWeb> outputList, long durationMatching,
-                               String result, FileChannel channel) throws IOException {
-        super.writeOutput(out, outputList, durationMatching, result, channel);
-        var JSONOutput = new Gson().toJson(outputList);
+    protected void writeOutput(PrintWriter out, DiffsearchResult result, long durationMatching,
+                               FileChannel channel) throws IOException {
+        super.writeOutput(out, result, durationMatching, channel);
+        var JSONOutput = new Gson().toJson(result.getResults());
         PrintWriter writer = new PrintWriter("./src/main/resources/GUI/Output/output.json", StandardCharsets.UTF_8);
         writer.println(JSONOutput);
         writer.close();

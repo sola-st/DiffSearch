@@ -1,5 +1,7 @@
 package research.diffsearch.pipeline.feature;
 
+import research.diffsearch.pipeline.feature.count.RuleCountExtractor;
+import research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounter;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -8,7 +10,17 @@ import research.diffsearch.util.ProgrammingLanguageDependent;
  */
 public interface FeatureExtractor extends ProgrammingLanguageDependent {
 
-    int getFeatureVectorLength();
+    /**
+     * @return length of the section of this feature extractor.
+     */
+    int getFeatureVectorSectionLength();
+
+    /**
+     * @return an identifier for this feature extractor.
+     */
+    default String getName() {
+        return getClass().getSimpleName();
+    }
 
     /**
      * Extracts a features out of the given code change and adds it to a feature vector.
@@ -62,6 +74,8 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
                 return new EditScriptExtractor(language, length);
             case "node":
                 return new SplitFeatureExtractor(new NodeExtractor(language, length / 2));
+            case "rulecount":
+                return new SplitFeatureExtractor(new RuleCountExtractor(language, new RuleMaxOccurrenceCounter(language)));
         }
         throw new IllegalArgumentException(definition);
     }

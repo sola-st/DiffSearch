@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This object represents the result of a diff search.
+ * It also contains optional measures of performance, recall, etc.
+ */
 public class DiffsearchResult {
 
     private String query;

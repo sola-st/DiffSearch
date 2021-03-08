@@ -26,7 +26,7 @@ public class EditScriptExtractor implements FeatureExtractor {
     }
 
     @Override
-    public int getFeatureVectorLength() {
+    public int getFeatureVectorSectionLength() {
         return featureVectorLength;
     }
 
@@ -133,7 +133,7 @@ public class EditScriptExtractor implements FeatureExtractor {
 
         var index = getFeatureVectorIndex(position,
                 feature.hashCode(),
-                getFeatureVectorLength() / 12);
+                getFeatureVectorSectionLength() / 12);
 
 
         if (!isQuery || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(feature)) {
@@ -202,7 +202,7 @@ public class EditScriptExtractor implements FeatureExtractor {
 
         var index = getFeatureVectorIndex(position,
                 f.hashCode(),
-                getFeatureVectorLength() / i);
+                getFeatureVectorSectionLength() / i);
 
         if (!isQuery || Config.EXTRACT_QUERY_KEYWORDS || !isQueryKeyword(f)) {
             section.addFeature(f, index);

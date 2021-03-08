@@ -62,7 +62,12 @@ public class FeatureVector {
     }
 
     public List<Feature> getFeatureList(String category) {
-        return typeToFeaturesMap.get(category);
+        return typeToFeaturesMap.entrySet()
+                .stream()
+                .filter(sectionListEntry -> sectionListEntry.getKey().getName().equals(category))
+                .map(Map.Entry::getValue)
+                .findAny()
+                .orElse(Collections.emptyList());
     }
 
     public String getCodeChange() {
@@ -87,6 +92,10 @@ public class FeatureVector {
 
         public void addFeature(String featureString, int index) {
             FeatureVector.this.addFeature(this, featureString, index);
+        }
+
+        public Section getSubsection(String name, int startPosition, int length) {
+            return FeatureVector.this.getSection(name, this.startPosition + startPosition, length);
         }
 
         public int getStartPosition() {

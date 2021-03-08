@@ -15,6 +15,6 @@ public class Deduplication {
         Pipeline
                 .getFilter(MatchingPipeline::isNotEqualCodeChange)
                 .connect(getStringFileWriterPipeline(getChangesFilePath(JAVA) + ".deduplicated"))
-                .execute(codeChanges, getNumberOfLines(getChangesFilePath(JAVA)));
+                .execute(codeChanges);
     }
 }

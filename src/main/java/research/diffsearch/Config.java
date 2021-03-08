@@ -2,7 +2,20 @@ package research.diffsearch;
 
 import research.diffsearch.util.ProgrammingLanguage;
 
+/**
+ * This class contains all configurable variables of DiffSearch.
+ */
 public class Config {
+
+    /**
+     * Path to the faiss index.
+     */
+    public static String INDEX_FILE = "./src/main/resources/Features_Vectors/faiss_java.index";
+
+    /**
+     * Path to the nearest neighbor search python file.
+     */
+    public static String NEAREST_NEIGHBOR_SEARCH_PY = "./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py";
 
     //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
     /**
@@ -18,19 +31,19 @@ public class Config {
     public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
     //Constants that enable/disable part of the tool
-    public static boolean LOG_FILE  = false;
+    public static boolean LOG_FILE = false;
 
     /**
      * Run DiffSearch as a command line app.
      */
-    public static boolean NORMAL  = false;
+    public static boolean NORMAL = false;
 
-    public static boolean WEB  = true;
+    public static boolean WEB = true;
 
     /**
      * Run DiffSearch as a web gui app.
      */
-    public static boolean WEB_GUI  = false;
+    public static boolean WEB_GUI = false;
 
     /**
      * If true, DiffSearch won't start any python files but assumes that they are already started.
@@ -40,6 +53,7 @@ public class Config {
 
     /**
      * If true, DiffSearch starts in query mode. This will execute a single query.
+     *
      * @see Config#query
      */
     public static boolean QUERY_MODE = false;
@@ -91,7 +105,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "node;sibling";
+    public static String featureExtractors = "node;sibling;rulecount";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider

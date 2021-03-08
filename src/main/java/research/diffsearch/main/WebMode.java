@@ -25,7 +25,7 @@ public class WebMode extends App {
         FileOutputStream serverLog;
         try {
             serverLog = getServerLog();
-            server = getServerSocket();
+            server = getDiffSearchServerSocket();
             socketFaiss = getFaissSocket();
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);

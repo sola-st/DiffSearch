@@ -36,7 +36,7 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
     }
 
     @Override
-    public int getFeatureVectorLength() {
+    public int getFeatureVectorSectionLength() {
         return featureVectorLength;
     }
 

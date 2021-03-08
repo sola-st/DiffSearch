@@ -41,7 +41,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
      * @return the length of the resulting feature vector.
      */
     public int getTotalFeatureVectorLength() {
-        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorLength).sum() * countBits;
+        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorSectionLength).sum() * countBits;
     }
 
     /**
@@ -58,10 +58,10 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
             var startPosition = 0;
 
             for (FeatureExtractor extractor : getFeatureExtractors()) {
-                var section = featureVector.getSection(extractor.getClass().getSimpleName(),
-                        startPosition, extractor.getFeatureVectorLength());
+                var section = featureVector.getSection(extractor.getName(),
+                        startPosition, extractor.getFeatureVectorSectionLength());
                 extractor.extractFeatures(codeChange, section, isQuery);
-                startPosition += extractor.getFeatureVectorLength();
+                startPosition += extractor.getFeatureVectorSectionLength();
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

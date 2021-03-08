@@ -2,6 +2,7 @@ package research.diffsearch.util;
 
 import com.google.common.collect.Iterators;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.IndexedConsumer;
@@ -17,6 +18,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FilePathUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(FilePathUtils.class);
+
     public static final String CANDIDATE_CHANGES = "./src/main/resources/Features_Vectors/candidate_changes.txt";
     public static final String CANDIDATE_CHANGES_INFO = "./src/main/resources/Features_Vectors/candidate_changes_info.txt";
     public static final String QUERY_FEATURE_VECTORS_CSV = "./src/main/resources/Features_Vectors/query_feature_vectors.csv";
@@ -81,7 +85,6 @@ public class FilePathUtils {
                 return FileUtils.lineIterator(new File(path));
             } catch (IOException e) {
                 return Collections.emptyIterator();
-                // throw new RuntimeException(e);
             }
         };
     }
@@ -108,8 +111,9 @@ public class FilePathUtils {
         };
     }
 
-    public static Iterable<CodeChangeWeb> getCodeChanges(ProgrammingLanguage programmingLanguage) {
-        return getCodeChanges(getChangesFilePath(programmingLanguage), getChangesInfoFilePath(programmingLanguage));
+    public static Collection<CodeChangeWeb> getCodeChanges(ProgrammingLanguage programmingLanguage) {
+        return getCodeChanges(getChangesFilePath(programmingLanguage), getChangesInfoFilePath(programmingLanguage),
+                getNumberOfLines(getChangesFilePath(programmingLanguage)));
     }
 
     public static Iterable<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
@@ -153,6 +157,16 @@ public class FilePathUtils {
         return result;
     }
 
+    public static <T> void readCSVToMap(String path,
+                                        String delim,
+                                        Map<String, T> map,
+                                        Function<String, T> converter) {
+        readCSV(path, delim)
+                .stream()
+                .filter(array -> array.length > 1)
+                .forEach(columns -> map.put(columns[0], converter.apply(columns[1])));
+    }
+
     public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Objects::toString);
     }
@@ -167,7 +181,7 @@ public class FilePathUtils {
                     try {
                         writer.write(mapper.apply(input) + "\n");
                     } catch (IOException e) {
-                        LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
+                        logger.error(e.getMessage(), e);
                         throw new RuntimeException(e);
                     }
                 }
@@ -193,4 +207,5 @@ public class FilePathUtils {
     public static Pipeline<FeatureVector, FeatureVector> getVectorFileWriterPipeline(String path) throws IOException {
         return getStringFileWriterPipeline(path, Util::featureVectorToString);
     }
+
 }
