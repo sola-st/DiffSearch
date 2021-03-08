@@ -68,14 +68,18 @@ public class WebServerGUI extends DiffSearchWebServer {
 		for (int i = 0; i < auxLine.length() - lang.length() - "&Language=".length(); i++) {
 			postData.append((char) auxLine.charAt(i));
 		}
-		
-		if (lang.equals("Java")) {
-			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
-		} else if (lang.equals("Python")) {
-			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
-		} else if (lang.equals("JavaScript")) {
-			Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
-		} // else Config is not changed
+
+		switch (lang) {
+			case "Java":
+				Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+				break;
+			case "Python":
+				Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
+				break;
+			case "JavaScript":
+				Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
+				break;
+		}
 		
 		long startTimeMatching = System.currentTimeMillis();
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());

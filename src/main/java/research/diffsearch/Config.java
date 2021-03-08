@@ -10,6 +10,12 @@ public class Config {
 
     //Programming language supported: PYTHON3, JAVA, JAVASCRIPT
     public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+    public static String changes_string_path = "";
+    public static String changes_string_prop_path = "";
+    public static String index_path = "";
+    public static String changes_feature_vectors = "";
+
+    public static long code_changes_num = 0;
 
     //Constants that enable/disable part of the tool
     public static boolean LOG_FILE  = false;
@@ -42,5 +48,7 @@ public class Config {
 
     //Files
     public static String server_log_file = "./src/main/resources/Features_Vectors/server_log.log";
+
+
 
 }

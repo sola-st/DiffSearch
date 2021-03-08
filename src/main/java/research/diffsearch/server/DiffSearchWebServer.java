@@ -136,7 +136,7 @@ public class DiffSearchWebServer extends Thread {
                                     outputList.size() + "</span>" +
                                     " Code changes found in <span style='color: #0071e3'>" +
                                     durationMatching / 1000.0 + " seconds </span> using a dataset of " +
-                                    "<span style='color: #0071e3'>832 142 code changes</span>:</span></H3>");
+                                    "<span style='color: #0071e3'>"+ Config.code_changes_num +" code changes</span>:</span></H3>");
                         flag = false;
                     }
                     out.println("<H4>"

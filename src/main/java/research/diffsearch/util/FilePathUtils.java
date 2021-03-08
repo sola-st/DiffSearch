@@ -20,7 +20,7 @@ public class FilePathUtils {
     public static final String QUERY_FEATURE_VECTORS_CSV = "./src/main/resources/Features_Vectors/query_feature_vectors.csv";
     public static final String CHANGES_STRINGS_JAVA = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
     public static final String CHANGES_STRINGS_JS = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
-    public static final String CHANGES_STRINGS_PYTHON = "./src/main/resources/Features_Vectors/changes_strings.txt";
+    public static final String CHANGES_STRINGS_PYTHON = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
 
     public static String getChangesFilePath(ProgrammingLanguage language) {
         switch (language) {
@@ -36,7 +36,7 @@ public class FilePathUtils {
     public static String getChangesInfoFilePath(ProgrammingLanguage language) {
         switch (language) {
             case PYTHON:
-                return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
             case JAVASCRIPT:
                 return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
             default:

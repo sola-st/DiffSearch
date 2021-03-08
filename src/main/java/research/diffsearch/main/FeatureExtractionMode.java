@@ -24,7 +24,7 @@ public class FeatureExtractionMode extends App {
         logger.info("Starting feature extraction on corpus.");
 
         try {
-            //extractFeaturesToFile();
+            extractFeaturesToFile();
             runPythonIndexing();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -39,8 +39,8 @@ public class FeatureExtractionMode extends App {
         if (!Config.ONLY_JAVA) {
             var pythonExecutor = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
-                    "Features_Vectors/changes_feature_vectors_java.csv",
-                    "Features_Vectors/faiss_java.index",
+                    Config.changes_feature_vectors,
+                    Config.index_path,
                     Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()));
             pythonExecutor.waitUntilEnd();
         } else {

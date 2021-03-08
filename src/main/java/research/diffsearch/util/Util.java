@@ -4,7 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
 
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,5 +96,37 @@ public class Util {
             return "";
         }
         return candidateUrl + repository.replace(".","/") + "/commit/" + commit + "-->" + items.get(1);
+    }
+
+    public static void program_languages_info(){
+        switch(Config.PROGRAMMING_LANGUAGE) {
+            case PYTHON:
+                Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
+                Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
+                Config.index_path = "./src/main/resources/Features_Vectors/faiss_py.index";
+                Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
+                break;
+            case JAVASCRIPT:
+                Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
+                Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
+                Config.index_path = "./src/main/resources/Features_Vectors/faiss_js.index";
+                Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
+                break;
+            default:
+                Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
+                Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
+                Config.index_path = "./src/main/resources/Features_Vectors/faiss_java.index";
+                Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
+        }
+
+        Path path = Paths.get(Config.changes_string_path);
+
+        try {
+
+            Config.code_changes_num = Files.lines(path).count();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

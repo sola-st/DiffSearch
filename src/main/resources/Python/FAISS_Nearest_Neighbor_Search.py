@@ -19,7 +19,7 @@ logger.setLevel(logging.DEBUG)
 logger.info("Starting python")
 
 
-def searching(index_path, k, host, port):
+def searching(index_path, k, host, port, changes_string, changes_string_prop):
     index = faiss.read_index(index_path)
 
     logger.debug("Index read.")
@@ -69,10 +69,10 @@ def searching(index_path, k, host, port):
                 #     np_array = np_array / norm
                 #     # print(str(np_array))
 
-                with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
+                with open(str(changes_string)) as f:
                     changes_strings = f.readlines()
 
-                with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
+                with open(str(changes_string_prop)) as f:
                     changes_info = f.readlines()
 
                 limits, distances, indices = index.range_search(query_feature_vectors, 5)
@@ -110,4 +110,4 @@ def searching(index_path, k, host, port):
                 clientsocket.send(bytes("JAVA" + "\r\n", 'UTF-8'))
 
 
-searching(str(sys.argv[-4]), int(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))
+searching(str(sys.argv[-6]), int(sys.argv[-5]), str(sys.argv[-4]), int(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))
