@@ -128,7 +128,7 @@ public class MatchingPipeline
                     consumer.skip(index);
                 }
             }
-        }, 5000, TimeUnit.MILLISECONDS);
+        }, 5, TimeUnit.MINUTES);
         if (checkCandidate(input)) {
             synchronized (foundResultObj) {
                 if (!foundResultObj.foundResult) {
