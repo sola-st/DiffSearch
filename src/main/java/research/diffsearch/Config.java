@@ -45,6 +45,9 @@ public class Config {
     // for python
     public static String host = "localhost";
     public static int port = 5002;
+    
+    // Web application
+    public static String web_url = "http://localhost:4200"; // angular development server
 
     //Files
     public static String server_log_file = "./src/main/resources/Features_Vectors/server_log.log";

@@ -26,7 +26,8 @@ public class CliUtil {
                         .numberOfArgs(2)
                         .optionalArg(true)
                         .build())
-                .addOption("silent", "don't output results in console")
-                .addOption("d", "dataset", false, "create a new dataset from GitHub repositories.");
+
+                .addOption("gurl", "web-gui-url", true, "set the web GUI URL")
+                .addOption("silent", "don't output results in console");
     }
 }
