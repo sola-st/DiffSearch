@@ -35,13 +35,28 @@ public class FeatureExtractionMode extends App {
         runPythonIndexing(Integer.MAX_VALUE);
     }
 
-    protected static void runPythonIndexing(int maxLines) throws IOException, InterruptedException {
+    public static void runPythonIndexing(int maxLines) throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
             var pythonExecutor = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
+                    Config.changes_feature_vectors,
+                    Config.index_path,
+                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()));
+            pythonExecutor.waitUntilEnd();
+        } else {
+            logger.warn("Running in ONLY_JAVA mode. Python indexing must be started separately.");
+        }
+    }
+
+    public static void runPythonIndexing_scalability(int maxLines, int part) throws IOException, InterruptedException {
+        if (!Config.ONLY_JAVA) {
+            var pythonExecutor = new PythonRunner(
+                    "./src/main/resources/Python/FAISS_indexing.py",
                     "Features_Vectors/changes_feature_vectors_java.csv",
                     "Features_Vectors/faiss_java.index",
-                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()));
+                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
+                    Integer.toString(maxLines),
+                    Integer.toString(part));
             pythonExecutor.waitUntilEnd();
         } else {
             logger.warn("Running in ONLY_JAVA mode. Python indexing must be started separately.");

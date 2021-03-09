@@ -1,5 +1,7 @@
 package research.diffsearch.main;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EffectivenessMode extends App {
@@ -47,8 +50,9 @@ public class EffectivenessMode extends App {
 
         /* INDEXING PYTHON STAGE (FAISS) */
         try {
-            int[] array = {1000000, 1000000, 1000000, 1000000, 568580};
+            int[] array = {770000, 1000000, 1000000, 1000000, 568580}; // entries 667395/49267  new:1131080
 
+            List<CodeChangeWeb> json_final = new ArrayList<>();
             for (int sub = 0; sub < 1; sub++) {
                 logger.debug("INDEXING STARTED.\n");
                 FeatureExtractionMode.runPythonIndexing(array[sub]);
@@ -94,16 +98,24 @@ public class EffectivenessMode extends App {
                         /* FINAL MATCHING STAGE:  Deep tree comparison as final matching.*/
                         /*long startTime_matching = System.currentTimeMillis();
                         long number_matching = -1;*/
-                        List<CodeChangeWeb> output = new OnlinePipeline(socket, Config.PROGRAMMING_LANGUAGE)
-                                .collect(queryInput)
-                                .orElseThrow();
+                        try {
+                            List<CodeChangeWeb> output = new OnlinePipeline(socket, Config.PROGRAMMING_LANGUAGE)
+                                    .collect(queryInput)
+                                    .orElseThrow();
 
-                        for (CodeChangeWeb temp : output) {
-                            buffWriterResults.write(temp.toString() + "\n\n");
+                            for (CodeChangeWeb temp : output) {
+                                buffWriterResults.write(temp.toString() + "\n\n");
+                            }
+                            counter += output.size();
+                            json_final.addAll(output);
+
                         }
-                        counter += output.size();
+                        catch (Exception e){
+                            logger.debug("Invalid query");
+                            continue;
+                        }
 
-                        logger.debug(counter + " DONE with query: " + queryInput);
+                        logger.debug(counter + " FOUND with query: " + queryInput);
                     }
                     matrix_results[j - 1][2] = counter;
                     matrix_results[j - 1][3] = counter / matrix_results[j - 1][1] * 100;
@@ -119,6 +131,21 @@ public class EffectivenessMode extends App {
                 // Writing the feature vector in a csv file
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Pattern, mineSStubs, DiffSearch, Percentage(%) \n");
+
+                Gson gson_list = new GsonBuilder().setPrettyPrinting().create();
+                // convert your list to json
+                String jsonChangesList = gson_list.toJson(json_final);
+                // print your generated json
+
+                try {
+                    FileWriter myWriter = new FileWriter("./src/main/resources/Effectiveness/list_results.json");
+                    myWriter.write(jsonChangesList);
+                    myWriter.close();
+                    //System.out.println("Successfully wrote to the file.");
+                } catch (IOException e) {
+                    System.out.println("An error occurred.");
+                    e.printStackTrace();
+                }
 
                 for (int j = 0; j < 12; j++) {
                     for (i = 0; i < 4; i++) {

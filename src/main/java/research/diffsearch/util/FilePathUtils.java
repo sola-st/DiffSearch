@@ -9,10 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,7 +20,7 @@ public class FilePathUtils {
     public static final String QUERY_FEATURE_VECTORS_CSV = "./src/main/resources/Features_Vectors/query_feature_vectors.csv";
     public static final String CHANGES_STRINGS_JAVA = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
     public static final String CHANGES_STRINGS_JS = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
-    public static final String CHANGES_STRINGS_PYTHON = "./src/main/resources/Features_Vectors/changes_strings.txt";
+    public static final String CHANGES_STRINGS_PYTHON = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
 
     public static String getChangesFilePath(ProgrammingLanguage language) {
         switch (language) {
@@ -39,7 +36,7 @@ public class FilePathUtils {
     public static String getChangesInfoFilePath(ProgrammingLanguage language) {
         switch (language) {
             case PYTHON:
-                return "./src/main/resources/Features_Vectors/changes_strings_prop.txt";
+                return "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
             case JAVASCRIPT:
                 return "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
             default:
@@ -80,23 +77,28 @@ public class FilePathUtils {
 
             @Override
             public CodeChangeWeb next() {
-                String candidateUrl = infoIterator.next();
-                String candidate = codeChangeIterator.next();
-                List<String> list = Arrays.asList(candidate.split("-->"));
-                String[] urlLine =
-                        Util.computeCandidateUrl(candidateUrl).split("-->");
-                index++;
-                return new CodeChangeWeb(list.get(0).trim(), list.get(1).trim())
-                        .setUrl(urlLine[0])
-                        .setHunkLines(urlLine[1])
-                        .setQuery(query)
-                        .setFullChangeString(candidate)
-                        .setRank(index + 1);
+                try {
+                    String candidateUrl = infoIterator.next();
+                    String candidate = codeChangeIterator.next();
+                    List<String> list = Arrays.asList(candidate.split("-->"));
+                    String[] urlLine = Util.computeCandidateUrl(candidateUrl).split("-->");
+                    index++;
+                    return new CodeChangeWeb(list.get(0).trim(), list.get(1).trim())
+                            .setUrl(urlLine[0])
+                            .setHunkLines(urlLine[1])
+                            .setQuery(query)
+                            .setFullChangeString(candidate)
+                            .setRank(index + 1);
+                }
+                catch (Exception e){
+                    return null;
+                }
             }
         };
         var result = StreamSupport
                 .stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
+        result.removeAll(Collections.singleton(null));
         var length = result.size();
         if (length > 0) {
             result.forEach(codeChangeWeb -> codeChangeWeb.numberOfCandidateChanges = length);

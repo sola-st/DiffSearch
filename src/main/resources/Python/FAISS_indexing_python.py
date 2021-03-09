@@ -15,7 +15,7 @@ logger.info("Starting python")
 def indexing(feature_in, index_out, dimension):
     # Reading csv feature vectors files
     logger.info("Reading " + str(feature_in))
-    changes_feature_vectors = dd.read_csv('./src/main/resources/' + str(feature_in), header=None)
+    changes_feature_vectors = dd.read_csv(str(feature_in), header=None)
     changes_feature_vectors = changes_feature_vectors.iloc[:, :]
     # changes_feature_vectors = changes_feature_vectors.values[0:, :-1]
     changes_feature_vectors = changes_feature_vectors.astype('float32')
@@ -42,12 +42,13 @@ def indexing(feature_in, index_out, dimension):
     #     np_array = np_array / norm
     #     print(str(np_array))
 
+    logger.info("Starting training")
     index.train(np_array)  # train on the database vectors
     logger.info("Training finished")
     index.add(np_array)  # add the vectors and update the index
     logger.info("Index added: " + str(index.ntotal) + " entries")
 
-    faiss.write_index(index, "./src/main/resources/" + str(index_out))
+    faiss.write_index(index, str(index_out))
 
 
 # print(str(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))

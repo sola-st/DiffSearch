@@ -1,2 +1,7 @@
 EXPR<0> binOP EXPR<1> -->  EXPR<0> binOP EXPR<1>
 EXPR<0> binOP EXPR<1>; -->  EXPR<0> binOP EXPR<1>;
+EXPR<0> binOP EXPR<1>; -->  EXPR<0> binOP EXPR<1>;
+if(ID<0>.ID<1>() binOP LT<0> ){ --> if(ID<0>.ID<1>() binOP LT<0>){
+if(ID<0> binOP LT<0> ){ --> if(ID<0> binOP LT<0>){
+if(ID<0> binOP ID<1> ){ --> if(ID<0> binOP ID<1>){
+while(ID<0> binOP ID<1> ){ --> while(ID<0> binOP ID<1>){

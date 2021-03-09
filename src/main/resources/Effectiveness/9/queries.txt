@@ -30,3 +30,7 @@ ID<1>.ID<0> unOP; --> ID<1>.ID<0> unOP;
 ID<1>.ID<0> unOP --> ID<1>.ID<0> unOP
 unOP ID<1>.ID<0>; --> unOP ID<1>.ID<0>;
 unOP ID<1>.ID<0> --> unOP ID<1>.ID<0>
+ID<0>.ID<1>(<...>) --> !ID<0>.ID<1>(<...>) 
+if(ID<0>.ID<1>(<...>)){ -->  if(!ID<0>.ID<1>(<...>)){ 
+if(!ID<0>.ID<1>(<...>)){ -->  if(ID<0>.ID<1>(<...>)){ 
+if(ID<1>(<...>)){ -->  if(!ID<1>(<...>)){ 

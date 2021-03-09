@@ -118,23 +118,6 @@ Matching change:
 
 This package contains the code of DiffSearch. If you want simply run the tool see the section "how to run".
 
-**Main files:**
-- src/main/java/research.diffsearch/**App.java** -> Main file
-- src/main/java/research.diffsearch/**Change_extraction.java** -> Clone repository and extract changes
-- src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage 
-- src/main/java/research.diffsearch/**Python3_Tree.java** -> Python tree class 
-- src/main/java/grammar/**Python3(...).java** -> ANTLR Java classes
-- src/main/java/research.diffsearch/**Java_Tree.java** -> Java tree class 
-- src/main/java/grammar/**Java(...).java** -> ANTLR Java classes
-- src/main/java/research.diffsearch/**TreeUtils.java** -> Methods to visit and work with trees
-- src/main/java/research.diffsearch/**Config.java** -> File with important configuration constants.
-- src/main/java/resources/Python/**FAISS_indexing.py** -> FAISS indexing (without query)
-- src/main/java/resources/Python/**FAISS_Nearest_Neighbor_Search.py** -> FAISS Nearest Neighbor Search
-- src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff.
-- src/main/java/matching/*  -> final matching algorithm
-- src/main/resources/Results/* -> there are some output file results
-
-
 **Requirements**
 - Java 8 and Python 3.7
 - [ANTLR 4.7.1](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
@@ -151,6 +134,8 @@ FOR THE DIFFSEARCH SERVER:
       - pip3 install faiss-cpu 
       - pip3 install numpy     
       - pip3 install pandas
+      - pip3 install pygit2
+      - pip3 install dask[dataframe]
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
   - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )

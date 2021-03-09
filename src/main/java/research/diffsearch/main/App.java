@@ -16,6 +16,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static research.diffsearch.util.Util.program_languages_info;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -28,10 +33,12 @@ public abstract class App implements Runnable {
         if (!Config.ONLY_JAVA) {
             try {
                 new PythonRunner("./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py",
-                        "./src/main/resources/Features_Vectors/faiss_java.index",
+                        Config.index_path,
                         Integer.toString(Config.k),
                         Config.host,
-                        Integer.toString(Config.port))
+                        Integer.toString(Config.port),
+                        Config.changes_string_path,
+                        Config.changes_string_prop_path)
                 .waitUntil(input -> input.toLowerCase().contains("server started"));
             } catch (IOException | InterruptedException exception) {
                 logger.error(exception.getMessage(), exception);
@@ -40,6 +47,20 @@ public abstract class App implements Runnable {
         } else {
             logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
         }
+    }
+
+    public static void close_ports() {
+
+        try {
+            String[] args = new String[] {"fuser", "-K", "8843/tcp"};
+            Process proc = new ProcessBuilder(args).start();
+
+            String[] args2 = new String[] {"fuser", "-K", "5002/tcp"};
+            Process proc2 = new ProcessBuilder(args).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     protected static ServerSocket getServerSocket() throws IOException {
@@ -53,7 +74,7 @@ public abstract class App implements Runnable {
         return new FileOutputStream(Config.server_log_file, true);
     }
 
-    protected static Socket getFaissSocket() throws IOException {
+    public static Socket getFaissSocket() throws IOException {
         return new Socket(Config.host, Config.port);
     }
 
@@ -78,6 +99,7 @@ public abstract class App implements Runnable {
             Config.MEASURE_RECALL = commandLine.hasOption("r");
             Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
             Config.SILENT = commandLine.hasOption("silent");
+            Config.DATASET_CREATION = commandLine.hasOption("d");
 
             if (commandLine.hasOption("p")) {
                 Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
@@ -92,6 +114,10 @@ public abstract class App implements Runnable {
                 Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.valueOf(
                         commandLine.getOptionValue("lang").toUpperCase());
             }
+
+            // Update info based on PL
+            program_languages_info();
+
             if (commandLine.hasOption("k")) {
                 Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
             }
@@ -109,6 +135,8 @@ public abstract class App implements Runnable {
         parseArgs(args);
         logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
 
+        close_ports();
+
         App app = null;
         if (Config.WEB_GUI) {
             app = new WebGUIMode();
@@ -124,6 +152,8 @@ public abstract class App implements Runnable {
             app = new QueryMode();
         } else if (Config.CORPUS_FEATURE_EXTRACTION) {
             app = new FeatureExtractionMode();
+        }else if (Config.DATASET_CREATION) {
+            app = new DatasetCreationMode();
         }
 
         if (app != null) {
