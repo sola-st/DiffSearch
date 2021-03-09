@@ -67,9 +67,9 @@ public class MatchingPipeline
         try {
             outputList =
                     ((Pipeline<CodeChangeWeb, CodeChangeWeb>) this::checkCandidateWithTimeout)
-                    .parallelUntilHere(Config.threadCount)
-                    .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
-                    .collect(input.getResults());
+                            .parallelUntilHere(Config.threadCount)
+                            .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
+                            .collect(input.getResults());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -128,14 +128,16 @@ public class MatchingPipeline
                     consumer.skip(index);
                 }
             }
-        }, 5, TimeUnit.SECONDS);
-        synchronized (foundResultObj) {
-            if (checkCandidate(input)) {
-                foundResultObj.foundResult = true;
-                consumer.accept(input, index);
-            } else {
-                consumer.skip(index);
+        }, 5000, TimeUnit.MILLISECONDS);
+        if (checkCandidate(input)) {
+            synchronized (foundResultObj) {
+                if (!foundResultObj.foundResult) {
+                    foundResultObj.foundResult = true;
+                    consumer.accept(input, index);
+                }
             }
+        } else {
+            consumer.skip(index);
         }
     }
 }
