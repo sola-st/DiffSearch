@@ -16,7 +16,9 @@ import research.diffsearch.util.ProgressWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
@@ -103,30 +105,37 @@ public class MatchingPipeline
         return !codeChangeWeb.getCodeChangeNew().trim().equals(codeChangeWeb.getCodeChangeOld().trim());
     }
 
-    private final Timer timer = new Timer();
-
     @Override
     public void after() {
         queryTree = null;
     }
 
+    private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
+
     private void checkCandidateWithTimeout(CodeChangeWeb input, int index, IndexedConsumer<CodeChangeWeb> consumer) {
         var foundResultObj = new Object() {
             public volatile boolean foundResult = false;
+
+            public void setFoundResult(boolean foundResult) {
+                this.foundResult = foundResult;
+            }
         };
-        /*timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
+        timer.schedule(() -> {
+            synchronized (foundResultObj) {
                 if (!foundResultObj.foundResult) {
+                    foundResultObj.setFoundResult(true);
+                    logger.warn("Timeout for code change " + input.getFullChangeString());
                     consumer.skip(index);
                 }
             }
-        }, 5000L);*/
-        if (checkCandidate(input)) {
-            foundResultObj.foundResult = true;
-            consumer.accept(input, index);
-        } else {
-            consumer.skip(index);
+        }, 5, TimeUnit.SECONDS);
+        synchronized (foundResultObj) {
+            if (checkCandidate(input)) {
+                foundResultObj.foundResult = true;
+                consumer.accept(input, index);
+            } else {
+                consumer.skip(index);
+            }
         }
     }
 }

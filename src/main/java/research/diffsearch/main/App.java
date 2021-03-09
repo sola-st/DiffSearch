@@ -90,8 +90,10 @@ public abstract class App implements Runnable {
         JavaTree queryJavaTree = new JavaTree(query);
 
         ParseTree queryTree = queryJavaTree.getParseTree();
+        System.out.println(queryJavaTree.getTreeString());
 
         JavaTree changeJavaTree = new JavaTree(candidate);
+        System.out.println(changeJavaTree.getTreeString());
         ParseTree changeTree = changeJavaTree.getParseTree();
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());

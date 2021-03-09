@@ -258,11 +258,11 @@ public class AppTest extends TestCase {
                 "-->\n" +
                 "ID<1>(EXPR);\n" +
                 "ID<0>(EXPR);";
-        String candidate = "foo1(x+1);\n" +
-                "foo2(x+2);\n" +
+        String candidate = "foo1(x);\n" +
+                "foo2(x);\n" +
                 "-->\n" +
-                "foo2(x+2);\n" +
-                "foo1(x+1);";
+                "foo2(x);\n" +
+                "foo1(x);";
 
         assertTrue(App.runJunit(query, candidate));
     }

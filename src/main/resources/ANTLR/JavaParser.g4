@@ -406,7 +406,7 @@ blockStatement
     : localVariableDeclaration ';' NEWLINE?
     | statement NEWLINE?
     | localTypeDeclaration NEWLINE?
-    | WILDCARD ';'? NEWLINE?
+    | WILDCARD NEWLINE?
     ;
 
 localVariableDeclaration
@@ -516,6 +516,7 @@ parExpression
 expressionList
     : WILDCARD
     |  expression (',' expression)*
+    | EXPR (',' EXPR)*
     ;
 
 methodCall
