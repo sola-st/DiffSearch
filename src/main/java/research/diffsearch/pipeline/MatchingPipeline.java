@@ -108,6 +108,7 @@ public class MatchingPipeline
     @Override
     public void after() {
         queryTree = null;
+        timer.shutdown();
     }
 
     private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
