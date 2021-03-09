@@ -157,8 +157,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 			CodeChangeWeb temp = new CodeChangeWeb("The query is not correct, please try again."," ");
 			outputList.set(0, temp);
 		}
-		String changes = "832 142"; // how does this number come about (see DiffSearchWebServer)
-		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), changes);
+
+		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
 		
 		var JSONOutput = new Gson().toJson(serverdata);
 		// Writing the JSON file on the port 8843
@@ -170,9 +170,8 @@ public class WebServerGUI extends DiffSearchWebServer {
     		String result, FileChannel chan) throws IOException {
     	
     	List<CodeChangeWeb> outputList = new ArrayList<CodeChangeWeb>();
-    	
-    	String changes = "832 142"; // how does this number come about (see DiffSearchWebServer)
-    	ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), changes);
+
+    	ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
     	var JSONOutput = new Gson().toJson(serverdata);
     	out.println(JSONOutput);
         
