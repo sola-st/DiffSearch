@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.Config;
 import research.diffsearch.pipeline.RecallPipeline;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.Pipeline;
@@ -43,7 +44,8 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
             writeCountMapsToFile();
         }
 
-        logger.debug("total: " + ruleNameCountMap.values().stream().mapToInt(i -> Math.min(i, 8)).sum());
+        logger.debug("total: " + ruleNameCountMap.values().stream()
+                .mapToInt(i -> Math.min(i, Config.ruleCountMaxCount)).sum());
     }
 
     private void writeCountMapsToFile() {

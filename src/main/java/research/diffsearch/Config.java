@@ -172,7 +172,7 @@ public class Config {
 
     public static boolean RANGE_SEARCH;
 
-    public static int ruleCountMaxCount = 32;
+    public static int ruleCountMaxCount = 8;
 
     /**
      * FAISS parameter, number of clusters of the index.
