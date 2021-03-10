@@ -59,13 +59,15 @@ public class MatchingPipeline
 
         if (queryTree == null) {
             queryTree = getChangeTree(input.getQuery(), language);
-            logger.debug(queryTree.getTreeString());
+            if (!Config.SILENT) {
+                logger.debug(queryTree.getTreeString());
+            }
         }
 
         try {
             outputList =
                     Pipeline.getFilter(this::checkCandidate)
-                            .withTimeout(60, TimeUnit.SECONDS, null)
+                            .withTimeout(Config.matchingTimeoutSeconds, TimeUnit.SECONDS, null)
                             .parallelUntilHere(Config.threadCount)
                             .connect(new ProgressWatcher<>("Matching"))
                             .collect(input.getResults());

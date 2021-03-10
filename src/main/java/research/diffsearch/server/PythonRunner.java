@@ -95,7 +95,7 @@ public class PythonRunner {
 
     public void shutDownProcess() {
         if (pythonProcess != null) {
-            pythonProcess.getProcess().destroy();
+            pythonProcess.getProcess().destroyForcibly();
         }
     }
 

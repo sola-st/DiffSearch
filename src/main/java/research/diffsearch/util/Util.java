@@ -5,6 +5,8 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.feature.FeatureVector;
+import research.diffsearch.tree.TreeFactory;
+import research.diffsearch.tree.TreeUtils;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -14,7 +16,6 @@ import java.util.stream.Collectors;
 
 public class Util {
 
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printOutputList(DiffsearchResult result) {
         printOutputList(result, System.out, true);
     }
@@ -71,7 +72,6 @@ public class Util {
                 .collect(Collectors.joining(","));
     }
 
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void printFeatureVectorAnalysis(FeatureVector vector) {
         System.out.println("Feature vector analysis");
         vector.getCategories()
@@ -105,5 +105,28 @@ public class Util {
             return "";
         }
         return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
+    }
+
+    public static String formatCodeChange(String result) {
+        return result.replaceAll("\r","").replaceAll("\n","");
+    }
+
+    public static boolean checkIfQueryIsValid(String query) {
+        return checkIfQueryIsValid(query, Config.PROGRAMMING_LANGUAGE);
+    }
+
+    public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
+        var queryTree = TreeFactory.getChangeTree(query, language);
+        var parseTree = queryTree.getParseTree();
+        var parser = queryTree.getParser();
+
+        return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
+    }
+
+    public static boolean isQueryKeyword(String nodeText) {
+        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>", "querySnippet");
+        return keywords
+                .stream()
+                .anyMatch(nodeText::contains);
     }
 }

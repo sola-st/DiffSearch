@@ -170,7 +170,9 @@ public class FilePathUtils {
         return getStringFileWriterPipeline(path, Objects::toString);
     }
 
-    public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path, Function<T, String> mapper) throws IOException {
+    public static <T> Pipeline<T, T> getStringFileWriterPipeline(String path, Function<T, String> mapper)
+            throws IOException {
+
         return new Pipeline<>() {
             private final BufferedWriter writer = getWriter(path);
 

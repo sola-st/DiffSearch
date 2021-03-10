@@ -170,9 +170,19 @@ public class Config {
      */
     public static boolean EXTRACT_QUERY_KEYWORDS = false;
 
-    public static boolean RANGE_SEARCH;
+    /**
+     * If faiss should use range search.
+     */
+    public static boolean RANGE_SEARCH = false;
+
+    /**
+     * Max additional ones in features vectors when using range search.
+     */
+    public static int rangeSearchMaxAdditionalFeatures = 100;
 
     public static int ruleCountMaxCount = 8;
+
+    public static int matchingTimeoutSeconds = 60;
 
     /**
      * FAISS parameter, number of clusters of the index.
@@ -182,5 +192,5 @@ public class Config {
     /**
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
-    public static int nprobe = 240;
+    public static int nprobe = 1;
 }

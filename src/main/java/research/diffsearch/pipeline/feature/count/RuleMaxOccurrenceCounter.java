@@ -115,10 +115,6 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
         return language;
     }
 
-    public static void main(String[] args) {
-        new RuleMaxOccurrenceCounter(ProgrammingLanguage.JAVA);
-    }
-
     public int getTotalMaxCount(int limitPerRule) {
         return ruleNameCountMap.values().stream()
                 .mapToInt(count -> Math.min(count, limitPerRule))

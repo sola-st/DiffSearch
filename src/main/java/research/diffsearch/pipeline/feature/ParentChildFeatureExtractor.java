@@ -4,9 +4,10 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.QueryUtil;
 
 import java.util.List;
+
+import static research.diffsearch.util.Util.isQueryKeyword;
 
 /**
  * Feature extractor for parent child features.
@@ -42,7 +43,7 @@ public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtract
     private static boolean shouldExtractFeature(String parentChildText, String childNodeText, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !QueryUtil.isQueryKeyword(childNodeText)
+                || !isQueryKeyword(childNodeText)
                )
                && !isBlacklisted(parentChildText)
                && !isBlacklisted(childNodeText);

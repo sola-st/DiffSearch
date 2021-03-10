@@ -22,6 +22,8 @@ public abstract class App implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
+    protected PythonRunner pythonRunner;
+
     public static void main(String[] args) {
         logger.debug(System.getProperty("java.vendor"));
         CommandLineUtil.parseArgs(args);
@@ -44,6 +46,9 @@ public abstract class App implements Runnable {
 
         if (app != null) {
             app.run();
+
+            // after execution
+            app.stopPythonServer();
         } else {
             logger.error("No DiffSearch mode selected.");
         }
@@ -52,22 +57,31 @@ public abstract class App implements Runnable {
     /**
      * Starts python server for nearest neighbor search.
      */
-    public static void startPythonServer() {
+    public void startPythonServer() {
         if (!Config.ONLY_JAVA) {
             try {
-                var runner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
+                pythonRunner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
                         Config.INDEX_FILE,
                         Integer.toString(Config.k),
                         Config.host,
-                        Integer.toString(Config.port));
+                        Integer.toString(Config.port),
+                        Integer.toString(Config.nprobe),
+                        Boolean.toString(Config.RANGE_SEARCH),
+                        Integer.toString(Config.rangeSearchMaxAdditionalFeatures));
 
-                runner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
+                pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 
             } catch (IOException | InterruptedException exception) {
                 logger.error(exception.getMessage(), exception);
             }
         } else {
             logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
+        }
+    }
+
+    public void stopPythonServer() {
+        if (!Config.ONLY_JAVA && pythonRunner != null) {
+            pythonRunner.shutDownProcess();
         }
     }
 

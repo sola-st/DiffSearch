@@ -5,10 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
+import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.util.ProgressWatcher;
-import research.diffsearch.util.QueryUtil;
+import research.diffsearch.util.Util;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +16,9 @@ import java.util.List;
 import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
 import static research.diffsearch.util.FilePathUtils.*;
 
+/**
+ * Extracts feature vectors from the code changes and indexes them.
+ */
 public class FeatureExtractionMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionMode.class);
@@ -25,22 +28,23 @@ public class FeatureExtractionMode extends App {
         logger.info("Starting feature extraction on corpus.");
 
         try {
-            extractFeaturesToFile();
-            System.gc();
-            runPythonIndexing();
+            var featureExtractionPipeline = getDefaultFeatureExtractionPipeline(false);
+            extractFeaturesToFile(featureExtractionPipeline);
+            runPythonIndexing(featureExtractionPipeline);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    protected static void runPythonIndexing() throws IOException, InterruptedException {
+    protected static void runPythonIndexing(FeatureExtractionPipeline featureExtractionPipeline)
+            throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
 
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
                     "Features_Vectors/changes_feature_vectors_java.csv",
                     "Features_Vectors/faiss_java.index",
-                    Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
+                    Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
                     Integer.toString(Config.nlist));
 
             pythonRunner.runAndWaitUntilEnd();
@@ -50,16 +54,15 @@ public class FeatureExtractionMode extends App {
         }
     }
 
-    protected static void extractFeaturesToFile() throws IOException {
+    protected static void extractFeaturesToFile(FeatureExtractionPipeline featureExtractionPipeline)
+            throws IOException {
         List<String> changesLines = Lists.newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
 
-        logger.debug("Feature vector length: {}",
-                getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength());
+        logger.debug("Feature vector length: {}", featureExtractionPipeline.getTotalFeatureVectorLength());
 
-        Pipeline.from(QueryUtil::formatQuery)
-                .connect(getDefaultFeatureExtractionPipeline(false))
+        Pipeline.from(Util::formatCodeChange)
+                .connect(featureExtractionPipeline)
                 .parallelUntilHere(Config.threadCount)
-                .connectIf(!Config.USE_COUNT_VECTORS_CORPUS, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
                 .connect(new ProgressWatcher<>("Feature extraction"))
                 .collect(changesLines);

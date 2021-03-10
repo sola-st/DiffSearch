@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.QueryUtil;
+import research.diffsearch.util.Util;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     private static boolean shouldExtractFeature(String nodeText, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !QueryUtil.isQueryKeyword(nodeText))
+                || !Util.isQueryKeyword(nodeText))
                && !isBlacklisted(nodeText);
     }
 }

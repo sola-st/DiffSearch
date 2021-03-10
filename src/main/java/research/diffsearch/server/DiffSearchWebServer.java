@@ -7,7 +7,6 @@ import research.diffsearch.pipeline.OnlinePipeline;
 import research.diffsearch.pipeline.RecallPipeline;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.DiffsearchResult;
-import research.diffsearch.util.QueryUtil;
 import research.diffsearch.util.Util;
 
 import java.io.*;
@@ -209,7 +208,7 @@ public class DiffSearchWebServer extends Thread {
     }
 
     protected static String getQuery(StringBuilder postData) {
-        return QueryUtil.formatQuery(URLDecoder.decode(postData.toString()
+        return Util.formatCodeChange(URLDecoder.decode(postData.toString()
                 .replaceAll("Text1=", "")
                 .replaceAll("&Text2=", "-->"), StandardCharsets.UTF_8));
     }

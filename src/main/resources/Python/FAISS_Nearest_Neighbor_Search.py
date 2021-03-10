@@ -19,11 +19,29 @@ logger.setLevel(logging.DEBUG)
 logger.info("Starting python")
 
 
-def searching(index_path, k, host, port, nprobe=1, range_search=False):
+def searching(index_path,
+              k,
+              host,
+              port,
+              nprobe=1,
+              range_search=False,
+              max_additional_features=100):
+    """
+    Sets up a server for faiss nearest neighbour searches.
+
+    :param index_path: path to the index file.
+    :param k: number of (minimum) candidate changes.
+    :param host: host name of the server
+    :param port: port of the server
+    :param nprobe: number of clusters to consider.
+    :param range_search: if range search should be used (instead of finding the k nearest neighbours)
+    :param max_additional_features: number of additional features to consider for the range search
+    """
     index = faiss.read_index(index_path)
 
     logger.debug("Index read.")
     logger.debug(f"k = {k}")
+    logger.debug(f"Range search={range_search}")
 
     # server #
 
@@ -88,10 +106,11 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
                     #   distances = distances[:10 * k]
                     # indices = indices[:10 * k]
                 else:
-                    search_range: int = 1
+                    search_range: int = max_additional_features
                     for vector in query_feature_vectors:
                         for feature in vector:
-                            search_range += (feature - 1) ** 2
+                            if feature > 0:
+                                search_range += (feature - 1) ** 2
 
                     # search_range *= 2
 
@@ -100,8 +119,6 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
 
                     if len(indices) < k:
                         distances, indices = index.search(query_feature_vectors, k)
-                    if len(indices) > 20 * k:
-                        distances, indices = distances[:20 * k], indices[:20 * k]
 
                 logger.info('Searching finished')
 
@@ -127,4 +144,10 @@ def searching(index_path, k, host, port, nprobe=1, range_search=False):
                 clientsocket.send(bytes("JAVA" + "\r\n", 'UTF-8'))
 
 
-searching(str(sys.argv[-4]), int(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))
+searching(index_path=str(sys.argv[-7]),
+          k=int(sys.argv[-6]),
+          host=str(sys.argv[-5]),
+          port=str(sys.argv[-4]),
+          nprobe=int(sys.argv[-3]),
+          range_search=sys.argv[-2] == "true",
+          max_additional_features=int(sys.argv[-1]))

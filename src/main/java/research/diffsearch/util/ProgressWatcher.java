@@ -9,6 +9,9 @@ import java.util.stream.IntStream;
 
 import static java.text.MessageFormat.format;
 
+/**
+ * Shows the progress of the pipeline in a progressbar in the console.
+ */
 public class ProgressWatcher<T> implements Pipeline<T, T> {
 
     private int size;

@@ -10,7 +10,6 @@ import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
-import research.diffsearch.util.QueryUtil;
 import research.diffsearch.util.Util;
 
 import java.io.BufferedReader;
@@ -62,9 +61,9 @@ public class OnlinePipeline implements
             logger.info("Processing query " + input);
             long startTime = System.currentTimeMillis();
             // write feature vector to file
-            var featureVector = Pipeline.from(QueryUtil::formatQuery)
+            var featureVector = Pipeline.from(Util::formatCodeChange)
                     // validate query
-                    .filter((Predicate<String>) QueryUtil::checkIfQueryIsValid)
+                    .filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS_QUERY, new RemoveCollisionPipeline())
@@ -77,7 +76,9 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
-            Util.printFeatureVectorAnalysis(featureVector.get());
+            if (!Config.SILENT) {
+                Util.printFeatureVectorAnalysis(featureVector.get());
+            }
 
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {

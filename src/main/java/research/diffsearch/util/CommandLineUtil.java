@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 
+import static java.lang.Byte.parseByte;
+import static java.lang.Integer.parseInt;
+
 public class CommandLineUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandLineUtil.class);
@@ -30,6 +33,7 @@ public class CommandLineUtil {
                 .addOption("cb", "count-bits", true, "number of count bits per feature. Must be at least 1.")
                 .addOption("extractors", true, "which feature extractors to use. Syntax: <name>(:<bits>)?, separated with commas")
                 .addOption("help", "show help")
+                .addOption("rs", "range-search", true, "if faiss should use range search. Optional: How many additional features a code changes may have in comparison to the query.")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
@@ -63,20 +67,20 @@ public class CommandLineUtil {
             Config.BATCH = commandLine.hasOption("b");
 
             if (commandLine.hasOption("p")) {
-                Config.port_web = Integer.parseInt(commandLine.getOptionValue("p"));
+                Config.port_web = parseInt(commandLine.getOptionValue("p"));
             }
             if (commandLine.hasOption("q")) {
                 Config.query = commandLine.getOptionValue("q");
             }
             if (commandLine.hasOption("py_port")) {
-                Config.port = Integer.parseInt(commandLine.getOptionValue("py_port"));
+                Config.port = parseInt(commandLine.getOptionValue("py_port"));
             }
             if (commandLine.hasOption("lang")) {
                 Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.valueOf(
                         commandLine.getOptionValue("lang").toUpperCase());
             }
             if (commandLine.hasOption("k")) {
-                Config.k = Integer.parseInt(commandLine.getOptionValue("k"));
+                Config.k = parseInt(commandLine.getOptionValue("k"));
             }
             if (commandLine.hasOption("b")) {
                 var params = commandLine.getOptionValues("b");
@@ -88,19 +92,26 @@ public class CommandLineUtil {
                 }
             }
             if (commandLine.hasOption("cb")) {
-                Config.COUNT_BITS = Byte.parseByte(commandLine.getOptionValue("cb"));
+                Config.COUNT_BITS = parseByte(commandLine.getOptionValue("cb"));
             }
             if (commandLine.hasOption("pyc")) {
                 Config.PYTHON_CMD = commandLine.getOptionValue("pyc");
             }
             if (commandLine.hasOption("t")) {
-                Config.threadCount = Integer.parseInt(commandLine.getOptionValue("t"));
+                Config.threadCount = parseInt(commandLine.getOptionValue("t"));
             }
             if (commandLine.hasOption("vl")) {
-                Config.SINGLE_FEATURE_VECTOR_LENGTH = Integer.parseInt(commandLine.getOptionValue("vl"));
+                Config.SINGLE_FEATURE_VECTOR_LENGTH = parseInt(commandLine.getOptionValue("vl"));
             }
             if (commandLine.hasOption("extractors")) {
                 Config.featureExtractors = commandLine.getOptionValue("extractors");
+            }
+            if (commandLine.hasOption("rs")) {
+                Config.RANGE_SEARCH = true;
+                var maxCount = commandLine.getOptionValue("rs");
+                if (!maxCount.isBlank()) {
+                    Config.rangeSearchMaxAdditionalFeatures = parseInt(maxCount);
+                }
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

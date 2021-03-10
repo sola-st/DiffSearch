@@ -4,9 +4,10 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.QueryUtil;
 
 import java.util.List;
+
+import static research.diffsearch.util.Util.isQueryKeyword;
 
 public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
@@ -38,8 +39,8 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
     private static boolean shouldExtractFeature(String nodeText1, String nodeText2, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || (!QueryUtil.isQueryKeyword(nodeText1)
-                    && !QueryUtil.isQueryKeyword(nodeText2)))
+                || (!isQueryKeyword(nodeText1)
+                    && !isQueryKeyword(nodeText2)))
                && !isBlacklisted(nodeText1)
                && !isBlacklisted(nodeText2);
     }

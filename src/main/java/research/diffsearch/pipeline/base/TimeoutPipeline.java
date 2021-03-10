@@ -6,6 +6,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Pipeline that times out the processing of an input after a certain time.
+ */
 public class TimeoutPipeline<I, O> implements Pipeline<I, O> {
 
     private volatile boolean[] processed;
