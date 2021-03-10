@@ -108,7 +108,7 @@ def searching(index_path,
                 else:
                     feature_count_query = len([x for vector in query_feature_vectors for x in vector if x > 0])
 
-                    candidate_change_limit = max(k, k * (50 - query_feature_vectors))
+                    candidate_change_limit = max(k, k * (50 - feature_count_query))
 
                     search_range: int = max(10, max_additional_features)
                     for vector in query_feature_vectors:
