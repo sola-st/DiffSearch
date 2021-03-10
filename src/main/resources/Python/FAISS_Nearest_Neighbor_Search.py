@@ -124,7 +124,8 @@ def searching(index_path,
                     if len(indices) < k:
                         distances, indices = index.search(query_feature_vectors, k)
                     if len(indices) > candidate_change_limit:
-                        distances, indices = distances[:candidate_change_limit], indices[:candidate_change_limit]
+                        distances, indices = distances[:int(candidate_change_limit)], \
+                                             indices[:int(candidate_change_limit)]
 
                 logger.info('Searching finished')
 
