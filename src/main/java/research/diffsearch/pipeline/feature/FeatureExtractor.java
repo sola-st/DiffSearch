@@ -42,6 +42,8 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      *     <li><code>sibling</code>: Returns a splitted {@link SiblingFeatureExtractor}</li>
      *     <li><code>node</code>: Returns a splitted {@link NodeExtractor}</li>
      *     <li><code>editscript</code>: Returns a {@link EditScriptExtractor}</li>
+     *     <li><code>rulecount</code>: Returns a {@link RuleCountExtractor}</li>
+     *     <li><code>equal</code>: Returns a {@link EqualNodesExtractor}</li>
      * </ul>
      * The section length for each extractor can be defined by adding ':' and the length.
      * If this is not given, the <code>defaultSectionLength</code> is used. <br>
@@ -75,7 +77,10 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
             case "node":
                 return new SplitFeatureExtractor(new NodeExtractor(language, length / 2));
             case "rulecount":
-                return new SplitFeatureExtractor(new RuleCountExtractor(language, new RuleMaxOccurrenceCounter(language)));
+                return new SplitFeatureExtractor(new RuleCountExtractor(language,
+                        new RuleMaxOccurrenceCounter(language)));
+            case "equal":
+                return new EqualNodesExtractor(language, length);
         }
         throw new IllegalArgumentException(definition);
     }
