@@ -16,8 +16,6 @@ import research.diffsearch.util.ProgressWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
@@ -114,37 +112,5 @@ public class MatchingPipeline
     @Override
     public void after() {
         queryTree = null;
-        timer.shutdown();
-    }
-
-    private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
-
-    private void checkCandidateWithTimeout(CodeChangeWeb input, int index, IndexedConsumer<CodeChangeWeb> consumer) {
-        var foundResultObj = new Object() {
-            public volatile boolean foundResult = false;
-
-            public void setFoundResult(boolean foundResult) {
-                this.foundResult = foundResult;
-            }
-        };
-        timer.schedule(() -> {
-            synchronized (foundResultObj) {
-                if (!foundResultObj.foundResult) {
-                    foundResultObj.setFoundResult(true);
-                    logger.warn("Timeout for code change " + input.getFullChangeString());
-                    consumer.skip(index);
-                }
-            }
-        }, 60, TimeUnit.MINUTES);
-        if (checkCandidate(input)) {
-            synchronized (foundResultObj) {
-                if (!foundResultObj.foundResult) {
-                    foundResultObj.foundResult = true;
-                    consumer.accept(input, index);
-                }
-            }
-        } else {
-            consumer.skip(index);
-        }
     }
 }

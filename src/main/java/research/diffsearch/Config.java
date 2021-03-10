@@ -170,6 +170,10 @@ public class Config {
      */
     public static boolean EXTRACT_QUERY_KEYWORDS = false;
 
+    public static boolean RANGE_SEARCH;
+
+    public static int ruleCountMaxCount = 32;
+
     /**
      * FAISS parameter, number of clusters of the index.
      */
