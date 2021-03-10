@@ -41,7 +41,7 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
                 || Config.EXTRACT_QUERY_KEYWORDS
                 || (!isQueryKeyword(nodeText1)
                     && !isQueryKeyword(nodeText2)))
-               && !isBlacklisted(nodeText1)
-               && !isBlacklisted(nodeText2);
+               /*&& !isBlacklisted(nodeText1)
+               && !isBlacklisted(nodeText2)*/;
     }
 }
