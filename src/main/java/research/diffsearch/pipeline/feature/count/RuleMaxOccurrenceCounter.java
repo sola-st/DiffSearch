@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
-import static research.diffsearch.util.FilePathUtils.*;
+import static research.diffsearch.util.FilePathUtils.getCodeChanges;
+import static research.diffsearch.util.FilePathUtils.readCSVToMap;
 
 public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
 
@@ -79,7 +80,7 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
                 mergeMapsForMaximum(ruleNameCountMap, newPartMap);
             }
             return codeChange;
-        }).connect(new ProgressWatcher<>(getNumberOfLines(getChangesFilePath(getProgrammingLanguage())),
+        }).connect(new ProgressWatcher<>(
                 "Counting features"))
         .execute(getCodeChanges(getProgrammingLanguage()));
     }

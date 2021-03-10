@@ -3,7 +3,6 @@ package research.diffsearch.pipeline.feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 
 import java.util.ArrayList;
@@ -71,12 +70,8 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     }
 
     @Override
-    public void process(String input, int index, IndexedConsumer<FeatureVector> outputConsumer) {
-        if (input != null) {
-            outputConsumer.accept(extractFeatures(input), index);
-        } else {
-            outputConsumer.skip(index);
-        }
+    public FeatureVector process(String input, int index) {
+        return extractFeatures(input);
     }
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {

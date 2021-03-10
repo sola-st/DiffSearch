@@ -66,15 +66,21 @@ public class MatchingPipeline
 
         try {
             outputList =
-                    ((Pipeline<CodeChangeWeb, CodeChangeWeb>) this::checkCandidateWithTimeout)
+                    Pipeline.getFilter(this::checkCandidate)
+                            .withTimeout(60, TimeUnit.SECONDS, null)
                             .parallelUntilHere(Config.threadCount)
-                            .connect(new ProgressWatcher<>(input.getCandidateChangeCount().orElse(0), "Matching"))
+                            .connect(new ProgressWatcher<>("Matching"))
                             .collect(input.getResults());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 
         outputConsumer.accept(input.setResults(outputList), index);
+    }
+
+    @Override
+    public DiffsearchResult process(DiffsearchResult input, int index) {
+        throw new IllegalStateException();
     }
 
     private boolean checkCandidate(CodeChangeWeb candidateChange) {

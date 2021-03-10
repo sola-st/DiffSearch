@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
-import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureVector;
 
@@ -176,16 +175,14 @@ public class FilePathUtils {
             private final BufferedWriter writer = getWriter(path);
 
             @Override
-            public void process(T input, int index, IndexedConsumer<T> outputConsumer) {
-                if (input != null) {
-                    try {
-                        writer.write(mapper.apply(input) + "\n");
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
-                        throw new RuntimeException(e);
-                    }
+            public T process(T input, int index) {
+                try {
+                    writer.write(mapper.apply(input) + "\n");
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new RuntimeException(e);
                 }
-                outputConsumer.accept(input, index);
+                return input;
             }
 
             @Override

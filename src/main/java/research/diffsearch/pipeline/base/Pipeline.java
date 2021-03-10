@@ -2,48 +2,47 @@ package research.diffsearch.pipeline.base;
 
 import java.util.*;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 
+/**
+ * Provides an interface for pipelining functions, similar to Java streams.
+ *
+ * @param <I> input type of this pipeline
+ * @param <O> output type of this pipeline
+ */
 public interface Pipeline<I, O> {
+    /**
+     * Processes an input.
+     *
+     * @param input the input. Is always non null.
+     * @param index the index of the input.
+     * @implNote subclasses should overwrite this if they do not need an asynchronous result
+     * callback.
+     */
+    O process(I input, int index);
 
-    void process(I input, int index, IndexedConsumer<O> outputConsumer);
+    /**
+     * Processes an input.
+     *
+     * @param input          the input. Can be null, representing an absent value
+     *                       at the given index.
+     * @param index          the index of the input.
+     * @param outputConsumer callback object for the result. Must be called in any case,
+     *                       otherwise the pipeline will be stuck.
+     * @implNote subclasses should overwrite this if they need the callback to be asynchronous.
+     */
+    default void process(I input, int index, IndexedConsumer<O> outputConsumer) {
+        if (input != null) {
+            outputConsumer.accept(process(input, index), index);
+        } else {
+            outputConsumer.skip(index);
+        }
+    }
 
     default void execute(Iterable<I> inputs, int size) {
-        if (!inputs.iterator().hasNext()) {
-            return;
-        }
-
-        Object sync = new Object();
-        var executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            int index = 0;
-            AtomicInteger processed = new AtomicInteger(0);
-
-            for (I input : inputs) {
-                process(input, index, (result, index1) -> {
-                    processed.getAndIncrement();
-                    if (processed.get() == size) {
-                        synchronized (sync) {
-                            sync.notifyAll();
-                        }
-                    }
-                }
-
-                );
-                index++;
-            }
-        });
-
-        synchronized (sync) {
-            try {
-                sync.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        after();
-        executor.shutdown();
+        collect(inputs, size);
     }
 
     default void execute(Collection<I> inputs) {
@@ -71,9 +70,10 @@ public interface Pipeline<I, O> {
         var collectedResults = new ArrayList<O>();
         var executor = Executors.newSingleThreadExecutor();
 
+        before(size);
+
         executor.submit(() -> {
             int index = 0;
-
             AtomicInteger processed = new AtomicInteger(0);
 
             for (I input : inputs) {
@@ -109,6 +109,17 @@ public interface Pipeline<I, O> {
     default <N> Pipeline<I, N> connect(Pipeline<O, N> otherPipeline) {
         return new Pipeline<>() {
             @Override
+            public void before(int size) {
+                Pipeline.this.before(size);
+                otherPipeline.before(size);
+            }
+
+            @Override
+            public N process(I input, int index) {
+                throw new IllegalStateException(); // unused
+            }
+
+            @Override
             public void process(I input, int index, IndexedConsumer<N> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) ->
                         otherPipeline.process(firstOutput, index2, outputConsumer));
@@ -134,10 +145,6 @@ public interface Pipeline<I, O> {
         return connect(Pipeline.from(function));
     }
 
-    default <N> Pipeline<I, N> connect(BiFunction<O, Integer, N> function) {
-        return connect(Pipeline.from(function));
-    }
-
     default Pipeline<I, O> filter(Predicate<O> predicate) {
         return connect(getFilter(predicate));
     }
@@ -148,6 +155,17 @@ public interface Pipeline<I, O> {
 
     default Pipeline<I, O> peek(Consumer<O> watcher) {
         return new Pipeline<>() {
+            @Override
+            public void before(int size) {
+                Pipeline.this.before(size);
+            }
+
+            @Override
+            public O process(I input, int index) {
+                // unused.
+                throw new IllegalStateException();
+            }
+
             @Override
             public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) -> {
@@ -167,6 +185,16 @@ public interface Pipeline<I, O> {
 
     default Pipeline<I, O> peek(BiConsumer<O, Integer> watcher) {
         return new Pipeline<>() {
+            @Override
+            public void before(int size) {
+                Pipeline.this.before(size);
+            }
+
+            @Override
+            public O process(I input, int index) {
+                throw new IllegalStateException();
+            }
+
             @Override
             public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
                 Pipeline.this.process(input, index, (firstOutput, index2) -> {
@@ -192,47 +220,51 @@ public interface Pipeline<I, O> {
         return new ParallelPipeline<>(this, threadCount);
     }
 
-    default void after() {
+    default Pipeline<I, O> withTimeout(int timeout, TimeUnit timeUnit, O defaultResult) {
+        return new TimeoutPipeline<>(timeout, timeUnit, this, defaultResult);
+    }
 
+    /**
+     * This method is called before the first input gets processed.
+     *
+     * @param size the size of the batch to process.
+     */
+    default void before(int size) {
+        // empty by default
+    }
+
+    /**
+     * This method is called after the processing of a batch.
+     */
+    default void after() {
+        // empty by default
     }
 
     static <T> Pipeline<T, T> getFilter(Predicate<T> predicate) {
-        return (input, index, outputConsumer) -> {
+        return (input, index) -> {
             if (predicate.test(input)) {
-                outputConsumer.accept(input, index);
+                return input;
             } else {
-                outputConsumer.skip(index);
+                return null;
             }
         };
     }
 
     static <T> Pipeline<T, T> getFilter(BiPredicate<T, Integer> predicate) {
-        return (input, index, outputConsumer) -> {
-            if (input != null && predicate.test(input, index)) {
-                outputConsumer.accept(input, index);
+        return (input, index) -> {
+            if (predicate.test(input, index)) {
+                return input;
             } else {
-                outputConsumer.skip(index);
+                return null;
             }
         };
     }
 
     static <T, R> Pipeline<T, R> from(Function<T, R> function) {
-        return (input, index, outputConsumer) -> {
-            if (input != null) {
-                outputConsumer.accept(function.apply(input), index);
-            } else {
-                outputConsumer.skip(index);
-            }
-        };
+        return (input, index) -> function.apply(input);
     }
 
     static <T, R> Pipeline<T, R> from(BiFunction<T, Integer, R> function) {
-        return (input, index, outputConsumer) -> {
-            if (input != null) {
-                outputConsumer.accept(function.apply(input, index), index);
-            } else {
-                outputConsumer.skip(index);
-            }
-        };
+        return function::apply;
     }
 }

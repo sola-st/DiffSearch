@@ -11,21 +11,20 @@ import static java.text.MessageFormat.format;
 
 public class ProgressWatcher<T> implements Pipeline<T, T> {
 
-    private final int size;
+    private int size;
     private final String progressName;
     private final double[] steps;
     private int currentStepIndex = 0;
     private long startTime = 0;
     private final Logger logger = LoggerFactory.getLogger(ProgressWatcher.class);
 
-    public ProgressWatcher(int size, String progressName, double... steps) {
-        this.size = size;
+    public ProgressWatcher(String progressName, double... steps) {
         this.progressName = progressName;
         this.steps = steps;
     }
 
-    public ProgressWatcher(int size, String progressName) {
-        this(size, progressName, IntStream.range(1, 1000).mapToDouble(i -> i / 1000.0).toArray());
+    public ProgressWatcher(String progressName) {
+        this(progressName, IntStream.range(1, 1000).mapToDouble(i -> i / 1000.0).toArray());
     }
 
     @Override
@@ -51,6 +50,16 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
             }
         }
         outputConsumer.accept(input, index);
+    }
+
+    @Override
+    public T process(T input, int index) {
+        throw new IllegalStateException(); // unused
+    }
+
+    @Override
+    public void before(int size) {
+        this.size = size;
     }
 
     @Override

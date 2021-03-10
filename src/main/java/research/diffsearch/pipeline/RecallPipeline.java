@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.CodeChangeWeb;
 import research.diffsearch.pipeline.base.DiffsearchResult;
-import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
@@ -83,34 +82,29 @@ public class RecallPipeline implements
     }
 
     @Override
-    public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> resultConsumer) {
-        if (input != null) {
-            try {
-                logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
+    public DiffsearchResult process(DiffsearchResult input, int index) {
+        try {
+            logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
 
-                String query = input.getQuery();
-                int numOfCandidates = input.getCandidateChangeCount().orElse(0);
-                int expected = 1; // by default recall will result in 0%
-                if (query != null) {
-                    expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
-                }
-                input.setExpectedValueCount(expected);
-
-                computeAndSaveRecall(input.getResults().size(), query, expected);
-
-                computeAndSaveCandidatePrecision(input, expected, input.getResults().size(), numOfCandidates);
-
-                computeAndSaveReciprocalRank(input);
-
-                savePerformance(input);
-
-                resultConsumer.accept(input, index);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+            String query = input.getQuery();
+            int numOfCandidates = input.getCandidateChangeCount().orElse(0);
+            int expected = 1; // by default recall will result in 0%
+            if (query != null) {
+                expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
             }
-        } else {
-            resultConsumer.skip(index);
+            input.setExpectedValueCount(expected);
+
+            computeAndSaveRecall(input.getResults().size(), query, expected);
+
+            computeAndSaveCandidatePrecision(input, expected, input.getResults().size(), numOfCandidates);
+
+            computeAndSaveReciprocalRank(input);
+
+            savePerformance(input);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
+        return input;
     }
 
     private static void printOutputToFile(DiffsearchResult result) {

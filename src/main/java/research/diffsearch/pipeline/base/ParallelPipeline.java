@@ -39,6 +39,12 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
         executorService = Executors.newFixedThreadPool(threadCount);
     }
 
+    @Override
+    public void before(int size) {
+        queue.clear();
+        basePipeline.before(size);
+    }
+
     private void passOnResult(O o, int innerIndex, IndexedConsumer<O> outputConsumer) {
         if (innerIndex == currentIndex.get()) {
             currentIndex.getAndIncrement();
@@ -81,9 +87,16 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
     }
 
     @Override
+    public O process(I input, int index) {
+        throw new IllegalStateException(); // unused
+    }
+
+    @Override
     public void after() {
         executorService.shutdown();
         syncExecutorService.shutdown();
         basePipeline.after();
     }
+
+
 }
