@@ -106,9 +106,9 @@ def searching(index_path,
                     #   distances = distances[:10 * k]
                     # indices = indices[:10 * k]
                 else:
-                    feature_count_query = len([x for vector in query_feature_vectors for x in vector if x == 1])
-                    logger.debug(f"feature_count_query = {feature_count_query}")
-                    search_range: int = max(15, max_additional_features - feature_count_query)
+                    feature_count_query = len([x for vector in query_feature_vectors for x in vector if x > 0])
+
+                    search_range: int = max(10, max_additional_features - feature_count_query)
                     for vector in query_feature_vectors:
                         for feature in vector:
                             if feature > 0:
