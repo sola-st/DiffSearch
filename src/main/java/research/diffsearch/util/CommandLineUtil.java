@@ -34,6 +34,7 @@ public class CommandLineUtil {
                 .addOption("extractors", true, "which feature extractors to use. Syntax: <name>(:<bits>)?, separated with commas")
                 .addOption("help", "show help")
                 .addOption("rs", "range-search", true, "if faiss should use range search. Optional: How many additional features a code changes may have in comparison to the query.")
+                .addOption("mt", "timeout", true, "matching timeout, after this time matching gets cancelled.")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
@@ -112,6 +113,9 @@ public class CommandLineUtil {
                 if (!maxCount.isBlank()) {
                     Config.rangeSearchMaxAdditionalFeatures = parseInt(maxCount);
                 }
+            }
+            if (commandLine.hasOption("mt")) {
+                Config.matchingTimeoutSeconds = parseInt(commandLine.getOptionValue("mt"));
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());
