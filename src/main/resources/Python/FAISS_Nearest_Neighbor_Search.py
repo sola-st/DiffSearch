@@ -108,7 +108,9 @@ def searching(index_path,
                 else:
                     feature_count_query = len([x for vector in query_feature_vectors for x in vector if x > 0])
 
-                    search_range: int = max(10, max_additional_features - feature_count_query * 4)
+                    candidate_change_limit = max(k, k * (50 - query_feature_vectors))
+
+                    search_range: int = max(10, max_additional_features)
                     for vector in query_feature_vectors:
                         for feature in vector:
                             if feature > 0:
@@ -121,6 +123,8 @@ def searching(index_path,
 
                     if len(indices) < k:
                         distances, indices = index.search(query_feature_vectors, k)
+                    if len(indices) > candidate_change_limit:
+                        distances, indices = distances[:candidate_change_limit], indices[:candidate_change_limit]
 
                 logger.info('Searching finished')
 
