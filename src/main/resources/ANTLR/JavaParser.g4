@@ -515,8 +515,8 @@ parExpression
 
 expressionList
     : WILDCARD
-    |  expression (',' expression)*
     | EXPR (',' EXPR)*
+    |  expression (',' expression)*
     ;
 
 methodCall
