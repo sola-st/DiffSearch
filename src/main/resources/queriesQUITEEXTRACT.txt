@@ -1,0 +1,11 @@
+_ --> nativeImageMimes.ID();
+TruffleEventInstrument.this.toolEventListener.returnValue(EXPR); --> ASTInstrument.this.astListener.returnValue(ASTInstrument.this.probe, node, vFrame, result);
+_ -->import com.oracle.graal.api.ID.*;
+_ -->import java.lang.reflect.ID; import java.util.Collection;
+Drawable helpDrawable OP com.hippo.vector.VectorDrawable.create(context, R.xml.ic_help_circle_x24); mNormalSearchModeHelp.setDrawable(helpDrawable); -->_
+return new ID(name, v); --> return new ID(field(), v);
+public static void denoise(double[] t, Wavelet wavelet) { --> static void denoise(<...>) {
+value = OBJECT_MAPPER.ID<1>(ID<2>, new TypeReference<Map<Object, Object>>() { }); --> value = OBJECT_MAPPER.ID<1>(ID<2>, TypeReferences.MAP_OBJECT_OBJECT);
+public void createAlias(Type type, int aliasedValue) { GlobalAlias alias = EXPR; --> public void createAlias(Type type, int aliasedValue, long linkage) { GlobalAlias alias = EXPR;
+int numFeature = dataMeta.featureMeta.numFeature; --> int numFeature = dataStore.featureMeta.numFeature;
+out.println(LT); --> out.println(" // Checkstyle: resume");

@@ -1,0 +1,11 @@
+_ --> ID.ID();
+ID.this.toolEventListener.ID<0>(EXPR); --> ID.this.astListener.ID<0>(EXPR);
+_ -->import com.ID.ID.ID.ID.*;
+_ -->import java.ID.ID.ID; import <...>;
+ID ID<0> OP EXPR; ID.ID(ID<0>); -->_
+return new ID(ID, ID<1>); --> return new ID(ID(), ID<1>);
+public static void ID(<...>) { --> static void ID(<...>) {
+EXPR = ID<0>.ID<1>(ID<2>, <...>); --> EXPR = ID<0>.ID<1>(ID<2>, <...>);
+public void createAlias(ID ID, ID<0> ID<1>) { <...> --> public void createAlias(ID ID, ID<0> ID<1>, ID ID) { <...>
+ID numFeature = EXPR; --> ID numFeature = EXPR;
+ID<0>.println(LT); --> ID<0>.println(LT);
