@@ -70,15 +70,20 @@ public class Util {
         String repository = "";
         String commit = "";
 
-        List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
-        if (items.size() > 2) {
-            commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
-            // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
-            repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("\\.", "/");
-        } else {
-            return "";
+        try {
+
+            List<String> items = Arrays.asList(candidate.split("\\s*@@\\s*"));
+            if (items.size() > 2) {
+                commit = items.get(0).replaceAll("commit", "").replaceAll(" ", "");
+                // String repository = items.get(1).replaceAll("\\/[a-zA-Z]+-[a-zA-Z]+\\.patch", "");
+                repository = StringUtils.substringBetween(items.get(2), "patch/", ".patch").replaceAll("\\.", "/");
+            } else {
+                return "";
+            }
+            return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
+        } catch (Exception e) {
+            return "errorUrl --> errorUrl";
         }
-        return candidateUrl + repository + "/commit/" + commit + "-->" + items.get(1);
     }
 
     public static String computeCandidateUrl_effectiveness(String candidate) {
