@@ -9,7 +9,7 @@ public class Config {
 
 
     //Programming language supported: PYTHON3, JAVA, JAVASCRIPT
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
     public static String index_path = "";
