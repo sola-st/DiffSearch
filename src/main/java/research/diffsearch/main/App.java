@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.Java_Tree;
+import research.diffsearch.tree.Javascript_Tree;
+import research.diffsearch.tree.Python3_Tree;
 import research.diffsearch.util.CliUtil;
 import research.diffsearch.util.ProgrammingLanguage;
 
@@ -169,5 +171,31 @@ public abstract class App implements Runnable {
         Matching matching = new Matching(queryTree, queryJavaTree.get_parser());
 
         return matching.isMatch(changeTree, changeJavaTree.get_parser());
+    }
+
+    public static boolean runJunit_Python(String query, String candidate) {
+        Python3_Tree queryPython3Tree = new Python3_Tree(query);
+
+        ParseTree queryTree = queryPython3Tree.get_parsetree();
+
+        Python3_Tree changePython3Tree = new Python3_Tree(candidate);
+        ParseTree changeTree = changePython3Tree.get_parsetree();
+
+        Matching matching = new Matching(queryTree, queryPython3Tree.get_parser());
+
+        return matching.isMatch(changeTree, changePython3Tree.get_parser());
+    }
+
+    public static boolean runJunit_JavaScript(String query, String candidate) {
+        Javascript_Tree queryJavascriptTree = new Javascript_Tree(query);
+
+        ParseTree queryTree = queryJavascriptTree.get_parsetree();
+
+        Javascript_Tree changeJavascriptTree = new Javascript_Tree(candidate);
+        ParseTree changeTree = changeJavascriptTree.get_parsetree();
+
+        Matching matching = new Matching(queryTree, queryJavascriptTree.get_parser());
+
+        return matching.isMatch(changeTree, changeJavascriptTree.get_parser());
     }
 }
