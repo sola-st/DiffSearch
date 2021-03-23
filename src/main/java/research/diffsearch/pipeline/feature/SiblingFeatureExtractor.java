@@ -5,8 +5,6 @@ import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.List;
-
 import static research.diffsearch.util.Util.isQueryKeyword;
 
 public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
@@ -16,8 +14,8 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
-                                         List<String> ruleNames, boolean isQuery) {
+    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section, boolean isQuery) {
+        var ruleNames = getProgrammingLanguage().getRuleNames();
         for (int i = 0; i < t.getChildCount() - 1; i++) {
             for (int j = i + 1; j < t.getChildCount(); j++) {
                 var child = t.getChild(i);
@@ -32,7 +30,7 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
-            extractFeaturesRecursive(t.getChild(i), section, ruleNames, isQuery);
+            extractFeaturesRecursive(t.getChild(i), section, isQuery);
         }
     }
 

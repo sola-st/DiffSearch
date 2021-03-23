@@ -105,7 +105,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "node;sibling;rulecount";
+    public static String featureExtractors = "node;sibling;rulecount;descendant:512";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider

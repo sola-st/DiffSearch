@@ -5,8 +5,6 @@ import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.Arrays;
-
 public class SplitFeatureExtractor implements FeatureExtractor {
 
     private final AbstractRecursiveFeatureExtractor baseExtractor;
@@ -28,15 +26,15 @@ public class SplitFeatureExtractor implements FeatureExtractor {
             baseExtractor.extractFeaturesRecursive(parseTree.getChild(0),
                     section.getSubsection(baseExtractor.getName() + " [old]",
                             0, baseExtractor.getFeatureVectorSectionLength()),
-                    Arrays.asList(ruleNames), isQuery);
+                    isQuery);
 
             baseExtractor.extractFeaturesRecursive(parseTree.getChild(2),
                     section.getSubsection(baseExtractor.getName() + "[new]",
                             baseExtractor.getFeatureVectorSectionLength(),
                             baseExtractor.getFeatureVectorSectionLength()),
-                    Arrays.asList(ruleNames), isQuery);
+                    isQuery);
         } else {
-            baseExtractor.extractFeaturesRecursive(parseTree, section, Arrays.asList(ruleNames), isQuery);
+            baseExtractor.extractFeaturesRecursive(parseTree, section, isQuery);
         }
     }
 

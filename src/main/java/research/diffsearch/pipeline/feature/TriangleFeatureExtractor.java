@@ -6,8 +6,6 @@ import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
-import java.util.List;
-
 public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
     public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
@@ -15,8 +13,8 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
-                                         List<String> ruleNames, boolean isQuery) {
+    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section, boolean isQuery) {
+        var ruleNames = getProgrammingLanguage().getRuleNames();
         StringBuilder sum = new StringBuilder();
         sum.append(Trees.getNodeText(t, ruleNames));
 
@@ -38,7 +36,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
                 continue;
             }
 
-            extractFeaturesRecursive(t.getChild(i), section, ruleNames, isQuery);
+            extractFeaturesRecursive(t.getChild(i), section, isQuery);
         }
     }
 }

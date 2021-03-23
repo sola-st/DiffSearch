@@ -8,6 +8,7 @@ import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.Util;
@@ -78,6 +79,8 @@ public class OnlinePipeline implements
 
             if (!Config.SILENT) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
+                var tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
+                System.out.println(tree.getTreeString());
             }
 
             // matching in this pipeline
@@ -90,7 +93,7 @@ public class OnlinePipeline implements
                         .setCandidateChangeCount(candidates.size());
 
                 var codeChanges = new MatchingPipeline(getProgrammingLanguage())
-                        .parallelUntilHere(16)
+                        .parallelUntilHere(Config.threadCount)
                         .collect(dfsResult)
                         .map(DiffsearchResult::getResults)
                         .orElse(Collections.emptyList());

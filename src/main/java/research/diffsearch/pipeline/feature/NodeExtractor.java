@@ -6,24 +6,21 @@ import research.diffsearch.Config;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
-import java.util.List;
-
 public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     public NodeExtractor(ProgrammingLanguage language, int featureVectorLength) {
         super(language, featureVectorLength);
     }
 
     @Override
-    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
-                                         List<String> ruleNames, boolean isQuery) {
-        var nodeText = Trees.getNodeText(t, ruleNames);
+    public void extractFeaturesRecursive(Tree t, FeatureVector.Section section, boolean isQuery) {
+        var nodeText = Trees.getNodeText(t, getProgrammingLanguage().getRuleNames());
 
         if (shouldExtractFeature(nodeText, isQuery)) {
             section.addFeature(nodeText);
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
-            extractFeaturesRecursive(t.getChild(i), section, ruleNames, isQuery);
+            extractFeaturesRecursive(t.getChild(i), section, isQuery);
         }
     }
 

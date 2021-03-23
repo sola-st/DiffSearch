@@ -79,6 +79,9 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
             case "rulecount":
                 return new SplitFeatureExtractor(new RuleCountExtractor(language,
                         new RuleMaxOccurrenceCounter(language)));
+            case "descendant":
+                return new SplitFeatureExtractor(
+                        new DescendentFeatureExtractor(language, length / 2));
             case "equal":
                 return new EqualNodesExtractor(language, length);
         }

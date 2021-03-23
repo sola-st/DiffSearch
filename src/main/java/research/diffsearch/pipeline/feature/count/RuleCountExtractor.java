@@ -8,7 +8,6 @@ import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounter.getRuleCountMapForTree;
 
@@ -23,10 +22,10 @@ public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
 
     @Override
     public void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
-                                         List<String> ruleNames, boolean isQuery) {
+                                         boolean isQuery) {
+
+        var ruleNames = getProgrammingLanguage().getRuleNames();
         var nodeText = Trees.getNodeText(t, ruleNames);
-
-
         var countMap = getRuleCountMapForTree(t, ruleNames, new HashMap<>());
 
         var index = 0;

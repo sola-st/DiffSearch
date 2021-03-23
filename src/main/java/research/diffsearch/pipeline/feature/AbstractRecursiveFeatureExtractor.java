@@ -5,7 +5,6 @@ import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtractor {
@@ -23,7 +22,6 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
     }
 
     public abstract void extractFeaturesRecursive(Tree t, FeatureVector.Section section,
-                                                  List<String> ruleNames,
                                                   boolean isQuery);
 
     @Override
@@ -31,8 +29,7 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
         String[] ruleNames = queryTree.getParser().getRuleNames();
 
-        extractFeaturesRecursive(queryTree.getParseTree(), section,
-                Arrays.asList(ruleNames), isQuery);
+        extractFeaturesRecursive(queryTree.getParseTree(), section, isQuery);
     }
 
     @Override

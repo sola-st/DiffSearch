@@ -6,6 +6,4 @@ Drawable ID<0> = com.hippo.vector.VectorDrawable.create(context, ID.ID.ID); mNor
 return new ID(name, v); --> return new ID(field(), v);
 public static void denoise(double[] t, Wavelet wavelet) { --> static void denoise(<...>) {
 value = OBJECT_MAPPER.ID<1>(ID<2>, new TypeReference<Map<Object, Object>>() { }); --> value = OBJECT_MAPPER.ID<1>(ID<2>, TypeReferences.MAP_OBJECT_OBJECT);
-public void createAlias(Type type, int aliasedValue) { <...> --> public void createAlias(Type type, int aliasedValue, long linkage) { GlobalAlias alias = <...>;
-int numFeature = dataMeta.featureMeta.numFeature; --> int numFeature = dataStore.featureMeta.numFeature;
 out.println(LT); --> out.println(" // Checkstyle: resume");
