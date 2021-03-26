@@ -8,8 +8,6 @@ import research.diffsearch.util.Util;
 
 import java.util.Arrays;
 
-import static research.diffsearch.pipeline.feature.AbstractRecursiveFeatureExtractor.isBlacklisted;
-
 public class EqualNodesExtractor implements FeatureExtractor {
 
     private final int sectionLength;
@@ -86,13 +84,8 @@ public class EqualNodesExtractor implements FeatureExtractor {
     }
 
     private static String createInheritanceLabel(ParseTreeNode node) {
-        if (!node.isRoot() && !isBlacklisted(node.getNodeLabel())) {
-            if (!node.getParent().isRoot() && !isBlacklisted(node.getParent().getNodeLabel())) {
-                return node.getParent().getParent().getNodeLabel() +
-                        "." + node.getParent().getNodeLabel() + "." + node.getNodeLabel();
-            } else {
-                return node.getParent().getNodeLabel() + "." + node.getNodeLabel();
-            }
+        if (!node.isRoot()) {
+            return node.getParent().getNodeLabel() + "." + node.getNodeLabel();
         }
         return "";
     }
