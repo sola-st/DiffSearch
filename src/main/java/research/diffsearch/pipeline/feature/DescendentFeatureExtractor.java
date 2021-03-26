@@ -16,8 +16,7 @@ public class DescendentFeatureExtractor extends AbstractRecursiveFeatureExtracto
 
     @Override
     public void extractFeaturesRecursive(Tree t, Section section, boolean isQuery) {
-        var ruleNames = getProgrammingLanguage().getRuleNames();
-        String parentChildText = Trees.getNodeText(t, ruleNames);
+        String parentChildText = Trees.getNodeText(t, getProgrammingLanguage().getRuleNames());
 
         if (!parentChildText.equals("querySnippet")) {
             for (int i = 0; i < t.getChildCount(); i++) {
@@ -31,12 +30,10 @@ public class DescendentFeatureExtractor extends AbstractRecursiveFeatureExtracto
     }
 
     private void extractFeaturesForParent(Tree t, Section section, boolean isQuery, String parentNode) {
-        var ruleNames = getProgrammingLanguage().getRuleNames();
-        var childNodeText = Trees.getNodeText(t, ruleNames);
+        var childNodeText = Trees.getNodeText(t, getProgrammingLanguage().getRuleNames());
         if (shouldExtractFeature(childNodeText, isQuery)) {
-            var feature = parentNode + ' ' + childNodeText;
 
-            section.addFeature(feature);
+            section.addFeature(parentNode + ' ' + childNodeText);
         }
 
         for (int i = 0; i < t.getChildCount(); i++) {
