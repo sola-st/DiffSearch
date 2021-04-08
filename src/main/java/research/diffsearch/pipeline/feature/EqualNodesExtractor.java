@@ -76,18 +76,11 @@ public class EqualNodesExtractor implements FeatureExtractor {
                     mainSection.addFeature(firstLabel);
                 }
 
-                var firstParentLabel = createInheritanceLabel(firstLeaf.getParent());
-                var secondParentLabel = createInheritanceLabel(secondLeaf.getParent());
+                var firstParentLabel = firstLeaf.getParent().getNodeLabel();
+                var secondParentLabel = secondLeaf.getParent().getNodeLabel();
                 parentSection.addFeature(firstParentLabel + ' ' + secondParentLabel);
             }
         }
-    }
-
-    private static String createInheritanceLabel(ParseTreeNode node) {
-        if (!node.isRoot()) {
-            return node.getParent().getNodeLabel() + "." + node.getNodeLabel();
-        }
-        return "";
     }
 
     private static boolean isNoQueryKeywordOrIsNamedKeyword(String firstLabel) {
