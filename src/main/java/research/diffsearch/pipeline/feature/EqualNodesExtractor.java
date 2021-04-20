@@ -71,7 +71,7 @@ public class EqualNodesExtractor implements FeatureExtractor {
         if (isNoQueryKeywordOrIsNamedKeyword(firstLabel)
             && (isNoQueryKeywordOrIsNamedKeyword(secondLabel))) {
 
-            if (firstLabel.length() > 1 && firstLabel.equals(secondLabel)) {
+            if (firstLabel.equals(secondLabel)) {
                 if (!Util.isQueryKeyword(firstLabel)) {
                     mainSection.addFeature(firstLabel);
                 }
