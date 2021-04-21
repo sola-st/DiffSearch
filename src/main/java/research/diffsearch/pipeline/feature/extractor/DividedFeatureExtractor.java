@@ -1,22 +1,25 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.ParseTree;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
-public class SplitFeatureExtractor implements FeatureExtractor {
+/**
+ * This feature extractor uses another {@link AbstractRecursiveFeatureExtractor} and extracts features
+ * using this extractor but divided in the old and new part of the code change.
+ */
+public class DividedFeatureExtractor implements FeatureExtractor {
 
     private final AbstractRecursiveFeatureExtractor baseExtractor;
 
-    public SplitFeatureExtractor(AbstractRecursiveFeatureExtractor baseExtractor) {
+    public DividedFeatureExtractor(AbstractRecursiveFeatureExtractor baseExtractor) {
         this.baseExtractor = baseExtractor;
     }
 
     @Override
-    public void extractFeatures(String codeChange,
-                                         FeatureVector.Section section,
-                                         boolean isQuery) {
+    public void extractFeatures(String codeChange, FeatureVector.Section section, boolean isQuery) {
 
         AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
         String[] ruleNames = queryTree.getParser().getRuleNames();

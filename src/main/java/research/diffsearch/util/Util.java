@@ -68,7 +68,7 @@ public class Util {
 
     public static String featureVectorToString(FeatureVector vector) {
         return Arrays.stream(vector.getVector())
-                .mapToObj(Integer::toString)
+                .mapToObj(Double::toString)
                 .collect(Collectors.joining(","));
     }
 

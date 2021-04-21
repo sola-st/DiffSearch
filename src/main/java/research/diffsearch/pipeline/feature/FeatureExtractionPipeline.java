@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
 
 import java.util.ArrayList;
 import java.util.List;

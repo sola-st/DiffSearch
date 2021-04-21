@@ -51,36 +51,6 @@ public class RecallPipeline implements
         readExpectedValuesFromFile();
     }
 
-    @SafeVarargs
-    public static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
-                                         Map<String, ?> map, String delim, Map<String, ?>... additionalMaps)
-            throws IOException {
-
-        try (var writer = getWriter(path)) {
-            var keys = orderedKeys == null ? map.keySet() : orderedKeys;
-
-            keys.forEach(query -> {
-                try {
-                    writer.write(query);
-                    Stream.concat(Stream.of(map), Stream.of(additionalMaps))
-                            .forEach(valueMap -> {
-                                var expected = valueMap.getOrDefault(query, null);
-                                try {
-                                    writer.write(delim);
-                                    // adjust for german excel
-                                    writer.write(Objects.toString(expected).replace('.', ','));
-                                } catch (IOException exception) {
-                                    throw new RuntimeException(exception);
-                                }
-                            });
-                    writer.newLine();
-                } catch (Exception exception) {
-                    logger.error(exception.getMessage(), exception);
-                }
-            });
-        }
-    }
-
     @Override
     public DiffsearchResult process(DiffsearchResult input, int index) {
         try {
@@ -136,7 +106,7 @@ public class RecallPipeline implements
                     .peek(RecallPipeline::printOutputToFile)
                     .connect(DiffsearchResult::getResults)
                     .connect(Collection::size)
-                    .collect(dfsResult)
+                    .execute(dfsResult)
                     .orElse(0);
 
             expectedValues.put(query, expectedValue);
@@ -204,6 +174,36 @@ public class RecallPipeline implements
             logger.debug("Recall results saved.");
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);
+        }
+    }
+
+    @SafeVarargs
+    public static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
+                                         Map<String, ?> map, String delim, Map<String, ?>... additionalMaps)
+            throws IOException {
+
+        try (var writer = getWriter(path)) {
+            var keys = orderedKeys == null ? map.keySet() : orderedKeys;
+
+            keys.forEach(query -> {
+                try {
+                    writer.write(query);
+                    Stream.concat(Stream.of(map), Stream.of(additionalMaps))
+                            .forEach(valueMap -> {
+                                var expected = valueMap.getOrDefault(query, null);
+                                try {
+                                    writer.write(delim);
+                                    // adjust for german excel
+                                    writer.write(Objects.toString(expected).replace('.', ','));
+                                } catch (IOException exception) {
+                                    throw new RuntimeException(exception);
+                                }
+                            });
+                    writer.newLine();
+                } catch (Exception exception) {
+                    logger.error(exception.getMessage(), exception);
+                }
+            });
         }
     }
 

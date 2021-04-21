@@ -14,6 +14,7 @@ public class DiffsearchResult {
     private String query;
     private Collection<CodeChangeWeb> results;
 
+    // these measures are nullable
     private Long performance;
     private Integer candidateChangeCount;
     private Integer expectedValueCount;

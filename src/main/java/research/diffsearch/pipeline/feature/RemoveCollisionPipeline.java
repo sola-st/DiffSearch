@@ -15,7 +15,7 @@ public class RemoveCollisionPipeline implements Pipeline<FeatureVector, FeatureV
     private int maxIndex = 0;
     private int collisions = 0;
     private int greaterZeroOccurrences = 0;
-    private int maxCount = 0;
+    private double maxCount = 0;
 
     @Override
     public FeatureVector process(FeatureVector input, int index) {

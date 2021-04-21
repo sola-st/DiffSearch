@@ -1,8 +1,9 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import static research.diffsearch.util.Util.isQueryKeyword;

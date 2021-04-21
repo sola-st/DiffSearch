@@ -10,6 +10,11 @@ import research.diffsearch.util.Util;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * DiffSearch mode that executes a single query.
+ *
+ * Usage: diffsearch -q <i>query_string</i>
+ */
 public class QueryMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(QueryMode.class);
@@ -22,8 +27,8 @@ public class QueryMode extends App {
 
             Socket socketFaiss = getFaissSocket();
 
-            long currentTime = System.currentTimeMillis();
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                    // add recall pipeline if necessary
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, Config.query))
                     .peek(result -> logger.info("Found {} results", result.getResults().size()))
                     .peek(Util::printOutputList)

@@ -3,8 +3,8 @@ package research.diffsearch.pipeline.feature.count;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.feature.AbstractRecursiveFeatureExtractor;
 import research.diffsearch.pipeline.feature.FeatureVector;
+import research.diffsearch.pipeline.feature.extractor.AbstractRecursiveFeatureExtractor;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.HashMap;

@@ -70,7 +70,7 @@ public class MatchingPipeline
                             .withTimeout(Config.matchingTimeoutSeconds, TimeUnit.SECONDS, null)
                             .parallelUntilHere(Config.threadCount)
                             .connect(new ProgressWatcher<>("Matching"))
-                            .collect(input.getResults());
+                            .execute(input.getResults());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

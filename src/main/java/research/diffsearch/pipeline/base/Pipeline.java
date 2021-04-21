@@ -18,6 +18,7 @@ public interface Pipeline<I, O> {
      *
      * @param input the input. Is always non null.
      * @param index the index of the input.
+     * @return the result or null, if the input should be filtered out.
      * @implNote subclasses should overwrite this if they do not need an asynchronous result
      * callback.
      */
@@ -41,27 +42,21 @@ public interface Pipeline<I, O> {
         }
     }
 
-    default void execute(Iterable<I> inputs, int size) {
-        collect(inputs, size);
+    /**
+     * Executes the pipeline on the given input.
+     *
+     * @param input the input to process
+     * @return the calculated output, possibly empty.
+     */
+    default Optional<O> execute(I input) {
+        return execute(List.of(input)).stream().findFirst();
     }
 
-    default void execute(Collection<I> inputs) {
-        execute(inputs, inputs.size());
+    default List<O> execute(Collection<I> inputs) {
+        return execute(inputs, inputs.size());
     }
 
-    default void execute(I input) {
-        execute(List.of(input));
-    }
-
-    default Optional<O> collect(I input) {
-        return collect(List.of(input)).stream().findFirst();
-    }
-
-    default List<O> collect(Collection<I> inputs) {
-        return collect(inputs, inputs.size());
-    }
-
-    default List<O> collect(Iterable<I> inputs, int size) {
+    default List<O> execute(Iterable<I> inputs, int size) {
         if (!inputs.iterator().hasNext()) {
             return Collections.emptyList();
         }

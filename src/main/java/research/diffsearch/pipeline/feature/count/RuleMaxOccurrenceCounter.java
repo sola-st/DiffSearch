@@ -14,10 +14,7 @@ import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static research.diffsearch.tree.TreeFactory.getChangeTree;
@@ -65,6 +62,7 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
     }
 
     private void buildRuleCountMaps() {
+        Collection<CodeChangeWeb> inputs = getCodeChanges(getProgrammingLanguage());
         Pipeline.from((Function<CodeChangeWeb, CodeChangeWeb>) codeChange -> {
             AbstractTree tree = getChangeTree(codeChange.getFullChangeString(), language);
             ParseTree parseTree = tree.getParseTree();
@@ -79,8 +77,7 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
             }
             return codeChange;
         }).connect(new ProgressWatcher<>(
-                "Counting features"))
-        .execute(getCodeChanges(getProgrammingLanguage()));
+                "Counting features")).execute(inputs, inputs.size());
     }
 
     private static void mergeMapsForMaximum(Map<String, Integer> mainMap, Map<String, Integer> mergeMap) {

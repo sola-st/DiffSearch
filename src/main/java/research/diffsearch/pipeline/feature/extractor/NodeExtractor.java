@@ -1,11 +1,15 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
+/**
+ * This feature extractor extracts a feature for each node in the parse tree.
+ */
 public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     public NodeExtractor(ProgrammingLanguage language, int featureVectorLength) {
         super(language, featureVectorLength);
@@ -28,6 +32,5 @@ public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
                 || !Util.isQueryKeyword(nodeText));
-               /*&& !isBlacklisted(nodeText);*/
     }
 }

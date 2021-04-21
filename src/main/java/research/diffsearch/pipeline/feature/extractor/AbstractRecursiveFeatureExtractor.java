@@ -1,11 +1,12 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtractor {
 
@@ -43,6 +44,6 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
     }
 
     protected static boolean isBlacklisted(String nodeText) {
-        return List.of("multipleStatements", "blockStatement", "querySnippet", "statement").contains(nodeText);
+        return Objects.equals("querySnippet", nodeText);
     }
 }

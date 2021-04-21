@@ -1,5 +1,6 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.tree.TreeFactory;

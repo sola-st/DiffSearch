@@ -105,7 +105,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "node;sibling;rulecount;descendant:512";
+    public static String featureExtractors = "node;sibling";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
@@ -116,7 +116,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 512;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 256;
 
     /**
      * The number of bits per feature that are used for unary counting
@@ -176,12 +176,21 @@ public class Config {
     public static boolean RANGE_SEARCH = false;
 
     /**
+     * If feature vectors should use tf-idf-weights.
+     */
+    public static boolean TFIDF = true;
+
+    /**
      * Max additional ones in features vectors when using range search.
      */
     public static int rangeSearchMaxAdditionalFeatures = 100;
 
     public static int ruleCountMaxCount = 8;
 
+    /**
+     * After this number of seconds, the matching process gets cancelled and its assumed that a
+     * candidate is not a match.
+     */
     public static int matchingTimeoutSeconds = 60;
 
     /**

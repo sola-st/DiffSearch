@@ -13,7 +13,6 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.System.currentTimeMillis;
 import static research.diffsearch.util.FilePathUtils.getAllLines;
 
 /**
@@ -33,7 +32,6 @@ public class BatchMode extends App {
 
             Socket socketFaiss = getFaissSocket();
 
-            long currentTime = currentTimeMillis();
             var queries = newArrayList(getAllLines(Config.batchFilePath));
 
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)

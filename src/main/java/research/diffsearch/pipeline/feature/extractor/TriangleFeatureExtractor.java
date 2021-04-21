@@ -1,11 +1,15 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
+/**
+ * This feature extractor extracts parse tree triangles from code changes.
+ */
 public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
     public TriangleFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
@@ -21,7 +25,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
         int i;
         for (i = 0; i < t.getChildCount(); i++) {
             String childNodeText = Trees.getNodeText(t.getChild(i), ruleNames);
-            if (isQuery || Config.EXTRACT_QUERY_KEYWORDS || !Util.isQueryKeyword(childNodeText)) {
+            if (!isQuery || Config.EXTRACT_QUERY_KEYWORDS || !Util.isQueryKeyword(childNodeText)) {
                 sum.append(childNodeText).append(" ");
             } else {
                 sum = new StringBuilder();

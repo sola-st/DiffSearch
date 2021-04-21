@@ -1,5 +1,6 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.count.RuleCountExtractor;
 import research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounter;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -37,10 +38,10 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      * Finds a feature extraction by name. <br>
      * Following names are allowed:
      * <ul>
-     *     <li><code>parentchild</code>: Returns a splitted {@link ParentChildFeatureExtractor}</li>
-     *     <li><code>triangle</code>: Returns a splitted {@link TriangleFeatureExtractor}</li>
-     *     <li><code>sibling</code>: Returns a splitted {@link SiblingFeatureExtractor}</li>
-     *     <li><code>node</code>: Returns a splitted {@link NodeExtractor}</li>
+     *     <li><code>parentchild</code>: Returns a divided {@link ParentChildFeatureExtractor}</li>
+     *     <li><code>triangle</code>: Returns a divided {@link TriangleFeatureExtractor}</li>
+     *     <li><code>sibling</code>: Returns a divided {@link SiblingFeatureExtractor}</li>
+     *     <li><code>node</code>: Returns a divided {@link NodeExtractor}</li>
      *     <li><code>editscript</code>: Returns a {@link EditScriptExtractor}</li>
      *     <li><code>rulecount</code>: Returns a {@link RuleCountExtractor}</li>
      *     <li><code>equal</code>: Returns a {@link EqualNodesExtractor}</li>
@@ -67,20 +68,20 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
 
         switch (name) {
             case "parentchild":
-                return new SplitFeatureExtractor(new ParentChildFeatureExtractor(language, length / 2));
+                return new DividedFeatureExtractor(new ParentChildFeatureExtractor(language, length / 2));
             case "triangle":
-                return new SplitFeatureExtractor(new TriangleFeatureExtractor(language, length / 2));
+                return new DividedFeatureExtractor(new TriangleFeatureExtractor(language, length / 2));
             case "sibling":
-                return new SplitFeatureExtractor(new SiblingFeatureExtractor(language, length / 2));
+                return new DividedFeatureExtractor(new SiblingFeatureExtractor(language, length / 2));
             case "editscript":
                 return new EditScriptExtractor(language, length);
             case "node":
-                return new SplitFeatureExtractor(new NodeExtractor(language, length / 2));
+                return new DividedFeatureExtractor(new NodeExtractor(language, length / 2));
             case "rulecount":
-                return new SplitFeatureExtractor(new RuleCountExtractor(language,
+                return new DividedFeatureExtractor(new RuleCountExtractor(language,
                         new RuleMaxOccurrenceCounter(language)));
             case "descendant":
-                return new SplitFeatureExtractor(
+                return new DividedFeatureExtractor(
                         new DescendentFeatureExtractor(language, length / 2));
             case "equal":
                 return new EqualNodesExtractor(language, length);

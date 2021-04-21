@@ -9,6 +9,7 @@ import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.JavaTree;
 import research.diffsearch.util.CommandLineUtil;
 
+import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,8 +18,10 @@ import java.net.Socket;
 
 /**
  * Main class and starting point of DiffSearch.
+ * DiffSearch can be run in different modes, such as feature extraction or batch mode. The sublasses of this
+ * class each represent a mode.
  */
-public abstract class App implements Runnable {
+public abstract class App implements Runnable, Closeable {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
@@ -49,6 +52,7 @@ public abstract class App implements Runnable {
 
             // after execution
             app.stopPythonServer();
+            app.close();
         } else {
             logger.error("No DiffSearch mode selected.");
         }
@@ -60,6 +64,16 @@ public abstract class App implements Runnable {
     public void startPythonServer() {
         if (!Config.ONLY_JAVA) {
             try {
+                /*
+                 * Args for the python nearest neighbor search:
+                 * - path to the index file
+                 * - k (number of candidate changes)
+                 * - host name of the server
+                 * - port of the server
+                 * - nprobe: number of clusters to consider
+                 * - range_search: true or false
+                 * - k_max: maximal number of candidate changes
+                 */
                 pythonRunner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
                         Config.INDEX_FILE,
                         Integer.toString(Config.k),
@@ -85,21 +99,53 @@ public abstract class App implements Runnable {
         }
     }
 
+    private static ServerSocket diffSearchServerSocket = null;
+
     protected static ServerSocket getDiffSearchServerSocket() throws IOException {
-        ServerSocket server;
-        server = new ServerSocket(Config.port_web);
+        if (diffSearchServerSocket == null) {
+            diffSearchServerSocket = new ServerSocket(Config.port_web);
+        }
         logger.info("DiffSearch Server active on port " + Config.port_web);
-        return server;
+        return diffSearchServerSocket;
     }
+
+    private static FileOutputStream serverLog = null;
 
     protected static FileOutputStream getServerLog() throws FileNotFoundException {
-        return new FileOutputStream(Config.server_log_file, true);
+        if (serverLog == null) {
+            serverLog = new FileOutputStream(Config.server_log_file, true);
+        }
+        return serverLog;
     }
+
+    private static Socket faissSocket = null;
 
     protected static Socket getFaissSocket() throws IOException {
-        return new Socket(Config.host, Config.port);
+        if (faissSocket == null) {
+            faissSocket = new Socket(Config.host, Config.port);
+        }
+        return faissSocket;
     }
 
+    public void close(){
+        try {
+            if (faissSocket != null) {
+                faissSocket.close();
+            }
+            if (serverLog != null) {
+                serverLog.close();
+            }
+            if (diffSearchServerSocket != null) {
+                diffSearchServerSocket.close();
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Method to run JUnit tests. Returns true, if the candidate matches the query.
+     */
     public static boolean runJunit(String query, String candidate) {
         JavaTree queryJavaTree = new JavaTree(query);
 

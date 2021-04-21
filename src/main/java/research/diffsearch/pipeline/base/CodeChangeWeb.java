@@ -2,12 +2,18 @@ package research.diffsearch.pipeline.base;
 
 import java.util.Objects;
 
+/**
+ * This POJO represents a code change. It contains the old and new part of the code change as well as information
+ * where it is extracted from.
+ */
 public class CodeChangeWeb {
     public String url = "";
     public String hunkLines = "";
     public String codeChangeOld;
     public String codeChangeNew;
     public String fullChangeString = null;
+
+    // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
     public int rank = 0;
 
     public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {

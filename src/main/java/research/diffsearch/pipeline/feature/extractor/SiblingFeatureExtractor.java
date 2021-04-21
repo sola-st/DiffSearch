@@ -1,12 +1,16 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import static research.diffsearch.util.Util.isQueryKeyword;
 
+/**
+ * This feature extractor extracts pairs of sibling from the parse tree.
+ */
 public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
     public SiblingFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {
@@ -38,8 +42,6 @@ public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
                 || (!isQueryKeyword(nodeText1)
-                    && !isQueryKeyword(nodeText2)))
-               /*&& !isBlacklisted(nodeText1)
-               && !isBlacklisted(nodeText2)*/;
+                    && !isQueryKeyword(nodeText2)));
     }
 }

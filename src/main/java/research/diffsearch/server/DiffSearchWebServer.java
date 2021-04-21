@@ -217,7 +217,7 @@ public class DiffSearchWebServer extends Thread {
         try {
             return new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, query))
-                    .collect(query)
+                    .execute(query)
                     .orElse(DiffsearchResult.internalError(query));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

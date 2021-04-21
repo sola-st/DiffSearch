@@ -6,21 +6,42 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a feature vector. It contains different section for each feature extractor.
+ */
 public class FeatureVector {
 
-    private final int[] vector;
+    private final double[] vector;
     private final String codeChange;
     private final Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
     private final int countBits;
     private final int quadraticProbingMaxCount;
 
+    /**
+     * Creates a new feature vector for the given code change.
+     *
+     * @param codeChange               the code change that this vector represents
+     * @param size                     the length of the vector
+     * @param countBits                the number of count bits per feature
+     * @param quadraticProbingMaxCount the maximum number of times quadratic probing is used
+     *                                 on a hash collision
+     */
     public FeatureVector(String codeChange, int size, int countBits, int quadraticProbingMaxCount) {
         this.codeChange = codeChange;
-        this.vector = new int[size * countBits];
+        this.vector = new double[size * countBits];
         this.countBits = countBits;
         this.quadraticProbingMaxCount = quadraticProbingMaxCount;
     }
 
+    /**
+     * Adds a feature to the feature vector at the given index. Uses quadratic probing and
+     * count bits on hash collisions.
+     *
+     * @param section the section in which the feature should be added.
+     * @param feature the feature as a string.
+     * @param index   position in the feature vector. The feature might end up at another index
+     *                if count bits or quadratic probing are used.
+     */
     public void addFeature(Section section, String feature, int index) {
         int actualIndex = index;
 
@@ -35,7 +56,7 @@ public class FeatureVector {
                 actualIndex = (countBits * actualIndex + offset) % vector.length;
                 if (vector[actualIndex] == 0) {
 
-                    vector[actualIndex] = 1;
+                    vector[actualIndex]++;
                     break outer;
                 }
             }
@@ -46,14 +67,25 @@ public class FeatureVector {
         typeToFeaturesMap.put(section, list);
     }
 
+    /**
+     * Returns a section of this feature vector with the given name.
+     *
+     * @param name          name of the section.
+     * @param startPosition index at where the sections starts.
+     * @param length        length of the section.
+     * @return the section of the feature vector.
+     */
     public Section getSection(String name, int startPosition, int length) {
         return new Section(startPosition, length, name);
     }
 
-    public int[] getVector() {
+    public double[] getVector() {
         return vector;
     }
 
+    /**
+     * @return the names of all sections this feature vector has.
+     */
     public Set<String> getCategories() {
         return typeToFeaturesMap.keySet()
                 .stream()
@@ -61,6 +93,12 @@ public class FeatureVector {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Returns all features in a section.
+     *
+     * @param category name of the section.
+     * @return all features of the given section.
+     */
     public List<Feature> getFeatureList(String category) {
         return typeToFeaturesMap.entrySet()
                 .stream()
@@ -74,6 +112,10 @@ public class FeatureVector {
         return codeChange;
     }
 
+    /**
+     * Represents a section of the feature vector. This is used to divide the vector in different
+     * areas for each feature extractor.
+     */
     public class Section {
         private final int startPosition;
         private final int length;
@@ -94,8 +136,8 @@ public class FeatureVector {
             FeatureVector.this.addFeature(this, featureString, index);
         }
 
-        public Section getSubsection(String name, int startPosition, int length) {
-            return FeatureVector.this.getSection(name, this.startPosition + startPosition, length);
+        public Section getSubsection(String name, int relativeStartPosition, int length) {
+            return FeatureVector.this.getSection(name, this.startPosition + relativeStartPosition, length);
         }
 
         public int getStartPosition() {
