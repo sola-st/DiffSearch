@@ -208,7 +208,7 @@ public interface Pipeline<I, O> {
     }
 
     default Pipeline<I, O> parallelUntilHere() {
-        return parallelUntilHere(4);
+        return parallelUntilHere(Runtime.getRuntime().availableProcessors() - 3);
     }
 
     default Pipeline<I, O> parallelUntilHere(int threadCount) {
