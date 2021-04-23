@@ -26,15 +26,17 @@ public class CommandLineUtil {
                 .addOption("r", "recall", false, "measure recall of queries (slow!)")
                 .addOption("s", "silent", false, "omit large console outputs")
                 .addOption("py_port", true, "set the port for the python server")
-                .addOption("k", true, "set value for k")
+                .addOption("k", true, "set value for k, which is the number of candidate changes")
                 .addOption("fe", "extract features from the corpus")
                 .addOption("t", "thread-count", true, "number of threads to use")
                 .addOption("vl", "single-feature-vector-length", true, "size a each partition of the feature vectors")
-                .addOption("cb", "count-bits", true, "number of count bits per feature. Must be at least 1.")
+                .addOption("cb", "count-bits", true, "number of count bits per feature. Must be at least 1")
                 .addOption("extractors", true, "which feature extractors to use. Syntax: <name>(:<bits>)?, separated with commas")
                 .addOption("help", "show help")
                 .addOption("rs", "range-search", true, "if faiss should use range search. Optional: How many additional features a code changes may have in comparison to the query.")
-                .addOption("mt", "timeout", true, "matching timeout, after this time matching gets cancelled.")
+                .addOption("mt", "timeout", true, "matching timeout, after this time matching gets cancelled")
+                .addOption("eqp", "extract-query-placeholders", false, "extract query placeholders like EXPR, default is false")
+                .addOption("tfidf", false, "if tfidf weights should be used in the feature vectors.")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
@@ -111,11 +113,17 @@ public class CommandLineUtil {
                 Config.RANGE_SEARCH = true;
                 var maxCount = commandLine.getOptionValue("rs");
                 if (!maxCount.isBlank()) {
-                    Config.rangeSearchMaxAdditionalFeatures = parseInt(maxCount);
+                    Config.k_max = parseInt(maxCount);
                 }
             }
             if (commandLine.hasOption("mt")) {
                 Config.matchingTimeoutSeconds = parseInt(commandLine.getOptionValue("mt"));
+            }
+            if (commandLine.hasOption("extract-query-placeholders")) {
+                Config.EXTRACT_QUERY_KEYWORDS = true;
+            }
+            if (commandLine.hasOption("tfidf")) {
+                Config.TFIDF = true;
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

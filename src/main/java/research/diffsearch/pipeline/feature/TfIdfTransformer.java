@@ -6,10 +6,10 @@ import java.util.Arrays;
 
 public class TfIdfTransformer implements Pipeline<double[], double[]> {
 
-    private final FeatureFrequencyCounter counter;
+    private final DocumentFrequencyCounter counter;
     private final int numberOfDocuments;
 
-    public TfIdfTransformer(FeatureFrequencyCounter counter, int numberOfDocuments) {
+    public TfIdfTransformer(DocumentFrequencyCounter counter, int numberOfDocuments) {
         this.counter = counter;
         this.numberOfDocuments = numberOfDocuments;
     }

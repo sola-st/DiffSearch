@@ -43,20 +43,20 @@ public class OnlinePipeline implements
         try {
             logger.info("Processing query " + input);
             long startTime = System.currentTimeMillis();
-            FeatureFrequencyCounter frequencyCounter = null;
+            DocumentFrequencyCounter frequencyCounter = null;
 
             if (Config.TFIDF) {
-                frequencyCounter = new FeatureFrequencyCounter();
+                frequencyCounter = new DocumentFrequencyCounter();
                 frequencyCounter.loadFromFile();
             }
             // write feature vector to file
-            FeatureFrequencyCounter finalFrequencyCounter = frequencyCounter;
+            DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
                     // validate query
                     .filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
-                    .connectIf(!Config.USE_COUNT_VECTORS_QUERY, new RemoveCollisionPipeline())
+                    .connectIf(!Config.USE_COUNT_VECTORS, new RemoveCollisionPipeline())
                     .connectIf(Config.TFIDF, (input1, index) -> {
                         new TfIdfTransformer(finalFrequencyCounter, numberOfDocuments).process(input1.getVector(), index);
                         return input1;

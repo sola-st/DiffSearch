@@ -2,7 +2,6 @@ package research.diffsearch.pipeline.feature.extractor;
 
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.count.RuleCountExtractor;
-import research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounter;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -44,7 +43,6 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      *     <li><code>node</code>: Returns a divided {@link NodeExtractor}</li>
      *     <li><code>editscript</code>: Returns a {@link EditScriptExtractor}</li>
      *     <li><code>rulecount</code>: Returns a {@link RuleCountExtractor}</li>
-     *     <li><code>equal</code>: Returns a {@link EqualNodesExtractor}</li>
      * </ul>
      * The section length for each extractor can be defined by adding ':' and the length.
      * If this is not given, the <code>defaultSectionLength</code> is used. <br>
@@ -78,8 +76,7 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
             case "node":
                 return new DividedFeatureExtractor(new NodeExtractor(language, length / 2));
             case "rulecount":
-                return new DividedFeatureExtractor(new RuleCountExtractor(language,
-                        new RuleMaxOccurrenceCounter(language)));
+                return new DividedFeatureExtractor(new RuleCountExtractor(language, length / 2));
             case "descendant":
                 return new DividedFeatureExtractor(
                         new DescendentFeatureExtractor(language, length / 2));

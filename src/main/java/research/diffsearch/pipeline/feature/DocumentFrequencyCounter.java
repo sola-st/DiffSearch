@@ -11,11 +11,11 @@ import java.util.stream.StreamSupport;
 
 import static research.diffsearch.util.FilePathUtils.getAllLines;
 
-public class FeatureFrequencyCounter implements Pipeline<FeatureVector, FeatureVector> {
+public class DocumentFrequencyCounter implements Pipeline<FeatureVector, FeatureVector> {
 
     private int[] documentFrequencies;
 
-    private static final Logger logger = LoggerFactory.getLogger(FeatureFrequencyCounter.class);
+    private static final Logger logger = LoggerFactory.getLogger(DocumentFrequencyCounter.class);
 
     @Override
     public FeatureVector process(FeatureVector input, int index) {

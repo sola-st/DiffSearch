@@ -82,7 +82,7 @@ public abstract class App implements Runnable, Closeable {
                         Integer.toString(Config.port),
                         Integer.toString(Config.nprobe),
                         Boolean.toString(Config.RANGE_SEARCH),
-                        Integer.toString(Config.rangeSearchMaxAdditionalFeatures),
+                        Integer.toString(Config.k_max),
                         Boolean.toString(Config.TFIDF));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));

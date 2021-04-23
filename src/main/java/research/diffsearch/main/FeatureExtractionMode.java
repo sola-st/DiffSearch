@@ -48,10 +48,11 @@ public class FeatureExtractionMode extends App {
             // - output file path
             // - total feature vector length
             // - nlist (number of clusters)
+            // - tfidf (true or false)
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
-                    "Features_Vectors/changes_feature_vectors_java.csv",
-                    "Features_Vectors/faiss_java.index",
+                    "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv",
+                    Config.INDEX_FILE,
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
                     Integer.toString(Config.nlist),
                     Boolean.toString(Config.TFIDF));
@@ -69,7 +70,7 @@ public class FeatureExtractionMode extends App {
         logger.debug("Feature vector length: {}", featureExtractionPipeline.getTotalFeatureVectorLength());
 
         List<String> changesLines = newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
-        FeatureFrequencyCounter featureFrequencyCounter = new FeatureFrequencyCounter();
+        DocumentFrequencyCounter featureFrequencyCounter = new DocumentFrequencyCounter();
         var numberOfLines = changesLines.size();
 
         Pipeline
@@ -79,7 +80,7 @@ public class FeatureExtractionMode extends App {
                 .connect(featureFrequencyCounter)
                 // show progress in console:
                 .connect(new ProgressWatcher<>("Feature extraction"))
-                .connectIf(!Config.USE_COUNT_VECTORS_CORPUS && !Config.TFIDF, new RemoveCollisionPipeline())
+                .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
                 .executeIgnoreResults(changesLines);
 

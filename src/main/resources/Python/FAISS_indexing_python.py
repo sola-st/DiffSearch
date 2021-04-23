@@ -14,9 +14,9 @@ logger.info("Starting python")
 
 def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     # Reading csv feature vectors files
-    feature_in = str(feature_in) + ".tfidf" if tfidf else ""
+    feature_in = str(feature_in) + (".tfidf" if tfidf else "")
     logger.info("Reading " + str(feature_in))
-    changes_feature_vectors = dd.read_csv('./src/main/resources/' + str(feature_in), header=None)
+    changes_feature_vectors = dd.read_csv(str(feature_in), header=None)
     changes_feature_vectors = changes_feature_vectors.iloc[:, :]
     # changes_feature_vectors = changes_feature_vectors.values[0:, :-1]
     changes_feature_vectors = changes_feature_vectors.astype('float32')
@@ -42,11 +42,6 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
 
     np_array = np.ascontiguousarray(changes_feature_vectors)
 
-    # norm = np.linalg.norm(np_array)
-    # if norm != 0:
-    #     np_array = np_array / norm
-    #     print(str(np_array))
-
     if tfidf:
         faiss.normalize_L2(np_array)
     index.train(np_array)  # train on the database vectors
@@ -54,7 +49,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     index.add(np_array)  # add the vectors and update the index
     logger.info("Index added: " + str(index.ntotal) + " entries")
 
-    faiss.write_index(index, "./src/main/resources/" + str(index_out))
+    faiss.write_index(index, str(index_out))
 
 
 indexing(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5] == 'true')

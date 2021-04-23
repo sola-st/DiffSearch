@@ -2,7 +2,6 @@ package research.diffsearch.pipeline.feature.count;
 
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
-import research.diffsearch.Config;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.extractor.AbstractRecursiveFeatureExtractor;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -13,11 +12,8 @@ import static research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounte
 
 public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
 
-    private final RuleMaxOccurrenceCounter ruleMaxOccurrenceCounter;
-
-    public RuleCountExtractor(ProgrammingLanguage language, RuleMaxOccurrenceCounter ruleMaxOccurrenceCounter) {
-        super(language, ruleMaxOccurrenceCounter.getTotalMaxCount(Config.ruleCountMaxCount));
-        this.ruleMaxOccurrenceCounter = ruleMaxOccurrenceCounter;
+    public RuleCountExtractor(ProgrammingLanguage language, int length) {
+        super(language, length);
     }
 
     @Override
@@ -30,7 +26,7 @@ public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
 
         var index = 0;
         for (var rule : ruleNames) {
-            var ruleMaxCount = ruleMaxOccurrenceCounter.getRuleCountLimited(rule, Config.ruleCountMaxCount);
+            var ruleMaxCount = this.getFeatureVectorSectionLength() / ruleNames.size();
 
             var countForCurrentCodeChange = countMap.getOrDefault(rule, 0);
             if (isNotBlacklisted(rule)) {

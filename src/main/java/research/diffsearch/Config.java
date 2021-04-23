@@ -21,7 +21,7 @@ public class Config {
     /**
      * The command to run a python file.
      */
-    public static String PYTHON_CMD = "wsl python3";
+    public static String PYTHON_CMD = "python3";
 
     public static String GITDIFF_FILE = "";
 
@@ -31,6 +31,7 @@ public class Config {
     public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
     //Constants that enable/disable part of the tool
+
     public static boolean LOG_FILE = false;
 
     /**
@@ -38,6 +39,9 @@ public class Config {
      */
     public static boolean NORMAL = false;
 
+    /**
+     * Run DiffSearch as a web app.
+     */
     public static boolean WEB = true;
 
     /**
@@ -105,13 +109,18 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "descendant";
+    public static String featureExtractors = "rulecount";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
      * this number of code changes while processing a query.
      */
     public static int k = 5000;
+
+    /**
+     * Maximum number of candidate changes to consider. Only relevant for range search.
+     */
+    public static int k_max = 10_000;
 
     /**
      * The length of the feature vectors.
@@ -155,20 +164,14 @@ public class Config {
     public static boolean SPLIT_EXTRACTORS = true;
 
     /**
-     * If true, count feature vectors will be used for the query instead of binary vectors.
+     * If true, count feature vectors will be used instead of binary vectors.
      */
-    public static boolean USE_COUNT_VECTORS_QUERY = true;
-
-    /**
-     * If true, count feature vectors will be used for the corpus instead of binary vectors.
-     * Change requires reindexing.
-     */
-    public static boolean USE_COUNT_VECTORS_CORPUS = true;
+    public static boolean USE_COUNT_VECTORS = false;
 
     /**
      * If true, keywords like "ID", "EXPR" will also be extracted in the query feature extraction.
      */
-    public static boolean EXTRACT_QUERY_KEYWORDS = true;
+    public static boolean EXTRACT_QUERY_KEYWORDS = false;
 
     /**
      * If faiss should use range search.
@@ -178,14 +181,7 @@ public class Config {
     /**
      * If feature vectors should use tf-idf-weights.
      */
-    public static boolean TFIDF = true;
-
-    /**
-     * Max additional ones in features vectors when using range search.
-     */
-    public static int rangeSearchMaxAdditionalFeatures = 100;
-
-    public static int ruleCountMaxCount = 8;
+    public static boolean TFIDF = false;
 
     /**
      * After this number of seconds, the matching process gets cancelled and its assumed that a
