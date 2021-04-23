@@ -83,8 +83,6 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
             case "descendant":
                 return new DividedFeatureExtractor(
                         new DescendentFeatureExtractor(language, length / 2));
-            case "equal":
-                return new EqualNodesExtractor(language, length);
         }
         throw new IllegalArgumentException(definition);
     }

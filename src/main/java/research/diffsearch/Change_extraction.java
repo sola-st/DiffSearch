@@ -7,7 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import research.diffsearch.util.CodeChange;
+import research.diffsearch.util.CodeChangeOld;
 
 import java.io.*;
 import java.net.URL;
@@ -546,7 +546,7 @@ public class Change_extraction {
             try {
                 String commit = null;
                 String position = null;
-                CodeChange cc = new CodeChange();
+                CodeChangeOld cc = new CodeChangeOld();
                 cc.url = f.toString();
 
                 while (scanner.hasNext()) {

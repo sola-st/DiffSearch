@@ -12,7 +12,7 @@ import java.util.Optional;
 public class DiffsearchResult {
 
     private String query;
-    private Collection<CodeChangeWeb> results;
+    private Collection<CodeChange> results;
 
     // these measures are nullable
     private Long performance;
@@ -24,7 +24,7 @@ public class DiffsearchResult {
     private boolean internalError = false;
     private boolean invalidQuery = false;
 
-    public DiffsearchResult(String query, Collection<CodeChangeWeb> results) {
+    public DiffsearchResult(String query, Collection<CodeChange> results) {
         this.query = query;
         this.results = results;
     }
@@ -49,7 +49,7 @@ public class DiffsearchResult {
         return query;
     }
 
-    public Collection<CodeChangeWeb> getResults() {
+    public Collection<CodeChange> getResults() {
         return results;
     }
 
@@ -58,7 +58,7 @@ public class DiffsearchResult {
         return this;
     }
 
-    public DiffsearchResult setResults(List<CodeChangeWeb> results) {
+    public DiffsearchResult setResults(List<CodeChange> results) {
         this.results = results;
         return this;
     }

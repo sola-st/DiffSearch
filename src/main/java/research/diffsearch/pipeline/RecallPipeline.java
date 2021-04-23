@@ -4,7 +4,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -125,7 +125,7 @@ public class RecallPipeline implements
 
     private void computeAndSaveReciprocalRank(DiffsearchResult input) {
         var rRank = input.getResults().stream()
-                .mapToInt(CodeChangeWeb::getRank)
+                .mapToInt(CodeChange::getRank)
                 .min()
                 .stream()
                 .mapToDouble(rank -> 1.0 / rank)

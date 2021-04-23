@@ -39,7 +39,7 @@ public class FeatureFrequencyCounter implements Pipeline<FeatureVector, FeatureV
     public void saveToFile() {
         try {
             FilePathUtils
-                    .getStringFileWriterPipeline("./src/main/resources/frequency.csv")
+                    .<Integer>getStringFileWriterPipeline("./src/main/resources/frequency.csv")
                     .execute(Ints.asList(documentFrequencies));
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

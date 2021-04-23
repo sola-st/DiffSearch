@@ -33,7 +33,7 @@ public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
             var ruleMaxCount = ruleMaxOccurrenceCounter.getRuleCountLimited(rule, Config.ruleCountMaxCount);
 
             var countForCurrentCodeChange = countMap.getOrDefault(rule, 0);
-            if (!isBlacklisted(rule)) {
+            if (isNotBlacklisted(rule)) {
                 for (int i = 0; i < ruleMaxCount && i < countForCurrentCodeChange; i++) {
                     section.addFeature(rule, section.getStartPosition() + index + i);
                 }

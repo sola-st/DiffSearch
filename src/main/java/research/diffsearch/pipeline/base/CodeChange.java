@@ -6,7 +6,7 @@ import java.util.Objects;
  * This POJO represents a code change. It contains the old and new part of the code change as well as information
  * where it is extracted from.
  */
-public class CodeChangeWeb {
+public class CodeChange {
     public String url = "";
     public String hunkLines = "";
     public String codeChangeOld;
@@ -16,7 +16,7 @@ public class CodeChangeWeb {
     // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
     public int rank = 0;
 
-    public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {
+    public CodeChange(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
         this.codeChangeNew = codeChangeNew;
     }
@@ -30,7 +30,7 @@ public class CodeChangeWeb {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CodeChangeWeb that = (CodeChangeWeb) o;
+        CodeChange that = (CodeChange) o;
         return Objects.equals(url, that.url) &&
                Objects.equals(hunkLines, that.hunkLines) &&
                Objects.equals(codeChangeOld, that.codeChangeOld) &&
@@ -46,7 +46,7 @@ public class CodeChangeWeb {
         return url;
     }
 
-    public CodeChangeWeb setUrl(String url) {
+    public CodeChange setUrl(String url) {
         this.url = url;
         return this;
     }
@@ -55,7 +55,7 @@ public class CodeChangeWeb {
         return hunkLines;
     }
 
-    public CodeChangeWeb setHunkLines(String hunkLines) {
+    public CodeChange setHunkLines(String hunkLines) {
         this.hunkLines = hunkLines;
         return this;
     }
@@ -64,7 +64,7 @@ public class CodeChangeWeb {
         return codeChangeOld;
     }
 
-    public CodeChangeWeb setCodeChangeOld(String codeChangeOld) {
+    public CodeChange setCodeChangeOld(String codeChangeOld) {
         this.codeChangeOld = codeChangeOld;
         return this;
     }
@@ -73,7 +73,7 @@ public class CodeChangeWeb {
         return codeChangeNew;
     }
 
-    public CodeChangeWeb setCodeChangeNew(String codeChangeNew) {
+    public CodeChange setCodeChangeNew(String codeChangeNew) {
         this.codeChangeNew = codeChangeNew;
         return this;
     }
@@ -82,7 +82,7 @@ public class CodeChangeWeb {
         return fullChangeString;
     }
 
-    public CodeChangeWeb setFullChangeString(String fullChangeString) {
+    public CodeChange setFullChangeString(String fullChangeString) {
         this.fullChangeString = fullChangeString;
         return this;
     }
@@ -91,7 +91,7 @@ public class CodeChangeWeb {
         return rank;
     }
 
-    public CodeChangeWeb setRank(int rank) {
+    public CodeChange setRank(int rank) {
         this.rank = rank;
         return this;
     }

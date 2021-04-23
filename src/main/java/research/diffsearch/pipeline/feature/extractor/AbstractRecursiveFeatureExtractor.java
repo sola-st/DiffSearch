@@ -8,6 +8,10 @@ import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.Objects;
 
+/**
+ * Represents any parse-tree based feature extractor that can be run recursive on
+ * the parse tree.
+ */
 public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtractor {
 
     private final ProgrammingLanguage programmingLanguage;
@@ -43,7 +47,7 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
         return programmingLanguage;
     }
 
-    protected static boolean isBlacklisted(String nodeText) {
-        return Objects.equals("querySnippet", nodeText);
+    protected static boolean isNotBlacklisted(String nodeText) {
+        return !Objects.equals("querySnippet", nodeText);
     }
 }

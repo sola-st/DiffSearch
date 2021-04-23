@@ -13,6 +13,7 @@ import java.util.function.*;
  * @param <O> output type of this pipeline
  */
 public interface Pipeline<I, O> {
+
     /**
      * Processes an input.
      *
@@ -35,11 +36,39 @@ public interface Pipeline<I, O> {
      * @implNote subclasses should overwrite this if they need the callback to be asynchronous.
      */
     default void process(I input, int index, IndexedConsumer<O> outputConsumer) {
-        if (input != null) {
-            outputConsumer.accept(process(input, index), index);
-        } else {
-            outputConsumer.skip(index);
+        try {
+            if (input != null) {
+                outputConsumer.accept(process(input, index), index);
+            } else {
+                outputConsumer.skip(index);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
+    }
+
+    /**
+     * Executes the pipeline on the given inputs.
+     *
+     * @param inputs the inputs to process
+     * @param size   the number of inputs
+     * @return the calculated outputs.
+     */
+    default List<O> execute(Iterable<I> inputs, int size) {
+        var collectedResults = new ArrayList<O>();
+
+        return execute(inputs, size, collectedResults);
+    }
+
+    /**
+     * Executes the pipeline on the given inputs.
+     *
+     * @param inputs the inputs to process
+     * @return the calculated outputs.
+     */
+    default List<O> execute(Collection<I> inputs) {
+        return execute(inputs, inputs.size());
     }
 
     /**
@@ -52,42 +81,16 @@ public interface Pipeline<I, O> {
         return execute(List.of(input)).stream().findFirst();
     }
 
-    default List<O> execute(Collection<I> inputs) {
-        return execute(inputs, inputs.size());
-    }
-
-    default List<O> execute(Iterable<I> inputs, int size) {
+    private List<O> execute(Iterable<I> inputs, int size, ArrayList<O> collectedResults) {
         if (!inputs.iterator().hasNext()) {
             return Collections.emptyList();
         }
         Object sync = new Object();
-
-        var collectedResults = new ArrayList<O>();
         var executor = Executors.newSingleThreadExecutor();
 
         before(size);
 
-        executor.submit(() -> {
-            int index = 0;
-            AtomicInteger processed = new AtomicInteger(0);
-
-            for (I input : inputs) {
-                process(input, index, (result, index1) -> {
-                    synchronized (collectedResults) {
-                        processed.getAndIncrement();
-                        if (result != null) {
-                            collectedResults.add(result);
-                        }
-                        if (processed.get() == size) {
-                            synchronized (sync) {
-                                sync.notifyAll();
-                            }
-                        }
-                    }
-                });
-                index++;
-            }
-        });
+        executor.submit(() -> processAllInputs(inputs, size, sync, collectedResults));
 
         synchronized (sync) {
             try {
@@ -101,6 +104,54 @@ public interface Pipeline<I, O> {
         return collectedResults;
     }
 
+    private void processAllInputs(Iterable<I> inputs, int size, Object sync, ArrayList<O> collectedResults) {
+        int index = 0;
+        AtomicInteger processed = new AtomicInteger(0);
+
+        for (I input : inputs) {
+            process(input, index, (result, index1) -> {
+                processed.getAndIncrement();
+                if (collectedResults != null && result != null) {
+                    synchronized (collectedResults) {
+                        collectedResults.add(result);
+                    }
+                }
+                if (processed.get() == size) {
+                    // all inputs processed
+                    synchronized (sync) {
+                        sync.notifyAll();
+                    }
+                }
+            });
+            index++;
+        }
+    }
+
+    /**
+     * Executes the pipeline on all given inputs but does not collect the results.
+     *
+     * @param inputs inputs that should be processed.
+     * @param size   number of inputs.
+     */
+    default void executeIgnoreResults(Iterable<I> inputs, int size) {
+        execute(inputs, size, null);
+    }
+
+    /**
+     * Executes the pipeline on all given inputs but does not collect the results.
+     *
+     * @param inputs inputs that should be processed.
+     */
+    default void executeIgnoreResults(Collection<I> inputs) {
+        executeIgnoreResults(inputs, inputs.size());
+    }
+
+    /**
+     * Connects another pipeline to this.
+     *
+     * @param <N> the output type of the other pipeline.
+     * @return a pipeline object that combines this and the other pipeline.
+     */
     default <N> Pipeline<I, N> connect(Pipeline<O, N> otherPipeline) {
         return new Pipeline<>() {
             @Override
@@ -128,6 +179,12 @@ public interface Pipeline<I, O> {
         };
     }
 
+    /**
+     * Connects another pipeline to this if a particular condition is true.
+     *
+     * @return either this pipeline if the condition is false or the combined pipeline
+     * of this and the other pipeline.
+     */
     default Pipeline<I, O> connectIf(boolean condition, Pipeline<O, O> otherPipeline) {
         if (condition) {
             return connect(otherPipeline);

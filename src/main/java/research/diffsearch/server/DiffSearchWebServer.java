@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.OnlinePipeline;
 import research.diffsearch.pipeline.RecallPipeline;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.Util;
 
@@ -63,7 +63,7 @@ public class DiffSearchWebServer extends Thread {
         StringBuilder postData = getPostDataStringBuilder(in, postDataI);
 
         DiffsearchResult result = null;
-        Collection<CodeChangeWeb> outputList = new ArrayList<>();
+        Collection<CodeChange> outputList = new ArrayList<>();
 
         long durationMatching;
         boolean flagFirstConnection = false;
@@ -119,7 +119,7 @@ public class DiffSearchWebServer extends Thread {
                                    FileChannel channel) {
         var outputList = result.getResults();
         boolean flag = true;
-        for (CodeChangeWeb change : outputList) {
+        for (CodeChange change : outputList) {
             try {
                 String[] parts = {change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url};
 

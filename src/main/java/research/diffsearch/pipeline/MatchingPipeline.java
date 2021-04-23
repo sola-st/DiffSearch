@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
@@ -55,7 +55,7 @@ public class MatchingPipeline
 
     @Override
     public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> outputConsumer) {
-        List<CodeChangeWeb> outputList = new ArrayList<>();
+        List<CodeChange> outputList = new ArrayList<>();
 
         if (queryTree == null) {
             queryTree = getChangeTree(input.getQuery(), language);
@@ -83,7 +83,7 @@ public class MatchingPipeline
         throw new IllegalStateException();
     }
 
-    private boolean checkCandidate(CodeChangeWeb candidateChange) {
+    private boolean checkCandidate(CodeChange candidateChange) {
         try {
             ParseTree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
@@ -107,7 +107,7 @@ public class MatchingPipeline
         return false;
     }
 
-    public static boolean isNotEqualCodeChange(CodeChangeWeb codeChangeWeb) {
+    public static boolean isNotEqualCodeChange(CodeChange codeChangeWeb) {
         return !codeChangeWeb.getCodeChangeNew().trim().equals(codeChangeWeb.getCodeChangeOld().trim());
     }
 

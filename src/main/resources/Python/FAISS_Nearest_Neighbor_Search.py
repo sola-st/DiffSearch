@@ -25,7 +25,8 @@ def searching(index_path,
               port,
               nprobe=1,
               range_search=False,
-              max_additional_features=100):
+              k_max=100,
+              tfidf=False):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -35,7 +36,8 @@ def searching(index_path,
     :param port: port of the server
     :param nprobe: number of clusters to consider.
     :param range_search: if range search should be used (instead of finding the k nearest neighbours)
-    :param max_additional_features: number of additional features to consider for the range search
+    :param k_max: number of additional features to consider for the range search
+    :param tfidf: if vectors contain tfidf weights
     """
     index = faiss.read_index(index_path)
 
@@ -55,7 +57,6 @@ def searching(index_path,
 
     with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
         changes_strings = f.readlines()
-        logger.debug(str(len(changes_strings)))
 
     with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
         changes_info = f.readlines()
@@ -89,6 +90,9 @@ def searching(index_path,
                 # Reading csv feature vectors files
                 query_feature_vectors = pd.read_csv('./src/main/resources/Features_Vectors/query_feature_vectors.csv',
                                                     header=None).iloc[:, :].values.astype('float32')
+
+                if tfidf:
+                    faiss.normalize_L2(query_feature_vectors)
                 # np_array = np.ascontiguousarray(query_feature_vectors)
                 # norm = np.linalg.norm(np_array)
                 # if norm != 0:
@@ -106,15 +110,13 @@ def searching(index_path,
                     #   distances = distances[:10 * k]
                     # indices = indices[:10 * k]
                 else:
-                    feature_count_query = len([x for vector in query_feature_vectors for x in vector if x > 0])
 
-                    candidate_change_limit = max(k, k * (50 * 4 / feature_count_query))
+                    candidate_change_limit = k_max
 
-                    search_range: int = max(10, max_additional_features)
+                    search_range: int = 0
                     for vector in query_feature_vectors:
                         for feature in vector:
-                            if feature > 0:
-                                search_range += (feature - 1) ** 2
+                            search_range += (feature - 1) ** 2
 
                     # search_range *= 2
 
@@ -151,10 +153,11 @@ def searching(index_path,
                 clientsocket.send(bytes("JAVA" + "\r\n", 'UTF-8'))
 
 
-searching(index_path=str(sys.argv[-7]),
-          k=int(sys.argv[-6]),
-          host=str(sys.argv[-5]),
-          port=str(sys.argv[-4]),
-          nprobe=int(sys.argv[-3]),
-          range_search=sys.argv[-2] == "true",
-          max_additional_features=int(sys.argv[-1]))
+searching(index_path=str(sys.argv[1]),
+          k=int(sys.argv[2]),
+          host=str(sys.argv[3]),
+          port=str(sys.argv[4]),
+          nprobe=int(sys.argv[5]),
+          range_search=sys.argv[6] == "true",
+          k_max=int(sys.argv[7]),
+          tfidf=sys.argv[8] == "true")

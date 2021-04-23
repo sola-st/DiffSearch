@@ -44,7 +44,7 @@ public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtract
                 || Config.EXTRACT_QUERY_KEYWORDS
                 || !isQueryKeyword(childNodeText)
                )
-               && !isBlacklisted(parentChildText)
-               && !isBlacklisted(childNodeText);
+               && isNotBlacklisted(parentChildText)
+               && isNotBlacklisted(childNodeText);
     }
 }

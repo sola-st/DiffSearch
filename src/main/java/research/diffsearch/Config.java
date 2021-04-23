@@ -105,7 +105,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "node;sibling";
+    public static String featureExtractors = "descendant";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
@@ -157,18 +157,18 @@ public class Config {
     /**
      * If true, count feature vectors will be used for the query instead of binary vectors.
      */
-    public static boolean USE_COUNT_VECTORS_QUERY = false;
+    public static boolean USE_COUNT_VECTORS_QUERY = true;
 
     /**
      * If true, count feature vectors will be used for the corpus instead of binary vectors.
      * Change requires reindexing.
      */
-    public static boolean USE_COUNT_VECTORS_CORPUS = false;
+    public static boolean USE_COUNT_VECTORS_CORPUS = true;
 
     /**
      * If true, keywords like "ID", "EXPR" will also be extracted in the query feature extraction.
      */
-    public static boolean EXTRACT_QUERY_KEYWORDS = false;
+    public static boolean EXTRACT_QUERY_KEYWORDS = true;
 
     /**
      * If faiss should use range search.

@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.tree.Trees;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.RecallPipeline;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -62,8 +62,8 @@ public class RuleMaxOccurrenceCounter implements ProgrammingLanguageDependent {
     }
 
     private void buildRuleCountMaps() {
-        Collection<CodeChangeWeb> inputs = getCodeChanges(getProgrammingLanguage());
-        Pipeline.from((Function<CodeChangeWeb, CodeChangeWeb>) codeChange -> {
+        Collection<CodeChange> inputs = getCodeChanges(getProgrammingLanguage());
+        Pipeline.from((Function<CodeChange, CodeChange>) codeChange -> {
             AbstractTree tree = getChangeTree(codeChange.getFullChangeString(), language);
             ParseTree parseTree = tree.getParseTree();
 

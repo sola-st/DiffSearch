@@ -50,14 +50,18 @@ public class OnlinePipeline implements
                 frequencyCounter.loadFromFile();
             }
             // write feature vector to file
+            FeatureFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
                     // validate query
                     .filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS_QUERY, new RemoveCollisionPipeline())
-                    .connectIf(Config.TFIDF, new TfIdfTransformer(frequencyCounter, numberOfDocuments))
-                    .connect(OnlinePipeline::multiplyVector)
+                    .connectIf(Config.TFIDF, (input1, index) -> {
+                        new TfIdfTransformer(finalFrequencyCounter, numberOfDocuments).process(input1.getVector(), index);
+                        return input1;
+                    })
+                    .connectIf(!Config.TFIDF, OnlinePipeline::multiplyVector)
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .execute(input);
             // query was invalid:

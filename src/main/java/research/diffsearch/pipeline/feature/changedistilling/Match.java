@@ -46,7 +46,10 @@ public class Match {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(oldNode).append(newNode).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(oldNode)
+                .append(newNode)
+                .toHashCode();
     }
 
     @Override

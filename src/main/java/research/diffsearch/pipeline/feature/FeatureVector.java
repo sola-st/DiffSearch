@@ -33,6 +33,13 @@ public class FeatureVector {
         this.quadraticProbingMaxCount = quadraticProbingMaxCount;
     }
 
+    public FeatureVector(double[] array) {
+        this.codeChange = null;
+        this.countBits = 0;
+        this.vector = array;
+        this.quadraticProbingMaxCount = 0;
+    }
+
     /**
      * Adds a feature to the feature vector at the given index. Uses quadratic probing and
      * count bits on hash collisions.
@@ -54,7 +61,7 @@ public class FeatureVector {
             // use count bits
             for (var offset = 0; offset < countBits; offset++) {
                 actualIndex = (countBits * actualIndex + offset) % vector.length;
-                if (vector[actualIndex] == 0) {
+                if (vector[actualIndex] == 0 || offset == countBits - 1) {
 
                     vector[actualIndex]++;
                     break outer;

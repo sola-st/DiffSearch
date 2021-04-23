@@ -73,6 +73,7 @@ public abstract class App implements Runnable, Closeable {
                  * - nprobe: number of clusters to consider
                  * - range_search: true or false
                  * - k_max: maximal number of candidate changes
+                 * - tfidf: if tfidf weights are used
                  */
                 pythonRunner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
                         Config.INDEX_FILE,
@@ -81,7 +82,8 @@ public abstract class App implements Runnable, Closeable {
                         Integer.toString(Config.port),
                         Integer.toString(Config.nprobe),
                         Boolean.toString(Config.RANGE_SEARCH),
-                        Integer.toString(Config.rangeSearchMaxAdditionalFeatures));
+                        Integer.toString(Config.rangeSearchMaxAdditionalFeatures),
+                        Boolean.toString(Config.TFIDF));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 

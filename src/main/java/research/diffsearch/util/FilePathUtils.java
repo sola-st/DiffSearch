@@ -1,10 +1,11 @@
 package research.diffsearch.util;
 
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.pipeline.base.CodeChangeWeb;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureVector;
 
@@ -96,10 +97,10 @@ public class FilePathUtils {
         }
     }
 
-    public static Collection<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath, int size) {
+    public static Collection<CodeChange> getCodeChanges(String codeChangeFilePath, String infoFilePath, int size) {
         return new AbstractCollection<>() {
             @Override
-            public Iterator<CodeChangeWeb> iterator() {
+            public Iterator<CodeChange> iterator() {
                 return getCodeChanges(codeChangeFilePath, infoFilePath).iterator();
             }
 
@@ -110,12 +111,12 @@ public class FilePathUtils {
         };
     }
 
-    public static Collection<CodeChangeWeb> getCodeChanges(ProgrammingLanguage programmingLanguage) {
+    public static Collection<CodeChange> getCodeChanges(ProgrammingLanguage programmingLanguage) {
         return getCodeChanges(getChangesFilePath(programmingLanguage), getChangesInfoFilePath(programmingLanguage),
                 getNumberOfLines(getChangesFilePath(programmingLanguage)));
     }
 
-    public static Iterable<CodeChangeWeb> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
+    public static Iterable<CodeChange> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
         return () -> new Iterator<>() {
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
             final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
@@ -128,14 +129,14 @@ public class FilePathUtils {
             }
 
             @Override
-            public CodeChangeWeb next() {
+            public CodeChange next() {
                 String candidateUrl = infoIterator.next();
                 String candidate = codeChangeIterator.next();
                 String[] candidateParts = candidate.split("-->");
                 String[] urlLine =
                         Util.computeCandidateUrl(candidateUrl).split("-->");
                 index++;
-                return new CodeChangeWeb(candidateParts[0].trim(), candidateParts[1].trim())
+                return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
                         .setUrl(urlLine[0])
                         .setHunkLines(urlLine[1])
                         .setFullChangeString(candidate)
@@ -149,11 +150,25 @@ public class FilePathUtils {
     }
 
     public static List<String[]> readCSV(String path, String delim) {
-        var result = new ArrayList<String[]>();
-        for (var line : getAllLines(path)) {
-            result.add(line.split(delim));
-        }
-        return result;
+        return Lists.newArrayList(readCSVLineByLine(path, delim));
+    }
+
+    public static Iterable<String[]> readCSVLineByLine(String path, String delim) {
+        return () -> {
+            Iterator<String> lines = getAllLines(path).iterator();
+
+            return new Iterator<>() {
+                @Override
+                public boolean hasNext() {
+                    return lines.hasNext();
+                }
+
+                @Override
+                public String[] next() {
+                    return lines.next().split(delim);
+                }
+            };
+        };
     }
 
     public static <T> void readCSVToMap(String path,

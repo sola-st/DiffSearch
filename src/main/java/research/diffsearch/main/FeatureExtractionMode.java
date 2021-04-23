@@ -10,8 +10,8 @@ import research.diffsearch.util.ProgressWatcher;
 import research.diffsearch.util.Util;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
@@ -51,9 +51,10 @@ public class FeatureExtractionMode extends App {
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
                     "Features_Vectors/changes_feature_vectors_java.csv",
-                    Config.INDEX_FILE,
+                    "Features_Vectors/faiss_java.index",
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
-                    Integer.toString(Config.nlist));
+                    Integer.toString(Config.nlist),
+                    Boolean.toString(Config.TFIDF));
 
             pythonRunner.runAndWaitUntilEnd();
 
@@ -69,21 +70,37 @@ public class FeatureExtractionMode extends App {
 
         List<String> changesLines = newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
         FeatureFrequencyCounter featureFrequencyCounter = new FeatureFrequencyCounter();
+        var numberOfLines = changesLines.size();
 
-        var vectors = Pipeline
+        Pipeline
                 .from(Util::formatCodeChange)
                 .connect(featureExtractionPipeline)
                 .parallelUntilHere(Config.threadCount)
                 .connect(featureFrequencyCounter)
                 // show progress in console:
                 .connect(new ProgressWatcher<>("Feature extraction"))
-                .execute(changesLines);
-
-        // write vectors to file:
-        Pipeline.from((Function<FeatureVector, FeatureVector>) featureVector -> featureVector)
-                .connectIf(!Config.USE_COUNT_VECTORS_CORPUS, new RemoveCollisionPipeline())
-                .connectIf(false, new TfIdfTransformer(featureFrequencyCounter, changesLines.size()))
+                .connectIf(!Config.USE_COUNT_VECTORS_CORPUS && !Config.TFIDF, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
-                .execute(vectors);
+                .executeIgnoreResults(changesLines);
+
+        if (Config.TFIDF) {
+            Pipeline.from(FeatureExtractionMode::stringArrayToDoubleArray)
+                    // calculate tfidf weights
+                    .connect(new TfIdfTransformer(featureFrequencyCounter, changesLines.size()))
+                    .connect(FeatureVector::new)
+                    .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE) + ".tfidf"))
+                    .connect(new ProgressWatcher<>("TFIDF"))
+                    .executeIgnoreResults(
+                            readCSVLineByLine(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE), ","), numberOfLines);
+        }
+    }
+
+    private static double[] stringArrayToDoubleArray(String[] featureVectorStr) {
+        try {
+            return Arrays.stream(featureVectorStr).mapToDouble(Double::parseDouble).toArray();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 }
