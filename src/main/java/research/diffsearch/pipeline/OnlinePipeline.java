@@ -19,7 +19,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import static research.diffsearch.util.FilePathUtils.*;
 
@@ -53,7 +52,7 @@ public class OnlinePipeline implements
             DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
                     // validate query
-                    .filter((Predicate<String>) Util::checkIfQueryIsValid)
+                    //.filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS, new RemoveCollisionPipeline())
