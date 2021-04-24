@@ -1,10 +1,10 @@
-import <...> -->_
+ID(); ID(); --> ID(); ID();
 final ID<0> ID<1> = EXPR --> final ID<0> ID<1> = EXPR;
-_ -->import static <...>;
+_ -->import static ID.ID.ID.ID;
 ID ID = ID.ID(); -->_
 return ID; --> return EXPR;
 this.ID = EXPR; -->_
-import <...>; -->import <...>; <...>
+ID(EXPR); ID(EXPR); --> ID(EXPR); ID(EXPR);
 <...> --> return ID.ID(EXPR, EXPR);
 ID ID = EXPR; --> final ID ID = EXPR;
 ID ID = ID.ID(EXPR, EXPR); --> ID ID = ID.ID(EXPR, EXPR);
@@ -17,4 +17,4 @@ ID<0>.ID<1>(LT, ID) --> ID<0>.ID<1>(LT, EXPR)
 <...> --> new ID[]{}
 (ID binOP LT) binOP (ID binOP LT) --> <...>
 ID unOP; --> ID unOP;
-ID OP ID; = ID OP EXPR;
+ID OP ID; --> ID OP EXPR;

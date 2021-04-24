@@ -29,11 +29,11 @@ _ --> if (EXPR binOP EXPR) { return; }
 log.debug(LT, ID); --> LOG.debug(LT, ID);
 final Map<String, String> group = EXPR; --> final Map<String, String> group = EXPR;
 ID slotSize = WordFactory.unsigned(EXPR); -->_
-public static double[][] ID(float[] ID<0>) { return EXPR --> static double[][] ID(float[] ID<0>) { return EXPR
+public static double[][] ID(float[] ID<0>) { return EXPR; --> static double[][] ID(float[] ID<0>) { return EXPR;
 return EXPR; --> return useLibraryConstant(EXPR);
-import static <...> -->_
+import static ID.ID.ID.ID.ID; -->_
 if (EXPR<0>) ID = QueryParamEntity.empty(); --> if (EXPR<0>) { ID = QueryParamEntity.empty(); }
-_ -->_ @Override protected ID getToolSupport(ID l) { return l.getToolSupport(); } _ @Override protected ID getDebugSupport(ID l) { return l.getDebugSupport(); }
+public void ID() { --> public void profileInlinedCall() { <...>
 _ --> res = res binOP LT + (vararg ? LT : LT);
 _ -->import io.ID.ID.ID.ID;
 package com.oracle.max.graal.ID.ID; -->package com.oracle.graal.ID.ID;
@@ -43,28 +43,28 @@ import org.ID.ID.ID.ID; -->import org.ID.ID.ID.ID; <...>
 package <...>; -->package ID.ID.ID.ID;
 ID = LT; --> ID = LT; ID = LT;
 ID<0>(LT, ID); --> ID<0>(false);
-for (AudioTrack audioTrack : EXPR) { <...> --> <...>
+for (AudioTrack audioTrack : ID.ID) { <...> --> <...>
 GalleryComment comment = ID[EXPR]; --> GalleryComment comment = ID.ID[EXPR];
-_ -->import EXPR; import EXPR; import EXPR;
+_ -->import ID.ID.ID; import ID.ID.ID; import ID.ID.ID;
 Collection<ID> ID(<...>) { --> Collection<ID> generateSyntheticBean(<...>) {
 @Before public void ID() throws ID { --> @BeforeClass public static void ID() throws ID {
 ID<0> = this; --> ID<0> = this.ID();
 ID<0>.incrementHost(EXPR); --> ID<0>.incrementSource(EXPR);
 return ID; --> return EXPR | EXPR;
 _ -->import com.oracle.ID.ID.ID.ID;
-_ -->_ @Override public boolean ID<0>() { return ID.ID<0>(); }
+_ -->public boolean ID<0>() { return ID.ID<0>(); }
 ID.ID(EXPR, EXPR); --> ID();
 return null; --> throw EXPR;
 throw EXPR; --> throw new GraalError(EXPR);
 @SuppressWarnings(<...>) -->_
 <...> --> merge.setNext(EXPR);
-import <...> -->_
+ID(); ID(); --> ID(); ID();
 final ID<0> ID<1> = EXPR --> final ID<0> ID<1> = EXPR;
-_ -->import static <...>;
+_ -->import static ID.ID.ID.ID;
 ID ID = ID.ID(); -->_
 return ID; --> return EXPR;
 this.ID = EXPR; -->_
-import <...>; -->import <...>; <...>
+ID(EXPR); ID(EXPR); --> ID(EXPR); ID(EXPR);
 <...> --> return ID.ID(EXPR, EXPR);
 ID ID = EXPR; --> final ID ID = EXPR;
 ID ID = ID.ID(EXPR, EXPR); --> ID ID = ID.ID(EXPR, EXPR);
@@ -77,4 +77,4 @@ ID<0>.ID<1>(LT, ID) --> ID<0>.ID<1>(LT, EXPR)
 <...> --> new ID[]{}
 (ID binOP LT) binOP (ID binOP LT) --> <...>
 ID unOP; --> ID unOP;
-ID OP ID; = ID OP EXPR;
+ID OP ID; --> ID OP EXPR;

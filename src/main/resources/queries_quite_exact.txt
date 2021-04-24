@@ -9,11 +9,11 @@ _ --> if (EXPR binOP EXPR) { return; }
 log.debug(LT, ID); --> LOG.debug(LT, ID);
 final Map<String, String> group = EXPR; --> final Map<String, String> group = EXPR;
 ID slotSize = WordFactory.unsigned(EXPR); -->_
-public static double[][] ID(float[] ID<0>) { return EXPR --> static double[][] ID(float[] ID<0>) { return EXPR
+public static double[][] ID(float[] ID<0>) { return EXPR; --> static double[][] ID(float[] ID<0>) { return EXPR;
 return EXPR; --> return useLibraryConstant(EXPR);
-import static <...> -->_
+import static ID.ID.ID.ID.ID; -->_
 if (EXPR<0>) ID = QueryParamEntity.empty(); --> if (EXPR<0>) { ID = QueryParamEntity.empty(); }
-_ -->_ @Override protected ID getToolSupport(ID l) { return l.getToolSupport(); } _ @Override protected ID getDebugSupport(ID l) { return l.getDebugSupport(); }
+public void ID() { --> public void profileInlinedCall() { <...>
 _ --> res = res binOP LT + (vararg ? LT : LT);
 _ -->import io.ID.ID.ID.ID;
 package com.oracle.max.graal.ID.ID; -->package com.oracle.graal.ID.ID;
