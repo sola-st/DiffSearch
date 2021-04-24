@@ -50,7 +50,7 @@ Collection<ID> ID(<...>) { --> Collection<ID> generateSyntheticBean(<...>) {
 @Before public void ID() throws ID { --> @BeforeClass public static void ID() throws ID {
 ID<0> = this; --> ID<0> = this.ID();
 ID<0>.incrementHost(EXPR); --> ID<0>.incrementSource(EXPR);
-return ID; --> return EXPR | EXPR;
+return ID; --> return EXPR binOP EXPR;
 _ -->import com.oracle.ID.ID.ID.ID;
 _ -->public boolean ID<0>() { return ID.ID<0>(); }
 ID.ID(EXPR, EXPR); --> ID();
