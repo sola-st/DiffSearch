@@ -59,7 +59,7 @@ throw EXPR; --> throw new GraalError(EXPR);
 @SuppressWarnings(<...>) -->_
 <...> --> merge.setNext(EXPR);
 ID(); ID(); --> ID(); ID();
-final ID<0> ID<1> = EXPR --> final ID<0> ID<1> = EXPR;
+final ID<0> ID<1> = EXPR; --> final ID<0> ID<1> = EXPR;
 _ -->import static ID.ID.ID.ID;
 ID ID = ID.ID(); -->_
 return ID; --> return EXPR;
