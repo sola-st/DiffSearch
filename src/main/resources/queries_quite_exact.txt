@@ -7,7 +7,7 @@ codeCache.ID(method, compResult); --> <...>
 if (ID<0> == null) return; --> if (ID<0> == null) { return; }
 _ --> if (EXPR binOP EXPR) { return; }
 log.debug(LT, ID); --> LOG.debug(LT, ID);
-final Map<String, String> group = EXPR; --> final Map<String, String> group = EXPR;
+if (type instanceof IntegerType) { return ID.ID(EXPR, EXPR); --><...>
 ID slotSize = WordFactory.unsigned(EXPR); -->_
 public static double[][] ID(float[] ID<0>) { return EXPR; --> static double[][] ID(float[] ID<0>) { return EXPR;
 return EXPR; --> return useLibraryConstant(EXPR);
