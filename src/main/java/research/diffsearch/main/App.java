@@ -45,6 +45,14 @@ public abstract class App implements Runnable, Closeable {
             app = new FeatureExtractionMode();
         } else if (Config.BATCH) {
             app = new BatchMode();
+        } else if (Config.MEASURE_RECALL) {
+            app = new App() {
+                @Override
+                public void run() {
+                    new FeatureExtractionMode().run();
+                    new BatchMode().run();
+                }
+            };
         }
 
         if (app != null) {

@@ -174,6 +174,11 @@ public class Config {
     public static boolean EXTRACT_QUERY_KEYWORDS = false;
 
     /**
+     * If true, query vectors get multiplied by l / 2 + 1.
+     */
+    public static boolean QUERY_MULTIPLICATION = true;
+
+    /**
      * If faiss should use range search.
      */
     public static boolean RANGE_SEARCH = false;
