@@ -55,12 +55,12 @@ public class OnlinePipeline implements
                     //.filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
-                    .connectIf(!Config.USE_COUNT_VECTORS, new RemoveCollisionPipeline())
+                    .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
                     .connectIf(Config.TFIDF, (input1, index) -> {
                         new TfIdfTransformer(finalFrequencyCounter, numberOfDocuments).process(input1.getVector(), index);
                         return input1;
                     })
-                    .connectIf(!Config.TFIDF, OnlinePipeline::multiplyVector)
+                    .connectIf(!Config.TFIDF && Config.QUERY_MULTIPLICATION, OnlinePipeline::multiplyVector)
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .execute(input);
             // query was invalid:

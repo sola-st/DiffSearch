@@ -37,6 +37,8 @@ public class CommandLineUtil {
                 .addOption("mt", "timeout", true, "matching timeout, after this time matching gets cancelled")
                 .addOption("eqp", "extract-query-placeholders", false, "extract query placeholders like EXPR, default is false")
                 .addOption("tfidf", false, "if tfidf weights should be used in the feature vectors.")
+                .addOption("noquerymultiplication", false, "query vectors do not get multiplied.")
+                .addOption("nondividedextraction", false, "feature extraction is not divided in the old and new part.")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
@@ -124,6 +126,12 @@ public class CommandLineUtil {
             }
             if (commandLine.hasOption("tfidf")) {
                 Config.TFIDF = true;
+            }
+            if (commandLine.hasOption("nondividedextraction")) {
+                Config.DIVIDE_EXTRACTORS = false;
+            }
+            if (commandLine.hasOption("noquerymultiplication")) {
+                Config.QUERY_MULTIPLICATION = false;
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

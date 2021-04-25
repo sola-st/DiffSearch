@@ -77,10 +77,13 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
         var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT, isQuery);
+
         var extractors = Config.featureExtractors.split(";");
+
         for (var extractorDef : extractors) {
-            pipeline.addFeatureExtractor(FeatureExtractor.byDefinition(extractorDef,
-                    Config.SINGLE_FEATURE_VECTOR_LENGTH, Config.PROGRAMMING_LANGUAGE));
+            pipeline.addFeatureExtractor(
+                    FeatureExtractor.byDefinition(extractorDef,
+                            Config.SINGLE_FEATURE_VECTOR_LENGTH, Config.PROGRAMMING_LANGUAGE, Config.DIVIDE_EXTRACTORS));
         }
         return pipeline;
     }

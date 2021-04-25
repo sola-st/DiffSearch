@@ -161,7 +161,7 @@ public class Config {
      * Split parent child and triangle feature extraction in two old and new part.
      * Change required reindexing.
      */
-    public static boolean SPLIT_EXTRACTORS = true;
+    public static boolean DIVIDE_EXTRACTORS = true;
 
     /**
      * If true, count feature vectors will be used instead of binary vectors.

@@ -53,12 +53,13 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      * @param defaultSectionLength length of the feature vector section for this feature extractor,
      *                             if no length is given by the definition.
      * @param language             programming language of DiffSearch
+     * @param divided              if true, a divided feature extractor is used.
      * @return a feature extractor that matches the definition
      * @throws IllegalArgumentException if the description is invalid.
      */
     static FeatureExtractor byDefinition(String definition,
                                          int defaultSectionLength,
-                                         ProgrammingLanguage language) {
+                                         ProgrammingLanguage language, boolean divided) {
 
         var parts = definition.split(":");
         var name = parts[0].trim().toLowerCase();
@@ -66,20 +67,44 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
 
         switch (name) {
             case "parentchild":
-                return new DividedFeatureExtractor(new ParentChildFeatureExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(new ParentChildFeatureExtractor(language, length / 2));
+                }
+                return new ParentChildFeatureExtractor(language, length);
+
             case "triangle":
-                return new DividedFeatureExtractor(new TriangleFeatureExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(new TriangleFeatureExtractor(language, length / 2));
+                }
+                return new TriangleFeatureExtractor(language, length);
+
             case "sibling":
-                return new DividedFeatureExtractor(new SiblingFeatureExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(new SiblingFeatureExtractor(language, length / 2));
+                }
+                return new SiblingFeatureExtractor(language, length);
+
             case "editscript":
                 return new EditScriptExtractor(language, length);
+
             case "node":
-                return new DividedFeatureExtractor(new NodeExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(new NodeExtractor(language, length / 2));
+                }
+                return new NodeExtractor(language, length);
+
             case "rulecount":
-                return new DividedFeatureExtractor(new RuleCountExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(new RuleCountExtractor(language, length / 2));
+                }
+                return new RuleCountExtractor(language, length);
+
             case "descendant":
-                return new DividedFeatureExtractor(
-                        new DescendentFeatureExtractor(language, length / 2));
+                if (divided) {
+                    return new DividedFeatureExtractor(
+                            new DescendentFeatureExtractor(language, length / 2));
+                }
+                return new DescendentFeatureExtractor(language, length);
         }
         throw new IllegalArgumentException(definition);
     }
