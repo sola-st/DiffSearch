@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
  */
 public class FeatureVector {
 
+    private static final boolean debug = false;
+
     private final double[] vector;
     private final String codeChange;
     private final Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
@@ -63,15 +65,17 @@ public class FeatureVector {
                 actualIndex = (countBits * actualIndex + offset) % vector.length;
                 if (vector[actualIndex] == 0 || offset == countBits - 1) {
 
-                    vector[actualIndex]++;
+                    vector[actualIndex] = 1;
                     break outer;
                 }
             }
         }
 
-        var list = typeToFeaturesMap.getOrDefault(section, new ArrayList<>());
-        list.add(new Feature(feature, actualIndex));
-        typeToFeaturesMap.put(section, list);
+        if (debug) {
+            var list = typeToFeaturesMap.getOrDefault(section, new ArrayList<>());
+            list.add(new Feature(feature, actualIndex));
+            typeToFeaturesMap.put(section, list);
+        }
     }
 
     /**
