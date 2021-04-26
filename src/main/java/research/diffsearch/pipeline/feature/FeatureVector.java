@@ -65,7 +65,7 @@ public class FeatureVector {
                 actualIndex = (countBits * actualIndex + offset) % vector.length;
                 if (vector[actualIndex] == 0 || offset == countBits - 1) {
 
-                    vector[actualIndex] = 1;
+                    vector[actualIndex]++;
                     break outer;
                 }
             }

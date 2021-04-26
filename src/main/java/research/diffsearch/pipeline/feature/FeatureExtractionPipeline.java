@@ -51,7 +51,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
      */
     public FeatureVector extractFeatures(String codeChange) {
         FeatureVector featureVector = new FeatureVector(codeChange,
-                getTotalFeatureVectorLength(),
+                getTotalFeatureVectorLength() / countBits,
                 countBits,
                 quadraticProbingMaxCount);
         try {
