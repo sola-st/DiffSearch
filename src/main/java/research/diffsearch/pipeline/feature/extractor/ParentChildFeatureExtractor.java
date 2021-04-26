@@ -6,7 +6,7 @@ import research.diffsearch.Config;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import static research.diffsearch.util.Util.isQueryKeyword;
+import static research.diffsearch.util.Util.isQueryPlaceholder;
 
 /**
  * Feature extractor for parent child features.
@@ -42,7 +42,7 @@ public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtract
     private static boolean shouldExtractFeature(String parentChildText, String childNodeText, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !isQueryKeyword(childNodeText)
+                || !isQueryPlaceholder(childNodeText)
                )
                && isNotBlacklisted(parentChildText)
                && isNotBlacklisted(childNodeText);

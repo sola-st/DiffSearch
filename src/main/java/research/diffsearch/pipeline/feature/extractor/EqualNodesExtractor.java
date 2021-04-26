@@ -73,7 +73,7 @@ public class EqualNodesExtractor implements FeatureExtractor {
             && (isNoQueryKeywordOrIsNamedKeyword(secondLabel))) {
 
             if (firstLabel.equals(secondLabel)) {
-                if (!Util.isQueryKeyword(firstLabel)) {
+                if (!Util.isQueryPlaceholder(firstLabel)) {
                     mainSection.addFeature(firstLabel);
                 }
 
@@ -85,7 +85,7 @@ public class EqualNodesExtractor implements FeatureExtractor {
     }
 
     private static boolean isNoQueryKeywordOrIsNamedKeyword(String firstLabel) {
-        return !Util.isQueryKeyword(firstLabel) || (firstLabel.contains("<") && !firstLabel.equals("<...>"));
+        return !Util.isQueryPlaceholder(firstLabel) || (firstLabel.contains("<") && !firstLabel.equals("<...>"));
     }
 
     @Override

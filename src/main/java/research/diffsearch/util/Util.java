@@ -123,7 +123,7 @@ public class Util {
         return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
     }
 
-    public static boolean isQueryKeyword(String nodeText) {
+    public static boolean isQueryPlaceholder(String nodeText) {
         var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>", "querySnippet");
         return keywords
                 .stream()

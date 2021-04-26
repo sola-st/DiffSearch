@@ -6,7 +6,7 @@ import research.diffsearch.Config;
 import research.diffsearch.pipeline.feature.FeatureVector.Section;
 import research.diffsearch.util.ProgrammingLanguage;
 
-import static research.diffsearch.util.Util.isQueryKeyword;
+import static research.diffsearch.util.Util.isQueryPlaceholder;
 
 public class DescendentFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
@@ -44,7 +44,7 @@ public class DescendentFeatureExtractor extends AbstractRecursiveFeatureExtracto
     private static boolean shouldExtractFeature(String childNodeText, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !isQueryKeyword(childNodeText)
+                || !isQueryPlaceholder(childNodeText)
                );
     }
 }

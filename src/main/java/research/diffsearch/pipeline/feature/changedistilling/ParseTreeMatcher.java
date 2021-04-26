@@ -10,9 +10,9 @@ import java.util.Set;
 public class ParseTreeMatcher {
 
     private double stringSimilarityThreshold = 0.6;
-    private double commonNodesThreshold = 0.3;
-    private double commonNodesNoStringSimilarityThreshold = 0.8;
-    private double commonNodesSmallSubtreeThreshold = 0.15;
+    private double commonNodesThreshold = 0.25;
+    private double commonNodesNoStringSimilarityThreshold = 0.7;
+    private double commonNodesSmallSubtreeThreshold = 0.1;
 
     private MatchList matches = new MatchList();
     private final ParseTreeNode oldCodeRoot;

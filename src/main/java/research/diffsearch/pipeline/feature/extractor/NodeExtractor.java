@@ -31,6 +31,6 @@ public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     private static boolean shouldExtractFeature(String nodeText, boolean isQuery) {
         return (!isQuery
                 || Config.EXTRACT_QUERY_KEYWORDS
-                || !Util.isQueryKeyword(nodeText));
+                || !Util.isQueryPlaceholder(nodeText));
     }
 }

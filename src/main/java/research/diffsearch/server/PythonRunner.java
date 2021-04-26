@@ -67,6 +67,7 @@ public class PythonRunner {
                     @Override
                     public void processLine(String s) {
                         logPythonEvent(s);
+
                         if (inputMatcher.test(s)) {
                             synchronized (waiter) {
                                 waiter.notifyAll();
