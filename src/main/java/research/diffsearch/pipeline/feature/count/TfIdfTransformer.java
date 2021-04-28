@@ -1,4 +1,4 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.count;
 
 import research.diffsearch.pipeline.base.Pipeline;
 
