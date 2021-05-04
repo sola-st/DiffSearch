@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
  */
 public class FeatureVector {
 
-    private static final boolean debug = false;
-
     private final double[] vector;
     private final String codeChange;
     private final Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
     private final int countBits;
     private final int quadraticProbingMaxCount;
+
+    private boolean featureVectorAnalysis = false;
 
     /**
      * Creates a new feature vector for the given code change.
@@ -71,7 +71,7 @@ public class FeatureVector {
             }
         }
 
-        if (debug) {
+        if (featureVectorAnalysis) {
             var list = typeToFeaturesMap.getOrDefault(section, new ArrayList<>());
             list.add(new Feature(feature, actualIndex));
             typeToFeaturesMap.put(section, list);
@@ -95,6 +95,15 @@ public class FeatureVector {
     }
 
     /**
+     * @param featureVectorAnalysis if this is true, the feature vector saves all features so
+     *                              that they can be returned by {@link #getFeatureList(String)}.
+     */
+    public void setFeatureVectorAnalysis(boolean featureVectorAnalysis) {
+        this.featureVectorAnalysis = featureVectorAnalysis;
+    }
+
+    /**
+     * Returns the names of all sections. This only works, if <b>featureVectorAnalysis</b> is true.
      * @return the names of all sections this feature vector has.
      */
     public Set<String> getCategories() {
@@ -105,7 +114,7 @@ public class FeatureVector {
     }
 
     /**
-     * Returns all features in a section.
+     * Returns all features in a section. This only works if <b>featureVectorAnalysis</b> is true.
      *
      * @param category name of the section.
      * @return all features of the given section.

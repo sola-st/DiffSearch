@@ -33,7 +33,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
             }
         }
 
-        if (!sum.toString().isBlank() && i > 0) {
+        if (!sum.toString().isBlank() && i > 0 && !sum.toString().contains("querySnippet")) {
             section.addFeature(sum.toString());
         }
 

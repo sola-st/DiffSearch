@@ -137,7 +137,7 @@ public abstract class App implements Runnable, Closeable {
         return faissSocket;
     }
 
-    public void close(){
+    public void close() {
         try {
             if (faissSocket != null) {
                 faissSocket.close();

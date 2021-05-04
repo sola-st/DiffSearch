@@ -1,9 +1,10 @@
-package research.diffsearch.pipeline.feature;
+package research.diffsearch.pipeline.feature.count;
 
 import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.FilePathUtils;
 
 import java.io.IOException;

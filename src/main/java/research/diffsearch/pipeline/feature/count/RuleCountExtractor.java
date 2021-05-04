@@ -7,13 +7,29 @@ import research.diffsearch.pipeline.feature.extractor.AbstractRecursiveFeatureEx
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.HashMap;
-
-import static research.diffsearch.pipeline.feature.count.RuleMaxOccurrenceCounter.getRuleCountMapForTree;
+import java.util.List;
+import java.util.Map;
 
 public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
 
     public RuleCountExtractor(ProgrammingLanguage language, int length) {
         super(language, length);
+    }
+
+    public static Map<String, Integer> getRuleCountMapForTree(Tree node,
+                                                              List<String> ruleNames,
+                                                              Map<String, Integer> countMap) {
+        var nodeText = Trees.getNodeText(node,ruleNames);
+        if (ruleNames.contains(nodeText)) {
+            var count = countMap.getOrDefault(nodeText, 0);
+            countMap.put(nodeText, count + 1);
+        }
+
+        for (int i = 0; i < node.getChildCount(); i++) {
+            countMap = getRuleCountMapForTree(node.getChild(i), ruleNames, countMap);
+        }
+
+        return countMap;
     }
 
     @Override

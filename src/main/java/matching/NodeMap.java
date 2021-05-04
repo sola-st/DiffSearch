@@ -72,7 +72,7 @@ public class NodeMap {
                 }
             } else {
                 // we've seen this placeholder before; make sure it is consistently bound
-                if (boundSubtree.contains(currentSubtree)) { // TODO ?
+                if (boundSubtree.contains(currentSubtree)) {
                     return updatedCopy(k, v);
                 } else {
                     return null;

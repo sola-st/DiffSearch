@@ -26,13 +26,11 @@ public class NormalMode extends App {
     public void run() {
         try {
             startPythonServer();
-            logger.info("DiffSearch in Query mode");
 
             Socket socketFaiss = getFaissSocket();
-
             String nextLine;
 
-            while (!(nextLine = readLine()).equals("-exit")) {
+            while (!(nextLine = readLine()).equals("--exit")) {
                 new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                         // add recall pipeline if necessary
                         .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, Config.query))
