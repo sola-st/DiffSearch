@@ -82,7 +82,7 @@ public class Config {
     /**
      * Number of threads to use.
      */
-    public static int threadCount = 12;
+    public static int threadCount = Runtime.getRuntime().availableProcessors() - 4;
 
     /**
      * If true, DiffSearch will run in Batch mode. This will process all queries of a text file and
@@ -109,7 +109,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "rulecount";
+    public static String featureExtractors = "node;triangle;rulecount:1400";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
@@ -125,7 +125,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 256;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 300;
 
     /**
      * The number of bits per feature that are used for unary counting
@@ -192,7 +192,7 @@ public class Config {
      * After this number of seconds, the matching process gets cancelled and its assumed that a
      * candidate is not a match.
      */
-    public static int matchingTimeoutSeconds = 60;
+    public static int matchingTimeoutSeconds = 10;
 
     /**
      * FAISS parameter, number of clusters of the index.

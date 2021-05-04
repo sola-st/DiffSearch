@@ -76,7 +76,7 @@ public class DiffSearchWebServer extends Thread {
             query = getQuery(postData);
 
             result = performSearch(query);
-            Util.printOutputList(result);
+            // Util.printOutputList(result);
         }
 
         durationMatching = System.currentTimeMillis() - startTimeMatching;
