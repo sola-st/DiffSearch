@@ -151,6 +151,7 @@ FOR THE DIFFSEARCH SERVER:
 
   - Extra:
       
+      - The class `reseach.diffsearch.main.RemoveEqualCodeChanges` can be run to remove code changes with equal sides. These code changes are never considered by DiffSearch. Therfore, removing them can increase recall slightly.
       - If you received the error: " OSError: [Errno 98] Address already in use"
       
       - Use the following commands:
