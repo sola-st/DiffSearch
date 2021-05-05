@@ -79,6 +79,7 @@ public class FeatureExtractionMode extends App {
         List<String> changesLines = newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
         DocumentFrequencyCounter featureFrequencyCounter = new DocumentFrequencyCounter();
         var numberOfLines = changesLines.size();
+        logger.debug("Corpus size: {}", numberOfLines);
 
         Pipeline
                 .from(Util::formatCodeChange)

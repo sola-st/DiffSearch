@@ -207,6 +207,7 @@ public class FilePathUtils {
 
             @Override
             public void after() {
+                logger.debug("Closing writer.");
                 try {
                     writer.close();
                 } catch (IOException e) {
