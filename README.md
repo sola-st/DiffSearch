@@ -128,13 +128,13 @@ FOR THE DIFFSEARCH SERVER:
 
   - clone the repository: https://github.com/lucaresearch/DiffSearch.git
   - Type the commands:  
-      - virtualenv -p /usr/bin/python3 diffsearch-env     
-      - source diffsearch-env/bin/activate  
-      - pip3 install faiss-cpu 
-      - pip3 install numpy     
-      - pip3 install pandas
-      - pip3 install pygit2
-      - pip3 install dask[dataframe]
+          - virtualenv -p /usr/bin/python3 diffsearch-env     
+          - source diffsearch-env/bin/activate  
+          - pip3 install faiss-cpu 
+          - pip3 install numpy     
+          - pip3 install pandas
+          - pip3 install pygit2
+          - pip3 install dask[dataframe]
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
   - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
@@ -162,7 +162,7 @@ FOR THE DIFFSEARCH SERVER:
         - Old GUI:                   -Dexec.args="-w -lang java"
         - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
         - DiffSearch Beta: -Dexec.args="-r -k 5000 -silent -lang java -extractors node:300;triangle:300;rulecount:1400 -mt 10"
-        - DiffSearch Alpha: -Dexec.args="-r -k 1000 -silent -lang java -extractors parentchild:2048;triangle:2048 -t 1 --extract-query-placeholders -nondividedextraction -noquerymultiplpication"
+        - DiffSearch Alpha: -Dexec.args="-r -k 1000 -silent -lang java -extractors parentchild:2048;triangle:2048 -t 1 --extract-query-placeholders -nondividedextraction -noquerymultiplication"
         
 
 FOR THE GUI:
