@@ -139,8 +139,8 @@ FOR THE DIFFSEARCH SERVER:
           - pip3 install dask[dataframe]
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
-  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/156-DbqxCAzSDSiU6NtLhWRqbZL8afDzv/view) )
-  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/156-DbqxCAzSDSiU6NtLhWRqbZL8afDzv/view) )
+  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/drive/folders/1DFP3T0MzlgCT0nnHqTZm6pb-2UZjD5TT?usp=sharing) )
+  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/drive/folders/1DFP3T0MzlgCT0nnHqTZm6pb-2UZjD5TT?usp=sharing) )
   - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
   - Run DiffSearch's feature extraction to create an index (see below).
 
