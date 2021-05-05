@@ -127,7 +127,8 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 FOR THE DIFFSEARCH SERVER:
 
   - clone the repository: https://github.com/lucaresearch/DiffSearch.git
-  - Type the commands:  
+  - Type the commands: 
+   
           - virtualenv -p /usr/bin/python3 diffsearch-env     
           - source diffsearch-env/bin/activate  
           - pip3 install faiss-cpu 
@@ -164,7 +165,7 @@ FOR THE DIFFSEARCH SERVER:
         - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
         - DiffSearch Beta: -Dexec.args="-r -k 5000 -silent -lang java -extractors node:300;triangle:300;rulecount:1400 -mt 10"
         - DiffSearch Alpha: -Dexec.args="-r -k 1000 -silent -lang java -extractors parentchild:2048;triangle:2048 -t 1 --extract-query-placeholders -nondividedextraction -noquerymultiplication"
-        - All arguments are given in the [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters).
+  - All arguments are given in the [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters).
         
 
 FOR THE GUI:
