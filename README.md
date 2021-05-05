@@ -127,7 +127,8 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 FOR THE DIFFSEARCH SERVER:
 
   - clone the repository: https://github.com/lucaresearch/DiffSearch.git
-  - Type the commands:  
+  - Type the commands: 
+   
           - virtualenv -p /usr/bin/python3 diffsearch-env     
           - source diffsearch-env/bin/activate  
           - pip3 install faiss-cpu 
@@ -137,14 +138,15 @@ FOR THE DIFFSEARCH SERVER:
           - pip3 install dask[dataframe]
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
-  - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
-  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1ZISwrmRnNTLZSjS5tmOqU7QcH7Dd793z/view?usp=sharing) )
-  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1Dp1IALq9W8Ktu1nlBcP3h8oVP24wlo4Q/view?usp=sharing) )
+  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/156-DbqxCAzSDSiU6NtLhWRqbZL8afDzv/view) )
+  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/156-DbqxCAzSDSiU6NtLhWRqbZL8afDzv/view) )
   - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
+  - Run DiffSearch's feature extraction to create an index (see below).
 
   - Then:   
       - mvn compile  
-      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"
+      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-fe -lang java"
+      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-w -lang java" (or run other modes of DiffSearch, see below)
 
   - Extra:
       
@@ -163,6 +165,7 @@ FOR THE DIFFSEARCH SERVER:
         - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
         - DiffSearch Beta: -Dexec.args="-r -k 5000 -silent -lang java -extractors node:300;triangle:300;rulecount:1400 -mt 10"
         - DiffSearch Alpha: -Dexec.args="-r -k 1000 -silent -lang java -extractors parentchild:2048;triangle:2048 -t 1 --extract-query-placeholders -nondividedextraction -noquerymultiplication"
+  - All arguments are given in the [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters).
         
 
 FOR THE GUI:
