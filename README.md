@@ -127,6 +127,7 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 FOR THE DIFFSEARCH SERVER:
 
   - clone the repository: https://github.com/lucaresearch/DiffSearch.git
+  - checkout branch origin/thesis-paul-bredl
   - Type the commands: 
    
           - virtualenv -p /usr/bin/python3 diffsearch-env     
