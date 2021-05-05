@@ -8,6 +8,10 @@ import java.io.IOException;
 import static research.diffsearch.util.FilePathUtils.*;
 import static research.diffsearch.util.ProgrammingLanguage.JAVA;
 
+/**
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class Deduplication {
 
     public static void main(String[] args) throws IOException {

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * @author Luca Di Grazia
+ */
 @SuppressWarnings("ALL")
 public class Matching_Methods {
 

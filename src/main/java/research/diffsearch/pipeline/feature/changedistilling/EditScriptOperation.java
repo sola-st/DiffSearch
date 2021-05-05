@@ -2,6 +2,9 @@ package research.diffsearch.pipeline.feature.changedistilling;
 
 import research.diffsearch.tree.ParseTreeNode;
 
+/**
+ * @author Paul Bredl
+ */
 public class EditScriptOperation {
 
     private final Type type;

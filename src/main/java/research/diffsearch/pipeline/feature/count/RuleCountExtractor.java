@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Paul Bredl
+ */
 public class RuleCountExtractor extends AbstractRecursiveFeatureExtractor {
 
     public RuleCountExtractor(ProgrammingLanguage language, int length) {

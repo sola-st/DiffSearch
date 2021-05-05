@@ -6,6 +6,9 @@ import research.diffsearch.tree.ParseTreeNode;
 
 import java.util.StringJoiner;
 
+/**
+ * @author Paul Bredl
+ */
 public class Match {
 
     private final ParseTreeNode oldNode, newNode;

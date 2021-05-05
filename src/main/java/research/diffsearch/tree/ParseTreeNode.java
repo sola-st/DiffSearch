@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 /**
  * This class represents an extended version of a parse tree with additional meta
  * information.
+ *
+ * @author Paul Bredl
  */
 public class ParseTreeNode {
 

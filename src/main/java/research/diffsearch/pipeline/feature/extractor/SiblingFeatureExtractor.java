@@ -10,6 +10,8 @@ import static research.diffsearch.util.Util.isQueryPlaceholder;
 
 /**
  * This feature extractor extracts pairs of sibling from the parse tree.
+ *
+ * @author Paul Bredl
  */
 public class SiblingFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 

@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Paul Bredl
+ */
 public class MatchList {
 
     private final Map<Integer, Match> matchMap = new HashMap<>();

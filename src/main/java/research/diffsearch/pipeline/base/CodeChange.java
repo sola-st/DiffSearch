@@ -5,6 +5,8 @@ import java.util.Objects;
 /**
  * This POJO represents a code change. It contains the old and new part of the code change as well as information
  * where it is extracted from.
+ *
+ * @author Paul Bredl
  */
 public class CodeChange {
     public String url = "";

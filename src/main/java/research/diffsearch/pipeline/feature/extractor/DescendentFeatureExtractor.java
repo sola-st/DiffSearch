@@ -8,6 +8,9 @@ import research.diffsearch.util.ProgrammingLanguage;
 
 import static research.diffsearch.util.Util.isQueryPlaceholder;
 
+/**
+ * @author Paul Bredl
+ */
 public class DescendentFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
     public DescendentFeatureExtractor(ProgrammingLanguage language, int featureVectorLength) {

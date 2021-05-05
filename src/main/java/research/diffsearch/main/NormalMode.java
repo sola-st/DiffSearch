@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class NormalMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(NormalMode.class);

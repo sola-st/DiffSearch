@@ -9,6 +9,8 @@ import research.diffsearch.util.ProgrammingLanguage;
 /**
  * This feature extractor uses another {@link AbstractRecursiveFeatureExtractor} and extracts features
  * using this extractor but divided in the old and new part of the code change.
+ *
+ * @author Paul Bredl
  */
 public class DividedFeatureExtractor implements FeatureExtractor {
 

@@ -17,8 +17,11 @@ import static research.diffsearch.util.FilePathUtils.getAllLines;
 
 /**
  * This mode is used to run a batch file of queries.
- *
+ * <p>
  * Usage: diffsearch -b <i>queries_file</i> <i>output_file</i>.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class BatchMode extends App {
 

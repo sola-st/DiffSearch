@@ -12,8 +12,11 @@ import java.net.Socket;
 
 /**
  * DiffSearch mode that executes a single query.
- *
+ * <p>
  * Usage: diffsearch -q <i>query_string</i>
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class QueryMode extends App {
 

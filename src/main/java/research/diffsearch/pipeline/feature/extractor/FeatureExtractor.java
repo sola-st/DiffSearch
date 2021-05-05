@@ -7,6 +7,8 @@ import research.diffsearch.util.ProgrammingLanguageDependent;
 
 /**
  * A feature extractor is used to get a feature vector of a given code change.
+ *
+ * @author Paul Bredl
  */
 public interface FeatureExtractor extends ProgrammingLanguageDependent {
 

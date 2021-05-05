@@ -12,6 +12,9 @@ import java.util.stream.StreamSupport;
 
 import static research.diffsearch.util.FilePathUtils.getAllLines;
 
+/**
+ * @author Paul Bredl
+ */
 public class DocumentFrequencyCounter implements Pipeline<FeatureVector, FeatureVector> {
 
     private int[] documentFrequencies;

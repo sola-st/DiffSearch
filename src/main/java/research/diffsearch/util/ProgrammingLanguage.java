@@ -7,6 +7,9 @@ import ProgrammingLanguage.Python.Python3Parser;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Paul Bredl
+ */
 public enum ProgrammingLanguage {
 
     JAVA(Arrays.asList(JavaParser.ruleNames)),

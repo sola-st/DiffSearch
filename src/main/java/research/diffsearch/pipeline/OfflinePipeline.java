@@ -3,6 +3,9 @@ package research.diffsearch.pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Luca Di Grazia
+ */
 public class OfflinePipeline {
 
     private static final Logger logger = LoggerFactory.getLogger(OfflinePipeline.class);

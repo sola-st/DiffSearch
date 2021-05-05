@@ -10,6 +10,10 @@ import java.net.Socket;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class WebServerGUI extends DiffSearchWebServer {
 
     public WebServerGUI(Socket socket, Socket socketFaiss, FileOutputStream log) {

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 /**
  * This class represents a feature vector. It contains different section for each feature extractor.
+ *
+ * @author Paul Bredl
  */
 public class FeatureVector {
 
@@ -17,7 +19,7 @@ public class FeatureVector {
     private final int countBits;
     private final int quadraticProbingMaxCount;
 
-    private boolean featureVectorAnalysis = false;
+    private boolean featureVectorAnalysis = true;
 
     /**
      * Creates a new feature vector for the given code change.

@@ -20,6 +20,9 @@ import java.net.Socket;
  * Main class and starting point of DiffSearch.
  * DiffSearch can be run in different modes, such as feature extraction or batch mode. The sublasses of this
  * class each represent a mode.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public abstract class App implements Runnable, Closeable {
 

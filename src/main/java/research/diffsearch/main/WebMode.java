@@ -12,6 +12,9 @@ import java.net.Socket;
 
 /**
  * DiffSearch web mode. Shows a simple gui to execute queries.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class WebMode extends App {
 

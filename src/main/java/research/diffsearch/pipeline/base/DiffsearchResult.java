@@ -8,6 +8,8 @@ import java.util.Optional;
 /**
  * This object represents the result of a diff search.
  * It also contains optional measures of performance, recall, etc.
+ *
+ * @author Paul Bredl
  */
 public class DiffsearchResult {
 

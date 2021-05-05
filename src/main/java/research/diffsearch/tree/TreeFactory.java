@@ -2,6 +2,9 @@ package research.diffsearch.tree;
 
 import research.diffsearch.util.ProgrammingLanguage;
 
+/**
+ * @author Paul Bredl
+ */
 public class TreeFactory {
 
     public static AbstractTree getChangeTree(String candidate, ProgrammingLanguage language) {

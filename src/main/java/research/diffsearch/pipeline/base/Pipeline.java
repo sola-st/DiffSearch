@@ -11,6 +11,7 @@ import java.util.function.*;
  *
  * @param <I> input type of this pipeline
  * @param <O> output type of this pipeline
+ * @author Paul Bredl
  */
 public interface Pipeline<I, O> {
 

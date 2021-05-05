@@ -22,6 +22,8 @@ import java.util.function.Predicate;
  * This class executes python files with certain arguments.
  * The output to the console from the python execution will
  * be logged.
+ *
+ * @author Paul Bredl
  */
 public class PythonRunner {
 

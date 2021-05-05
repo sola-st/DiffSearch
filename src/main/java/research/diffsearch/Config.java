@@ -4,6 +4,9 @@ import research.diffsearch.util.ProgrammingLanguage;
 
 /**
  * This class contains all configurable variables of DiffSearch.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class Config {
 

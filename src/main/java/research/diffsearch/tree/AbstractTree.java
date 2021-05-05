@@ -10,6 +10,9 @@ import java.util.function.Supplier;
 
 /**
  * Abstract super class for all tree classes.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public abstract class AbstractTree {
     protected String changeString;

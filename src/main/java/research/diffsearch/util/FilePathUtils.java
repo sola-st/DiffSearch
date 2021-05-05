@@ -17,6 +17,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * @author Paul Bredl
+ */
 public class FilePathUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FilePathUtils.class);

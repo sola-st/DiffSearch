@@ -4,6 +4,9 @@ import research.diffsearch.pipeline.base.Pipeline;
 
 import java.util.Arrays;
 
+/**
+ * @author Paul Bredl
+ */
 public class TfIdfTransformer implements Pipeline<double[], double[]> {
 
     private final DocumentFrequencyCounter counter;

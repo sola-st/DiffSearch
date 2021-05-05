@@ -10,6 +10,9 @@ import java.util.List;
 
 import static research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation.Type.*;
 
+/**
+ * @author Paul Bredl
+ */
 public class EditScriptCreator {
 
     private final MatchList matchList;

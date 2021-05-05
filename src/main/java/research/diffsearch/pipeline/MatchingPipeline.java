@@ -22,6 +22,9 @@ import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
 /**
  * Pipeline to check if some candidate code change actually matches a query.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class MatchingPipeline
         implements Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {

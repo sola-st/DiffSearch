@@ -10,7 +10,6 @@ import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
-import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
@@ -26,6 +25,11 @@ import java.util.Objects;
 
 import static research.diffsearch.util.FilePathUtils.*;
 
+/**
+ * Online phase of DiffSearch that performs the search.
+ *
+ * @author Paul Bredl
+ */
 public class OnlinePipeline implements
         Pipeline<String, DiffsearchResult>, ProgrammingLanguageDependent {
 
@@ -73,11 +77,8 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
-            // TODO remove
             if (!Config.SILENT) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
-                var tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
-                System.out.println(tree.getTreeString());
             }
 
             // matching in this pipeline

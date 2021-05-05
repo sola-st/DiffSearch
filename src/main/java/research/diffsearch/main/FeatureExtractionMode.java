@@ -25,6 +25,9 @@ import static research.diffsearch.util.FilePathUtils.*;
  * Extracts feature vectors from the code changes and indexes them.
  * <p>
  * Usage: diffsearch -fe
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class FeatureExtractionMode extends App {
 

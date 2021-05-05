@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class WebGUIMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(WebGUIMode.class);

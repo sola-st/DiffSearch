@@ -20,6 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class DiffSearchWebServer extends Thread {
 
     private static final Logger logger = LoggerFactory.getLogger(DiffSearchWebServer.class);

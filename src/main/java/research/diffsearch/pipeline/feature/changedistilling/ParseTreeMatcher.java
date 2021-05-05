@@ -7,6 +7,9 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Paul Bredl
+ */
 public class ParseTreeMatcher {
 
     private double stringSimilarityThreshold = 0.6;

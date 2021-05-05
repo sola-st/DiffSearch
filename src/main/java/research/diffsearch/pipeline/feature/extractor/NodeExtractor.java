@@ -9,6 +9,8 @@ import research.diffsearch.util.Util;
 
 /**
  * This feature extractor extracts a feature for each node in the parse tree.
+ *
+ * @author Paul Bredl
  */
 public class NodeExtractor extends AbstractRecursiveFeatureExtractor {
     public NodeExtractor(ProgrammingLanguage language, int featureVectorLength) {

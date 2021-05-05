@@ -9,6 +9,9 @@ import research.diffsearch.util.Util;
 
 /**
  * This feature extractor extracts parse tree triangles from code changes.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
@@ -33,7 +36,7 @@ public class TriangleFeatureExtractor extends AbstractRecursiveFeatureExtractor 
             }
         }
 
-        if (!sum.toString().isBlank() && i > 0 && !sum.toString().contains("querySnippet")) {
+        if (!sum.toString().isBlank() && i > 0 /*&& !sum.toString().contains("querySnippet") */) {
             section.addFeature(sum.toString());
         }
 

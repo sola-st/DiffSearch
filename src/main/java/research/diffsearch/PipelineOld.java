@@ -1,5 +1,8 @@
 package research.diffsearch;
 
+/**
+ * @author Paul Bredl
+ */
 @SuppressWarnings("ALL")
 public class PipelineOld {
 

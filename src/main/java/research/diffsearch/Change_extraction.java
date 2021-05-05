@@ -16,6 +16,9 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
+/**
+ * @author Luca Di Grazia
+ */
 @SuppressWarnings("ALL")
 public class Change_extraction {
     /**

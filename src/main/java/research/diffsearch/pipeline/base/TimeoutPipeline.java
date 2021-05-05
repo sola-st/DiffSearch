@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Pipeline that times out the processing of an input after a certain time.
+ *
+ * @author Paul Bredl
  */
 public class TimeoutPipeline<I, O> implements Pipeline<I, O> {
 

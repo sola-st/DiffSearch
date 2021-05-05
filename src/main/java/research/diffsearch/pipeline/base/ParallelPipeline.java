@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Pipeline that processes inputs in other threads, but synchronizes the outputs so
  * they get returned in the right order.
+ *
+ * @author Paul Bredl
  */
 public class ParallelPipeline<I, O> implements Pipeline<I, O> {
 

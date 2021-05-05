@@ -23,6 +23,8 @@ import static research.diffsearch.util.FilePathUtils.*;
 /**
  * This pipeline is used to measure the recall of queries.
  * This process is very slow as it matches all the code changes of the corpus.
+ *
+ * @author Paul Bredl
  */
 public class RecallPipeline implements
         Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {

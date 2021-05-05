@@ -8,6 +8,11 @@ import research.diffsearch.Config;
 import static java.lang.Byte.parseByte;
 import static java.lang.Integer.parseInt;
 
+/**
+ * Parses command line arguments and adjusts the config accordingly.
+ *
+ * @author Paul Bredl
+ */
 public class CommandLineUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandLineUtil.class);
@@ -44,10 +49,6 @@ public class CommandLineUtil {
                         .numberOfArgs(2)
                         .optionalArg(true)
                         .build());
-    }
-
-    public static void parseArgs(String command) {
-        parseArgs(org.apache.commons.exec.CommandLine.parse(command).getArguments());
     }
 
     public static void parseArgs(String[] args) {

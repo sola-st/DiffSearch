@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Extracts features from code changes.
+ *
+ * @author Paul Bredl
  */
 public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector> {
 

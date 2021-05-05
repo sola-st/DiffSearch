@@ -13,6 +13,9 @@ import java.util.List;
 import static research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation.Type.*;
 import static research.diffsearch.util.Util.isQueryPlaceholder;
 
+/**
+ * @author Paul Bredl
+ */
 public class EditScriptExtractor implements FeatureExtractor {
 
     private final ProgrammingLanguage programmingLanguage;

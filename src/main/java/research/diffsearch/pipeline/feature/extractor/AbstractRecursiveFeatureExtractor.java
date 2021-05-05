@@ -11,6 +11,8 @@ import java.util.Objects;
 /**
  * Represents any parse-tree based feature extractor that can be run recursive on
  * the parse tree.
+ *
+ * @author Paul Bredl
  */
 public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtractor {
 

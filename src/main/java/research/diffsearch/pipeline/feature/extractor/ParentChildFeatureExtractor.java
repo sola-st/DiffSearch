@@ -10,6 +10,9 @@ import static research.diffsearch.util.Util.isQueryPlaceholder;
 
 /**
  * Feature extractor for parent child features.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class ParentChildFeatureExtractor extends AbstractRecursiveFeatureExtractor {
 
