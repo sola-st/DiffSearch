@@ -118,30 +118,55 @@ Matching change:
 
 This package contains the code of DiffSearch. If you want simply run the tool see the section "how to run".
 
-**Main files:**
-- src/main/java/research.diffsearch/**App.java** -> Main file
-- src/main/java/research.diffsearch/**Change_extraction.java** -> Clone repository and extract changes
-- src/main/java/research.diffsearch/**Pipeline.java** -> Feature extraction stage, FAISS stage 
-- src/main/java/research.diffsearch/**Python3_Tree.java** -> Python tree class 
-- src/main/java/grammar/**Python3(...).java** -> ANTLR Java classes
-- src/main/java/research.diffsearch/**Java_Tree.java** -> Java tree class 
-- src/main/java/grammar/**Java(...).java** -> ANTLR Java classes
-- src/main/java/research.diffsearch/**TreeUtils.java** -> Methods to visit and work with trees
-- src/main/java/research.diffsearch/**Config.java** -> File with important configuration constants.
-- src/main/java/resources/Python/**FAISS_indexing.py** -> FAISS indexing (without query)
-- src/main/java/resources/Python/**FAISS_Nearest_Neighbor_Search.py** -> FAISS Nearest Neighbor Search
-- src/main/java/resources/Python/**git_functions.py** -> python script that clones and performs the git diff.
-- src/main/java/matching/*  -> final matching algorithm
-- src/main/resources/Results/* -> there are some output file results
-
-
 **Requirements**
-- Java 8 and Python 3.7
+- Java 11 and Python 3.7
 - [ANTLR 4.7.1](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
-- [FAISS 1.6.1](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> pip3 install faiss-cpu --no-cache
 
 **How to run**
-- In src/main/java/research.diffsearch/**Config.java** set WEB = true, SCALABILITY  = false and EFFECTIVENESS = false;
-- Run the file src/main/java/research.diffsearch/**App.java**
-- Open a Browser and digit **http://localhost:8843**
-- Try a query, e.g. return ID --> return ID (It is a toy dataset with a few code changes)
+
+FOR THE DIFFSEARCH SERVER:
+
+  - clone the repository: https://github.com/lucaresearch/DiffSearch.git
+  - Type the commands:  
+      - virtualenv -p /usr/bin/python3 diffsearch-env     
+      - source diffsearch-env/bin/activate  
+      - pip3 install faiss-cpu 
+      - pip3 install numpy     
+      - pip3 install pandas
+      - pip3 install pygit2
+      - pip3 install dask[dataframe]
+
+  - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
+  - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
+  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1ZISwrmRnNTLZSjS5tmOqU7QcH7Dd793z/view?usp=sharing) )
+  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1Dp1IALq9W8Ktu1nlBcP3h8oVP24wlo4Q/view?usp=sharing) )
+  - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
+
+  - Then:   
+      - mvn compile  
+      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"
+
+  - Extra:
+      
+      - If you received the error: " OSError: [Errno 98] Address already in use"
+      
+      - Use the following commands:
+           
+          - fuser -k 5002/tcp
+          - fuser -k 8843/tcp
+          
+  - More DiffSearch arguments:
+ 
+        - Recall experiments:        -Dexec.args="-r -b -lang java"
+        - Features extraction:       -Dexec.args="-fe -lang java"
+        - Old GUI:                   -Dexec.args="-w -lang java"
+        - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
+        - DiffSearch Beta: -Dexec.args="-r -k 5000 -silent -lang java -extractors node:300;triangle:300;rulecount:1400 -mt 10"
+        - DiffSearch Alpha: -Dexec.args="-r -k 1000 -silent -lang java -extractors parentchild:2048;triangle:2048 -t 1 --extract-query-placeholders -nondividedextraction -noquerymultiplpication"
+        
+
+FOR THE GUI:
+
+- clone the repository: https://github.com/sola-st/DiffSearch-UI
+- Run the command: ng serve --proxy-config src/proxy.conf.json
+- Go in "http://localhost:4200/diffsearch" with your browser 
