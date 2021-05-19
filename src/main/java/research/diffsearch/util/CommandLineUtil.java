@@ -44,6 +44,7 @@ public class CommandLineUtil {
                 .addOption("tfidf", false, "if tfidf weights should be used in the feature vectors.")
                 .addOption("noquerymultiplication", false, "query vectors do not get multiplied.")
                 .addOption("nondividedextraction", false, "feature extraction is not divided in the old and new part.")
+                .addOption("gurl", "web-gui-url", true, "set the web GUI URL")
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
@@ -133,6 +134,9 @@ public class CommandLineUtil {
             }
             if (commandLine.hasOption("noquerymultiplication")) {
                 Config.QUERY_MULTIPLICATION = false;
+            }
+            if (commandLine.hasOption("gurl")) {
+                Config.web_url = commandLine.getOptionValue("gurl");
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

@@ -1,10 +1,9 @@
 #! /usr/bin/python3
-import logging
-import socket
-
 import faiss  # make faiss available
+import logging
 import numpy as np
 import pandas as pd
+import socket
 import sys
 import time
 
@@ -27,7 +26,8 @@ def searching(index_path,
               range_search=False,
               k_max=100,
               tfidf=False,
-              changes_string, changes_string_prop):
+              changes_string="",
+              changes_string_prop=""):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -165,4 +165,4 @@ searching(index_path=str(sys.argv[1]),
           range_search=sys.argv[6] == "true",
           k_max=int(sys.argv[7]),
           tfidf=sys.argv[8] == "true",
-          str(sys.argv[-2]), str(sys.argv[-1]))
+          changes_string=str(sys.argv[-2]), changes_string_prop=str(sys.argv[-1]))
