@@ -83,7 +83,7 @@ public class NodeUtil {
             return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators") || parentLabel.equals("assignmentOperator")|| parentLabel.equals("expr_stmt");
         }else if (kText.equals("unOP")|| kText.matches("unOP<[0-9]+>")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
-            return parentLabel.equals("expression");
+            return parentLabel.equals("unary_prefix_operators") || parentLabel.equals("unary_postfix_operators");
         } else if (kText.equals("EXPR")|| kText.matches("EXPR<[0-9]+>")) {
             return vText.equals("expression") || vText.equals("expr") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
                     || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall")|| Trees.getNodeText(v.getParent(), changeParser).equals("singleExpression");

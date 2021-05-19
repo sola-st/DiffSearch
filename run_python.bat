@@ -1,1 +1,0 @@
-python3 src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py

@@ -1,0 +1,20 @@
+_ -->import java.util.Optional; import java.util.Set; import java.util.concurrent.Executors;
+t = PrimitiveType.I32; --> ty = PrimitiveType.I32;
+println(e) --> e  
+long lookupMethodInPool(long metaspaceConstantPool, int cpi, byte opcode, long[] unresolvedInfo); --> long lookupKlassInPool(long metaspaceConstantPool, int cpi);
+_ -->import com.oracle.jvmci.asm.sparc.*;
+public void generate(NodeLIRBuilderTool gen, LIRGenerationResult res) { --> public void generate(NodeLIRBuilderTool gen) {
+searchHit.getSource().clear(); searchHit.getSource().putAll(results); --> searchHit.getSourceAsMap().clear(); searchHit.getSourceAsMap().putAll(results);
+return sub(left, toComparableValue.execute(right)); --> return sub(left, toComparableValue.executeWithTarget(right));
+_ -->import static org.graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;  
+Arrays.sort(files); --> Arrays.sort(files, naturalComparator);  
+return isHostConfiguration() ? (label + " (host)") : label.toString(); --> return label.toString();  
+import android.support.design.widget.FloatingActionButton; -->_
+return types; --> return foundTypes;  
+throw JVMCIError.shouldNotReachHere(); --> throw GraalError.shouldNotReachHere();
+this.id = result.getRuntime().getBitcodeID(); -->_
+try (ToLibGraalScope<TruffleToLibGraal.Id> s = new ToLibGraalScope<>(InitializeRuntime, env)) { --> try (JNILibGraalScope<TruffleToLibGraal.Id> s = new JNILibGraalScope<>(InitializeRuntime, env)) {
+byte[] memo = hasChildren ? null : LEAF_MEMO; --> byte[] memo = hasChildren ? null : NO_MEMO;
+@JsonProperty -->_
+StructuredGraph graph = parseEager(method, AllowAssumptions.YES, options); --> StructuredGraph graph = parseEager(method, AllowAssumptions.YES, goptions);
+public int read(char cbuf[], int off, int len) throws IOException { --> public int read(char[] cbuf, int off, int len) throws IOException {
