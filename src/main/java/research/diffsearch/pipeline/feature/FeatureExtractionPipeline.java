@@ -3,21 +3,34 @@ package research.diffsearch.pipeline.feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Extracts features from code changes.
+ *
+ * @author Paul Bredl
  */
-public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
+public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector> {
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
-
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
+    private final byte countBits;
+    private final int quadraticProbingMaxCount;
+    private final boolean isQuery;
 
+    public FeatureExtractionPipeline(byte countBits, int quadraticProbingMaxCount, boolean isQuery) {
+        this.countBits = countBits;
+        this.quadraticProbingMaxCount = quadraticProbingMaxCount;
+        this.isQuery = isQuery;
+    }
+
+    /**
+     * Adds a new extractor to the pipeline.
+     */
     public void addFeatureExtractor(FeatureExtractor extractor) {
         extractorList.add(extractor);
     }
@@ -30,7 +43,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
      * @return the length of the resulting feature vector.
      */
     public int getTotalFeatureVectorLength() {
-        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorLength).sum();
+        return extractorList.stream().mapToInt(FeatureExtractor::getFeatureVectorSectionLength).sum() * countBits;
     }
 
     /**
@@ -38,14 +51,19 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
      *
      * @param codeChange the code change.
      */
-    public int[] extractFeatures(String codeChange) {
-        int[] featureVector = new int[getTotalFeatureVectorLength()];
+    public FeatureVector extractFeatures(String codeChange) {
+        FeatureVector featureVector = new FeatureVector(codeChange,
+                getTotalFeatureVectorLength() / countBits,
+                countBits,
+                quadraticProbingMaxCount);
         try {
             var startPosition = 0;
 
             for (FeatureExtractor extractor : getFeatureExtractors()) {
-                extractor.extractFeatures(codeChange, featureVector, startPosition);
-                startPosition += extractor.getFeatureVectorLength();
+                var section = featureVector.getSection(extractor.getName(),
+                        startPosition, extractor.getFeatureVectorSectionLength());
+                extractor.extractFeatures(codeChange, section, isQuery);
+                startPosition += extractor.getFeatureVectorSectionLength();
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -55,24 +73,20 @@ public class FeatureExtractionPipeline implements Pipeline<String, int[]> {
     }
 
     @Override
-    public void process(String input, int index, IndexedConsumer<int[]> outputConsumer) {
-        if (input != null) {
-            outputConsumer.accept(extractFeatures(input), index);
-        } else {
-            outputConsumer.skip(index);
-        }
+    public FeatureVector process(String input, int index) {
+        return extractFeatures(input);
     }
 
     public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
-        var pipeline = new FeatureExtractionPipeline();
-        pipeline.addFeatureExtractor(
-                        new TriangleFeatureExtractor(
-                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
-        );
-        pipeline.addFeatureExtractor(
-                        new ParentChildFeatureExtractor(
-                                Config.PROGRAMMING_LANGUAGE, Config.SINGLE_FEATURE_VECTOR_LENGTH, isQuery)
-        );
+        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT, isQuery);
+
+        var extractors = Config.featureExtractors.split(";");
+
+        for (var extractorDef : extractors) {
+            pipeline.addFeatureExtractor(
+                    FeatureExtractor.byDefinition(extractorDef,
+                            Config.SINGLE_FEATURE_VECTOR_LENGTH, Config.PROGRAMMING_LANGUAGE, Config.DIVIDE_EXTRACTORS));
+        }
         return pipeline;
     }
 }

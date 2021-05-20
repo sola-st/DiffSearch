@@ -77,6 +77,18 @@ public class ECMAScriptBaseListener implements ECMAScriptListener {
      *
      * <p>The default implementation does nothing.</p>
      */
+    @Override public void enterMultipleStatement(ECMAScriptParser.MultipleStatementContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override public void exitMultipleStatement(ECMAScriptParser.MultipleStatementContext ctx) { }
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
     @Override public void enterBlock(ECMAScriptParser.BlockContext ctx) { }
     /**
      * {@inheritDoc}

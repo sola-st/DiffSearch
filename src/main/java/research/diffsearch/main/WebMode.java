@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * DiffSearch web mode. Shows a simple gui to execute queries.
+ *
+ * @author Paul Bredl
+ * @author Luca Di Grazia
+ */
 public class WebMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(WebMode.class);
@@ -25,7 +31,7 @@ public class WebMode extends App {
         FileOutputStream serverLog;
         try {
             serverLog = getServerLog();
-            server = getServerSocket();
+            server = getDiffSearchServerSocket();
             socketFaiss = getFaissSocket();
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);

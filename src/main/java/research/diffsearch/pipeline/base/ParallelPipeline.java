@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Pipeline that processes inputs in other threads, but synchronizes the outputs so
  * they get returned in the right order.
+ *
+ * @author Paul Bredl
  */
 public class ParallelPipeline<I, O> implements Pipeline<I, O> {
 
@@ -37,6 +39,12 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
     public ParallelPipeline(Pipeline<I, O> basePipeline, int threadCount) {
         this.basePipeline = basePipeline;
         executorService = Executors.newFixedThreadPool(threadCount);
+    }
+
+    @Override
+    public void before(int size) {
+        queue.clear();
+        basePipeline.before(size);
     }
 
     private void passOnResult(O o, int innerIndex, IndexedConsumer<O> outputConsumer) {
@@ -70,8 +78,19 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
 
     @Override
     public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
-        executorService.submit(() -> basePipeline.process(input, index,
-                (o, innerIndex) -> ParallelPipeline.this.manageQueue(o, innerIndex, outputConsumer)));
+        executorService.submit(() -> {
+            try {
+                basePipeline.process(input, index,
+                        (o, innerIndex) -> ParallelPipeline.this.manageQueue(o, innerIndex, outputConsumer));
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
+    }
+
+    @Override
+    public O process(I input, int index) {
+        throw new IllegalStateException(); // unused
     }
 
     @Override
@@ -80,4 +99,6 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
         syncExecutorService.shutdown();
         basePipeline.after();
     }
+
+
 }
