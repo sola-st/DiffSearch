@@ -1,0 +1,20 @@
+import org.ID.ID.ID.ID; -->import org.ID.ID.ID.ID; <...>
+<...> --> return Optional.of(EXPR);
+package <...>; -->package ID.ID.ID.ID;
+ID = LT; --> ID = LT; ID = LT;
+ID<0>(LT, ID); --> ID<0>(false);
+for (AudioTrack audioTrack : ID.ID) { <...> --> <...>
+GalleryComment comment = ID[EXPR]; --> GalleryComment comment = ID.ID[EXPR];
+_ -->import ID.ID.ID; import ID.ID.ID; import ID.ID.ID;
+Collection<ID> ID(<...>) { --> Collection<ID> generateSyntheticBean(<...>) {
+@Before public void ID() throws ID { --> @BeforeClass public static void ID() throws ID {
+ID<0> = this; --> ID<0> = this.ID();
+ID<0>.incrementHost(EXPR); --> ID<0>.incrementSource(EXPR);
+return ID; --> return EXPR binOP EXPR;
+_ -->import com.oracle.ID.ID.ID.ID;
+_ --> public boolean ID<0>() { return ID.ID<0>(); }
+ID.ID(EXPR, EXPR); --> ID();
+return null; --> throw EXPR;
+throw EXPR; --> throw new GraalError(EXPR);
+@SuppressWarnings(<...>) -->_
+<...> --> merge.setNext(EXPR);

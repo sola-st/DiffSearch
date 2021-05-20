@@ -1,70 +1,93 @@
-ID<1>(ID<2>, LT<3>);-->ID<1>(LT<3>, ID<2>);$9
-EXPR = ID<1>(<...>);-->EXPR = ID<1>(<...>);$1160
-EXPR = ID<1>(<...>)-->EXPR = ID<1>(<...>)$1554
-ID<1>(ID<2>, ID<3>);-->ID<1>(ID<3>, ID<2>);$28
-ID<0>.ID<1>(ID, LT)-->ID<0>.ID<1>(ID, LT)$553
-LT-->LT binOP LT$431
-LT-->LT$97768
-return;-->return ID;$28
-return ID;-->return ID;$1554
-return;-->return EXPR;$123
-return EXPR;-->return EXPR;$40485
-return null;-->return EXPR;$388
-_-->return;$577
-<...>;-->_$142
-_--><...>$158355
-System.out.println(EXPR);-->_$323
-System.out.print(EXPR);-->_$5
-System.out.print(EXPR);-->System.out.print(EXPR);$13
-_-->System.out.println(<...>);$158
-_-->System.out.println(<...>)$247
-EXPR = ID(ID);-->EXPR = ID(ID);$83
-EXPR = ID();-->EXPR = ID(ID);$16
-EXPR = ID()-->EXPR = ID(ID)$24
-EXPR = LT;-->EXPR = ID;$35
-EXPR = LT-->EXPR = ID$88
-continue;-->_;$80
-break;-->_;$66
-break;-->return EXPR;$15
-_-->continue;$332
-if (EXPR) {-->EXPR;$39
-if (LT) {-->if (ID) {$1
-if (ID) {-->if (EXPR) {$431
-if (ID) {-->if (ID()) {$40
-if (ID<0>) {-->if (ID<1>()) {$40
-<...>-->} else {$70752
-_-->import java.io.ID;$1776
-_-->import java.ID.ID;$9902
-_-->import org.ID.ID.ID;$5365
-_-->import org.ID.ID.ID.ID;$7322
-import ID.ID.ID.ID;-->import org.ID.ID.ID;$760
-import java.util.ID;-->_$2379
-if (EXPR != null) {-->if (EXPR == null) {$5
-if (EXPR == null) {-->if (EXPR != null) {$7
-<...> ID(<...>) throws ID { --> <...> ID(<...>) {$859
-<...> ID() { --> <...> ID() {$4043
-public static void ID() { -->public static void ID() {$11
-public static void ID(<...>) { -->public static void ID(<...>) {$670
-public void ID(<...>) { -->public static void ID(<...>) {$21
-package ID;-->package ID;$2
-EXPR-->try {EXPR;} catch (ID ID) {<...>}$38
-EXPR;-->try {EXPR;} catch (ID ID) {<...>}$34
-EXPR;-->try {EXPR;} finally {<...>}$4
-int ID;-->int ID = LT;$5
-double ID;-->double ID = EXPR;$1
-boolean ID = EXPR;-->boolean ID = EXPR;$89
-while (EXPR) {-->while (EXPR) {$290
-while (LT) {-->while (EXPR) {$3
-for (<...>) {-->for (<...>) {$2955
-_-->for (ID ID: ID) {$554
-ID<2>.add(ID<0>);-->ID<2>.addAll(ID<1>);$5
-ID.toString()-->ID.toString()$1003
-ID.hashCode()-->ID.hashCode()$95
-list.add(ID);--><...>$5
-ID binOP ID-->ID binOP ID$4079
-ID unOP;-->ID unOP;$50
-_-->ID unOP$2505
-ID<0>() --> ID<0>(EXPR)$3
-EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<3>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>, EXPR<2>, EXPR<2>);$13
-EXPR.ID<0>(EXPR<0>, EXPR<1>); --> EXPR.ID<0>(EXPR<0>, EXPR<1>);$1763
-EXPR.ID<0>(EXPR<0>); --> EXPR.ID<0>(EXPR<0>);$2917
+_ -->_ @Override public boolean ID<0>() { return ID.ID<0>(); }$128413
+ID ID = ID.ID(EXPR, EXPR); --> ID ID = ID.ID(EXPR, EXPR);$1186
+for (AudioTrack audioTrack : ID.ID) { <...> --> <...>$1
+long lookupMethodInPool(long metaspaceConstantPool, int cpi, byte opcode, long[] unresolvedInfo); --> long lookupKlassInPool(long metaspaceConstantPool, int cpi);$1
+ID ID = EXPR; --> final ID ID = EXPR;$30
+ID.ID(EXPR, EXPR); --> ID();$24
+public int read(char cbuf[], int off, int len) throws IOException { --> public int read(char[] cbuf, int off, int len) throws IOException {$1
+_ -->public boolean ID<0>() { return ID.ID<0>(); }$14
+(ID binOP LT) binOP (ID binOP LT) --> <...>$14
+import static ID.ID.ID.ID.ID; -->_$106
+if (EXPR<0>) ID = QueryParamEntity.empty(); --> if (EXPR<0>) { ID = QueryParamEntity.empty(); }$2
+ID(); ID(); --> ID(); ID();$9
+_ -->import static org.graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;$2
+ID<0>(LT, ID); --> ID<0>(false);$2
+searchHit.getSource().clear(); searchHit.getSource().putAll(results); --> searchHit.getSourceAsMap().clear(); searchHit.getSourceAsMap().putAll(results);$1
+ID(EXPR); ID(EXPR); --> ID(EXPR); ID(EXPR);$184
+throw EXPR; --> throw new GraalError(EXPR);$1
+this.id = result.getRuntime().getBitcodeID(); -->_$2
+<...> --> return ID.ID(EXPR, EXPR);$3147
+return ID; --> return EXPR;$1842
+int remainBytes = EXPR<0> = EXPR --> int remainBytes = EXPR<0> = EXPR$13609
+import org.ID.ID.ID.ID; -->import org.ID.ID.ID.ID; <...>$676
+this.ID<0> = ID.ID(ID<0>); --> this.ID<0> = ID<0>;$22
+_ -->import static <...>;$6020
+if (ID<0> == null) return; --> if (ID<0> == null) { return; }$5
+public static double[][] ID(float[] ID<0>) { return EXPR --> static double[][] ID(float[] ID<0>) { return EXPR$0
+GalleryComment comment = ID[EXPR]; --> GalleryComment comment = ID.ID[EXPR];$1
+_ --> for (ID ID<0> = EXPR; ID<0> binOP EXPR; ID<0> unOP) { <...>$2
+println(e) --> e$143
+import com.oracle.ID.ID.ID.*; -->_$2916
+<...> --> return Optional.of(EXPR);$67
+import static <...> -->_$0
+try (ToLibGraalScope<TruffleToLibGraal.Id> s = new ToLibGraalScope<>(InitializeRuntime, env)) { --> try (JNILibGraalScope<TruffleToLibGraal.Id> s = new JNILibGraalScope<>(InitializeRuntime, env)) {$1
+_ --> return ID.getValue(<...>);$12
+_ -->import ID.ID.ID; import ID.ID.ID; import ID.ID.ID;$15904
+_ -->import static ID.ID.ID.ID;$968
+byte[] memo = hasChildren ? null : LEAF_MEMO; --> byte[] memo = hasChildren ? null : NO_MEMO;$2
+_ --> EXPR.ID(EXPR, LT);$419
+return EXPR; --> return useLibraryConstant(EXPR);$1
+ID(ID, ID); -->_$146
+_ -->import com.oracle.ID.ID.ID.ID;$7718
+t = PrimitiveType.I32; --> ty = PrimitiveType.I32;$2
+ID<0> = this; --> ID<0> = this.ID();$7
+return types; --> return foundTypes;$4
+package <...>; -->package ID.ID.ID.ID;$3393
+ID OP ID; --> ID OP EXPR;$319
+ID<0>(ID<1>, args, context); --> ID<0>(ID<1>, args, intrinsic);$1
+ID<0>.ID<1>(LT, ID) --> ID<0>.ID<1>(LT, EXPR)$971
+codeCache.ID(method, compResult); --> <...>$2
+final ID<0> ID<1> = EXPR; --> final ID<0> ID<1> = EXPR;$302
+ID<0>(LT); --> ID<0>(LT);$903
+Assert.assertEquals(1, test(<...>)); --> runTest("test", <...>);$88
+import <...>; -->import <...>; <...>$24264
+@JsonProperty -->_$110
+Arrays.sort(files); --> Arrays.sort(files, naturalComparator);$1
+ID slotSize = WordFactory.unsigned(EXPR); -->_$1
+ID = LT; --> ID = LT; ID = LT;$14
+ID OP ID; = ID OP EXPR;$0
+return ID; --> return EXPR binOP EXPR;$38
+for (AudioTrack audioTrack : EXPR) { <...> --> <...>$0
+return null; --> throw EXPR;$6
+<...> --> merge.setNext(EXPR);$3
+_ -->import com.oracle.jvmci.asm.sparc.*;$34
+<...> --> new ID[]{}$42
+_ -->import java.util.Optional; import java.util.Set; import java.util.concurrent.Executors;$405
+_ --> res = res binOP LT + (vararg ? LT : LT);$1
+log.debug(LT, ID); --> LOG.debug(LT, ID);$19
+final Map<String, String> group = EXPR; --> final Map<String, String> group = EXPR;$0
+annotationWriter.write(appendable, context).append(LT); --> annotationWriter.write(appendable, context).append(ID);$1
+_ -->_ @Override protected ID getToolSupport(ID l) { return l.getToolSupport(); } _ @Override protected ID getDebugSupport(ID l) { return l.getDebugSupport(); }$128413
+package com.oracle.max.graal.ID.ID; -->package com.oracle.graal.ID.ID;$934
+public void ID() { --> public void profileInlinedCall() { <...>$1
+import android.support.design.widget.FloatingActionButton; -->_$3
+return ID; --> return EXPR | EXPR;$0
+_ -->import EXPR; import EXPR; import EXPR;$0
+return isHostConfiguration() ? (label + " (host)") : label.toString(); --> return label.toString();$1
+ID ID = ID.ID(); -->_$368
+ID unOP; --> ID unOP;$55
+public void generate(NodeLIRBuilderTool gen, LIRGenerationResult res) { --> public void generate(NodeLIRBuilderTool gen) {$3
+import <...> -->_$42230
+Collection<ID> ID(<...>) { --> Collection<ID> generateSyntheticBean(<...>) {$2
+@SuppressWarnings(<...>) -->_$6289
+this.ID = EXPR; -->_$1419
+_ --> if (EXPR binOP EXPR) { return; }$62
+return sub(left, toComparableValue.execute(right)); --> return sub(left, toComparableValue.executeWithTarget(right));$1
+_ -->import io.ID.ID.ID.ID;$1759
+if (type instanceof IntegerType) { return ID.ID(EXPR, EXPR); --><...>$1
+public static double[][] ID(float[] ID<0>) { return EXPR; --> static double[][] ID(float[] ID<0>) { return EXPR;$1
+throw JVMCIError.shouldNotReachHere(); --> throw GraalError.shouldNotReachHere();$179
+@Before public void ID() throws ID { --> @BeforeClass public static void ID() throws ID {$5
+ID<0>.incrementHost(EXPR); --> ID<0>.incrementSource(EXPR);$5
+StructuredGraph graph = parseEager(method, AllowAssumptions.YES, options); --> StructuredGraph graph = parseEager(method, AllowAssumptions.YES, goptions);$1
+final ID<0> ID<1> = EXPR --> final ID<0> ID<1> = EXPR;$544
