@@ -36,6 +36,7 @@ public class Config {
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
     public static String changes_feature_vectors = "";
+    public static String index_path = "./src/main/resources/Features_Vectors/faiss_java.index";
 
     public static long code_changes_num = 0;
 

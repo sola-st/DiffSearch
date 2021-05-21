@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.util.CodeChangeOld;
 import research.diffsearch.util.Util;
 
@@ -772,7 +773,7 @@ public class Change_extraction {
             try {
                 String commit = null;
                 String position = null;
-                CodeChange cc = new CodeChange();
+                CodeChange cc = new CodeChange("","");
 
                 cc.url = f.toString();
                 cc.projectname = f.toString();
@@ -904,7 +905,7 @@ public class Change_extraction {
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
 
-                                    cc = new CodeChange();
+                                    cc = new CodeChange("","");
                                     cc.projectname = f.toString();
 
                                     fixPatch = "";
@@ -1046,7 +1047,7 @@ public class Change_extraction {
                 String commit = null;
                 String projectName = null;
                 String position = null;
-                CodeChange cc = new CodeChange();
+                CodeChange cc = new CodeChange("","");
 
                 cc.url = f.toString();
                 cc.projectname = f.toString();
@@ -1190,7 +1191,7 @@ public class Change_extraction {
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
 
-                                    cc = new CodeChange();
+                                    cc = new CodeChange("","");
                                     cc.projectname = projectName;
 
                                     fixPatch = "";

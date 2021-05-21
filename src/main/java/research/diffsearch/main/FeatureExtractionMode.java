@@ -74,14 +74,14 @@ public class FeatureExtractionMode extends App {
 
     public static void runPythonIndexing_scalability(int maxLines, int part) throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
-            var pythonExecutor = new PythonRunner(
+            var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing.py",
                     "Features_Vectors/changes_feature_vectors_java.csv",
                     "Features_Vectors/faiss_java.index",
                     Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
                     Integer.toString(maxLines),
                     Integer.toString(part));
-            pythonExecutor.waitUntilEnd();
+            pythonRunner.runAndWaitUntilEnd();
         } else {
             logger.warn("Running in ONLY_JAVA mode. Python indexing must be started separately.");
         }

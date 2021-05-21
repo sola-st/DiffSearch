@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 import static research.diffsearch.util.FilePathUtils.*;
-import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
+//import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
 
 /**
  * Online phase of DiffSearch that performs the search.

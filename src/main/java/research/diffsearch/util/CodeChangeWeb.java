@@ -1,29 +1,18 @@
-package research.diffsearch.pipeline.base;
+package research.diffsearch.util;
 
 import java.util.Objects;
 
-/**
- * This POJO represents a code change. It contains the old and new part of the code change as well as information
- * where it is extracted from.
- *
- * @author Paul Bredl
- */
-public class CodeChange {
+public class CodeChangeWeb {
     public String url = "";
     public String hunkLines = "";
     public String codeChangeOld;
     public String codeChangeNew;
+    public String query = "";
     public String fullChangeString = null;
-    public String projectname = "";
-    public String commit = "";
-    public String line = "";
-    public String codeChange = "";
-    public String fixPatch = "";
-
-    // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
     public int rank = 0;
+    public int numberOfCandidateChanges = 0;
 
-    public CodeChange(String codeChangeOld, String codeChangeNew) {
+    public CodeChangeWeb(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
         this.codeChangeNew = codeChangeNew;
     }
@@ -37,11 +26,11 @@ public class CodeChange {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CodeChange that = (CodeChange) o;
+        CodeChangeWeb that = (CodeChangeWeb) o;
         return Objects.equals(url, that.url) &&
-               Objects.equals(hunkLines, that.hunkLines) &&
-               Objects.equals(codeChangeOld, that.codeChangeOld) &&
-               Objects.equals(codeChangeNew, that.codeChangeNew);
+                Objects.equals(hunkLines, that.hunkLines) &&
+                Objects.equals(codeChangeOld, that.codeChangeOld) &&
+                Objects.equals(codeChangeNew, that.codeChangeNew);
     }
 
     @Override
@@ -53,7 +42,7 @@ public class CodeChange {
         return url;
     }
 
-    public CodeChange setUrl(String url) {
+    public CodeChangeWeb setUrl(String url) {
         this.url = url;
         return this;
     }
@@ -62,7 +51,7 @@ public class CodeChange {
         return hunkLines;
     }
 
-    public CodeChange setHunkLines(String hunkLines) {
+    public CodeChangeWeb setHunkLines(String hunkLines) {
         this.hunkLines = hunkLines;
         return this;
     }
@@ -71,7 +60,7 @@ public class CodeChange {
         return codeChangeOld;
     }
 
-    public CodeChange setCodeChangeOld(String codeChangeOld) {
+    public CodeChangeWeb setCodeChangeOld(String codeChangeOld) {
         this.codeChangeOld = codeChangeOld;
         return this;
     }
@@ -80,8 +69,17 @@ public class CodeChange {
         return codeChangeNew;
     }
 
-    public CodeChange setCodeChangeNew(String codeChangeNew) {
+    public CodeChangeWeb setCodeChangeNew(String codeChangeNew) {
         this.codeChangeNew = codeChangeNew;
+        return this;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public CodeChangeWeb setQuery(String query) {
+        this.query = query;
         return this;
     }
 
@@ -89,7 +87,7 @@ public class CodeChange {
         return fullChangeString;
     }
 
-    public CodeChange setFullChangeString(String fullChangeString) {
+    public CodeChangeWeb setFullChangeString(String fullChangeString) {
         this.fullChangeString = fullChangeString;
         return this;
     }
@@ -98,8 +96,26 @@ public class CodeChange {
         return rank;
     }
 
-    public CodeChange setRank(int rank) {
+    public CodeChangeWeb setRank(int rank) {
         this.rank = rank;
         return this;
     }
+
+    public int getNumberOfCandidateChanges() {
+        return numberOfCandidateChanges;
+    }
+
+    public CodeChangeWeb setNumberOfCandidateChanges(int numberOfCandidateChanges) {
+        this.numberOfCandidateChanges = numberOfCandidateChanges;
+        return this;
+    }
+
+    /**
+     * This object gets returned when an error occurs.
+     */
+    public static final CodeChangeWeb ERROR_CODE_CHANGE
+            = new CodeChangeWeb("error", "error");
+
+    public static final CodeChangeWeb INVALID_QUERY_CODE_CHANGE
+            = new CodeChangeWeb("invalid query", "invalid query");
 }

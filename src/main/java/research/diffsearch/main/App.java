@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.JavaTree;
-import research.diffsearch.tree.Javascript_Tree;
-import research.diffsearch.tree.Python3_Tree;
+import research.diffsearch.tree.JavascriptTree;
+import research.diffsearch.tree.Python3Tree;
 import research.diffsearch.util.CommandLineUtil;
 
 import java.io.Closeable;
@@ -17,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import static research.diffsearch.util.Util.program_languages_info;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -39,8 +37,6 @@ public abstract class App implements Runnable, Closeable {
         CommandLineUtil.parseArgs(args);
         logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
 
-        close_ports();
-
         App app = null;
         if (Config.WEB_GUI) {
             app = new WebGUIMode();
@@ -54,8 +50,14 @@ public abstract class App implements Runnable, Closeable {
             app = new FeatureExtractionMode();
         } else if (Config.BATCH) {
             app = new BatchMode();
-        } else if (Config.DATASET_CREATION) {
-            app = new DatasetCreationMode();
+        } else if (Config.MEASURE_RECALL) {
+            app = new App() {
+                @Override
+                public void run() {
+                    new FeatureExtractionMode().run();
+                    new BatchMode().run();
+                }
+            };
         }
 
         if (app != null) {
@@ -94,9 +96,7 @@ public abstract class App implements Runnable, Closeable {
                         Integer.toString(Config.nprobe),
                         Boolean.toString(Config.RANGE_SEARCH),
                         Integer.toString(Config.k_max),
-                        Boolean.toString(Config.TFIDF),
-                        Config.changes_string_path,
-                        Config.changes_string_prop_path);
+                        Boolean.toString(Config.TFIDF));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 
@@ -105,18 +105,6 @@ public abstract class App implements Runnable, Closeable {
             }
         } else {
             logger.warn("DiffSearch started in ONLY_JAVA mode. Python server must be started separately.");
-        }
-    }
-
-    public static void close_ports() {
-        try {
-            String[] args = new String[] {"fuser", "-K", "8843/tcp"};
-            Process proc = new ProcessBuilder(args).start();
-
-            String[] args2 = new String[] {"fuser", "-K", "5002/tcp"};
-            Process proc2 = new ProcessBuilder(args).start();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -189,28 +177,30 @@ public abstract class App implements Runnable, Closeable {
     }
 
     public static boolean runJunit_Python(String query, String candidate) {
-        Python3_Tree queryPython3Tree = new Python3_Tree(query);
-
-        ParseTree queryTree = queryPython3Tree.get_parsetree();
-
-        Python3_Tree changePython3Tree = new Python3_Tree(candidate);
-        ParseTree changeTree = changePython3Tree.get_parsetree();
-
-        Matching matching = new Matching(queryTree, queryPython3Tree.get_parser());
-
-        return matching.isMatch(changeTree, changePython3Tree.get_parser());
+//        Python3Tree queryPython3Tree = new Python3Tree(query);
+//
+//        ParseTree queryTree = queryPython3Tree.getParserTree();
+//
+//        Python3Tree changePython3Tree = new Python3Tree(candidate);
+//        ParseTree changeTree = changePython3Tree.getParserTree();
+//
+//        Matching matching = new Matching(queryTree, queryPython3Tree.getParser());
+//
+//        return matching.isMatch(changeTree, changePython3Tree.getParser());
+        return false;
     }
 
     public static boolean runJunit_JavaScript(String query, String candidate) {
-        Javascript_Tree queryJavascriptTree = new Javascript_Tree(query);
-
-        ParseTree queryTree = queryJavascriptTree.get_parsetree();
-
-        Javascript_Tree changeJavascriptTree = new Javascript_Tree(candidate);
-        ParseTree changeTree = changeJavascriptTree.get_parsetree();
-
-        Matching matching = new Matching(queryTree, queryJavascriptTree.get_parser());
-
-        return matching.isMatch(changeTree, changeJavascriptTree.get_parser());
+//        JavascriptTree queryJavascriptTree = new JavascriptTree(query);
+//
+//        ParseTree queryTree = queryJavascriptTree.getParserTree();
+//
+//        JavascriptTree changeJavascriptTree = new JavascriptTree(candidate);
+//        ParseTree changeTree = changeJavascriptTree.getParserTree();
+//
+//        Matching matching = new Matching(queryTree, queryJavascriptTree.getParser());
+//
+//        return matching.isMatch(changeTree, changeJavascriptTree.getParser());
+        return false;
     }
 }

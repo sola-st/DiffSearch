@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
@@ -62,7 +63,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 			}
 		}
 		StringBuilder postData = new StringBuilder();
-		List<CodeChangeWeb> outputList = new ArrayList<>();
+		//List<CodeChangeWeb> outputList = new ArrayList<>();
+		DiffsearchResult result = null;
 
 		long durationMatching;
 		boolean flagFirstConnection = false;
@@ -97,8 +99,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 			query = getQuery(postData);
 
 			try {
-				outputList = performSearch(query);
-				Util.printOutputList(outputList, startTimeMatching);
+				result = performSearch(query);
+				//Util.printOutputList(result, startTimeMatching);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -113,9 +115,10 @@ public class WebServerGUI extends DiffSearchWebServer {
 		// The lock is not useful for now.
 		channel = serverLog.getChannel();
 		lock = channel.lock();
-		if (!outputList.isEmpty()) {
-			writeOutput(out, outputList, durationMatching, query, channel);
-		} else if (flagFirstConnection) {
+		assert result != null;
+		if (!result.getResults().isEmpty()) {
+			writeOutput(out, result, durationMatching,  channel);
+		} else {
 			writeNoMatchingCodeFound(out, durationMatching, query, channel);
 		}
 
@@ -136,7 +139,7 @@ public class WebServerGUI extends DiffSearchWebServer {
         writer.close();
 	}
 
-    @Override
+
     protected void writeOutputList(PrintWriter out, List<CodeChangeWeb> outputList, long durationMatching,
 			FileChannel channel) {
 		boolean incorrect = false;

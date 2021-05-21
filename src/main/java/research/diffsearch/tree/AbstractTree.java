@@ -73,8 +73,8 @@ public abstract class AbstractTree {
 
     private void explore(RuleContext ctx, int indentation, boolean ignoringWrappers) {
         boolean toBeIgnored = ignoringWrappers
-                              && ctx.getChildCount() == 1
-                              && ctx.getChild(0) instanceof ParserRuleContext;
+                && ctx.getChildCount() == 1
+                && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
             String ruleName = getRuleNames()[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
