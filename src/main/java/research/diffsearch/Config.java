@@ -127,7 +127,7 @@ public class Config {
      * The number of candidate changes that are used to find results. DiffSearch will consider
      * this number of code changes while processing a query.
      */
-    public static int k = 5000;
+    public static int k = 1000;
 
     /**
      * Maximum number of candidate changes to consider. Only relevant for range search.

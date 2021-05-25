@@ -1,9 +1,10 @@
 #! /usr/bin/python3
-import faiss  # make faiss available
 import logging
+import socket
+
+import faiss  # make faiss available
 import numpy as np
 import pandas as pd
-import socket
 import sys
 import time
 
@@ -25,9 +26,7 @@ def searching(index_path,
               nprobe=1,
               range_search=False,
               k_max=100,
-              tfidf=False,
-              changes_string="",
-              changes_string_prop=""):
+              tfidf=False):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -56,10 +55,10 @@ def searching(index_path,
     serversocket.listen(5)
     logger.info('Server started and listening')
 
-    with open(str(changes_string)) as f:
+    with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
         changes_strings = f.readlines()
 
-    with open(str(changes_string_prop)) as f:
+    with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
         changes_info = f.readlines()
 
     while 1:
@@ -96,9 +95,11 @@ def searching(index_path,
                     faiss.normalize_L2(query_feature_vectors)
                 # np_array = np.ascontiguousarray(query_feature_vectors)
                 # norm = np.linalg.norm(np_array)
-                # if norm != 0:
+                # if norm != 0:index.search
                 #     np_array = np_array / norm
                 #     # print(str(np_array))
+
+                # limits, distances, indices = index.range_search(query_feature_vectors, 5)
 
                 # if len(indices) < k:
                 index.nprobe = nprobe
@@ -110,8 +111,6 @@ def searching(index_path,
                     # indices = indices[:10 * k]
                 else:
 
-                with open(str(changes_string_prop)) as f:
-                    changes_info = f.readlines()
                     candidate_change_limit = k_max
 
                     search_range: int = 0
@@ -147,10 +146,7 @@ def searching(index_path,
 
                 with open('./src/main/resources/Features_Vectors/candidate_changes_info.txt', 'w') as f:
                     for item in index_list:
-                        if len(changes_info) > item + 1:
-                            f.write("%s" % changes_info[item+1])
-                        else:
-                            f.write("%s" % changes_info[item])
+                        f.write("%s" % changes_info[item])
 
                 logger.info(f"Searching done in {time.time() - start} seconds")
 
@@ -164,5 +160,4 @@ searching(index_path=str(sys.argv[1]),
           nprobe=int(sys.argv[5]),
           range_search=sys.argv[6] == "true",
           k_max=int(sys.argv[7]),
-          tfidf=sys.argv[8] == "true",
-          changes_string=str(sys.argv[-2]), changes_string_prop=str(sys.argv[-1]))
+          tfidf=sys.argv[8] == "true")
