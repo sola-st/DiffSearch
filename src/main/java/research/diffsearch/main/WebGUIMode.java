@@ -10,10 +10,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * @author Paul Bredl
- * @author Luca Di Grazia
- */
 public class WebGUIMode extends App {
 
     private static final Logger logger = LoggerFactory.getLogger(WebGUIMode.class);
@@ -28,7 +24,7 @@ public class WebGUIMode extends App {
             startPythonServer();
 
             socketFaiss = getFaissSocket();
-            server = getDiffSearchServerSocket();
+            server = getServerSocket();
             serverLog = getServerLog();
 
         } catch (IOException exception) {

@@ -22,28 +22,24 @@ import java.util.ArrayList;
 // import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Paul Bredl
- * @author Luca Di Grazia
- */
 public class WebServerGUI extends DiffSearchWebServer {
 	private static final Logger logger = LoggerFactory.getLogger(WebServerGUI.class);
     public WebServerGUI(Socket socket, Socket socketFaiss, FileOutputStream log) {
         super(socket, socketFaiss, log);
     }
-
+    
     public class ServerData {
     	List<CodeChangeWeb> outputList;
 		String duration;
     	String changesnumber;
-
+    
     	public ServerData(List<CodeChangeWeb> list, String time, String number) {
        		outputList = list;
         	duration = time;
         	changesnumber = number;
     	}
     }
-
+    
     @Override
     protected void handleRequest() throws IOException {
 		PrintWriter out = new PrintWriter(socket.getOutputStream());
@@ -63,12 +59,12 @@ public class WebServerGUI extends DiffSearchWebServer {
 		}
 		StringBuilder postData = new StringBuilder();
 		List<CodeChangeWeb> outputList = new ArrayList<>();
-
+		
 		long durationMatching;
 		boolean flagFirstConnection = false;
-
+		
 		String query = "";
-
+		
 		lang = auxLine.substring(auxLine.lastIndexOf("=") + 1, auxLine.length());
 		// for (int i = 0; i < auxLine.length());
 		for (int i = 0; i < auxLine.length() - lang.length() - "&Language=".length(); i++) {
@@ -86,7 +82,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 				Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
 				break;
 		}
-
+		
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		long startTimeMatching = System.currentTimeMillis();
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
@@ -125,17 +121,17 @@ public class WebServerGUI extends DiffSearchWebServer {
 		// System.out.println("Connection closed with thread " + Thread.currentThread().getId());
 		logger.trace("Connection closed with thread " + Thread.currentThread().getId());
 	}
-
+    
     @Override
-	protected void writeOutput(PrintWriter out, DiffsearchResult result, long durationMatching,
+	protected void writeOutput(PrintWriter out, List<CodeChangeWeb> outputList, long durationMatching, String result,
 			FileChannel channel) throws IOException {
-		super.writeOutput(out, result, durationMatching,  channel);
-		var JSONOutput = new Gson().toJson(result.getResults());
+		super.writeOutput(out, outputList, durationMatching, result, channel);
+		var JSONOutput = new Gson().toJson(outputList);
         PrintWriter writer = new PrintWriter("./src/main/resources/GUI/Output/output.json", StandardCharsets.UTF_8);
         writer.println(JSONOutput);
         writer.close();
 	}
-
+    
     @Override
     protected void writeOutputList(PrintWriter out, List<CodeChangeWeb> outputList, long durationMatching,
 			FileChannel channel) {
@@ -163,22 +159,22 @@ public class WebServerGUI extends DiffSearchWebServer {
 		}
 
 		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
-
+		
 		var JSONOutput = new Gson().toJson(serverdata);
 		// Writing the JSON file on the port 8843
         out.println(JSONOutput);
 	}
-
+    
     @Override
-    protected void writeNoMatchingCodeFound(PrintWriter out, long durationMatching,
+    protected void writeNoMatchingCodeFound(PrintWriter out, long durationMatching, 
     		String result, FileChannel chan) throws IOException {
-
+    	
     	List<CodeChangeWeb> outputList = new ArrayList<CodeChangeWeb>();
 
     	ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
     	var JSONOutput = new Gson().toJson(serverdata);
     	out.println(JSONOutput);
-
+        
         chan.write(ByteBuffer.wrap(
                 (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()) + "\n").getBytes()));
         chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r", "") + "\n").getBytes()));
@@ -192,7 +188,7 @@ public class WebServerGUI extends DiffSearchWebServer {
                                     "================================" +
                                     "============================================================\n\n").getBytes()));
     }
-
+    
     @Override
     protected void writeHeader(PrintWriter out) {
         out.print("HTTP/1.0 200 OK\r\n");
@@ -203,5 +199,5 @@ public class WebServerGUI extends DiffSearchWebServer {
 		out.print("Access-Control-Allow-Origin: " + Config.web_url + "\r\n");
 		out.print("\r\n"); // End of headers
     }
-
+	
 }

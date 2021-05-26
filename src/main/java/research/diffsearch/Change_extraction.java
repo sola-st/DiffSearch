@@ -12,7 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import research.diffsearch.util.CodeChangeOld;
+import research.diffsearch.util.CodeChange;
 import research.diffsearch.util.Util;
 
 import java.io.*;
@@ -24,16 +24,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-/**
- * @author Luca Di Grazia
- */
 @SuppressWarnings("ALL")
 public class Change_extraction {
     /**
      * Cloning and git diff computation of a git repository (not complete)
      *
      */
-    public static void git_diff() {
+    public static void git_diff(){
         Process git_diff_python;
         try {
             git_diff_python = Runtime.getRuntime().exec("python ./src/main/resources/Python/git_functions.py");
@@ -557,7 +554,7 @@ public class Change_extraction {
             try {
                 String commit = null;
                 String position = null;
-                CodeChangeOld cc = new CodeChangeOld();
+                CodeChange cc = new CodeChange();
                 cc.url = f.toString();
 
                 while (scanner.hasNext()) {

@@ -258,28 +258,13 @@ public class AppTest extends TestCase {
                 "-->\n" +
                 "ID<1>(EXPR);\n" +
                 "ID<0>(EXPR);";
-        String candidate = "foo1(x);\n" +
-                "foo2(x.caller);\n" +
+        String candidate = "foo1(x+1);\n" +
+                "foo2(x+2);\n" +
                 "-->\n" +
-                "foo2(x);\n" +
-                "foo1(x);";
+                "foo2(x+2);\n" +
+                "foo1(x+1);";
 
         assertTrue(App.runJunit(query, candidate));
-    }
-
-    public void test25_5() throws Exception {
-        String query = "ID<0>(EXPR);\n" +
-                       "ID<1>(EXPR);\n" +
-                       "-->\n" +
-                       "ID<1>(EXPR);\n" +
-                       "ID<0>(EXPR);";
-        String candidate = "foo1(x);\n" +
-                           "foo2(x);\n" +
-                           "-->\n" +
-                           "foo2_additional(x);\n" +
-                           "foo1_additional(x);";
-
-        assertFalse(App.runJunit(query, candidate));
     }
 
     //@org.junit.jupiter.api.Test
@@ -296,21 +281,6 @@ public class AppTest extends TestCase {
                 "}";
 
         assertTrue(App.runJunit(query, candidate));
-    }
-
-    public void test27_5() throws Exception {
-        String query = "EXPR<0>.next();\n" +
-                       "-->\n" +
-                       "if (EXPR<0>.hasNext()) {\n" +
-                       "  EXPR<0>.next();\n" +
-                       "}";
-        String candidate = "x.next();\n" +
-                           "-->\n" +
-                           "if (x.hasNext()) {\n" +
-                           "  x1.next();\n" +
-                           "}";
-
-        assertFalse(App.runJunit(query, candidate));
     }
 
     //@org.junit.jupiter.api.Test

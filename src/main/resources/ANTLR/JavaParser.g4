@@ -103,7 +103,7 @@ variableModifier
     ;
 
 classDeclaration
-    : CLASS identifier typeParameters?
+    : CLASS IDENTIFIER typeParameters?
       (EXTENDS typeType)?
       (IMPLEMENTS typeList)?
       classBody
@@ -114,7 +114,7 @@ typeParameters
     ;
 
 typeParameter
-    : annotation* identifier (EXTENDS typeBound)?
+    : annotation* IDENTIFIER (EXTENDS typeBound)?
     ;
 
 typeBound
@@ -122,7 +122,7 @@ typeBound
     ;
 
 enumDeclaration
-    : ENUM identifier (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'
+    : ENUM IDENTIFIER (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'
     ;
 
 enumConstants
@@ -130,7 +130,7 @@ enumConstants
     ;
 
 enumConstant
-    : annotation* identifier arguments? classBody?
+    : annotation* IDENTIFIER arguments? classBody?
     ;
 
 enumBodyDeclarations
@@ -138,7 +138,7 @@ enumBodyDeclarations
     ;
 
 interfaceDeclaration
-    : INTERFACE identifier typeParameters? (EXTENDS typeList)? interfaceBody
+    : INTERFACE IDENTIFIER typeParameters? (EXTENDS typeList)? interfaceBody
     ;
 
 classBody
@@ -173,7 +173,7 @@ memberDeclaration
    for invalid return type after parsing.
  */
 methodDeclaration
-    : typeTypeOrVoid identifier formalParameters ('[' ']')*
+    : typeTypeOrVoid IDENTIFIER formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
       methodBody
     ;
@@ -197,7 +197,7 @@ genericConstructorDeclaration
     ;
 
 constructorDeclaration
-    : identifier formalParameters (THROWS qualifiedNameList)? constructorBody=block
+    : IDENTIFIER formalParameters (THROWS qualifiedNameList)? constructorBody=block
     ;
 
 fieldDeclaration
@@ -224,15 +224,15 @@ constDeclaration
     ;
 
 constantDeclarator
-    : identifier ('[' ']')* '=' variableInitializer
+    : IDENTIFIER ('[' ']')* '=' variableInitializer
     ;
 
 // see matching of [] comment in methodDeclaratorRest
 // methodBody from Java8
 interfaceMethodDeclaration
     : interfaceMethodModifier* (typeTypeOrVoid | typeParameters annotation* typeTypeOrVoid)
-      identifier formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
-    | WILDCARD NEWLINE? identifier formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
+      IDENTIFIER formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
+    | WILDCARD NEWLINE? IDENTIFIER formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
     ;
 
 // Java8
@@ -258,7 +258,7 @@ variableDeclarator
     ;
 
 variableDeclaratorId
-    : identifier ('[' ']')*
+    : IDENTIFIER ('[' ']')*
     ;
 
 variableInitializer
@@ -271,7 +271,7 @@ arrayInitializer
     ;
 
 classOrInterfaceType
-    : identifier typeArguments? ('.' identifier typeArguments?)*
+    : IDENTIFIER typeArguments? ('.' IDENTIFIER typeArguments?)*
     ;
 
 typeArgument
@@ -302,7 +302,7 @@ lastFormalParameter
     ;
 
 qualifiedName
-    : identifier ('.' identifier)*
+    : IDENTIFIER ('.' IDENTIFIER)*
     ;
 
 literal
@@ -338,7 +338,7 @@ elementValuePairs
     ;
 
 elementValuePair
-    : identifier '=' elementValue
+    : IDENTIFIER '=' elementValue
     ;
 
 elementValue
@@ -352,7 +352,7 @@ elementValueArrayInitializer
     ;
 
 annotationTypeDeclaration
-    : '@' INTERFACE identifier annotationTypeBody
+    : '@' INTERFACE IDENTIFIER annotationTypeBody
     ;
 
 annotationTypeBody
@@ -378,7 +378,7 @@ annotationMethodOrConstantRest
     ;
 
 annotationMethodRest
-    : identifier '(' ')' defaultValue?
+    : IDENTIFIER '(' ')' defaultValue?
     ;
 
 annotationConstantRest
@@ -421,16 +421,16 @@ localTypeDeclaration
 
 statement
     : blockLabel=block
-   // | ASSERT EXPR (':' EXPR)? ';' //MOD
+    | ASSERT EXPR (':' EXPR)? ';' //MOD
    // | IF EXPR statement (ELSE statement)?
-//    | FOR '(' EXPR (',' EXPR)* ')' statement?
+    | FOR '(' EXPR (',' EXPR)* ')' statement?
     | FOR '(' WILDCARD ')' statement?
-//    | WHILE EXPR statement?
-//    | DO statement WHILE EXPR ';'
-//    | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
-//    | SYNCHRONIZED EXPR block
-//    | RETURN EXPR ';'
-//    | THROW EXPR ';'
+    | WHILE EXPR statement?
+    | DO statement WHILE EXPR ';'
+    | SWITCH EXPR '{' switchBlockStatementGroup* switchLabel* '}'
+    | SYNCHRONIZED EXPR block
+    | RETURN EXPR ';'
+    | THROW EXPR ';'
     | ASSERT expression (':' expression)? ';'
     | IF parExpression statement? (ELSE statement)?
     | FOR '(' forControl ')' statement?
@@ -442,20 +442,15 @@ statement
     | SYNCHRONIZED parExpression block
     | RETURN expression? ';'
     | THROW expression ';'
-    | BREAK identifier? ';'
-    | CONTINUE identifier? ';'
+    | BREAK IDENTIFIER? ';'
+    | CONTINUE IDENTIFIER? ';'
     | SEMI
     | statementExpression=expression ';'
-    | identifierLabel=identifier ':' statement
-    ;
-
-
-identifier
-    : IDENTIFIER
+    | identifierLabel=IDENTIFIER ':' statement
     ;
 
 catchClause
-    : CATCH '(' variableModifier* catchType identifier ')' block
+    : CATCH '(' variableModifier* catchType IDENTIFIER ')' block
     | CATCH '(' WILDCARD ')' block
     ;
 
@@ -487,7 +482,7 @@ switchBlockStatementGroup
     ;
 
 switchLabel
-    : CASE (constantExpression=expression | enumConstantName=identifier) ':'
+    : CASE (constantExpression=expression | enumConstantName=IDENTIFIER) ':'
     | DEFAULT ':'
     ;
 
@@ -508,19 +503,16 @@ enhancedForControl
 // EXPRESSIONS
 
 parExpression
-    :  '(' EXPR ')' | '(' expression ')'
-    | EXPR
-    //MOD
+    :  '(' EXPR ')' | '(' expression ')' //MOD
     ;
 
 expressionList
-    : WILDCARD
-    | EXPR (',' EXPR)*
+    : WILDCARD | EXPR (',' EXPR)*
     |  expression (',' expression)*
     ;
 
 methodCall
-    : identifier '(' expressionList? ')'
+    : IDENTIFIER '(' expressionList? ')'
     | EXPR '(' expressionList? ')'
     | THIS '(' expressionList? ')'
     | SUPER '(' expressionList? ')'
@@ -534,7 +526,7 @@ assign_operators : '=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' 
 expression
     : //primary|
      expression bop='.'
-      ( identifier
+      ( IDENTIFIER
       | methodCall
       | THIS
       | NEW nonWildcardTypeArguments? innerCreator
@@ -548,13 +540,13 @@ expression
     | THIS
     | SUPER
     | literal
-    | identifier
+    | IDENTIFIER
     | typeTypeOrVoid '.' CLASS
     | nonWildcardTypeArguments (explicitGenericInvocationSuffix | THIS arguments)
     | NEW creator
     | '(' typeType ')' expression
-    | expression postfix=unary_postfix_operators    // | 'unOP<0>' | 'unOP<1>' | 'unOP<2>' | 'unOP<3>')
-    | prefix=unary_prefix_operators expression // | 'unOP<0>' | 'unOP<1>' | 'unOP<2>' | 'unOP<3>') expression
+    | expression postfix=('++' | '--'|UNOP)    // | 'unOP<0>' | 'unOP<1>' | 'unOP<2>' | 'unOP<3>')
+    | prefix=('+'|'-'|'++'|'--'| '~'|'!'|UNOP) expression // | 'unOP<0>' | 'unOP<1>' | 'unOP<2>' | 'unOP<3>') expression
     //| prefix=('~'|'!') expression
     | expression binary_operators expression
     //| expression bop=('*'|'/'|'%') expression
@@ -577,27 +569,13 @@ expression
       expression
     | lambdaExpression // Java8
     // Java 8 methodReference
-    | expression '::' typeArguments? identifier
-    | typeType '::' (typeArguments? identifier | NEW)
+    | expression '::' typeArguments? IDENTIFIER
+    | typeType '::' (typeArguments? IDENTIFIER | NEW)
     | classType '::' typeArguments? NEW
     ;
 
 //unary_operators: '+'|'-' | '++' |'--' | '~'|'!' | unOP | unOP<0> | unOP<1> | unOP<2> | unOP<3>;
-unary_postfix_operators:
-    '++'
-    | '--'
-    | UNOP
-    ;
 
-unary_prefix_operators:
-    '+'
-    |'-'
-    |'++'
-    |'--'
-    | '~'
-    |'!'
-    |UNOP
-    ;
 
 // Java8
 lambdaExpression
@@ -606,9 +584,9 @@ lambdaExpression
 
 // Java8
 lambdaParameters
-    : identifier
+    : IDENTIFIER
     | '(' formalParameterList? ')'
-    | '(' identifier (',' identifier)* ')'
+    | '(' IDENTIFIER (',' IDENTIFIER)* ')'
     ;
 
 // Java8
@@ -622,13 +600,13 @@ primary
     | THIS
     | SUPER
     | literal
-    | identifier
+    | IDENTIFIER
     | typeTypeOrVoid '.' CLASS
     | nonWildcardTypeArguments (explicitGenericInvocationSuffix | THIS arguments)
     ;
 
 classType
-    : (classOrInterfaceType '.')? annotation* identifier typeArguments?
+    : (classOrInterfaceType '.')? annotation* IDENTIFIER typeArguments?
     ;
 
 creator
@@ -637,12 +615,12 @@ creator
     ;
 
 createdName
-    : identifier typeArgumentsOrDiamond? ('.' identifier typeArgumentsOrDiamond?)*
+    : IDENTIFIER typeArgumentsOrDiamond? ('.' IDENTIFIER typeArgumentsOrDiamond?)*
     | primitiveType
     ;
 
 innerCreator
-    : identifier nonWildcardTypeArgumentsOrDiamond? classCreatorRest
+    : IDENTIFIER nonWildcardTypeArgumentsOrDiamond? classCreatorRest
     ;
 
 arrayCreatorRest
@@ -696,12 +674,12 @@ typeArguments
 
 superSuffix
     : arguments
-    | '.' identifier arguments?
+    | '.' IDENTIFIER arguments?
     ;
 
 explicitGenericInvocationSuffix
     : SUPER superSuffix
-    | identifier arguments
+    | IDENTIFIER arguments
     ;
 
 arguments

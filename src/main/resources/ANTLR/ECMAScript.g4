@@ -195,7 +195,6 @@ querySnippet
 	| variableStatement
 	| emptyStatement
 	| {_input.LA(1) != OpenBrace}? expressionStatement
-	| multipleStatement
 	| ifStatement
 	| iterationStatement
 	| continueStatement
@@ -263,10 +262,6 @@ statement
  | WILDCARD
  ;
 
-multipleStatement:
-expressionStatement expressionStatement expressionStatement*
-;
-
 /// Block :
 ///     { StatementList? }
 block
@@ -333,11 +328,11 @@ ifStatement
 ///     for ( var VariableDeclaration in Expression ) Statement
 iterationStatement
  : Do statement While '(' expressionSequence ')' ';'?                                                 # DoStatement
- | While '(' expressionSequence ')' statement?                                                        # WhileStatement
- | For '(' expressionSequence? ';' expressionSequence? ';' expressionSequence? ')' statement?         # ForStatement
- | For '(' Var variableDeclarationList ';' expressionSequence? ';' expressionSequence? ')' statement? # ForVarStatement
- | For '(' singleExpression In expressionSequence ')' statement?                                      # ForInStatement
- | For '(' Var variableDeclaration In expressionSequence ')' statement?                               # ForVarInStatement
+ | While '(' expressionSequence ')' statement                                                        # WhileStatement
+ | For '(' expressionSequence? ';' expressionSequence? ';' expressionSequence? ')' statement         # ForStatement
+ | For '(' Var variableDeclarationList ';' expressionSequence? ';' expressionSequence? ')' statement # ForVarStatement
+ | For '(' singleExpression In expressionSequence ')' statement                                      # ForInStatement
+ | For '(' Var variableDeclaration In expressionSequence ')' statement                               # ForVarInStatement
  ;
 
 /// ContinueStatement :
@@ -661,22 +656,22 @@ expressionSequence
  ;
 
 singleExpression
- : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}'? # FunctionExpression
+ : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}' # FunctionExpression
  | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
  | singleExpression '.' identifierName                                    # MemberDotExpression
- | singleExpression arguments  '{'?  functionBody '}'?                    # ArgumentsExpression
+ | singleExpression arguments                                             # ArgumentsExpression
  | New singleExpression arguments?                                        # NewExpression
- | singleExpression {!here(LineTerminator)}?    ('++' | UNOP)             # PostIncrementExpression
- | singleExpression {!here(LineTerminator)}? ('--' | UNOP)                        # PostDecreaseExpression
+ | singleExpression {!here(LineTerminator)}? '++'                         # PostIncrementExpression
+ | singleExpression {!here(LineTerminator)}? '--'                         # PostDecreaseExpression
  | Delete singleExpression                                                # DeleteExpression
  | Void singleExpression                                                  # VoidExpression
  | Typeof singleExpression                                                # TypeofExpression
- | ('++' | UNOP) singleExpression                                                  # PreIncrementExpression
- | ('--' | UNOP) singleExpression                                                  # PreDecreaseExpression
+ | '++' singleExpression                                                  # PreIncrementExpression
+ | '--' singleExpression                                                  # PreDecreaseExpression
  | '+' singleExpression                                                   # UnaryPlusExpression
  | '-' singleExpression                                                   # UnaryMinusExpression
- | ('~' | UNOP) singleExpression                                                   # BitNotExpression
- | ('!' | UNOP) singleExpression                                                   # NotExpression
+ | '~' singleExpression                                                   # BitNotExpression
+ | '!' singleExpression                                                   # NotExpression
  | singleExpression  binOperator singleExpression                         # BinaryExpression
  | singleExpression Instanceof singleExpression                           # InstanceofExpression
  | singleExpression In singleExpression                                   # InExpression
@@ -690,9 +685,6 @@ singleExpression
  | WILDCARD                                                               #wildcard
 | '(' expressionSequence ')'                                             # ParenthesizedExpression
  ;
-
-
-
 
 /// AssignmentOperator : one of
 ///     *=	/=	%=	+=	-=	<<=	>>=	>>>=	&=	^=	|=
@@ -957,8 +949,6 @@ EMPTY: '_'; //MOD
 WILDCARD: '<...>'; //MOD
 
 NEWLINE: '\r'? '\n' | '\r' | '\f';//MOD
-
-UNOP: 'unOP' | 'unOP<0>' |'unOP<1>'| 'unOP<2>'| 'unOP<3>';
 
 // Literals
 LITERALS: 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>' | 'LT'; //MOD

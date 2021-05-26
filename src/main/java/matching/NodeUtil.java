@@ -77,16 +77,16 @@ public class NodeUtil {
             return v.getChildCount() == 0;
         } else if (kText.equals("binOP")|| kText.matches("binOP<[0-9]+>")) {
            // return vText.equals("binary_operators");
-            return v.getParent() != null && (Trees.getNodeText(v.getParent(), changeParser).equals("binary_operators")||Trees.getNodeText(v.getParent(), changeParser).equals("binOperator")||Trees.getNodeText(v.getParent(), changeParser).equals("bin_op"));
+            return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("binary_operators");
         } else if (kText.equals("OP")|| kText.matches("OP<[0-9]+>")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
-            return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators") || parentLabel.equals("assignmentOperator")|| parentLabel.equals("expr_stmt");
+            return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators");
         }else if (kText.equals("unOP")|| kText.matches("unOP<[0-9]+>")) {
             String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
-            return parentLabel.equals("unary_prefix_operators") || parentLabel.equals("unary_postfix_operators");
+            return parentLabel.equals("expression");
         } else if (kText.equals("EXPR")|| kText.matches("EXPR<[0-9]+>")) {
-            return vText.equals("expression") || vText.equals("expr") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
-                    || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall")|| Trees.getNodeText(v.getParent(), changeParser).equals("singleExpression");
+            return vText.equals("expression") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
+                    || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall");
         }
         throw new IllegalArgumentException("Unexpected node label " + kText);
     }

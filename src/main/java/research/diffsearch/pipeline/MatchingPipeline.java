@@ -4,37 +4,30 @@ import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.CodeChange;
-import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static research.diffsearch.tree.TreeFactory.getChangeTree;
+import static research.diffsearch.tree.TreeObjectUtils.*;
 
 /**
  * Pipeline to check if some candidate code change actually matches a query.
- *
- * @author Paul Bredl
- * @author Luca Di Grazia
  */
 public class MatchingPipeline
-        implements Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {
+        implements Pipeline<List<CodeChangeWeb>, List<CodeChangeWeb>>, ProgrammingLanguageDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(MatchingPipeline.class);
 
     private final int matchingLimit;
     private final ProgrammingLanguage language;
     private int matchingCounter = 0;
-    private AbstractTree queryTree = null;
 
     public MatchingPipeline(ProgrammingLanguage language) {
         this(language, Integer.MAX_VALUE);
@@ -57,46 +50,37 @@ public class MatchingPipeline
     }
 
     @Override
-    public void process(DiffsearchResult input, int index, IndexedConsumer<DiffsearchResult> outputConsumer) {
-        List<CodeChange> outputList = new ArrayList<>();
-
-        if (queryTree == null) {
-            queryTree = getChangeTree(input.getQuery(), language);
-        }
-
+    public void process(List<CodeChangeWeb> input, int index, IndexedConsumer<List<CodeChangeWeb>> outputConsumer) {
+        List<CodeChangeWeb> outputList = new ArrayList<>();
         try {
-            outputList =
-                    Pipeline.getFilter(this::checkCandidate)
-                            .withTimeout(Config.matchingTimeoutSeconds, TimeUnit.SECONDS, null)
-                            //.parallelUntilHere(Config.threadCount)
-                            .connect(new ProgressWatcher<>("Matching"))
-                            .execute(input.getResults());
+            outputList = Pipeline
+                    .getFilter(this::checkCandidate)
+                    //.parallelUntilHere(16)
+                    .connect(new ProgressWatcher<>(input.size(), "Matching"))
+                    .collect(input);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 
-        outputConsumer.accept(input.setResults(outputList), index);
+        outputConsumer.accept(outputList, index);
     }
 
-    @Override
-    public DiffsearchResult process(DiffsearchResult input, int index) {
-        throw new IllegalStateException();
-    }
-
-    private boolean checkCandidate(CodeChange candidateChange) {
+    private boolean checkCandidate(CodeChangeWeb candidateChange) {
         try {
-            ParseTree parseTreeQuery = queryTree.getParseTree();
+            String query = candidateChange.query;
+            Object queryTree = getChangeTree(query, language);
+            ParseTree parseTreeQuery = getParseTree(queryTree, language);
             String candidate = candidateChange.toString();
 
-            AbstractTree changeTree = getChangeTree(candidate, language);
-            ParseTree changeParseTree = changeTree.getParseTree();
+            Object changeTree = getChangeTree(candidate, language);
+            ParseTree changeParseTree = getParseTree(changeTree, language);
 
-            Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
+            Matching matching = new Matching(parseTreeQuery, getParser(queryTree, language));
 
             if (matchingCounter < matchingLimit &&
-                matching.isMatch(changeParseTree, changeTree.getParser())) {
+                matching.isMatch(changeParseTree, getParser(changeTree, language))) {
 
-                if (isNotEqualCodeChange(candidateChange)) {
+                if (isNotEqualCodeChange(candidate)) {
                     matchingCounter++;
                     return true;
                 }
@@ -107,12 +91,12 @@ public class MatchingPipeline
         return false;
     }
 
-    public static boolean isNotEqualCodeChange(CodeChange codeChangeWeb) {
-        return !codeChangeWeb.getCodeChangeNew().trim().equals(codeChangeWeb.getCodeChangeOld().trim());
-    }
-
-    @Override
-    public void after() {
-        queryTree = null;
+    public static boolean isNotEqualCodeChange(String candidate) {
+        List<String> list = Arrays.asList(candidate.replace(" ", "").split("-->"));
+        if (list.size() >= 2) {
+            return !list.get(1).equals(list.get(0));
+        } else {
+            return false;
+        }
     }
 }

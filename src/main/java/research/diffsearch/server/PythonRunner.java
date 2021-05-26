@@ -22,8 +22,6 @@ import java.util.function.Predicate;
  * This class executes python files with certain arguments.
  * The output to the console from the python execution will
  * be logged.
- *
- * @author Paul Bredl
  */
 public class PythonRunner {
 
@@ -46,8 +44,8 @@ public class PythonRunner {
      * @throws IOException          when the python command could not be started.
      * @throws InterruptedException if the thread is interrupted.
      */
-    public void runAndWaitUntilEnd() throws IOException, InterruptedException {
-        runAndWaitUntil(input -> false);
+    public void waitUntilEnd() throws IOException, InterruptedException {
+        waitUntil(input -> false);
     }
 
     /**
@@ -59,7 +57,7 @@ public class PythonRunner {
      * @throws IOException          when the python command could not be started.
      * @throws InterruptedException if the thread is interrupted.
      */
-    public void runAndWaitUntil(Predicate<String> inputMatcher) throws IOException, InterruptedException {
+    public void waitUntil(Predicate<String> inputMatcher) throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
 
         var waiter = new Object();
@@ -69,7 +67,6 @@ public class PythonRunner {
                     @Override
                     public void processLine(String s) {
                         logPythonEvent(s);
-
                         if (inputMatcher.test(s)) {
                             synchronized (waiter) {
                                 waiter.notifyAll();
@@ -98,7 +95,7 @@ public class PythonRunner {
 
     public void shutDownProcess() {
         if (pythonProcess != null) {
-            pythonProcess.getProcess().destroyForcibly();
+            pythonProcess.getProcess().destroy();
         }
     }
 
