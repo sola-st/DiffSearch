@@ -1,20 +1,15 @@
 package research.diffsearch.pipeline;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.pipeline.base.CodeChange;
-import research.diffsearch.pipeline.base.DiffsearchResult;
+import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
-import research.diffsearch.util.Util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -23,16 +18,16 @@ import static research.diffsearch.util.FilePathUtils.*;
 /**
  * This pipeline is used to measure the recall of queries.
  * This process is very slow as it matches all the code changes of the corpus.
- *
- * @author Paul Bredl
  */
 public class RecallPipeline implements
-        Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {
+        Pipeline<List<CodeChangeWeb>, List<CodeChangeWeb>>, ProgrammingLanguageDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(RecallPipeline.class);
     private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/ExpectedValues.csv";
+    private static final String ACTUAL_VALUES_FILE = "./src/main/resources/Recall/ActualValues.csv";
     private static final String RECALL_VALUES_FILE = "./src/main/resources/Recall/RecallResults.csv";
-    private static final String EXPECTED_RESULTS_FILE = "./src/main/resources/Recall/expected.txt";
+    private static final String PRECISION_VALUES_FILE = "./src/main/resources/Recall/PrecisionResults.csv";
+    private static final String RECIPROCAL_RANK_VALUES_FILE = "./src/main/resources/Recall/ReciprocalRankResults.csv";
 
     private final ProgrammingLanguage language;
     private final List<String> queries;
@@ -41,7 +36,6 @@ public class RecallPipeline implements
     private final Map<String, Double> recallValues = new HashMap<>();
     private final Map<String, Double> candidatePrecisionValues = new HashMap<>();
     private final Map<String, Double> reciprocalRankValues = new HashMap<>();
-    private final Map<String, String> performanceValues = new HashMap<>();
 
     public RecallPipeline(ProgrammingLanguage language, String query) {
         this(language, List.of(query));
@@ -53,62 +47,21 @@ public class RecallPipeline implements
         readExpectedValuesFromFile();
     }
 
-    @Override
-    public DiffsearchResult process(DiffsearchResult input, int index) {
-        try {
-            logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
-
-            String query = input.getQuery();
-            int numOfCandidates = input.getCandidateChangeCount().orElse(0);
-            int expected = 1; // by default recall will result in 0%
-            if (query != null) {
-                expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
-            }
-            input.setExpectedValueCount(expected);
-
-            computeAndSaveRecall(input.getResults().size(), query, expected);
-
-            computeAndSaveCandidatePrecision(input, expected, input.getResults().size(), numOfCandidates);
-
-            computeAndSaveReciprocalRank(input);
-
-            savePerformance(input);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return input;
+    public RecallPipeline(ProgrammingLanguage language) {
+        this(language, new ArrayList<>());
     }
 
-    private static void printOutputToFile(DiffsearchResult result) {
-
-        try (var printStream = new PrintStream(
-                new FileOutputStream(EXPECTED_RESULTS_FILE, true))) {
-
-            Util.printOutputList(result, printStream, false);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
-        }
-    }
-
-    private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
+    int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
         if (!expectedValues.containsKey(query)) {
             logger.debug("Need to calculate expected value");
 
             // load all code changes from file
-            var corpusSize = getNumberOfLines(getChangesFilePath(language));
             var codeChanges = getCodeChanges(
-                    getChangesFilePath(language),
-                    getChangesInfoFilePath(language),
-                    corpusSize);
-
-            var dfsResult = new DiffsearchResult(query, codeChanges)
-                    .setCandidateChangeCount(corpusSize);
+                    getChangesFilePath(language), getChangesInfoFilePath(language), query);
 
             var expectedValue = new MatchingPipeline(language)
-                    .peek(RecallPipeline::printOutputToFile)
-                    .connect(DiffsearchResult::getResults)
-                    .connect(Collection::size)
-                    .execute(dfsResult)
+                    .collect(codeChanges)
+                    .map(List::size)
                     .orElse(0);
 
             expectedValues.put(query, expectedValue);
@@ -116,30 +69,48 @@ public class RecallPipeline implements
         return expectedValues.get(query);
     }
 
-    private void computeAndSaveCandidatePrecision(DiffsearchResult result, double expected, int actual, int k) {
-        var precision = actual / (Math.min(expected, k));
-        candidatePrecisionValues.put(result.getQuery(), precision);
+    @Override
+    public void process(List<CodeChangeWeb> input, int index, IndexedConsumer<List<CodeChangeWeb>> resultConsumer) {
+        try {
+            logger.warn("Recall measurement is active. This may have a heavy impact on performance!");
 
-        logger.info("Candidate changes precision: {}", precision);
+            String query = input.isEmpty() ? this.queries.get(index) : input.get(0).query;
+            int numOfCandidates = input.isEmpty() ? 1 : input.get(0).numberOfCandidateChanges;
+            double expected = 1; // by default recall will result in 0%
+            if (query != null) {
+                expected = getTotalNumberOfExpectedResults(query, getProgrammingLanguage());
+            }
 
-        result.setCandidateChangePrecision(precision);
+            computeAndSaveRecall(input, query, expected);
+            computeAndSaveCandidatePrecision(input, query, expected, numOfCandidates);
+            computeAndSaveReciprocalRank(input, query);
+
+            resultConsumer.accept(input, index);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
-    private void computeAndSaveReciprocalRank(DiffsearchResult input) {
-        var rRank = input.getResults().stream()
-                .mapToInt(CodeChange::getRank)
+    private void computeAndSaveCandidatePrecision(List<CodeChangeWeb> input, String query, double expected, int k) {
+        var precision = input.size() / (Math.min(expected, k));
+        logger.info("Candidate changes precision: {}", precision);
+        candidatePrecisionValues.put(query, precision);
+    }
+
+    private void computeAndSaveReciprocalRank(List<CodeChangeWeb> input, String query) {
+        var rRank = input.stream()
+                .mapToInt(CodeChangeWeb::getRank)
                 .min()
                 .stream()
                 .mapToDouble(rank -> 1.0 / rank)
                 .findAny()
                 .orElse(0.0);
-
         logger.info("Reciprocal rank: {}", rRank);
-        reciprocalRankValues.put(input.getQuery(), rRank);
-        input.setReciprocalRank(rRank);
+        reciprocalRankValues.put(query, rRank);
     }
 
-    private void computeAndSaveRecall(int actualResults, String query, double expected) {
+    private void computeAndSaveRecall(List<CodeChangeWeb> input, String query, double expected) {
+        int actualResults = input.size();
         logger.debug("Expected {} results.", expected);
         actualValues.put(query, actualResults);
 
@@ -152,41 +123,26 @@ public class RecallPipeline implements
         recallValues.put(query, recall);
     }
 
-    private void savePerformance(DiffsearchResult input) {
-        long timeMs = input.getPerformance().orElse(0L);
-        performanceValues.put(input.getQuery(), DurationFormatUtils.formatDuration(timeMs, "HH:mm:ss.SSS"));
-    }
-
     private void readExpectedValuesFromFile() {
-        readCSVToMap(EXPECTED_VALUES_FILE, "\\$", expectedValues, Integer::parseInt);
+        readCSV(EXPECTED_VALUES_FILE, "\\$")
+                .stream()
+                .filter(array -> array.length > 1)
+                .forEach(columns -> expectedValues.put(columns[0], Integer.parseInt(columns[1])));
     }
 
     @SafeVarargs
-    private static void writeExpectedValuesToFile(Map<String, ?> map, Map<String, ?>... additionalMaps)
+    private static void writeValuesToFile(String path,
+                                          Map<String, ?> map, Map<String, ?>... additionalMaps)
             throws IOException {
-        writeValuesToFile(null, RecallPipeline.EXPECTED_VALUES_FILE, map, "$", additionalMaps);
-    }
-
-    @Override
-    public void after() {
-        try {
-            writeExpectedValuesToFile(expectedValues);
-            writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, "$", recallValues,
-                    candidatePrecisionValues, reciprocalRankValues, performanceValues);
-            logger.debug("Recall results saved.");
-        } catch (IOException exception) {
-            logger.error(exception.getMessage(), exception);
-        }
+        writeValuesToFile(null, path, map, additionalMaps);
     }
 
     @SafeVarargs
-    public static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
-                                         Map<String, ?> map, String delim, Map<String, ?>... additionalMaps)
+    private static void writeValuesToFile(@Nullable List<String> orderedKeys, String path,
+                                          Map<String, ?> map, Map<String, ?>... additionalMaps)
             throws IOException {
-
         try (var writer = getWriter(path)) {
             var keys = orderedKeys == null ? map.keySet() : orderedKeys;
-
             keys.forEach(query -> {
                 try {
                     writer.write(query);
@@ -194,8 +150,7 @@ public class RecallPipeline implements
                             .forEach(valueMap -> {
                                 var expected = valueMap.getOrDefault(query, null);
                                 try {
-                                    writer.write(delim);
-                                    // adjust for german excel
+                                    writer.write("$");
                                     writer.write(Objects.toString(expected).replace('.', ','));
                                 } catch (IOException exception) {
                                     throw new RuntimeException(exception);
@@ -206,6 +161,18 @@ public class RecallPipeline implements
                     logger.error(exception.getMessage(), exception);
                 }
             });
+        }
+    }
+
+    @Override
+    public void after() {
+        try {
+            writeValuesToFile(EXPECTED_VALUES_FILE, expectedValues);
+            writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, recallValues,
+                    candidatePrecisionValues, reciprocalRankValues);
+            logger.debug("Recall results saved.");
+        } catch (IOException exception) {
+            logger.error(exception.getMessage(), exception);
         }
     }
 

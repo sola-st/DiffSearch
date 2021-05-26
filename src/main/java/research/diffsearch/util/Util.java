@@ -3,10 +3,6 @@ package research.diffsearch.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
-import research.diffsearch.pipeline.base.DiffsearchResult;
-import research.diffsearch.pipeline.feature.FeatureVector;
-import research.diffsearch.tree.TreeFactory;
-import research.diffsearch.tree.TreeUtils;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -14,30 +10,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author Paul Bredl
- */
 public class Util {
 
-    public static void printOutputList(DiffsearchResult result) {
-        printOutputList(result, System.out, true);
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
+    public static void printOutputList(List<CodeChangeWeb> output, long startTimeStamp) {
+        printOutputList(output, startTimeStamp, System.out);
     }
 
-    public static void printOutputList(DiffsearchResult result, PrintStream out, boolean colored) {
+    public static void printOutputList(List<CodeChangeWeb> output, long startTimeStamp, PrintStream out) {
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_GREEN = "\u001B[32m";
         if (!Config.SILENT) {
-            String query = result.getQuery();
-            var output = result.getResults();
-
-            final String ANSI_RED = "\u001B[31m";
-            final String ANSI_GREEN = "\u001B[32m";
-
             if (!output.isEmpty()) {
                 out.println("*** " + output.size()
-                            + " RESULTS  for " + query + "***");
+                            + " RESULTS  for " + output.get(0) .query + "***");
                 out.println("*");
                 for (var change : output) {
                     if(change.codeChangeOld.equals("invalid query") && change.codeChangeNew.equals("invalid query")){
@@ -45,10 +35,12 @@ public class Util {
                         break;
                     }
                     for (var oldLine : change.codeChangeOld.split("\n")) {
-                        printCodeChangePart(out, colored, ANSI_RED, oldLine, "*  - ");
+                        out.print("*  - ");
+                        out.println(ANSI_RED + oldLine + ANSI_RESET);
                     }
                     for (var newLine : change.codeChangeNew.split("\n")) {
-                        printCodeChangePart(out, colored, ANSI_GREEN, newLine, "*  + ");
+                        out.print("*  + ");
+                        out.println(ANSI_GREEN + newLine + ANSI_RESET);
                     }
                     out.print("*       ");
                     out.println("at " + change.url);
@@ -59,43 +51,14 @@ public class Util {
             } else {
                 out.println("*** No results found. ***");
             }
-            out.flush();
         }
+
     }
 
-    private static void printCodeChangePart(PrintStream out, boolean colored, String ansiColor,
-                                            String newLine, String prefix) {
-        final String ANSI_RESET = "\u001B[0m";
-        out.print(prefix);
-        if (colored) {
-            out.print(ansiColor);
-        }
-        out.print(newLine);
-        if (colored) {
-            out.print(ANSI_RESET);
-        }
-        out.println();
-    }
-
-    public static String featureVectorToString(FeatureVector vector) {
-        return Arrays.stream(vector.getVector())
-                .mapToObj(Double::toString)
+    public static String featureVectorToString(int[] vector) {
+        return Arrays.stream(vector)
+                .mapToObj(Integer::toString)
                 .collect(Collectors.joining(","));
-    }
-
-    public static void printFeatureVectorAnalysis(FeatureVector vector) {
-        System.out.println("Feature vector analysis");
-        vector.getCategories()
-                .stream()
-                .sorted()
-                .forEach(category -> {
-                    System.out.println(category + ": ");
-                    vector.getFeatureList(category)
-                            .stream()
-                            .sorted(Comparator.comparing(feature -> feature.index))
-                            .map(feature -> "\t" + feature.index + ": " + feature.featureString)
-                            .forEach(System.out::println);
-                });
     }
 
     public static String formatDuration(long startTime, long endTime) {
@@ -104,8 +67,8 @@ public class Util {
 
     public static String computeCandidateUrl(String candidate) {
         String candidateUrl = "https://github.com/";
-        String repository;
-        String commit;
+        String repository = "";
+        String commit = "";
 
         try {
 
@@ -170,28 +133,5 @@ public class Util {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String formatCodeChange(String result) {
-        return result.replaceAll("\r","").replaceAll("\n","");
-    }
-
-    public static boolean checkIfQueryIsValid(String query) {
-        return checkIfQueryIsValid(query, Config.PROGRAMMING_LANGUAGE);
-    }
-
-    public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
-        var queryTree = TreeFactory.getChangeTree(query, language);
-        var parseTree = queryTree.getParseTree();
-        var parser = queryTree.getParser();
-
-        return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
-    }
-
-    public static boolean isQueryPlaceholder(String nodeText) {
-        var keywords = List.of("ID", "EXPR", "binOP", "unOP", "OP", "LT", "<...>", "querySnippet");
-        return keywords
-                .stream()
-                .anyMatch(nodeText::contains);
     }
 }

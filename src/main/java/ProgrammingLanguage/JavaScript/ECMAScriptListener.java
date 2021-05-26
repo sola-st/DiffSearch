@@ -59,16 +59,6 @@ public interface ECMAScriptListener extends ParseTreeListener {
      */
     void exitStatement(ECMAScriptParser.StatementContext ctx);
     /**
-     * Enter a parse tree produced by {@link ECMAScriptParser#multipleStatement}.
-     * @param ctx the parse tree
-     */
-    void enterMultipleStatement(ECMAScriptParser.MultipleStatementContext ctx);
-    /**
-     * Exit a parse tree produced by {@link ECMAScriptParser#multipleStatement}.
-     * @param ctx the parse tree
-     */
-    void exitMultipleStatement(ECMAScriptParser.MultipleStatementContext ctx);
-    /**
      * Enter a parse tree produced by {@link ECMAScriptParser#block}.
      * @param ctx the parse tree
      */
