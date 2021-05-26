@@ -119,8 +119,9 @@ Matching change:
 This package contains the code of DiffSearch. If you want simply run the tool see the section "how to run".
 
 **Requirements**
-- Java 11 and Python 3.7
+- Java 8 and Python 3.7
 - [ANTLR 4.7.1](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
+- [FAISS 1.6.1](https://github.com/facebookresearch/faiss/blob/master/INSTALL.md) -> pip3 install faiss-cpu --no-cache
 
 **How to run**
 
@@ -154,17 +155,6 @@ FOR THE DIFFSEARCH SERVER:
            
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
-          
-  - More DiffSearch arguments:
-  
-        - Scalability experiments:   -Dexec.args="-s -lang java"
-        - Effectiveness experiments: -Dexec.args="-e -lang java"
-        - Recall experiments:        -Dexec.args="-r -lang java"
-        - Features extraction:       -Dexec.args="-fe -lang java"
-        - Dataset extraction:        -Dexec.args="-d -lang java"
-        - Old GUI:                   -Dexec.args="-w -lang java"
-        - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
-        
 
 FOR THE GUI:
 
