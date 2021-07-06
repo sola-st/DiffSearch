@@ -26,7 +26,7 @@ public class Config {
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -115,7 +115,7 @@ public class Config {
     /**
      * Defines the feature extractors that are used.
      */
-    public static String featureExtractors = "node;triangle;rulecount:1400";
+    public static String featureExtractors = "node;triangle";
 
     /**
      * The number of candidate changes that are used to find results. DiffSearch will consider
@@ -131,7 +131,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 300;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
 
     /**
      * The number of bits per feature that are used for unary counting

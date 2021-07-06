@@ -64,7 +64,7 @@ public class FeatureExtractionMode extends App {
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
                     Integer.toString(Config.nlist),
                     Boolean.toString(Config.TFIDF),
-                    Config.changes_feature_vectors);
+                    FilePathUtils.getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE));
 
             pythonRunner.runAndWaitUntilEnd();
 
