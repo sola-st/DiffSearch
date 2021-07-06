@@ -10,6 +10,7 @@ import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
 import research.diffsearch.server.PythonRunner;
+import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgressWatcher;
 import research.diffsearch.util.Util;
 
@@ -59,7 +60,7 @@ public class FeatureExtractionMode extends App {
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
                     "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv",
-                    Config.INDEX_FILE,
+                    FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE),
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
                     Integer.toString(Config.nlist),
                     Boolean.toString(Config.TFIDF),

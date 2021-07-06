@@ -11,11 +11,6 @@ import research.diffsearch.util.ProgrammingLanguage;
 public class Config {
 
     /**
-     * Path to the faiss index.
-     */
-    public static String INDEX_FILE = "./src/main/resources/Features_Vectors/faiss_java.index";
-
-    /**
      * Path to the nearest neighbor search python file.
      */
     public static String NEAREST_NEIGHBOR_SEARCH_PY = "./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py";
@@ -36,7 +31,6 @@ public class Config {
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
     public static String changes_feature_vectors = "";
-    public static String index_path = "./src/main/resources/Features_Vectors/faiss_java.index";
 
     public static long code_changes_num = 0;
 

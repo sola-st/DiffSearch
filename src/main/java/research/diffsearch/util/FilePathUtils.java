@@ -64,6 +64,10 @@ public class FilePathUtils {
         }
     }
 
+    public static String getIndexFilePath(ProgrammingLanguage language) {
+        return "./src/main/resources/Features_Vectors/faiss_" + language.toString() + ".index";
+    }
+
     public static Collection<String> getAllLines(String path, int numberOfLines) {
         return new AbstractCollection<>() {
             @Override

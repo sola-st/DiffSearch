@@ -145,19 +145,16 @@ public class Util {
             case PYTHON:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
-                Config.index_path = "./src/main/resources/Features_Vectors/faiss_py.index";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
                 break;
             case JAVASCRIPT:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
-                Config.index_path = "./src/main/resources/Features_Vectors/faiss_js.index";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
                 break;
             default:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
-                Config.index_path = "./src/main/resources/Features_Vectors/faiss_java.index";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
         }
 

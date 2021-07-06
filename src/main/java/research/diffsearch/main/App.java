@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.JavaTree;
-import research.diffsearch.tree.JavascriptTree;
-import research.diffsearch.tree.Python3Tree;
 import research.diffsearch.util.CommandLineUtil;
+import research.diffsearch.util.FilePathUtils;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
@@ -89,7 +88,7 @@ public abstract class App implements Runnable, Closeable {
                  * - tfidf: if tfidf weights are used
                  */
                 pythonRunner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
-                        Config.INDEX_FILE,
+                        FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE),
                         Integer.toString(Config.k),
                         Config.host,
                         Integer.toString(Config.port),
