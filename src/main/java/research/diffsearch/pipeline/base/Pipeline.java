@@ -1,5 +1,7 @@
 package research.diffsearch.pipeline.base;
 
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -283,6 +285,7 @@ public interface Pipeline<I, O> {
      * @param size the size of the batch to process.
      */
     default void before(int size) {
+        LoggerFactory.getLogger(getClass()).debug("Starting pipeline: {}", getClass().getName());
         // empty by default
     }
 
@@ -290,6 +293,7 @@ public interface Pipeline<I, O> {
      * This method is called after the processing of a batch.
      */
     default void after() {
+        LoggerFactory.getLogger(getClass()).debug("Finish pipeline: {}", getClass().getName());
         // empty by default
     }
 

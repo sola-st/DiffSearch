@@ -85,7 +85,6 @@ public class MatchingPipeline
 
     private boolean checkCandidate(CodeChange candidateChange) {
         try {
-            System.out.print(candidateChange);
             ParseTree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
 
