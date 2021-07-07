@@ -68,7 +68,7 @@ public class MatchingPipeline
             outputList =
                     Pipeline.getFilter(this::checkCandidate)
                             .withTimeout(Config.matchingTimeoutSeconds, TimeUnit.SECONDS, null)
-                            //.parallelUntilHere(Config.threadCount)
+                            .parallelUntilHere(Config.threadCount)
                             .connect(new ProgressWatcher<>("Matching"))
                             .execute(input.getResults());
         } catch (Exception e) {
