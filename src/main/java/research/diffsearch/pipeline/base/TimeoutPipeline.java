@@ -32,23 +32,35 @@ public class TimeoutPipeline<I, O> implements Pipeline<I, O> {
 
     @Override
     public void process(I input, int index, IndexedConsumer<O> outputConsumer) {
-        executorService.schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!processed[index]) {
-                    processed[index] = true;
-                    LoggerFactory.getLogger(getClass()).warn("Timout for " + input);
-                    outputConsumer.accept(defaultResult, index);
+        try {
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (!processed[index]) {
+                            processed[index] = true;
+                            LoggerFactory.getLogger(getClass()).warn("Timout for " + input);
+                            outputConsumer.accept(defaultResult, index);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }, timeoutMillis, TimeUnit.MILLISECONDS);
+            }, timeoutMillis, TimeUnit.MILLISECONDS);
 
-        basePipeline.process(input, index, (result, index1) -> {
-            if (!processed[index1]) {
-                processed[index1] = true;
-                outputConsumer.accept(result, index1);
-            }
-        });
+            basePipeline.process(input, index, (result, index1) -> {
+                try {
+                    if (!processed[index1]) {
+                        processed[index1] = true;
+                        outputConsumer.accept(result, index1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
