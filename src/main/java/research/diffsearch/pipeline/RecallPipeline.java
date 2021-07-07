@@ -91,29 +91,34 @@ public class RecallPipeline implements
     }
 
     private int getTotalNumberOfExpectedResults(String query, ProgrammingLanguage language) {
-        if (!expectedValues.containsKey(query)) {
-            logger.debug("Need to calculate expected value");
+        try {
+            if (!expectedValues.containsKey(query)) {
+                logger.debug("Need to calculate expected value");
 
-            // load all code changes from file
-            var corpusSize = getNumberOfLines(getChangesFilePath(language));
-            var codeChanges = getCodeChanges(
-                    getChangesFilePath(language),
-                    getChangesInfoFilePath(language),
-                    corpusSize);
+                // load all code changes from file
+                var corpusSize = getNumberOfLines(getChangesFilePath(language));
+                var codeChanges = getCodeChanges(
+                        getChangesFilePath(language),
+                        getChangesInfoFilePath(language),
+                        corpusSize);
 
-            var dfsResult = new DiffsearchResult(query, codeChanges)
-                    .setCandidateChangeCount(corpusSize);
+                var dfsResult = new DiffsearchResult(query, codeChanges)
+                        .setCandidateChangeCount(corpusSize);
 
-            var expectedValue = new MatchingPipeline(language)
-                    .peek(RecallPipeline::printOutputToFile)
-                    .connect(DiffsearchResult::getResults)
-                    .connect(Collection::size)
-                    .execute(dfsResult)
-                    .orElse(0);
+                var expectedValue = new MatchingPipeline(language)
+                        .peek(RecallPipeline::printOutputToFile)
+                        .connect(DiffsearchResult::getResults)
+                        .connect(Collection::size)
+                        .execute(dfsResult)
+                        .orElse(0);
 
-            expectedValues.put(query, expectedValue);
+                expectedValues.put(query, expectedValue);
+            }
+            return expectedValues.get(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        return expectedValues.get(query);
     }
 
     private void computeAndSaveCandidatePrecision(DiffsearchResult result, double expected, int actual, int k) {
