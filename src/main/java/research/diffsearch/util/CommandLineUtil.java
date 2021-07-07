@@ -45,10 +45,13 @@ public class CommandLineUtil {
                 .addOption("noquerymultiplication", false, "query vectors do not get multiplied.")
                 .addOption("nondividedextraction", false, "feature extraction is not divided in the old and new part.")
                 .addOption("gurl", "web-gui-url", true, "set the web GUI URL")
+                .addOption("a", "analysis", true, "prints a detailed analysis of the query or a given code change containing the parse tree and a list of all extracted features.")
+                .addOption(Option.builder("test").numberOfArgs(2).desc("tests if a code change matches a query.").build())
                 .addOption(Option.builder("b")
                         .longOpt("batch")
                         .numberOfArgs(2)
                         .optionalArg(true)
+                        .desc("executes a batch of queries. First argument is the input query file, second argument the output text file.")
                         .build());
     }
 
@@ -72,7 +75,11 @@ public class CommandLineUtil {
             Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
             Config.SILENT = commandLine.hasOption("silent");
             Config.BATCH = commandLine.hasOption("b");
+            Config.ANALYSIS_MODE = commandLine.hasOption("a");
 
+            if (commandLine.hasOption("a")) {
+                Config.query = commandLine.getOptionValue("a");
+            }
             if (commandLine.hasOption("p")) {
                 Config.port_web = parseInt(commandLine.getOptionValue("p"));
             }

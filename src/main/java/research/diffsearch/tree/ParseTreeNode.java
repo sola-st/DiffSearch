@@ -258,7 +258,7 @@ public class ParseTreeNode {
         throw new IllegalArgumentException();
     }
 
-    private static ParseTreeNode fromTree(ParseTree parseTree, List<String> ruleNames, int depth) {
+    public static ParseTreeNode fromTree(ParseTree parseTree, List<String> ruleNames, int depth) {
         var content = Trees.getNodeText(parseTree, ruleNames);
 
         var root = new ParseTreeNode(content, 0, depth, 0);

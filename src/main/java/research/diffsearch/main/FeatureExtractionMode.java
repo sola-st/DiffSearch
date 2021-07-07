@@ -17,6 +17,7 @@ import research.diffsearch.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
@@ -59,12 +60,11 @@ public class FeatureExtractionMode extends App {
             // - tfidf (true or false)
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing_python.py",
-                    "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv",
+                    FilePathUtils.getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE),
                     FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE),
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
                     Integer.toString(Config.nlist),
-                    Boolean.toString(Config.TFIDF),
-                    FilePathUtils.getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE));
+                    Boolean.toString(Config.TFIDF));
 
             pythonRunner.runAndWaitUntilEnd();
 
@@ -101,6 +101,8 @@ public class FeatureExtractionMode extends App {
         Pipeline
                 .from(Util::formatCodeChange)
                 .connect(featureExtractionPipeline)
+                .withTimeout(5, TimeUnit.MINUTES,
+                        new FeatureVector(new double[featureExtractionPipeline.getTotalFeatureVectorLength()]))
                 .parallelUntilHere(Config.threadCount)
                 .connect(featureFrequencyCounter)
                 // show progress in console:

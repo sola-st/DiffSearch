@@ -26,7 +26,7 @@ public class Config {
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -65,6 +65,11 @@ public class Config {
      * @see Config#query
      */
     public static boolean QUERY_MODE = false;
+
+    /**
+     * If true, detailed feature vector analysis and parse tree will be printed.
+     */
+    public static boolean ANALYSIS_MODE = false;
 
     /**
      * If true, DiffSearch will measure the recall of the queries and save the results.

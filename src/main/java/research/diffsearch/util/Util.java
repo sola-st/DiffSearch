@@ -5,6 +5,8 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.feature.FeatureVector;
+import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
@@ -40,7 +42,7 @@ public class Util {
                             + " RESULTS  for " + query + "***");
                 out.println("*");
                 for (var change : output) {
-                    if(change.codeChangeOld.equals("invalid query") && change.codeChangeNew.equals("invalid query")){
+                    if (change.codeChangeOld.equals("invalid query") && change.codeChangeNew.equals("invalid query")) {
                         out.println("*** Query not valid. ***");
                         break;
                     }
@@ -98,6 +100,12 @@ public class Util {
                 });
     }
 
+    public static void printParseTree(AbstractTree tree) {
+        ParseTreeNode rootNode = ParseTreeNode.fromTree(tree.getParseTree(), Arrays.asList(tree.getRuleNames()), 0);
+        System.out.println(rootNode.toTreeString());
+
+    }
+
     public static String formatDuration(long startTime, long endTime) {
         return DurationFormatUtils.formatDuration(endTime - startTime, "mm'm':ss's':SSS'ms'");
     }
@@ -137,11 +145,11 @@ public class Util {
             //return "errorUrl --> errorUrl";
             return "";
         }
-        return candidateUrl + repository.replace(".","/") + "/commit/" + commit + "-->" + items.get(1);
+        return candidateUrl + repository.replace(".", "/") + "/commit/" + commit + "-->" + items.get(1);
     }
 
-    public static void program_languages_info(){
-        switch(Config.PROGRAMMING_LANGUAGE) {
+    public static void program_languages_info() {
+        switch (Config.PROGRAMMING_LANGUAGE) {
             case PYTHON:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
@@ -170,11 +178,7 @@ public class Util {
     }
 
     public static String formatCodeChange(String result) {
-        return result.replaceAll("\r","").replaceAll("\n","");
-    }
-
-    public static boolean checkIfQueryIsValid(String query) {
-        return checkIfQueryIsValid(query, Config.PROGRAMMING_LANGUAGE);
+        return result.replaceAll("\r", "").replaceAll("\n", "");
     }
 
     public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {

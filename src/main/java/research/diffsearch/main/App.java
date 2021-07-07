@@ -35,7 +35,7 @@ public abstract class App implements Runnable, Closeable {
         logger.debug(System.getProperty("java.vendor"));
         CommandLineUtil.parseArgs(args);
         logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
-
+        logger.debug("Using {} threads", Config.threadCount);
         App app = null;
         if (Config.WEB_GUI) {
             app = new WebGUIMode();
@@ -49,6 +49,8 @@ public abstract class App implements Runnable, Closeable {
             app = new FeatureExtractionMode();
         } else if (Config.BATCH) {
             app = new BatchMode();
+        } else if (Config.ANALYSIS_MODE) {
+            app = new AnalysisMode();
         } else if (Config.MEASURE_RECALL) {
             app = new App() {
                 @Override
@@ -86,6 +88,8 @@ public abstract class App implements Runnable, Closeable {
                  * - range_search: true or false
                  * - k_max: maximal number of candidate changes
                  * - tfidf: if tfidf weights are used
+                 * - path to code changes
+                 * - path to properties of the code changes
                  */
                 pythonRunner = new PythonRunner(Config.NEAREST_NEIGHBOR_SEARCH_PY,
                         FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE),
@@ -95,7 +99,9 @@ public abstract class App implements Runnable, Closeable {
                         Integer.toString(Config.nprobe),
                         Boolean.toString(Config.RANGE_SEARCH),
                         Integer.toString(Config.k_max),
-                        Boolean.toString(Config.TFIDF));
+                        Boolean.toString(Config.TFIDF),
+                        FilePathUtils.getChangesFilePath(Config.PROGRAMMING_LANGUAGE),
+                        FilePathUtils.getChangesInfoFilePath(Config.PROGRAMMING_LANGUAGE));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 

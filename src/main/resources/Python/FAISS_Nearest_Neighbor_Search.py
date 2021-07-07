@@ -26,7 +26,9 @@ def searching(index_path,
               nprobe=1,
               range_search=False,
               k_max=100,
-              tfidf=False):
+              tfidf=False,
+              changes_path="",
+              prop_path=""):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -38,6 +40,7 @@ def searching(index_path,
     :param range_search: if range search should be used (instead of finding the k nearest neighbours)
     :param k_max: number of additional features to consider for the range search
     :param tfidf: if vectors contain tfidf weights
+    :param changes_path: path to the code changes.
     """
     index = faiss.read_index(index_path)
 
@@ -55,10 +58,10 @@ def searching(index_path,
     serversocket.listen(5)
     logger.info('Server started and listening')
 
-    with open('./src/main/resources/Features_Vectors/changes_strings_java.txt') as f:
+    with open(changes_path) as f:
         changes_strings = f.readlines()
 
-    with open('./src/main/resources/Features_Vectors/changes_strings_prop_java.txt') as f:
+    with open(prop_path) as f:
         changes_info = f.readlines()
 
     while 1:
@@ -160,4 +163,6 @@ searching(index_path=str(sys.argv[1]),
           nprobe=int(sys.argv[5]),
           range_search=sys.argv[6] == "true",
           k_max=int(sys.argv[7]),
-          tfidf=sys.argv[8] == "true")
+          tfidf=sys.argv[8] == "true",
+          changes_path=sys.argv[9],
+          prop_path=sys.argv[10])

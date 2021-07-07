@@ -10,9 +10,9 @@ import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
+import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.FilePathUtils;
-import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
-import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.Util;
@@ -80,8 +80,10 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
-            if (!Config.SILENT) {
+            if (Config.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
+                AbstractTree tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
+                System.out.println(tree.getTreeString());
             }
 
 
