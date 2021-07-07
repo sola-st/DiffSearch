@@ -97,10 +97,15 @@ public class RecallPipeline implements
 
                 // load all code changes from file
                 var corpusSize = getNumberOfLines(getChangesFilePath(language));
+
+                logger.debug("corpus size: {}", corpusSize);
+
                 var codeChanges = getCodeChanges(
                         getChangesFilePath(language),
                         getChangesInfoFilePath(language),
                         corpusSize);
+
+                logger.debug("loaded code changes");
 
                 var dfsResult = new DiffsearchResult(query, codeChanges)
                         .setCandidateChangeCount(corpusSize);
@@ -111,6 +116,8 @@ public class RecallPipeline implements
                         .connect(Collection::size)
                         .execute(dfsResult)
                         .orElse(0);
+
+                logger.debug("expected {}", expectedValue);
 
                 expectedValues.put(query, expectedValue);
             }
