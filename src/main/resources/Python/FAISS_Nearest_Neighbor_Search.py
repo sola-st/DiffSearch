@@ -56,15 +56,15 @@ def searching(index_path,
     serversocket.bind(('', int(port)))
 
     serversocket.listen(5)
-    logger.info('Server started and listening')
 
     with open(changes_path) as f:
         changes_strings = f.readlines()
 
     with open(prop_path) as f:
         changes_info = f.readlines()
+    logger.info('Server started and listening')
 
-    while 1:
+    while True:
         logger.debug('WAITING A NEW CONNECTION.. ')
         (clientsocket, address) = serversocket.accept()
         logger.debug("CONNECTED WITH " + str(address))

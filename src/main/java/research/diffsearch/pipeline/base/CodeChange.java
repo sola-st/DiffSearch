@@ -102,4 +102,13 @@ public class CodeChange {
         this.rank = rank;
         return this;
     }
+
+    /**
+     * This object gets returned when an error occurs.
+     */
+    public static final CodeChange ERROR_CODE_CHANGE
+            = new CodeChange("error", "error");
+
+    public static final CodeChange INVALID_QUERY_CODE_CHANGE
+            = new CodeChange("invalid query", "invalid query");
 }

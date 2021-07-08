@@ -143,9 +143,17 @@ public class FilePathUtils {
                 String[] urlLine =
                         Util.computeCandidateUrl(candidateUrl).split("-->");
                 index++;
+                if (candidateParts.length < 2) {
+                    return CodeChange.ERROR_CODE_CHANGE;
+                }
+                if (urlLine.length >= 2) {
+                    return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
+                            .setUrl(urlLine[0])
+                            .setHunkLines(urlLine[1])
+                            .setFullChangeString(candidate)
+                            .setRank(index + 1);
+                }
                 return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
-                        .setUrl(urlLine[0])
-                        .setHunkLines(urlLine[1])
                         .setFullChangeString(candidate)
                         .setRank(index + 1);
             }
