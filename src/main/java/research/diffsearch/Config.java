@@ -206,7 +206,7 @@ public class Config {
      * After this number of seconds, the matching process gets cancelled and its assumed that a
      * candidate is not a match.
      */
-    public static int matchingTimeoutSeconds = 10;
+    public static int matchingTimeoutSeconds = 1;
 
     /**
      * FAISS parameter, number of clusters of the index.

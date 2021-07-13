@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static research.diffsearch.util.FilePathUtils.*;
 //import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
@@ -97,7 +98,8 @@ public class OnlinePipeline implements
                         .setCandidateChangeCount(candidates.size());
 
                 var codeChanges = new MatchingPipeline(getProgrammingLanguage())
-                        .parallelUntilHere(Config.threadCount)
+                        //.parallelUntilHere(Config.threadCount)
+                        .withTimeout(5, TimeUnit.MINUTES,null)
                         .execute(dfsResult)
                         .map(DiffsearchResult::getResults)
                         .orElse(Collections.emptyList());

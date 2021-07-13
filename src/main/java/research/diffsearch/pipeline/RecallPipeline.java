@@ -117,8 +117,6 @@ public class RecallPipeline implements
                         .execute(dfsResult)
                         .orElse(0);
 
-                logger.debug("expected {}", expectedValue);
-
                 expectedValues.put(query, expectedValue);
             }
             return expectedValues.get(query);
