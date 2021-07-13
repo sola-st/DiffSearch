@@ -98,8 +98,8 @@ public class OnlinePipeline implements
                         .setCandidateChangeCount(candidates.size());
 
                 var codeChanges = new MatchingPipeline(getProgrammingLanguage())
-                        //.parallelUntilHere(Config.threadCount)
                         .withTimeout(5, TimeUnit.MINUTES,null)
+                        .parallelUntilHere(1)
                         .execute(dfsResult)
                         .map(DiffsearchResult::getResults)
                         .orElse(Collections.emptyList());
