@@ -38,7 +38,7 @@ _ -->"builderAliases": [LT],
 this.ID<0>.ID<1>(); --> ID<0>.ID<1>();
 false; -->return !(<...>);
 ID OP func.apply(this, arguments); --> ID OP apply(this, func, arguments);
-_ --> const ID OP this.ID.ID[ID].get();
+_ --> ID OP this.ID.ID[ID].get();
 ID<0>.ID<1> OP new ID(new ID()); --> ID<0>.ID<1> OP ID(new ID());
 _ --> ID.ID = <...>; _
 return <...> --> return ID.ID(LT, LT) .ID(LT, LT);
@@ -53,7 +53,7 @@ ID<0>.ID<1>(), ID<0>.ID<2>() --> ID<0>.ID<1>() , ID<0>.ID<3>()
 return <...> --> let <...>
 _ -->ID.ID = LT;
 if (ID.ID(EXPR)) return <...>; -->if (ID.ID(EXPR) binOP <...>) return <...>;
-_ -->const ID OP this.ID.ID();
+_ -->ID OP EXPR;
 var ID<0> = <...> --> let ID<0> = <...>
 var ID<0> = require(LT<0>) , ID<1> = require(LT<1>) , ID<2> = require(LT<2>)(LT<3>) , ID<3> = <...>; -->var ID<0> = require(LT<0>); var ID<1> = require(LT<1>); var ID<2> = require(LT<2>)(LT<3>); var ID<3> = <...>;
 _ --> ID<0> = ID<0>(EXPR)
