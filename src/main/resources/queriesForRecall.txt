@@ -1,80 +1,80 @@
-_ -->import java.util.Optional; import java.util.Set; import java.util.concurrent.Executors;
-t = PrimitiveType.I32; --> ty = PrimitiveType.I32;
-println(e) --> e
-long lookupMethodInPool(long metaspaceConstantPool, int cpi, byte opcode, long[] unresolvedInfo); --> long lookupKlassInPool(long metaspaceConstantPool, int cpi);
-_ -->import com.oracle.jvmci.asm.sparc.*;
-public void generate(NodeLIRBuilderTool gen, LIRGenerationResult res) { --> public void generate(NodeLIRBuilderTool gen) {
-searchHit.getSource().clear(); searchHit.getSource().putAll(results); --> searchHit.getSourceAsMap().clear(); searchHit.getSourceAsMap().putAll(results);
-return sub(left, toComparableValue.execute(right)); --> return sub(left, toComparableValue.executeWithTarget(right));
-_ -->import static org.graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;
-Arrays.sort(files); --> Arrays.sort(files, naturalComparator);
-return isHostConfiguration() ? (label + " (host)") : label.toString(); --> return label.toString();
-import android.support.design.widget.FloatingActionButton; -->_
-return types; --> return foundTypes;
-throw JVMCIError.shouldNotReachHere(); --> throw GraalError.shouldNotReachHere();
-this.id = result.getRuntime().getBitcodeID(); -->_
-try (ToLibGraalScope<TruffleToLibGraal.Id> s = new ToLibGraalScope<>(InitializeRuntime, env)) { --> try (JNILibGraalScope<TruffleToLibGraal.Id> s = new JNILibGraalScope<>(InitializeRuntime, env)) {
-byte[] memo = hasChildren ? null : LEAF_MEMO; --> byte[] memo = hasChildren ? null : NO_MEMO;
-@JsonProperty -->_
-StructuredGraph graph = parseEager(method, AllowAssumptions.YES, options); --> StructuredGraph graph = parseEager(method, AllowAssumptions.YES, goptions);
-public int read(char cbuf[], int off, int len) throws IOException { --> public int read(char[] cbuf, int off, int len) throws IOException {
-import com.oracle.ID.ID.ID.*; -->_
-ID<0>(ID<1>, args, context); --> ID<0>(ID<1>, args, intrinsic);
-annotationWriter.write(appendable, context).append(LT); --> annotationWriter.write(appendable, context).append(ID);
-int remainBytes = EXPR<0> = EXPR --> int remainBytes = EXPR<0> = EXPR
-_ --> return ID.getValue(<...>);
-codeCache.ID(method, compResult); --> <...>
-if (ID<0> == null) return; --> if (ID<0> == null) { return; }
-_ --> if (EXPR binOP EXPR) { return; }
-log.debug(LT, ID); --> LOG.debug(LT, ID);
-if (type instanceof IntegerType) { return ID.ID(EXPR, EXPR); --><...>
-ID slotSize = WordFactory.unsigned(EXPR); -->_
-public static double[][] ID(float[] ID<0>) { return EXPR; --> static double[][] ID(float[] ID<0>) { return EXPR;
-return EXPR; --> return useLibraryConstant(EXPR);
-import static ID.ID.ID.ID.ID; -->_
-if (EXPR<0>) ID = QueryParamEntity.empty(); --> if (EXPR<0>) { ID = QueryParamEntity.empty(); }
-public void ID() { --> public void profileInlinedCall() { <...>
-_ --> res = res binOP LT + (vararg ? LT : LT);
-_ -->import io.ID.ID.ID.ID;
-package com.oracle.max.graal.ID.ID; -->package com.oracle.graal.ID.ID;
-Assert.assertEquals(1, test(<...>)); --> runTest("test", <...>);
-import org.ID.ID.ID.ID; -->import org.ID.ID.ID.ID; <...>
-<...> --> return Optional.of(EXPR);
-package <...>; -->package ID.ID.ID.ID;
-ID = LT; --> ID = LT; ID = LT;
-ID<0>(LT, ID); --> ID<0>(false);
-for (AudioTrack audioTrack : ID.ID) { <...> --> <...>
-GalleryComment comment = ID[EXPR]; --> GalleryComment comment = ID.ID[EXPR];
-_ -->import ID.ID.ID; import ID.ID.ID; import ID.ID.ID;
-Collection<ID> ID(<...>) { --> Collection<ID> generateSyntheticBean(<...>) {
-@Before public void ID() throws ID { --> @BeforeClass public static void ID() throws ID {
-ID<0> = this; --> ID<0> = this.ID();
-ID<0>.incrementHost(EXPR); --> ID<0>.incrementSource(EXPR);
-return ID; --> return EXPR binOP EXPR;
-_ -->import com.oracle.ID.ID.ID.ID;
-_ -->public boolean ID<0>() { return ID.ID<0>(); }
-ID.ID(EXPR, EXPR); --> ID();
-return null; --> throw EXPR;
-throw EXPR; --> throw new GraalError(EXPR);
-@SuppressWarnings(<...>) -->_
-<...> --> merge.setNext(EXPR);
-ID(); ID(); --> ID(); ID();
-final ID<0> ID<1> = EXPR; --> final ID<0> ID<1> = EXPR;
-_ -->import static ID.ID.ID.ID;
-ID ID = ID.ID(); -->_
-return ID; --> return EXPR;
-this.ID = EXPR; -->_
-ID(EXPR); ID(EXPR); --> ID(EXPR); ID(EXPR);
-<...> --> return ID.ID(EXPR, EXPR);
-ID ID = EXPR; --> final ID ID = EXPR;
-ID ID = ID.ID(EXPR, EXPR); --> ID ID = ID.ID(EXPR, EXPR);
-this.ID<0> = ID.ID(ID<0>); --> this.ID<0> = ID<0>;
-ID(ID, ID); -->_
-_ --> for (ID ID<0> = EXPR; ID<0> binOP EXPR; ID<0> unOP) { <...>
-ID<0>(LT); --> ID<0>(LT);
-_ --> EXPR.ID(EXPR, LT);
-ID<0>.ID<1>(LT, ID) --> ID<0>.ID<1>(LT, EXPR)
-<...> --> new ID[]{}
-(ID binOP LT) binOP (ID binOP LT) --> <...>
-ID unOP; --> ID unOP;
-ID OP ID; --> ID OP EXPR;
+DIST_URL = 'https://atom.io/download/electron/' -->DIST_URL = 'https://electronjs.org/headers/'
+return new MockElementRef(); --> return new MockElementRef(new MockElement()); } _ export function mockElementRefEle(ele: any): ElementRef { return new MockElementRef(ele);
+fnOrClass: o.Expression; --> type: o.Expression;
+categories_topics: "/categories sayfasında gösterilecek olan konu sayısı." --> categories_topics: " Kategoriler sayfasında gösterilecek konu sayısı. 0 olarak ayarlanırsa, iki sütunu simetrik (kategoriler ve konular) tutmak için otomatik olarak bir değer bulmaya çalışır."
+_ --> if (this.directive === 'avatar') { return callback(null, file); }
+_ --> assert.equal('/blog', blog.route);
+return false; --> return RespondNow(Error(error_));
+run_spec(__dirname, { parser: "css" }); -->run_spec(__dirname, ["css"]);
+_ --> "optional": true,
+return group(concat([ path.call(print, "left"), " ", n.operator, indent(options.tabWidth, concat([ line, path.call(print, "right") ])) ])); --> return group( concat([ path.call(print, "left"), " ", n.operator, indent(options.tabWidth, concat([ line, path.call(print, "right") ])) ]) );
+_ -->require('./heroku'); require('./rsync');
+_ --> "Telecom": "Telecom",
+it('should be called when changed', function() { assert.equal(changed, true); }) --> it('should be called when changed', function(done) { assert.equal(changed, true); done(); })
+_ --> if (V8_ENABLE_THIRD_PARTY_HEAP_BOOL) return;
+_ -->checksum = "11cdb95816290b525b32587d76419facd99662a07e59d3cdb560488a819d9a45"
+var mappedChildren = React.Children.map(instance.props.children, callback, context); --> var mappedChildren = React.Children.map( instance.props.children, callback, context, );
+console.log('Lint passed'); -->_
+module.exports = function() { return "This text was generated by template A"; } -->_
+assert.deepEqual(destroyed, { 1: 0, 2: 0, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 }); --> this.runTask(() => { set(this.context, 'cond3', false); set(this.context, 'cond5', true); set(this.context, 'cond4', false); });
+/** @type {number} */ this._numLabels = undefined; --> this._numLabels = 0;
+var ID = ID(171); -->var ID = ID(180);
+setHasFloatingToc(LT); --> setHasFloatingToc(LT);
+<...> --> bootApplication();
+_ --> ID.ID(LT, null);
+_ --> "baseBranch": LT,
+urlService.getUrlByResourceId.withArgs(ID.ID, EXPR).returns(LT); --> <...>
+_ --> pickerOptions0: { disabledDate(time) { return time < Date.now(); } },
+<...> = NavigationArrowDropDown; -->_
+exports.describe = EXPR; -->exports.describe = EXPR;
+LT<0> --> path.ID(ID, LT<0>)
+_ --> if (Ember.FEATURES.isEnabled(LT)) { <...> }
+ID.set(this, keyName, value); --><...>
+ID.ID(ret, nw.Menu.destroy.bind(EXPR, id)); -->ID.ID(ret, nw.Menu.destroy.bind(EXPR, id), -1);
+_ -->import swal, { SweetAlert } from LT; <...>
+_ -->EventEmitter.call(EXPR)
+if (ID<0>.ID<1> === LT<0>) { --> if (this.ID<0>.ID<1> === LT<0>) {
+_ -->"builderAliases": [LT],
+this.ID<0>.ID<1>(); --> ID<0>.ID<1>();
+false; -->return !(<...>);
+ID OP func.apply(this, arguments); --> ID OP apply(this, func, arguments);
+_ --> const ID OP this.ID.ID[ID].get();
+ID<0>.ID<1> OP new ID(new ID()); --> ID<0>.ID<1> OP ID(new ID());
+_ --> ID.ID = <...>; _
+return <...> --> return ID.ID(LT, LT) .ID(LT, LT);
+<...> --> return <...> ? EXPR : EXPR;
+EXPR = ID.ID(LT<0>); --> EXPR = ID.ID(LT<0>), <...>
+_ --> return { ID() {<...> } };
+_ --> if (<...>) { ID = ID binOP ID ; }
+if (<...>) { --> if (this.ID.ID binOP ID) {
+return ID.ID.ID(LT); --> return ID.ID(LT);
+return ID.ID.ID<0>(LT, <...>); --> return ID<0>(LT, <...>);
+ID<0>.ID<1>(), ID<0>.ID<2>() --> ID<0>.ID<1>() , ID<0>.ID<3>()
+return <...> --> let <...>
+_ -->ID.ID = LT;
+if (ID.ID(EXPR)) return <...>; -->if (ID.ID(EXPR) binOP <...>) return <...>;
+_ -->const ID OP this.ID.ID();
+var ID<0> = <...> --> let ID<0> = <...>
+var ID<0> = require(LT<0>) , ID<1> = require(LT<1>) , ID<2> = require(LT<2>)(LT<3>) , ID<3> = <...>; -->var ID<0> = require(LT<0>); var ID<1> = require(LT<1>); var ID<2> = require(LT<2>)(LT<3>); var ID<3> = <...>;
+_ --> ID<0> = ID<0>(EXPR)
+!ID.ID(<...>) && !ID.ID(<...>) --> !ID.ID(<...>) && !this.ID.ID(<...>)
+_ --> LT :LT,
+_ --> ID.ID({ID: LT});
+var ID<0> = new ID<1>.ID(<...>); -->var ID<0> = ID<1>.ID.ID(<...>);
+_ -->var <...>;
+ID: ID;-->_
+ID<0>: LT --> ID<0>: LT
+<...> --> await <...>
+var ID = <...>; --> var ID = ID(<...>);
+this.ID<0>(EXPR); --> this.ID<0>(EXPR);
+_ --> ID.ID = ID;
+ID.ID(<...>); -->_
+if (<...> binOP <...> binOP <...>) { --> if (<...> binOP (<...> binOP <...>)) {
+if (ID) { ID.ID(<...>); --><...>
+<...> = EXPR<0>;--><...> = EXPR<0> binOP EXPR;
+if (ID<0> binOP null) {-->if (ID<0> binOP null) {
+_-->throw EXPR;
+return EXPR;-->_
+while (<...>) {--><...>
+ID();-->_
+ID();-->ID(ID);
