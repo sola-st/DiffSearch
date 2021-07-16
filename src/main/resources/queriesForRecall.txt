@@ -36,9 +36,9 @@ _ -->EventEmitter.call(EXPR)
 if (ID<0>.ID<1> === LT<0>) { --> if (this.ID<0>.ID<1> === LT<0>) {
 _ -->"builderAliases": [LT],
 this.ID<0>.ID<1>(); --> ID<0>.ID<1>();
-false; -->return !(<...>);
+return false; -->return !(<...>);
 ID OP func.apply(this, arguments); --> ID OP apply(this, func, arguments);
-_ --> ID OP this.ID.ID[ID].get();
+_ --> ID = ID.get(<...>);
 ID<0>.ID<1> OP new ID(new ID()); --> ID<0>.ID<1> OP ID(new ID());
 _ --> ID.ID = <...>; _
 return <...> --> return ID.ID(LT, LT) .ID(LT, LT);
