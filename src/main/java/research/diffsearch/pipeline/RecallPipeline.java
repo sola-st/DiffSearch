@@ -105,8 +105,6 @@ public class RecallPipeline implements
                         getChangesInfoFilePath(language),
                         corpusSize);
 
-                logger.debug("loaded code changes");
-
                 var dfsResult = new DiffsearchResult(query, codeChanges)
                         .setCandidateChangeCount(corpusSize);
 
@@ -121,7 +119,7 @@ public class RecallPipeline implements
             }
             return expectedValues.get(query);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return 0;
         }
     }
@@ -181,7 +179,7 @@ public class RecallPipeline implements
     public void after() {
         try {
             writeExpectedValuesToFile(expectedValues);
-            writeValuesToFile(queries, RECALL_VALUES_FILE, actualValues, "$", recallValues,
+            writeValuesToFile(queries, RECALL_VALUES_FILE, expectedValues, "$", actualValues, recallValues,
                     candidatePrecisionValues, reciprocalRankValues, performanceValues);
             logger.debug("Recall results saved.");
         } catch (IOException exception) {
