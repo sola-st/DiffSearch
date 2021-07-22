@@ -182,7 +182,7 @@ public class Util {
     }
 
     public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
-        var queryTree = TreeFactory.getChangeTree(query, language);
+        var queryTree = TreeFactory.getAbstractTree(query, language);
         var parseTree = queryTree.getParseTree();
         var parser = queryTree.getParser();
 

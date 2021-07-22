@@ -18,7 +18,6 @@ import research.diffsearch.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
@@ -103,8 +102,7 @@ public class FeatureExtractionMode extends App {
                 .from(Util::formatCodeChange)
                 .connect(cc -> TreeFactory.getAbstractTree(cc, Config.PROGRAMMING_LANGUAGE))
                 .connect(featureExtractionPipeline)
-                .parallelWithTimeout(Config.threadCount, 5, TimeUnit.MINUTES,
-                        new FeatureVector(new double[featureExtractionPipeline.getTotalFeatureVectorLength()]))
+                .parallelUntilHere(Config.threadCount)
                 .connect(featureFrequencyCounter)
                 // show progress in console:
                 .connect(new ProgressWatcher<>("Feature extraction"))

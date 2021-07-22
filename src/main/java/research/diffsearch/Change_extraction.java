@@ -1,11 +1,8 @@
 package research.diffsearch;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import difflib.DiffUtils;
 import difflib.Patch;
-import org.antlr.v4.runtime.misc.Utils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jsoup.Jsoup;

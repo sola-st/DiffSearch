@@ -82,7 +82,7 @@ public class OnlinePipeline implements
 
             if (Config.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
-                AbstractTree tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
+                AbstractTree tree = TreeFactory.getAbstractTree(input, getProgrammingLanguage());
                 System.out.println(tree.getTreeString());
             }
 
