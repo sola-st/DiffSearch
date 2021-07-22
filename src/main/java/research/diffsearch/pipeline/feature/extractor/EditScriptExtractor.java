@@ -4,6 +4,7 @@ import research.diffsearch.Config;
 import research.diffsearch.pipeline.feature.FeatureVector.Section;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptCreator;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation;
+import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.util.ProgrammingLanguage;
 
@@ -33,10 +34,10 @@ public class EditScriptExtractor implements FeatureExtractor {
     }
 
     @Override
-    public void extractFeatures(String codeChange,
-                                         Section section, boolean isQuery) {
+    public void extractFeatures(AbstractTree codeChangeTree,
+                                Section section, boolean isQuery) {
 
-        var editScript = new EditScriptCreator(codeChange, programmingLanguage)
+        var editScript = new EditScriptCreator(codeChangeTree, programmingLanguage)
                 .calculateEditScript();
         extractFeatures(editScript, section, isQuery);
     }

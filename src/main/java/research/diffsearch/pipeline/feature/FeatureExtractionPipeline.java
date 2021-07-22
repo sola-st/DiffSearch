@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
+import research.diffsearch.tree.AbstractTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author Paul Bredl
  */
-public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector> {
+public class FeatureExtractionPipeline implements Pipeline<AbstractTree, FeatureVector> {
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
@@ -48,11 +49,9 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
 
     /**
      * Extracts the features of the given code change.
-     *
-     * @param codeChange the code change.
      */
-    public FeatureVector extractFeatures(String codeChange) {
-        FeatureVector featureVector = new FeatureVector(codeChange,
+    public FeatureVector extractFeatures(AbstractTree codeChangeTree) {
+        FeatureVector featureVector = new FeatureVector(
                 getTotalFeatureVectorLength() / countBits,
                 countBits,
                 quadraticProbingMaxCount);
@@ -62,7 +61,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
             for (FeatureExtractor extractor : getFeatureExtractors()) {
                 var section = featureVector.getSection(extractor.getName(),
                         startPosition, extractor.getFeatureVectorSectionLength());
-                extractor.extractFeatures(codeChange, section, isQuery);
+                extractor.extractFeatures(codeChangeTree, section, isQuery);
                 startPosition += extractor.getFeatureVectorSectionLength();
             }
         } catch (Exception e) {
@@ -73,7 +72,7 @@ public class FeatureExtractionPipeline implements Pipeline<String, FeatureVector
     }
 
     @Override
-    public FeatureVector process(String input, int index) {
+    public FeatureVector process(AbstractTree input, int index) {
         return extractFeatures(input);
     }
 

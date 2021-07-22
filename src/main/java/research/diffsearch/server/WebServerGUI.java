@@ -33,7 +33,7 @@ public class WebServerGUI extends DiffSearchWebServer {
         super(socket, socketFaiss, log);
     }
 
-    public class ServerData {
+    public static class ServerData {
     	List<CodeChangeWeb> outputList;
 		String duration;
     	String changesnumber;
@@ -53,7 +53,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 		String auxLine = "";
 		String lang = "";
 		// looks for post data
-		while ((line = in.readLine()) != null && (line.length() != 0)) {
+		while ((line = in.readLine()) != null && (!line.isEmpty())) {
 		    // System.out.println(line);
 			// if (line.contains("GET /api?")) {
 			if (line.contains("?Text1=") && line.contains("Text2=")) {

@@ -2,6 +2,7 @@ package research.diffsearch.pipeline.feature.extractor;
 
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.count.RuleCountExtractor;
+import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -27,11 +28,11 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
     /**
      * Extracts a features out of the given code change and adds it to a feature vector.
      *
-     * @param codeChange the code change
-     * @param section    the section of the feature vector.
-     * @param isQuery    if the code change is a query or not.
+     * @param codeChangeTree the code change tree
+     * @param section        the section of the feature vector.
+     * @param isQuery        if the code change is a query or not.
      */
-    void extractFeatures(String codeChange,
+    void extractFeatures(AbstractTree codeChangeTree,
                          FeatureVector.Section section,
                          boolean isQuery);
 

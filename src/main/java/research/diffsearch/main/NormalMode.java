@@ -37,7 +37,7 @@ public class NormalMode extends App {
             while (!(nextLine = readLine()).equals("--exit")) {
                 new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                         // add recall pipeline if necessary
-                        .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, Config.query))
+                        .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextLine))
                         .peek(result -> logger.info("Found {} results", result.getResults().size()))
                         .peek(Util::printOutputList)
                         .execute(nextLine);

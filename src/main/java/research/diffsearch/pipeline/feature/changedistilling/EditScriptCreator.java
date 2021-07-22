@@ -1,7 +1,7 @@
 package research.diffsearch.pipeline.feature.changedistilling;
 
+import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.ParseTreeNode;
-import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.ArrayList;
@@ -25,8 +25,7 @@ public class EditScriptCreator {
         this.newTree = newTree;
     }
 
-    public EditScriptCreator(String codeChange, ProgrammingLanguage language) {
-        var tree = TreeFactory.getChangeTree(codeChange, language);
+    public EditScriptCreator(AbstractTree tree, ProgrammingLanguage language) {
         var pair = ParseTreeNode.fromTree(tree.getParseTree(), Arrays.asList(tree.getRuleNames()));
 
         this.matchList = new ParseTreeMatcher(pair.getLeft(), pair.getRight()).calculateMatches();
