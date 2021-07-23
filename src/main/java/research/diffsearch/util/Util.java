@@ -154,16 +154,21 @@ public class Util {
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
+                if (Config.WEB_GUI)
+                    Config.port_web = Config.port_web_python;
                 break;
             case JAVASCRIPT:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
+                if (Config.WEB_GUI)
+                    Config.port_web = Config.port_web_javascript;
                 break;
             default:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_java.txt";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
+                Config.port_web = Config.port_web_java;
         }
 
         Path path = Paths.get(Config.changes_string_path);

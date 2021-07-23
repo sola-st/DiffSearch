@@ -149,9 +149,13 @@ public class Config {
     public static int FEATURE_MAX_COUNT = 1;
 
     /**
-     * Port of the web server.
+     * Port of the web server for each programming language.
      */
     public static int port_web = 8843;
+
+    public static final int port_web_java = 8843;
+    public static final int port_web_python = 8844;
+    public static final int port_web_javascript = 8845;
 
     /**
      * Python host name.

@@ -7,6 +7,7 @@ import research.diffsearch.Config;
 
 import static java.lang.Byte.parseByte;
 import static java.lang.Integer.parseInt;
+import static research.diffsearch.util.Util.program_languages_info;
 
 /**
  * Parses command line arguments and adjusts the config accordingly.
@@ -97,6 +98,9 @@ public class CommandLineUtil {
             if (commandLine.hasOption("lang")) {
                 Config.PROGRAMMING_LANGUAGE = ProgrammingLanguage.valueOf(
                         commandLine.getOptionValue("lang").toUpperCase());
+
+                // Update info based on PL
+                program_languages_info();
             }
             if (commandLine.hasOption("k")) {
                 Config.k = parseInt(commandLine.getOptionValue("k"));
