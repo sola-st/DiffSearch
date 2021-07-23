@@ -1,22 +1,7 @@
 package research.diffsearch.main;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.Config;
-import research.diffsearch.PipelineOld;
-import research.diffsearch.pipeline.OnlinePipeline;
-import research.diffsearch.util.CodeChangeWeb;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EffectivenessMode extends App {
 

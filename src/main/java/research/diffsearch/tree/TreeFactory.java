@@ -7,7 +7,7 @@ import research.diffsearch.util.ProgrammingLanguage;
  */
 public class TreeFactory {
 
-    public static AbstractTree getChangeTree(String candidate, ProgrammingLanguage language) {
+    public static AbstractTree getAbstractTree(String candidate, ProgrammingLanguage language) {
         AbstractTree changeTree;
         switch (language) {
             case JAVA:

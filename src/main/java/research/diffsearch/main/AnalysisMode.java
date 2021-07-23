@@ -14,8 +14,9 @@ public class AnalysisMode extends App {
     public void run() {
         String query = Config.query;
         logger.info("Analysing " + query);
-        Util.printParseTree(TreeFactory.getChangeTree(query, Config.PROGRAMMING_LANGUAGE));
+        var tree = TreeFactory.getAbstractTree(query, Config.PROGRAMMING_LANGUAGE);
+        Util.printParseTree(tree);
         Util.printFeatureVectorAnalysis(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true)
-                .extractFeatures(query));
+                .extractFeatures(tree));
     }
 }

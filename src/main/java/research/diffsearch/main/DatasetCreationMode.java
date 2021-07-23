@@ -4,9 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Change_extraction;
 
-import static research.diffsearch.Change_extraction.clone_GitHub_repositories;
-import static research.diffsearch.Change_extraction.git_diff;
-
 public class DatasetCreationMode extends App{
     private static final Logger logger = LoggerFactory.getLogger(DatasetCreationMode.class);
 

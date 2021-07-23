@@ -63,8 +63,7 @@ public class OnlinePipeline implements
             // write feature vector to file
             DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
-                    // validate query
-                    //.filter((Predicate<String>) Util::checkIfQueryIsValid)
+                    .connect(q -> TreeFactory.getAbstractTree(q, getProgrammingLanguage()))
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
@@ -83,7 +82,7 @@ public class OnlinePipeline implements
 
             if (Config.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
-                AbstractTree tree = TreeFactory.getChangeTree(input, getProgrammingLanguage());
+                AbstractTree tree = TreeFactory.getAbstractTree(input, getProgrammingLanguage());
                 System.out.println(tree.getTreeString());
             }
 

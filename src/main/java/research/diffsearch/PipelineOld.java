@@ -1,25 +1,5 @@
 package research.diffsearch;
 
-import org.antlr.v4.runtime.tree.Tree;
-import research.diffsearch.server.PythonRunner;
-import research.diffsearch.tree.JavaTree;
-import research.diffsearch.tree.Javascript_Tree;
-import research.diffsearch.tree.TreeUtils;
-import research.diffsearch.util.FilePathUtils;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
-
 @SuppressWarnings("ALL")
 public class PipelineOld {
 

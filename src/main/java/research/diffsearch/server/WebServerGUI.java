@@ -1,18 +1,14 @@
 package research.diffsearch.server;
+
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.gson.Gson;
-
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
-import research.diffsearch.util.Util;
 
 import java.io.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -20,7 +16,6 @@ import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-// import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,7 +28,7 @@ public class WebServerGUI extends DiffSearchWebServer {
         super(socket, socketFaiss, log);
     }
 
-    public class ServerData {
+    public static class ServerData {
     	List<CodeChangeWeb> outputList;
 		String duration;
     	String changesnumber;
@@ -53,7 +48,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 		String auxLine = "";
 		String lang = "";
 		// looks for post data
-		while ((line = in.readLine()) != null && (line.length() != 0)) {
+		while ((line = in.readLine()) != null && (!line.isEmpty())) {
 		    // System.out.println(line);
 			// if (line.contains("GET /api?")) {
 			if (line.contains("?Text1=") && line.contains("Text2=")) {

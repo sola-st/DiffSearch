@@ -10,6 +10,7 @@ import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.ProgressWatcher;
@@ -17,8 +18,6 @@ import research.diffsearch.util.ProgressWatcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static research.diffsearch.tree.TreeFactory.getChangeTree;
 
 /**
  * Pipeline to check if some candidate code change actually matches a query.
@@ -61,7 +60,7 @@ public class MatchingPipeline
         List<CodeChange> outputList = new ArrayList<>();
 
         if (queryTree == null) {
-            queryTree = getChangeTree(input.getQuery(), language);
+            queryTree = TreeFactory.getAbstractTree(input.getQuery(), language);
         }
 
         try {
@@ -88,7 +87,7 @@ public class MatchingPipeline
             ParseTree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
 
-            AbstractTree changeTree = getChangeTree(candidate, language);
+            AbstractTree changeTree = TreeFactory.getAbstractTree(candidate, language);
             ParseTree changeParseTree = changeTree.getParseTree();
 
             Matching matching = new Matching(parseTreeQuery, queryTree.getParser());

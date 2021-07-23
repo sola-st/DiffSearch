@@ -1,23 +1,5 @@
 package research.diffsearch.pipeline;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import research.diffsearch.Config;
-import research.diffsearch.PipelineOld;
-import research.diffsearch.main.App;
-import research.diffsearch.main.FeatureExtractionMode;
-import research.diffsearch.util.CodeChangeWeb;
-import research.diffsearch.util.FilePathUtils;
-import research.diffsearch.util.ProgrammingLanguage;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.List;
-import java.util.ListIterator;
-
 //import static research.diffsearch.main.App.getFaissSocket;
 //import static research.diffsearch.main.App.startPythonServer;
 

@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.JavaTree;
+import research.diffsearch.tree.JavascriptTree;
+import research.diffsearch.tree.Python3Tree;
 import research.diffsearch.util.CommandLineUtil;
 import research.diffsearch.util.FilePathUtils;
 
@@ -170,10 +172,8 @@ public abstract class App implements Runnable, Closeable {
         JavaTree queryJavaTree = new JavaTree(query);
 
         ParseTree queryTree = queryJavaTree.getParseTree();
-        System.out.println(queryJavaTree.getTreeString());
 
         JavaTree changeJavaTree = new JavaTree(candidate);
-        System.out.println(changeJavaTree.getTreeString());
         ParseTree changeTree = changeJavaTree.getParseTree();
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());
@@ -182,30 +182,28 @@ public abstract class App implements Runnable, Closeable {
     }
 
     public static boolean runJunit_Python(String query, String candidate) {
-//        Python3Tree queryPython3Tree = new Python3Tree(query);
-//
-//        ParseTree queryTree = queryPython3Tree.getParserTree();
-//
-//        Python3Tree changePython3Tree = new Python3Tree(candidate);
-//        ParseTree changeTree = changePython3Tree.getParserTree();
-//
-//        Matching matching = new Matching(queryTree, queryPython3Tree.getParser());
-//
-//        return matching.isMatch(changeTree, changePython3Tree.getParser());
-        return false;
+         Python3Tree queryPython3Tree = new Python3Tree(query);
+
+        ParseTree queryTree = queryPython3Tree.getParseTree();
+
+        Python3Tree changePython3Tree = new Python3Tree(candidate);
+        ParseTree changeTree = changePython3Tree.getParseTree();
+
+        Matching matching = new Matching(queryTree, queryPython3Tree.getParser());
+
+        return matching.isMatch(changeTree, changePython3Tree.getParser());
     }
 
     public static boolean runJunit_JavaScript(String query, String candidate) {
-//        JavascriptTree queryJavascriptTree = new JavascriptTree(query);
-//
-//        ParseTree queryTree = queryJavascriptTree.getParserTree();
-//
-//        JavascriptTree changeJavascriptTree = new JavascriptTree(candidate);
-//        ParseTree changeTree = changeJavascriptTree.getParserTree();
-//
-//        Matching matching = new Matching(queryTree, queryJavascriptTree.getParser());
-//
-//        return matching.isMatch(changeTree, changeJavascriptTree.getParser());
-        return false;
+        JavascriptTree queryJavascriptTree = new JavascriptTree(query);
+
+        ParseTree queryTree = queryJavascriptTree.getParseTree();
+
+        JavascriptTree changeJavascriptTree = new JavascriptTree(candidate);
+        ParseTree changeTree = changeJavascriptTree.getParseTree();
+
+        Matching matching = new Matching(queryTree, queryJavascriptTree.getParser());
+
+        return matching.isMatch(changeTree, changeJavascriptTree.getParser());
     }
 }

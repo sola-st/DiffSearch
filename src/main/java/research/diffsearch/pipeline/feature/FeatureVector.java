@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 public class FeatureVector {
 
     private final double[] vector;
-    private final String codeChange;
     private final Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
     private final int countBits;
     private final int quadraticProbingMaxCount;
@@ -24,21 +23,18 @@ public class FeatureVector {
     /**
      * Creates a new feature vector for the given code change.
      *
-     * @param codeChange               the code change that this vector represents
      * @param size                     the length of the vector
      * @param countBits                the number of count bits per feature
      * @param quadraticProbingMaxCount the maximum number of times quadratic probing is used
      *                                 on a hash collision
      */
-    public FeatureVector(String codeChange, int size, int countBits, int quadraticProbingMaxCount) {
-        this.codeChange = codeChange;
+    public FeatureVector(int size, int countBits, int quadraticProbingMaxCount) {
         this.vector = new double[size * countBits];
         this.countBits = countBits;
         this.quadraticProbingMaxCount = quadraticProbingMaxCount;
     }
 
     public FeatureVector(double[] array) {
-        this.codeChange = null;
         this.countBits = 0;
         this.vector = array;
         this.quadraticProbingMaxCount = 0;
@@ -128,10 +124,6 @@ public class FeatureVector {
                 .map(Map.Entry::getValue)
                 .findAny()
                 .orElse(Collections.emptyList());
-    }
-
-    public String getCodeChange() {
-        return codeChange;
     }
 
     /**

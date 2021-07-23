@@ -28,9 +28,9 @@ public class CodeChangeWeb {
         if (o == null || getClass() != o.getClass()) return false;
         CodeChangeWeb that = (CodeChangeWeb) o;
         return Objects.equals(url, that.url) &&
-                Objects.equals(hunkLines, that.hunkLines) &&
-                Objects.equals(codeChangeOld, that.codeChangeOld) &&
-                Objects.equals(codeChangeNew, that.codeChangeNew);
+               Objects.equals(hunkLines, that.hunkLines) &&
+               Objects.equals(codeChangeOld, that.codeChangeOld) &&
+               Objects.equals(codeChangeNew, that.codeChangeNew);
     }
 
     @Override

@@ -3,7 +3,6 @@ package research.diffsearch.pipeline.feature.extractor;
 import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
-import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.Objects;
@@ -32,11 +31,8 @@ public abstract class AbstractRecursiveFeatureExtractor implements FeatureExtrac
                                                   boolean isQuery);
 
     @Override
-    public void extractFeatures(String codeChange, FeatureVector.Section section, boolean isQuery) {
-        AbstractTree queryTree = TreeFactory.getChangeTree(codeChange, getProgrammingLanguage());
-        String[] ruleNames = queryTree.getParser().getRuleNames();
-
-        extractFeaturesRecursive(queryTree.getParseTree(), section, isQuery);
+    public void extractFeatures(AbstractTree changeTree, FeatureVector.Section section, boolean isQuery) {
+        extractFeaturesRecursive(changeTree.getParseTree(), section, isQuery);
     }
 
     @Override
