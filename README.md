@@ -68,14 +68,14 @@ replaces some (potentially empty) code with a return statement that returns a va
 
 **Examples of Queries and Matching Code Changes**
 
-Query:    
+Query A:    
                	
                	       <...>                      <...>
                            ID<0>();                   ID<1>();
                            <...>         	-->       <...>
                            ID<0>();                	  ID<1>();
                	 
-Matching change:   
+Matching change A:   
     
                            g();              	   g();
                            f();                        z();
@@ -84,14 +84,14 @@ Matching change:
                            f(); }                	   z();
 
 
-Query:     
+Query B:     
                	
                	       <...> 		         try {
                                                            <...>
                                             -->      } catch (ID ID) {
                                                            <...> }
 
-Matching change: 	
+Matching change B: 	
 
                            x=3; 		  	try {
                                             -->          x=3;
@@ -99,13 +99,13 @@ Matching change:
                                                          System.out.println("oops");}
 
 
-Query:                  
+Query C:                  
   	
   	                      <...>
                           ID = 23;   	 -->  	<...>
                           <...>
 
-Matching change: 	
+Matching change C: 	
 
                             a=2;             		a=2;
                             b=5;             		b=5;
@@ -120,7 +120,7 @@ This package contains the code of DiffSearch. If you want simply run the tool se
 
 **Requirements**
 - Java 11 and Python 3.7
-- [ANTLR 4.7.1](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
+- [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
 
 **How to run**
 
@@ -163,7 +163,7 @@ FOR THE DIFFSEARCH SERVER:
         - Features extraction:       -Dexec.args="-fe -lang java"
         - Dataset extraction:        -Dexec.args="-d -lang java"
         - Old GUI:                   -Dexec.args="-w -lang java"
-        - Options for flag -lang: PYTHON3, JAVA, JAVASCRIPT (case-insensitive)
+        - Options for flag -lang: PYTHON, JAVA, JAVASCRIPT (case-insensitive)
         
 
 FOR THE GUI:
