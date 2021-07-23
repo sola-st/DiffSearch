@@ -11,8 +11,6 @@ import java.util.Set;
 /**
  * Utility methods to handle parse tree nodes.
  * Some of them are specific to the grammar and/or language.
- *
- *
  */
 public class NodeUtil {
 
@@ -71,22 +69,30 @@ public class NodeUtil {
         // Note: the following checks are brittle w.r.t. changes of the grammar and may be incomplete
         String kText = Trees.getNodeText(k, queryParser);
         String vText = Trees.getNodeText(v, changeParser);
-        if (kText.equals("LT")|| kText.matches("LT<[0-9]+>")) {
-            return v.getParent() != null && Trees.getNodeText(v.getParent(), changeParser).equals("literal");
+        String vParentText = Trees.getNodeText(v.getParent(), changeParser);
+
+        if (kText.equals("LT") || kText.matches("LT<[0-9]+>")) {
+            return v.getParent() != null && (vParentText.equals("literal") || vParentText.equals("atom"));
         } else if (kText.equals("ID") || kText.matches("ID<[0-9]+>")) {
             return v.getChildCount() == 0;
-        } else if (kText.equals("binOP")|| kText.matches("binOP<[0-9]+>")) {
-           // return vText.equals("binary_operators");
-            return v.getParent() != null && (Trees.getNodeText(v.getParent(), changeParser).equals("binary_operators")||Trees.getNodeText(v.getParent(), changeParser).equals("binOperator")||Trees.getNodeText(v.getParent(), changeParser).equals("bin_op"));
-        } else if (kText.equals("OP")|| kText.matches("OP<[0-9]+>")) {
-            String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
-            return parentLabel.equals("binary_operators") || parentLabel.equals("assign_operators") || parentLabel.equals("assignmentOperator")|| parentLabel.equals("expr_stmt");
-        }else if (kText.equals("unOP")|| kText.matches("unOP<[0-9]+>")) {
-            String parentLabel = Trees.getNodeText(v.getParent(), changeParser);
-            return parentLabel.equals("unary_prefix_operators") || parentLabel.equals("unary_postfix_operators");
-        } else if (kText.equals("EXPR")|| kText.matches("EXPR<[0-9]+>")) {
-            return vText.equals("expression") || vText.equals("expr") || Trees.getNodeText(v.getParent(), changeParser).equals("expression")//v.getChildCount() == 0;
-                    || Trees.getNodeText(v.getParent(), changeParser).equals("methodCall")|| Trees.getNodeText(v.getParent(), changeParser).equals("singleExpression");
+        } else if (kText.equals("binOP") || kText.matches("binOP<[0-9]+>")) {
+            // return vText.equals("binary_operators");
+            return v.getParent() != null && (vParentText.equals("binary_operators")
+                                             || vParentText.equals("binOperator")
+                                             || vParentText.equals("bin_op"));
+        } else if (kText.equals("OP") || kText.matches("OP<[0-9]+>")) {
+            return vParentText.equals("binary_operators")
+                   || vParentText.equals("assign_operators")
+                   || vParentText.equals("assignmentOperator")
+                   || vParentText.equals("expr_stmt");
+        } else if (kText.equals("unOP") || kText.matches("unOP<[0-9]+>")) {
+            return vParentText.equals("unary_prefix_operators")
+                   || vParentText.equals("unary_postfix_operators");
+        } else if (kText.equals("EXPR") || kText.matches("EXPR<[0-9]+>")) {
+            return vText.equals("expression") || vText.equals("expr")
+                   || vParentText.equals("expression")//v.getChildCount() == 0;
+                   || vParentText.equals("methodCall")
+                   || vParentText.equals("singleExpression");
         }
         throw new IllegalArgumentException("Unexpected node label " + kText);
     }
@@ -94,8 +100,8 @@ public class NodeUtil {
     public boolean isMatchingEmpty(ParseTree k, ParseTree v) {
         // Note: the following check is brittle w.r.t. changes of the grammar
         return getKind(k) == Kind.EMPTY &&
-                v.getChildCount() == 0 &&
-                Trees.getNodeText(v, changeParser).equals("multipleStatements");
+               v.getChildCount() == 0 &&
+               Trees.getNodeText(v, changeParser).equals("multipleStatements");
     }
 
     public ParseTree extractOldSubtree(ParseTree t) {
@@ -108,7 +114,7 @@ public class NodeUtil {
 
         int n = 2;
 
-        while( t.getChild(n).toStringTree().equals( "\n")) {
+        while (t.getChild(n).toStringTree().equals("\n")) {
             n++;
         }
         ParseTree leftQuerySnippet = t.getChild(n);
