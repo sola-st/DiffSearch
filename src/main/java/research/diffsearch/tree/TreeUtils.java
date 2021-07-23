@@ -1,5 +1,6 @@
 package research.diffsearch.tree;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 
 import java.util.List;
@@ -8,14 +9,14 @@ import java.util.List;
  * @author Luca Di Grazia
  */
 public class TreeUtils {
-    /**
-     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
-     *
-     * @param t : AST of a change or query
-     * @param ruleNames: rule names of the AST
-     * @param list_parent_child: list of the couple parent-child found
-     * @param features: binary feature vector ("it is the return value of the function")
-     */
+//    /**
+//     * Extraction of all the nodes of the query AST to perform a deep comparison with changes AST.
+//     *
+//     * @param t : AST of a change or query
+//     * @param ruleNames: rule names of the AST
+//     * @param list_parent_child: list of the couple parent-child found
+//     * @param features: binary feature vector ("it is the return value of the function")
+//     */
 //    static void pairs_parent_childAST_python(final Tree t, final List<String> ruleNames, final List<Integer> list_parent_child, int [] features) {
 //
 //        for (int i = 0; i < t.getChildCount(); i++) {
@@ -117,6 +118,15 @@ public class TreeUtils {
 //
 //    }
 
+    public static String getCompleteNodeText(Tree tree) {
+        if (tree instanceof ParseTree) {
+            return ((ParseTree) tree).getText();
+        }
+        if (tree instanceof SerializableTreeNode) {
+            return ((SerializableTreeNode) tree).getCompleteNodeText();
+        }
+        throw new IllegalStateException();
+    }
 
     //Node count method
     public static int nodeCount(final Tree queryTree, final List<String> queryRuleNames, int n) {

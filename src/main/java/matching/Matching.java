@@ -1,9 +1,10 @@
 package matching;
 
 import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import research.diffsearch.tree.TreeUtils;
 
 import java.util.*;
 
@@ -22,29 +23,29 @@ import java.util.*;
  */
 public class Matching {
 
-    private ParseTree query;
+    private Tree query;
     private Parser queryParser;
 
-    public Matching(ParseTree query, Parser queryParser) {
+    public Matching(Tree query, Parser queryParser) {
         this.query = query;
         this.queryParser = queryParser;
     }
 
-    public boolean isMatch(ParseTree change, Parser changeParser) {
+    public boolean isMatch(Tree change, Parser changeParser) {
         NodeUtil nodeUtil = new NodeUtil(queryParser, changeParser);
 
         // initialize work list with node pairs that match the query's old+new subtrees
         LinkedList<NodeMap> workList = new LinkedList<>();
-        ParseTree queryOld = nodeUtil.extractOldSubtree(query);
-        ParseTree queryNew = nodeUtil.extractNewSubtree(query);
-        ParseTree changeOld = nodeUtil.extractOldSubtree(change);
-        ParseTree changeNew = nodeUtil.extractNewSubtree(change);
-        for (Pair<ParseTree, ParseTree> nodePair : subtreeCandidates(queryOld, queryNew, changeOld, changeNew, nodeUtil)) {
+        Tree queryOld = nodeUtil.extractOldSubtree(query);
+        Tree queryNew = nodeUtil.extractNewSubtree(query);
+        Tree changeOld = nodeUtil.extractOldSubtree(change);
+        Tree changeNew = nodeUtil.extractNewSubtree(change);
+        for (Pair<Tree, Tree> nodePair : subtreeCandidates(queryOld, queryNew, changeOld, changeNew, nodeUtil)) {
             NodeMap m = new NodeMap(queryOld, nodePair.getLeft(), queryNew, nodePair.getRight(), nodeUtil);
             workList.add(m);
         }
 
-        List<ParseTree> nodesToMatch = computeNodes(queryOld);
+        List<Tree> nodesToMatch = computeNodes(queryOld);
         nodesToMatch.addAll(computeNodes(queryNew));
 
         if (quickPruning(queryOld, queryNew, changeOld, changeNew, nodesToMatch, nodeUtil)) {
@@ -55,7 +56,7 @@ public class Matching {
         while (!workList.isEmpty()) {
             NodeMap m = workList.removeLast();
 
-            ParseTree unmatchedQueryNode = m.nextUnmatchedNode(nodesToMatch);
+            Tree unmatchedQueryNode = m.nextUnmatchedNode(nodesToMatch);
 
             if (unmatchedQueryNode == null) {
                 if (validateMatchingCandidate(m, nodeUtil)) {
@@ -65,15 +66,13 @@ public class Matching {
                 }
             }
 
-            ParseTree queryParent = unmatchedQueryNode.getParent();
-            ParseTree treeParent = m.get(queryParent);
+            Tree queryParent = unmatchedQueryNode.getParent();
+            Tree treeParent = m.get(queryParent);
             assert (treeParent != null);
 
             int startIdx = m.indexOfLastMatchedChild(treeParent);
             for (int i = startIdx; i < treeParent.getChildCount(); i++) {
-                ParseTree treeCandidateNode = treeParent.getChild(i);
-                String quer = unmatchedQueryNode.getText();
-                String cand = treeCandidateNode.getText();
+                Tree treeCandidateNode = treeParent.getChild(i);
                 NodeMap updatedMap = m.checkAndUpdate(unmatchedQueryNode, treeCandidateNode);
                 if (updatedMap != null) {
                     if (updatedMap.nextUnmatchedNode(nodesToMatch) == null) {
@@ -90,30 +89,30 @@ public class Matching {
         return false;
     }
 
-    private boolean quickPruning(ParseTree queryOld, ParseTree queryNew,
-                                 ParseTree changeOld, ParseTree changeNew,
-                                 List<ParseTree> nodesToMatch,
+    private boolean quickPruning(Tree queryOld, Tree queryNew,
+                                 Tree changeOld, Tree changeNew,
+                                 List<Tree> nodesToMatch,
                                  NodeUtil nodeUtil) {
         return quickPruningByLeaves(changeOld, changeNew, nodesToMatch, nodeUtil);
     }
 
-    private boolean quickPruningByLeaves(ParseTree changeOld, ParseTree changeNew,
-                                         List<ParseTree> nodesToMatch,
+    private boolean quickPruningByLeaves(Tree changeOld, Tree changeNew,
+                                         List<Tree> nodesToMatch,
                                          NodeUtil nodeUtil) {
         // compute leaf nodes of change
-        List<ParseTree> changeNodes = computeNodes(changeOld);
+        List<Tree> changeNodes = computeNodes(changeOld);
         changeNodes.addAll(computeNodes(changeNew));
         Set<String> leaves = new HashSet<>();
-        for (ParseTree n : changeNodes) {
+        for (Tree n : changeNodes) {
             if (n.getChildCount() == 0) {
-                leaves.add(n.getText());
+                leaves.add(TreeUtils.getCompleteNodeText(n));
             }
         }
 
         // if any of the leaves to match don't appear in the change, certainly no match
-        for (ParseTree n : nodesToMatch) {
+        for (Tree n : nodesToMatch) {
             if (n.getChildCount() == 0 && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL) {
-                if (!leaves.contains(n.getText())) {
+                if (!leaves.contains(TreeUtils.getCompleteNodeText(n))) {
                     return true;
                 }
             }
@@ -126,15 +125,15 @@ public class Matching {
                 && validateMatchingCandidateSingleTree(m, m.treeLeftRoot, m.treeRightRoot, nodeUtil);
     }
 
-    private boolean validateMatchingCandidateSingleTree(NodeMap m, ParseTree query, ParseTree change, NodeUtil nodeUtil) {
+    private boolean validateMatchingCandidateSingleTree(NodeMap m, Tree query, Tree change, NodeUtil nodeUtil) {
         if (query.getChildCount() == 0) {
             return true; // nothing to validate, e.g., for "LT" terminal node in query
         }
 
         int queryIdx = 0;
-        ParseTree queryChild = query.getChild(queryIdx);
+        Tree queryChild = query.getChild(queryIdx);
         for (int changeIdx = 0; changeIdx < change.getChildCount(); changeIdx++) {
-            ParseTree changeChild = change.getChild(changeIdx);
+            Tree changeChild = change.getChild(changeIdx);
 
             if (nodeUtil.getKind(queryChild) == NodeUtil.Kind.WILDCARD) {
                 // look-ahead to decide whether to use or skip wildcard
@@ -165,24 +164,24 @@ public class Matching {
         return true;
     }
 
-    private List<ParseTree> computeNodes(ParseTree t) {
-        List<ParseTree> result = new ArrayList<>();
+    private List<Tree> computeNodes(Tree t) {
+        List<Tree> result = new ArrayList<>();
         result.add(t);
         for (int i = 0; i < t.getChildCount(); i++) {
-            ParseTree c = t.getChild(i);
-            if (c.getText().equals("<...>"))
+            Tree c = t.getChild(i);
+            if (TreeUtils.getCompleteNodeText(c).equals("<...>"))
                 continue;
             result.addAll(computeNodes(c));
         }
         return result;
     }
 
-    private List<ImmutablePair<ParseTree, ParseTree>> subtreeCandidates(ParseTree queryOld, ParseTree queryNew,
-                                                                        ParseTree treeOld, ParseTree treeNew,
+    private List<ImmutablePair<Tree, Tree>> subtreeCandidates(Tree queryOld, Tree queryNew,
+                                                                        Tree treeOld, Tree treeNew,
                                                                         NodeUtil nodeUtil) {
-        List<ImmutablePair<ParseTree, ParseTree>> result = new ArrayList<>();
-        for (ParseTree nOld : computeNodes(treeOld)) {
-            for (ParseTree nNew : computeNodes(treeNew)) {
+        List<ImmutablePair<Tree, Tree>> result = new ArrayList<>();
+        for (Tree nOld : computeNodes(treeOld)) {
+            for (Tree nNew : computeNodes(treeNew)) {
                 if ((nodeUtil.isMatchingNormalNode(queryOld, nOld) | nodeUtil.isMatchingEmpty(queryOld, nOld)) &&
                         (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew)))
                     result.add(new ImmutablePair<>(nOld, nNew));

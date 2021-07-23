@@ -2,6 +2,8 @@ package research.diffsearch.tree;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
+import org.antlr.v4.runtime.tree.Trees;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,14 +51,14 @@ public abstract class AbstractTree {
      * @return a string representation of the parse tree.
      */
     public String getTreeString() {
-        return getParseTree().toStringTree(getParser());
+        return Trees.toStringTree(getParseTree(), getParser());
     }
 
     protected CommonTokenStream getTokens() {
         return tokens;
     }
 
-    public ParseTree getParseTree() {
+    public Tree getParseTree() {
         return parsetree;
     }
 

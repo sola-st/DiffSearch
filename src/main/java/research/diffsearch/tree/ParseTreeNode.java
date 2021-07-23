@@ -1,6 +1,6 @@
 package research.diffsearch.tree;
 
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -238,7 +238,7 @@ public class ParseTreeNode {
                 .toHashCode();
     }
 
-    public static Pair<ParseTreeNode, ParseTreeNode> fromTree(ParseTree parseTree, List<String> ruleNames) {
+    public static Pair<ParseTreeNode, ParseTreeNode> fromTree(Tree parseTree, List<String> ruleNames) {
         if (parseTree.getChildCount() == 3) {
             var result = new ImmutablePair<>(fromTree(parseTree.getChild(0), ruleNames, 0),
                     fromTree(parseTree.getChild(2), ruleNames,  0));
@@ -258,7 +258,7 @@ public class ParseTreeNode {
         throw new IllegalArgumentException();
     }
 
-    public static ParseTreeNode fromTree(ParseTree parseTree, List<String> ruleNames, int depth) {
+    public static ParseTreeNode fromTree(Tree parseTree, List<String> ruleNames, int depth) {
         var content = Trees.getNodeText(parseTree, ruleNames);
 
         var root = new ParseTreeNode(content, 0, depth, 0);

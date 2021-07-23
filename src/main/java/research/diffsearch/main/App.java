@@ -1,7 +1,7 @@
 package research.diffsearch.main;
 
 import matching.Matching;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -38,6 +38,7 @@ public abstract class App implements Runnable, Closeable {
         CommandLineUtil.parseArgs(args);
         logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
         logger.debug("Using {} threads", Config.threadCount);
+
         App app = null;
         if (Config.WEB_GUI) {
             app = new WebGUIMode();
@@ -171,10 +172,10 @@ public abstract class App implements Runnable, Closeable {
     public static boolean runJunit(String query, String candidate) {
         JavaTree queryJavaTree = new JavaTree(query);
 
-        ParseTree queryTree = queryJavaTree.getParseTree();
+        Tree queryTree = queryJavaTree.getParseTree();
 
         JavaTree changeJavaTree = new JavaTree(candidate);
-        ParseTree changeTree = changeJavaTree.getParseTree();
+        Tree changeTree = changeJavaTree.getParseTree();
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());
 
@@ -184,10 +185,10 @@ public abstract class App implements Runnable, Closeable {
     public static boolean runJunit_Python(String query, String candidate) {
          Python3Tree queryPython3Tree = new Python3Tree(query);
 
-        ParseTree queryTree = queryPython3Tree.getParseTree();
+        Tree queryTree = queryPython3Tree.getParseTree();
 
         Python3Tree changePython3Tree = new Python3Tree(candidate);
-        ParseTree changeTree = changePython3Tree.getParseTree();
+        Tree changeTree = changePython3Tree.getParseTree();
 
         Matching matching = new Matching(queryTree, queryPython3Tree.getParser());
 
@@ -197,10 +198,10 @@ public abstract class App implements Runnable, Closeable {
     public static boolean runJunit_JavaScript(String query, String candidate) {
         JavascriptTree queryJavascriptTree = new JavascriptTree(query);
 
-        ParseTree queryTree = queryJavascriptTree.getParseTree();
+        Tree queryTree = queryJavascriptTree.getParseTree();
 
         JavascriptTree changeJavascriptTree = new JavascriptTree(candidate);
-        ParseTree changeTree = changeJavascriptTree.getParseTree();
+        Tree changeTree = changeJavascriptTree.getParseTree();
 
         Matching matching = new Matching(queryTree, queryJavascriptTree.getParser());
 

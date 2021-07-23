@@ -1,7 +1,7 @@
 package research.diffsearch.pipeline;
 
 import matching.Matching;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -84,11 +84,11 @@ public class MatchingPipeline
 
     private boolean checkCandidate(CodeChange candidateChange) {
         try {
-            ParseTree parseTreeQuery = queryTree.getParseTree();
+            Tree parseTreeQuery = queryTree.getParseTree();
             String candidate = candidateChange.toString();
 
             AbstractTree changeTree = TreeFactory.getAbstractTree(candidate, language);
-            ParseTree changeParseTree = changeTree.getParseTree();
+            Tree changeParseTree = changeTree.getParseTree();
 
             Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
 

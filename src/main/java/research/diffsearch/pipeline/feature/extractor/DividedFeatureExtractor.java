@@ -1,6 +1,6 @@
 package research.diffsearch.pipeline.feature.extractor;
 
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -23,7 +23,7 @@ public class DividedFeatureExtractor implements FeatureExtractor {
     public void extractFeatures(AbstractTree queryTree, FeatureVector.Section section, boolean isQuery) {
 
         String[] ruleNames = queryTree.getParser().getRuleNames();
-        ParseTree parseTree = queryTree.getParseTree();
+        Tree parseTree = queryTree.getParseTree();
 
         if (parseTree.getChildCount() == 3) {
             baseExtractor.extractFeaturesRecursive(parseTree.getChild(0),
