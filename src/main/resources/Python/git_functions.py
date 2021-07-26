@@ -29,6 +29,6 @@ i = 0
 for link in dirlist:
     print(i, link)
 
-    command = "git --git-dir ./src/main/resources/GitHub_Java/" + link + "/.git log -p -m > ./src/main/resources/java_patch/" + link + ".patch"
+    command = "git --git-dir ./src/main/resources/GitHub_Java/" + link + "/.git log --stat --format=\"%h\" -p -m > ./src/main/resources/java_patch/" + link + ".patch"
     os.system(command)
     i = i + 1
