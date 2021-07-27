@@ -31,7 +31,7 @@ public class NodeUtil {
     }
 
     public Kind getKind(Tree t) {
-        String text = TreeUtils.getCompleteNodeText(t);
+        String text = TreeUtils.getCompleteNodeText(t, Arrays.asList(changeParser.getRuleNames()));
         if (text.equals("<...>")) {
             return Kind.WILDCARD;
         } else if (t.getChildCount() == 0 && text.equals("_")) {
@@ -115,7 +115,8 @@ public class NodeUtil {
 
         int n = 2;
 
-        while (t.getChild(n).toStringTree().equals("\n")) {
+        while (t.getChild(n).toStringTree().equals("\n")
+               || Trees.getNodeText(t.getChild(n), changeParser).equals("\n")) {
             n++;
         }
         Tree leftQuerySnippet = t.getChild(n);

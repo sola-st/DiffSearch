@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
-import research.diffsearch.util.CodeChangeWeb;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.io.*;
@@ -29,11 +29,11 @@ public class WebServerGUI extends DiffSearchWebServer {
     }
 
     public static class ServerData {
-    	List<CodeChangeWeb> outputList;
+    	List<CodeChange> outputList;
 		String duration;
     	String changesnumber;
 
-    	public ServerData(List<CodeChangeWeb> list, String time, String number) {
+    	public ServerData(List<CodeChange> list, String time, String number) {
        		outputList = list;
         	duration = time;
         	changesnumber = number;
@@ -135,10 +135,10 @@ public class WebServerGUI extends DiffSearchWebServer {
 	}
 
 
-    protected void writeOutputList(PrintWriter out, List<CodeChangeWeb> outputList, long durationMatching,
+    protected void writeOutputList(PrintWriter out, List<CodeChange> outputList, long durationMatching,
 			FileChannel channel) {
 		boolean incorrect = false;
-		for (CodeChangeWeb change : outputList) {
+		for (CodeChange change : outputList) {
 			try {
 				String[] parts = { change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url };
 
@@ -156,7 +156,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 			}
 		}
 		if (incorrect) {
-			CodeChangeWeb temp = new CodeChangeWeb("The query is not correct, please try again."," ");
+			CodeChange temp = new CodeChange("The query is not correct, please try again."," ");
 			outputList.set(0, temp);
 		}
 
@@ -171,7 +171,7 @@ public class WebServerGUI extends DiffSearchWebServer {
     protected void writeNoMatchingCodeFound(PrintWriter out, long durationMatching,
     		String result, FileChannel chan) throws IOException {
 
-    	List<CodeChangeWeb> outputList = new ArrayList<CodeChangeWeb>();
+    	List<CodeChange> outputList = new ArrayList<>();
 
     	ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
     	var JSONOutput = new Gson().toJson(serverdata);

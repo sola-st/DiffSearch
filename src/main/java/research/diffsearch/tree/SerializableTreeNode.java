@@ -107,14 +107,17 @@ public class SerializableTreeNode implements Serializable, Tree {
                 .toString();
     }
 
-    public String getCompleteNodeText() {
+    public String getCompleteNodeText(List<String> ruleNames) {
         if (this.getChildCount() == 0) {
-            return nodeLabel;
+            if (!ruleNames.contains(nodeLabel)) {
+                return nodeLabel;
+            }
+            return "";
         } else {
             StringBuilder builder = new StringBuilder();
 
             for(int i = 0; i < this.getChildCount(); ++i) {
-                builder.append(this.getChild(i).getCompleteNodeText());
+                builder.append(this.getChild(i).getCompleteNodeText(ruleNames));
             }
 
             return builder.toString();

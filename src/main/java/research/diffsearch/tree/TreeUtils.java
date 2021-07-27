@@ -118,12 +118,12 @@ public class TreeUtils {
 //
 //    }
 
-    public static String getCompleteNodeText(Tree tree) {
+    public static String getCompleteNodeText(Tree tree, List<String> ruleNames) {
         if (tree instanceof ParseTree) {
             return ((ParseTree) tree).getText();
         }
         if (tree instanceof SerializableTreeNode) {
-            return ((SerializableTreeNode) tree).getCompleteNodeText();
+            return ((SerializableTreeNode) tree).getCompleteNodeText(ruleNames);
         }
         throw new IllegalStateException();
     }

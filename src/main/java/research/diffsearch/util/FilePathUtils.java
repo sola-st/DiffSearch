@@ -184,7 +184,7 @@ public class FilePathUtils {
                 if (urlLine.length >= 2) {
                     return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
                             .setCommitUrl(urlLine[0])
-                            .setHunkLines(urlLine[1])
+                            .setCommitLines(urlLine[1])
                             .setJSONParseTree(parseTreeJson)
                             .setFullChangeString(candidate)
                             .setRank(index + 1);

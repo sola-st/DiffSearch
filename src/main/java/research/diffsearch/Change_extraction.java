@@ -10,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import research.diffsearch.pipeline.base.CodeChange;
-import research.diffsearch.util.CodeChangeOld;
 import research.diffsearch.util.Util;
 
 import java.io.*;
@@ -555,8 +554,8 @@ public class Change_extraction {
             try {
                 String commit = null;
                 String position = null;
-                CodeChangeOld cc = new CodeChangeOld();
-                cc.url = f.toString();
+                CodeChange cc = new CodeChange();
+                cc.setCommitUrl(f.toString());
 
                 while (scanner.hasNext()) {
                     String line = scanner.nextLine() + "  ";
@@ -566,12 +565,12 @@ public class Change_extraction {
 
                     if(line.length() > 7 && line.substring(0, 7).equals("commit ")){
                         commit = line;
-                        cc.commit = line.replace("commit ", "");
+                        cc.setCommitUrl(line.replace("commit ", ""));
                     }
                     else
                         if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
                             position = line;
-                            cc.line = line;
+                            cc.setCommitLines(line);
                         }
                         else
                     //manage -old change
@@ -798,7 +797,7 @@ public class Change_extraction {
                     else
                     if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
                         position = line;
-                        cc.setHunkLines(line);
+                        cc.setCommitLines(line);
                     }
                     else
                         //manage -old change
@@ -897,7 +896,7 @@ public class Change_extraction {
                                     }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                                     cc.setCommitUrl(items.get(0));
-                                    cc.setHunkLines(items.get(1));
+                                    cc.setCommitLines(items.get(1));
                                     change_number++;
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
@@ -951,7 +950,7 @@ public class Change_extraction {
                     }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                     cc.setCommitUrl(items.get(0));
-                    cc.setHunkLines(items.get(1));
+                    cc.setCommitLines(items.get(1));
                     cc.fixPatch = fixPatch;
                     codechanges_list.add(cc);
                     change_number++;
@@ -1073,7 +1072,7 @@ public class Change_extraction {
                     else
                     if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
                         position = line;
-                        cc.setHunkLines(line);
+                        cc.setCommitLines(line);
                     }
                     else
                         //manage -old change
@@ -1183,7 +1182,7 @@ public class Change_extraction {
                                     }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                                     cc.setCommitUrl(items.get(0));
-                                    cc.setHunkLines(items.get(1));
+                                    cc.setCommitLines(items.get(1));
                                     change_number++;
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
@@ -1237,7 +1236,7 @@ public class Change_extraction {
                     }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
                     cc.setCommitUrl(items.get(0));
-                    cc.setHunkLines(items.get(1));
+                    cc.setCommitLines(items.get(1));
                     cc.fixPatch = fixPatch;
                     codechanges_list.add(cc);
                     change_number++;

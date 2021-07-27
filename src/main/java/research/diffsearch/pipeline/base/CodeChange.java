@@ -30,6 +30,10 @@ public class CodeChange {
         this.codeChangeNew = codeChangeNew;
     }
 
+    public CodeChange() {
+
+    }
+
     @Override
     public String toString() {
         return Objects.requireNonNullElseGet(fullChangeString, () -> codeChangeOld + " --> " + codeChangeNew);
@@ -64,7 +68,7 @@ public class CodeChange {
         return hunkLines;
     }
 
-    public CodeChange setHunkLines(String hunkLines) {
+    public CodeChange setCommitLines(String hunkLines) {
         this.hunkLines = hunkLines;
         return this;
     }

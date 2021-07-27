@@ -32,7 +32,7 @@ public class Matching {
     }
 
     public boolean isMatch(Tree change, Parser parser) {
-        NodeUtil nodeUtil = new NodeUtil(parser, parser);
+        NodeUtil nodeUtil = new NodeUtil(queryParser, parser);
 
         // initialize work list with node pairs that match the query's old+new subtrees
         LinkedList<NodeMap> workList = new LinkedList<>();
@@ -105,14 +105,14 @@ public class Matching {
         Set<String> leaves = new HashSet<>();
         for (Tree n : changeNodes) {
             if (n.getChildCount() == 0) {
-                leaves.add(TreeUtils.getCompleteNodeText(n));
+                leaves.add(TreeUtils.getCompleteNodeText(n, Arrays.asList(queryParser.getRuleNames())));
             }
         }
 
         // if any of the leaves to match don't appear in the change, certainly no match
         for (Tree n : nodesToMatch) {
             if (n.getChildCount() == 0 && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL) {
-                if (!leaves.contains(TreeUtils.getCompleteNodeText(n))) {
+                if (!leaves.contains(TreeUtils.getCompleteNodeText(n, Arrays.asList(queryParser.getRuleNames())))) {
                     return true;
                 }
             }
@@ -169,7 +169,7 @@ public class Matching {
         result.add(t);
         for (int i = 0; i < t.getChildCount(); i++) {
             Tree c = t.getChild(i);
-            if (TreeUtils.getCompleteNodeText(c).equals("<...>"))
+            if (TreeUtils.getCompleteNodeText(c, Arrays.asList(queryParser.getRuleNames())).equals("<...>"))
                 continue;
             result.addAll(computeNodes(c));
         }

@@ -1,16 +1,16 @@
 package research.diffsearch.main;
 
+import ProgrammingLanguage.Java.JavaParser;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.server.PythonRunner;
-import research.diffsearch.tree.JavaTree;
-import research.diffsearch.tree.JavascriptTree;
-import research.diffsearch.tree.Python3Tree;
+import research.diffsearch.tree.*;
 import research.diffsearch.util.CommandLineUtil;
 import research.diffsearch.util.FilePathUtils;
+import research.diffsearch.util.ProgrammingLanguage;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -176,11 +177,14 @@ public abstract class App implements Runnable, Closeable {
         Tree queryTree = queryJavaTree.getParseTree();
 
         JavaTree changeJavaTree = new JavaTree(candidate);
-        Tree changeTree = changeJavaTree.getParseTree();
+        Tree changeTree = SerializableTreeNode.fromTree(changeJavaTree.getParseTree(), Arrays.asList(JavaParser.ruleNames));
+        System.out.println(TreeUtils.getCompleteNodeText(changeTree, ProgrammingLanguage.JAVA.getRuleNames()));
+        System.out.println(TreeUtils.getCompleteNodeText(changeJavaTree.getParseTree(), ProgrammingLanguage.JAVA.getRuleNames()));
+        System.out.println(changeJavaTree.getParseTree().toStringTree(changeJavaTree.getParser()));
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());
 
-        return matching.isMatch(changeTree, changeJavaTree.getParser());
+        return matching.isMatch(changeJavaTree.getParseTree(), changeJavaTree.getParser());
     }
 
     public static boolean runJunit_Python(String query, String candidate) {
