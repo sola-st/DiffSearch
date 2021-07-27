@@ -17,6 +17,6 @@ public class AnalysisMode extends App {
         var tree = TreeFactory.getAbstractTree(query, Config.PROGRAMMING_LANGUAGE);
         Util.printParseTree(tree);
         Util.printFeatureVectorAnalysis(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true)
-                .extractFeatures(tree));
+                .extractFeatures(tree.getParseTree()));
     }
 }

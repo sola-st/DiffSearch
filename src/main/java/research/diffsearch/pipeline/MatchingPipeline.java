@@ -1,5 +1,6 @@
 package research.diffsearch.pipeline;
 
+import com.google.gson.Gson;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.IndexedConsumer;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
@@ -85,15 +87,13 @@ public class MatchingPipeline
     private boolean checkCandidate(CodeChange candidateChange) {
         try {
             Tree parseTreeQuery = queryTree.getParseTree();
-            String candidate = candidateChange.toString();
-
-            AbstractTree changeTree = TreeFactory.getAbstractTree(candidate, language);
-            Tree changeParseTree = changeTree.getParseTree();
+            SerializableTreeNode changeParseTree = new Gson().fromJson(candidateChange.getJSONParseTree(), SerializableTreeNode.class);
+            changeParseTree.setConsistentParentChildRelations();
 
             Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
 
             if (matchingCounter < matchingLimit &&
-                matching.isMatch(changeParseTree, changeTree.getParser())) {
+                matching.isMatch(changeParseTree, getProgrammingLanguage().getParser(candidateChange.getFullChangeString()))) {
 
                 if (isNotEqualCodeChange(candidateChange)) {
                     matchingCounter++;

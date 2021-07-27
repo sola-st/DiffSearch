@@ -31,8 +31,8 @@ public class Matching {
         this.queryParser = queryParser;
     }
 
-    public boolean isMatch(Tree change, Parser changeParser) {
-        NodeUtil nodeUtil = new NodeUtil(queryParser, changeParser);
+    public boolean isMatch(Tree change, Parser parser) {
+        NodeUtil nodeUtil = new NodeUtil(parser, parser);
 
         // initialize work list with node pairs that match the query's old+new subtrees
         LinkedList<NodeMap> workList = new LinkedList<>();

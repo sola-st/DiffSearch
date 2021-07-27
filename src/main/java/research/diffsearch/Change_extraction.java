@@ -793,12 +793,12 @@ public class Change_extraction {
 
                     if(line.length() > 7 && line.substring(0, 7).equals("commit ")){
                         commit = line;
-                        cc.commit = line.replace("commit ", "");
+                        cc.setCommitUrl(line.replace("commit ", ""));
                     }
                     else
                     if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
                         position = line;
-                        cc.line = line;
+                        cc.setHunkLines(line);
                     }
                     else
                         //manage -old change
@@ -896,8 +896,8 @@ public class Change_extraction {
                                         info_url_line = "error --> error" ;
                                     }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
-                                    cc.url = items.get(0);
-                                    cc.line = items.get(1);
+                                    cc.setCommitUrl(items.get(0));
+                                    cc.setHunkLines(items.get(1));
                                     change_number++;
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
@@ -950,8 +950,8 @@ public class Change_extraction {
                         info_url_line = "error --> error" ;
                     }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
-                    cc.url = items.get(0);
-                    cc.line = items.get(1);
+                    cc.setCommitUrl(items.get(0));
+                    cc.setHunkLines(items.get(1));
                     cc.fixPatch = fixPatch;
                     codechanges_list.add(cc);
                     change_number++;
@@ -1068,12 +1068,12 @@ public class Change_extraction {
                         if (commit.contains("3d3aad91880410164be0372875fe702af44fa279"))
                                 System.out.println(line);
                         projectName = "java/" + parts[1].replace(" ", "") + ".patch";
-                        cc.commit = commit.replace("commit ", "");
+                        cc.setCommitUrl(commit.replace("commit ", ""));
                     }
                     else
                     if(line.length() > 4 && line.substring(0, 4).equals("@@ -")){
                         position = line;
-                        cc.line = line;
+                        cc.setHunkLines(line);
                     }
                     else
                         //manage -old change
@@ -1182,8 +1182,8 @@ public class Change_extraction {
                                         info_url_line = "error --> error" ;
                                     }
                                     List<String> items = Arrays.asList(info_url_line.split("-->"));
-                                    cc.url = items.get(0);
-                                    cc.line = items.get(1);
+                                    cc.setCommitUrl(items.get(0));
+                                    cc.setHunkLines(items.get(1));
                                     change_number++;
                                     cc.fixPatch = fixPatch;
                                     codechanges_list.add(cc);
@@ -1236,8 +1236,8 @@ public class Change_extraction {
                         info_url_line = "error --> error" ;
                     }
                     List<String> items = Arrays.asList(info_url_line.split("-->"));
-                    cc.url = items.get(0);
-                    cc.line = items.get(1);
+                    cc.setCommitUrl(items.get(0));
+                    cc.setHunkLines(items.get(1));
                     cc.fixPatch = fixPatch;
                     codechanges_list.add(cc);
                     change_number++;

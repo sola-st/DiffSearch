@@ -125,7 +125,8 @@ public class DiffSearchWebServer extends Thread {
         boolean flag = true;
         for (CodeChange change : outputList) {
             try {
-                String[] parts = {change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url};
+                String[] parts = {change.getCodeChangeOld(), change.getCodeChangeNew(),
+                        change.getHunkLines(), change.getCommitUrl()};
 
                 if (result.isInvalidQuery()) {
                     out.println("<center><H3><span style='color: #000000'>" +

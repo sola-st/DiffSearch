@@ -2,7 +2,6 @@ package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.pipeline.feature.FeatureVector;
-import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
 
 /**
@@ -20,24 +19,21 @@ public class DividedFeatureExtractor implements FeatureExtractor {
     }
 
     @Override
-    public void extractFeatures(AbstractTree queryTree, FeatureVector.Section section, boolean isQuery) {
+    public void extractFeatures(Tree tree, FeatureVector.Section section, boolean isQuery) {
 
-        String[] ruleNames = queryTree.getParser().getRuleNames();
-        Tree parseTree = queryTree.getParseTree();
-
-        if (parseTree.getChildCount() == 3) {
-            baseExtractor.extractFeaturesRecursive(parseTree.getChild(0),
+        if (tree.getChildCount() == 3) {
+            baseExtractor.extractFeaturesRecursive(tree.getChild(0),
                     section.getSubsection(baseExtractor.getName() + " [old]",
                             0, baseExtractor.getFeatureVectorSectionLength()),
                     isQuery);
 
-            baseExtractor.extractFeaturesRecursive(parseTree.getChild(2),
+            baseExtractor.extractFeaturesRecursive(tree.getChild(2),
                     section.getSubsection(baseExtractor.getName() + "[new]",
                             baseExtractor.getFeatureVectorSectionLength(),
                             baseExtractor.getFeatureVectorSectionLength()),
                     isQuery);
         } else {
-            baseExtractor.extractFeaturesRecursive(parseTree, section, isQuery);
+            baseExtractor.extractFeaturesRecursive(tree, section, isQuery);
         }
     }
 

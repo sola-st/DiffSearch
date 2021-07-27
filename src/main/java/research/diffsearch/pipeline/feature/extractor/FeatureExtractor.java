@@ -1,8 +1,8 @@
 package research.diffsearch.pipeline.feature.extractor;
 
+import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.count.RuleCountExtractor;
-import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -32,7 +32,7 @@ public interface FeatureExtractor extends ProgrammingLanguageDependent {
      * @param section        the section of the feature vector.
      * @param isQuery        if the code change is a query or not.
      */
-    void extractFeatures(AbstractTree codeChangeTree,
+    void extractFeatures(Tree codeChangeTree,
                          FeatureVector.Section section,
                          boolean isQuery);
 

@@ -1,11 +1,10 @@
 package research.diffsearch.pipeline.feature.changedistilling;
 
-import research.diffsearch.tree.AbstractTree;
+import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.util.ProgrammingLanguage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation.Type.*;
@@ -25,8 +24,8 @@ public class EditScriptCreator {
         this.newTree = newTree;
     }
 
-    public EditScriptCreator(AbstractTree tree, ProgrammingLanguage language) {
-        var pair = ParseTreeNode.fromTree(tree.getParseTree(), Arrays.asList(tree.getRuleNames()));
+    public EditScriptCreator(Tree tree, ProgrammingLanguage language) {
+        var pair = ParseTreeNode.fromTree(tree, language.getRuleNames());
 
         this.matchList = new ParseTreeMatcher(pair.getLeft(), pair.getRight()).calculateMatches();
         this.oldTree = pair.getLeft();

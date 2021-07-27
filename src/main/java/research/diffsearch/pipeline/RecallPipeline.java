@@ -103,6 +103,7 @@ public class RecallPipeline implements
                 var codeChanges = getCodeChanges(
                         getChangesFilePath(language),
                         getChangesInfoFilePath(language),
+                        getTreesFilePath(language),
                         corpusSize);
 
                 var dfsResult = new DiffsearchResult(query, codeChanges)

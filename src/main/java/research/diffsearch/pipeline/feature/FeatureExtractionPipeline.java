@@ -1,11 +1,11 @@
 package research.diffsearch.pipeline.feature;
 
+import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
-import research.diffsearch.tree.AbstractTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Paul Bredl
  */
-public class FeatureExtractionPipeline implements Pipeline<AbstractTree, FeatureVector> {
+public class FeatureExtractionPipeline <T extends Tree> implements Pipeline<T, FeatureVector> {
 
     private static final Logger logger = LoggerFactory.getLogger(FeatureExtractionPipeline.class);
     private final List<FeatureExtractor> extractorList = new ArrayList<>();
@@ -50,7 +50,7 @@ public class FeatureExtractionPipeline implements Pipeline<AbstractTree, Feature
     /**
      * Extracts the features of the given code change.
      */
-    public FeatureVector extractFeatures(AbstractTree codeChangeTree) {
+    public FeatureVector extractFeatures(T codeChangeTree) {
         FeatureVector featureVector = new FeatureVector(
                 getTotalFeatureVectorLength() / countBits,
                 countBits,
@@ -72,12 +72,12 @@ public class FeatureExtractionPipeline implements Pipeline<AbstractTree, Feature
     }
 
     @Override
-    public FeatureVector process(AbstractTree input, int index) {
+    public FeatureVector process(T input, int index) {
         return extractFeatures(input);
     }
 
-    public static FeatureExtractionPipeline getDefaultFeatureExtractionPipeline(boolean isQuery) {
-        var pipeline = new FeatureExtractionPipeline(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT, isQuery);
+    public static <T extends Tree> FeatureExtractionPipeline<T> getDefaultFeatureExtractionPipeline(boolean isQuery) {
+        var pipeline = new FeatureExtractionPipeline<T>(Config.COUNT_BITS, Config.FEATURE_MAX_COUNT, isQuery);
 
         var extractors = Config.featureExtractors.split(";");
 

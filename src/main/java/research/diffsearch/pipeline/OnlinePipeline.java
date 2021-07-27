@@ -11,6 +11,7 @@ import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
 import research.diffsearch.tree.AbstractTree;
+import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
@@ -64,6 +65,7 @@ public class OnlinePipeline implements
             DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
                     .connect(q -> TreeFactory.getAbstractTree(q, getProgrammingLanguage()))
+                    .connect(t -> SerializableTreeNode.fromTree(t.getParseTree(), getProgrammingLanguage().getRuleNames()))
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
@@ -92,7 +94,7 @@ public class OnlinePipeline implements
                 var numberOfCandidates = getNumberOfLines(CANDIDATE_CHANGES);
 
                 var candidates = getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO,
-                        numberOfCandidates);
+                        CANDIDATE_CHANGES_TREES, numberOfCandidates);
                 DiffsearchResult dfsResult = new DiffsearchResult(input, candidates)
                         .setCandidateChangeCount(candidates.size());
 

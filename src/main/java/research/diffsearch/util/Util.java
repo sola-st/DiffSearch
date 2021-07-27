@@ -42,19 +42,19 @@ public class Util {
                             + " RESULTS  for " + query + "***");
                 out.println("*");
                 for (var change : output) {
-                    if (change.codeChangeOld.equals("invalid query") && change.codeChangeNew.equals("invalid query")) {
+                    if (change.getCodeChangeOld().equals("invalid query") && change.getCodeChangeNew().equals("invalid query")) {
                         out.println("*** Query not valid. ***");
                         break;
                     }
-                    for (var oldLine : change.codeChangeOld.split("\n")) {
+                    for (var oldLine : change.getCodeChangeOld().split("\n")) {
                         printCodeChangePart(out, colored, ANSI_RED, oldLine, "*  - ");
                     }
-                    for (var newLine : change.codeChangeNew.split("\n")) {
+                    for (var newLine : change.getCodeChangeNew().split("\n")) {
                         printCodeChangePart(out, colored, ANSI_GREEN, newLine, "*  + ");
                     }
                     out.print("*       ");
-                    out.println("at " + change.url);
-                    out.println("*       " + change.hunkLines);
+                    out.println("at " + change.getCommitUrl());
+                    out.println("*       " + change.getHunkLines());
                     out.println("*");
                 }
                 out.println("***");

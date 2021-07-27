@@ -1,10 +1,10 @@
 package research.diffsearch.pipeline.feature.extractor;
 
+import org.antlr.v4.runtime.tree.Tree;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.feature.FeatureVector.Section;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptCreator;
 import research.diffsearch.pipeline.feature.changedistilling.EditScriptOperation;
-import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.util.ProgrammingLanguage;
 
@@ -34,7 +34,7 @@ public class EditScriptExtractor implements FeatureExtractor {
     }
 
     @Override
-    public void extractFeatures(AbstractTree codeChangeTree,
+    public void extractFeatures(Tree codeChangeTree,
                                 Section section, boolean isQuery) {
 
         var editScript = new EditScriptCreator(codeChangeTree, programmingLanguage)

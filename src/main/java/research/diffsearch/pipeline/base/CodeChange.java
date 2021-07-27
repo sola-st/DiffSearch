@@ -1,5 +1,7 @@
 package research.diffsearch.pipeline.base;
 
+import org.eclipse.jgit.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -15,10 +17,10 @@ public class CodeChange {
     public String codeChangeNew;
     public String fullChangeString = null;
     public String projectname = "";
-    public String commit = "";
-    public String line = "";
     public String codeChange = "";
     public String fixPatch = "";
+    @Nullable
+    public String JSONParseTree = null;
 
     // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
     public int rank = 0;
@@ -49,11 +51,11 @@ public class CodeChange {
         return Objects.hash(url, hunkLines, codeChangeOld, codeChangeNew);
     }
 
-    public String getUrl() {
+    public String getCommitUrl() {
         return url;
     }
 
-    public CodeChange setUrl(String url) {
+    public CodeChange setCommitUrl(String url) {
         this.url = url;
         return this;
     }
@@ -100,6 +102,33 @@ public class CodeChange {
 
     public CodeChange setRank(int rank) {
         this.rank = rank;
+        return this;
+    }
+
+    public String getProjectName() {
+        return projectname;
+    }
+
+    public CodeChange setProjectName(String projectName) {
+        this.projectname = projectName;
+        return this;
+    }
+
+    public String getFixPatch() {
+        return fixPatch;
+    }
+
+    public CodeChange setFixPatch(String fixPatch) {
+        this.fixPatch = fixPatch;
+        return this;
+    }
+
+    public String getJSONParseTree() {
+        return JSONParseTree;
+    }
+
+    public CodeChange setJSONParseTree(String jsonParseTree) {
+        this.JSONParseTree = jsonParseTree;
         return this;
     }
 

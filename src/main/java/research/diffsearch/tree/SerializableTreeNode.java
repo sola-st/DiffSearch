@@ -4,8 +4,6 @@ import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 import org.antlr.v4.runtime.tree.Trees;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +13,12 @@ import java.util.stream.Collectors;
 
 public class SerializableTreeNode implements Serializable, Tree {
     private final String nodeLabel;
-    private final String completeNodeText;
 
     private final List<SerializableTreeNode> children = new ArrayList<>();
     private transient SerializableTreeNode parent;
 
-    public SerializableTreeNode(String nodeLabel, String completeNodeText) {
+    public SerializableTreeNode(String nodeLabel) {
         this.nodeLabel = nodeLabel;
-        this.completeNodeText = completeNodeText;
     }
 
     /**
@@ -40,7 +36,7 @@ public class SerializableTreeNode implements Serializable, Tree {
     }
 
     @Override
-    public Tree getChild(int i) {
+    public SerializableTreeNode getChild(int i) {
         return getChildren().get(i);
     }
 
@@ -92,6 +88,13 @@ public class SerializableTreeNode implements Serializable, Tree {
         return result.toString();
     }
 
+    public void setConsistentParentChildRelations() {
+        for (var child : getChildren()) {
+            child.parent = this;
+            child.setConsistentParentChildRelations();
+        }
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", SerializableTreeNode.class.getSimpleName() + "[", "]")
@@ -104,34 +107,18 @@ public class SerializableTreeNode implements Serializable, Tree {
                 .toString();
     }
 
-    // note: no deep comparison
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SerializableTreeNode that = (SerializableTreeNode) o;
-
-        return new EqualsBuilder()
-                .append(nodeLabel, that.nodeLabel)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(nodeLabel)
-                .append(children)
-                .toHashCode();
-    }
-
     public String getCompleteNodeText() {
-        return completeNodeText;
+        if (this.getChildCount() == 0) {
+            return nodeLabel;
+        } else {
+            StringBuilder builder = new StringBuilder();
+
+            for(int i = 0; i < this.getChildCount(); ++i) {
+                builder.append(this.getChild(i).getCompleteNodeText());
+            }
+
+            return builder.toString();
+        }
     }
 
     @Override
@@ -166,7 +153,7 @@ public class SerializableTreeNode implements Serializable, Tree {
     public static SerializableTreeNode fromTree(ParseTree parseTree, List<String> ruleNames) {
         var content = Trees.getNodeText(parseTree, ruleNames);
 
-        var root = new SerializableTreeNode(content, parseTree.getText());
+        var root = new SerializableTreeNode(content);
 
         for (var i = 0; i < parseTree.getChildCount(); i++) {
             root.addChild(fromTree(parseTree.getChild(i), ruleNames));

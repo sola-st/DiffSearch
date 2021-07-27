@@ -104,7 +104,8 @@ public abstract class App implements Runnable, Closeable {
                         Integer.toString(Config.k_max),
                         Boolean.toString(Config.TFIDF),
                         FilePathUtils.getChangesFilePath(Config.PROGRAMMING_LANGUAGE),
-                        FilePathUtils.getChangesInfoFilePath(Config.PROGRAMMING_LANGUAGE));
+                        FilePathUtils.getChangesInfoFilePath(Config.PROGRAMMING_LANGUAGE),
+                        FilePathUtils.getTreesFilePath(Config.PROGRAMMING_LANGUAGE));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 
@@ -192,7 +193,7 @@ public abstract class App implements Runnable, Closeable {
 
         Matching matching = new Matching(queryTree, queryPython3Tree.getParser());
 
-        return matching.isMatch(changeTree, changePython3Tree.getParser());
+        return matching.isMatch(changeTree,changePython3Tree.getParser());
     }
 
     public static boolean runJunit_JavaScript(String query, String candidate) {

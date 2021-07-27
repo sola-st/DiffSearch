@@ -2,6 +2,7 @@ package research.diffsearch.util;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class FilePathUtils {
 
     public static final String CANDIDATE_CHANGES = "./src/main/resources/Features_Vectors/candidate_changes.txt";
     public static final String CANDIDATE_CHANGES_INFO = "./src/main/resources/Features_Vectors/candidate_changes_info.txt";
+    public static final String CANDIDATE_CHANGES_TREES = "./src/main/resources/Features_Vectors/candidate_changes_trees.txt";
     public static final String QUERY_FEATURE_VECTORS_CSV = "./src/main/resources/Features_Vectors/query_feature_vectors.csv";
     public static final String CHANGES_STRINGS_JAVA = "./src/main/resources/Features_Vectors/changes_strings_java.txt";
     public static final String CHANGES_STRINGS_JS = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
@@ -61,6 +63,17 @@ public class FilePathUtils {
                 return "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
             default:
                 return "./src/main/resources/Features_Vectors/changes_feature_vectors_java.csv";
+        }
+    }
+
+    public static String getTreesFilePath(ProgrammingLanguage language) {
+        switch (language) {
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_trees_py.txt";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_trees_js.txt";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_trees_java.txt";
         }
     }
 
@@ -104,11 +117,23 @@ public class FilePathUtils {
         }
     }
 
-    public static Collection<CodeChange> getCodeChanges(String codeChangeFilePath, String infoFilePath, int size) {
+    /**
+     * Loads all code changes from disk.
+     *
+     * @param codeChangeFilePath path to the code changes (text in format x --> y)
+     * @param infoFilePath       path to the commit info of the code changes.
+     * @param treesFilePath      path to the json tress of the code changes.
+     * @param size               number of code changes of the corpus.
+     * @return a collection of all code changes at the given paths.
+     */
+    public static Collection<CodeChange> getCodeChanges(String codeChangeFilePath,
+                                                        String infoFilePath,
+                                                        String treesFilePath,
+                                                        int size) {
         return new AbstractCollection<>() {
             @Override
             public Iterator<CodeChange> iterator() {
-                return getCodeChanges(codeChangeFilePath, infoFilePath).iterator();
+                return getCodeChanges(codeChangeFilePath, infoFilePath, treesFilePath).iterator();
             }
 
             @Override
@@ -118,27 +143,37 @@ public class FilePathUtils {
         };
     }
 
-    public static Collection<CodeChange> getCodeChanges(ProgrammingLanguage programmingLanguage) {
-        return getCodeChanges(getChangesFilePath(programmingLanguage), getChangesInfoFilePath(programmingLanguage),
-                getNumberOfLines(getChangesFilePath(programmingLanguage)));
+    public static Collection<CodeChange> getCodeChanges(ProgrammingLanguage lang) {
+        return getCodeChanges(
+                getChangesFilePath(lang),
+                getChangesInfoFilePath(lang),
+                getTreesFilePath(lang),
+                getNumberOfLines(getChangesFilePath(lang)));
     }
 
-    public static Iterable<CodeChange> getCodeChanges(String codeChangeFilePath, String infoFilePath) {
+    public static Iterable<CodeChange> getCodeChanges(String codeChangeFilePath,
+                                                      String infoFilePath,
+                                                      String parseTreesFilePath) {
         return () -> new Iterator<>() {
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
             final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
+            final Iterator<String> treesIterator = getAllLines(parseTreesFilePath).iterator();
 
             int index = -1;
 
             @Override
             public boolean hasNext() {
-                return codeChangeIterator.hasNext() && infoIterator.hasNext();
+                return codeChangeIterator.hasNext()
+                       && infoIterator.hasNext()
+                       && treesIterator.hasNext();
             }
 
             @Override
             public CodeChange next() {
                 String candidateUrl = infoIterator.next();
                 String candidate = codeChangeIterator.next();
+                String parseTreeJson = treesIterator.next();
+
                 String[] candidateParts = candidate.split("-->");
                 String[] urlLine =
                         Util.computeCandidateUrl(candidateUrl).split("-->");
@@ -148,12 +183,14 @@ public class FilePathUtils {
                 }
                 if (urlLine.length >= 2) {
                     return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
-                            .setUrl(urlLine[0])
+                            .setCommitUrl(urlLine[0])
                             .setHunkLines(urlLine[1])
+                            .setJSONParseTree(parseTreeJson)
                             .setFullChangeString(candidate)
                             .setRank(index + 1);
                 }
                 return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
+                        .setJSONParseTree(parseTreeJson)
                         .setFullChangeString(candidate)
                         .setRank(index + 1);
             }
@@ -238,4 +275,7 @@ public class FilePathUtils {
         return getStringFileWriterPipeline(path, Util::featureVectorToString);
     }
 
+    public static <T> Pipeline<T, T> getJSONFileWriterPipeline(String path) throws IOException {
+        return getStringFileWriterPipeline(path, tree -> new Gson().toJson(tree));
+    }
 }

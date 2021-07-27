@@ -1,5 +1,8 @@
 package research.diffsearch.main;
 
+import com.google.gson.Gson;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
@@ -10,6 +13,7 @@ import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
 import research.diffsearch.server.PythonRunner;
+import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgressWatcher;
@@ -48,7 +52,7 @@ public class FeatureExtractionMode extends App {
         }
     }
 
-    protected static void runPythonIndexing(FeatureExtractionPipeline featureExtractionPipeline)
+    protected static void runPythonIndexing(FeatureExtractionPipeline<Tree> featureExtractionPipeline)
             throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
 
@@ -88,7 +92,7 @@ public class FeatureExtractionMode extends App {
         }
     }
 
-    protected static void extractFeaturesToFile(FeatureExtractionPipeline featureExtractionPipeline)
+    protected static void extractFeaturesToFile(FeatureExtractionPipeline<Tree> featureExtractionPipeline)
             throws IOException {
 
         logger.debug("Feature vector length: {}", featureExtractionPipeline.getTotalFeatureVectorLength());
@@ -98,17 +102,32 @@ public class FeatureExtractionMode extends App {
         var numberOfLines = changesLines.size();
         logger.debug("Corpus size: {}", numberOfLines);
 
+        // first parse code changes
         Pipeline
+                // check for correct formatting and illegal characters
                 .from(Util::formatCodeChange)
-                .connect(cc -> TreeFactory.getAbstractTree(cc, Config.PROGRAMMING_LANGUAGE))
+                // parse with ANTLR
+                .connect(FeatureExtractionMode::parseCodeChange)
+                .connect(FeatureExtractionMode::toSerializableTree)
+                .parallelUntilHere(Config.threadCount)
+                // show progress in console:
+                .connect(new ProgressWatcher<>("Parsing code changes"))
+                // store parse trees in file
+                .connect(getJSONFileWriterPipeline(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)))
+                .executeIgnoreResults(changesLines);
+
+        // extract features
+        Pipeline.from(FeatureExtractionMode::deserializeTree)
                 .connect(featureExtractionPipeline)
                 .parallelUntilHere(Config.threadCount)
-                .connect(featureFrequencyCounter)
+                // count features for tfidf
+                .connectIf(Config.TFIDF, featureFrequencyCounter)
                 // show progress in console:
                 .connect(new ProgressWatcher<>("Feature extraction"))
+                // create binary vectors if needed
                 .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
                 .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
-                .executeIgnoreResults(changesLines);
+                .executeIgnoreResults(getAllLines(getTreesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
 
         if (Config.TFIDF) {
             Pipeline.from(FeatureExtractionMode::stringArrayToDoubleArray)
@@ -124,10 +143,24 @@ public class FeatureExtractionMode extends App {
 
     private static double[] stringArrayToDoubleArray(String[] featureVectorStr) {
         try {
-            return Arrays.stream(featureVectorStr).mapToDouble(Double::parseDouble).toArray();
+            return Arrays.stream(featureVectorStr)
+                    .mapToDouble(Double::parseDouble)
+                    .toArray();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static ParseTree parseCodeChange(String cc) {
+        return TreeFactory.getAbstractTree(cc, Config.PROGRAMMING_LANGUAGE).getParseTree();
+    }
+
+    private static Tree toSerializableTree(ParseTree absTree) {
+        return SerializableTreeNode.fromTree(absTree, Config.PROGRAMMING_LANGUAGE.getRuleNames());
+    }
+
+    private static Tree deserializeTree(String json) {
+        return new Gson().fromJson(json, SerializableTreeNode.class);
     }
 }

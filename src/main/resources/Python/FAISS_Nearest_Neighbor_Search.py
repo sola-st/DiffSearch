@@ -23,12 +23,13 @@ def searching(index_path,
               k,
               host,
               port,
-              nprobe=1,
-              range_search=False,
-              k_max=100,
-              tfidf=False,
-              changes_path="",
-              prop_path=""):
+              nprobe,
+              range_search,
+              k_max,
+              tfidf,
+              changes_path,
+              prop_path,
+              trees_path):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -41,12 +42,9 @@ def searching(index_path,
     :param k_max: number of additional features to consider for the range search
     :param tfidf: if vectors contain tfidf weights
     :param changes_path: path to the code changes.
+    :param prop_path: path to the properties of the code changes.
+    :param trees_path: path to the parse trees of the code changes.
     """
-    index = faiss.read_index(index_path)
-
-    logger.debug("Index read.")
-    logger.debug(f"k = {k}")
-    logger.debug(f"Range search={range_search}")
 
     # server #
 
@@ -55,6 +53,12 @@ def searching(index_path,
     logger.debug(f"running on {host}:{port}")
     serversocket.bind(('', int(port)))
 
+    index = faiss.read_index(index_path)
+
+    logger.debug("Index read.")
+    logger.debug(f"k = {k}")
+    logger.debug(f"Range search={range_search}")
+
     serversocket.listen(5)
 
     with open(changes_path) as f:
@@ -62,6 +66,10 @@ def searching(index_path,
 
     with open(prop_path) as f:
         changes_info = f.readlines()
+
+    with open(trees_path) as f:
+        changes_trees = f.readlines()
+
     logger.info('Server started and listening')
 
     while True:
@@ -96,13 +104,6 @@ def searching(index_path,
 
                 if tfidf:
                     faiss.normalize_L2(query_feature_vectors)
-                # np_array = np.ascontiguousarray(query_feature_vectors)
-                # norm = np.linalg.norm(np_array)
-                # if norm != 0:index.search
-                #     np_array = np_array / norm
-                #     # print(str(np_array))
-
-                # limits, distances, indices = index.range_search(query_feature_vectors, 5)
 
                 # if len(indices) < k:
                 index.nprobe = nprobe
@@ -120,8 +121,6 @@ def searching(index_path,
                     for vector in query_feature_vectors:
                         for feature in vector:
                             search_range += (feature - 1) ** 2
-
-                    # search_range *= 2
 
                     logger.debug(f"range={search_range}")
                     limits, distances, indices = index.range_search(query_feature_vectors, search_range)
@@ -151,6 +150,10 @@ def searching(index_path,
                     for item in index_list:
                         f.write("%s" % changes_info[item])
 
+                with open('./src/main/resources/Features_Vectors/candidate_changes_trees.txt', 'w') as f:
+                    for item in index_list:
+                        f.write("%s" % changes_trees[item])
+
                 logger.info(f"Searching done in {time.time() - start} seconds")
 
                 clientsocket.send(bytes("JAVA" + "\r\n", 'UTF-8'))
@@ -165,4 +168,5 @@ searching(index_path=str(sys.argv[1]),
           k_max=int(sys.argv[7]),
           tfidf=sys.argv[8] == "true",
           changes_path=sys.argv[9],
-          prop_path=sys.argv[10])
+          prop_path=sys.argv[10],
+          trees_path=sys.argv[11])
