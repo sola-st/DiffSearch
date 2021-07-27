@@ -89,11 +89,11 @@ public class MatchingPipeline
             Tree parseTreeQuery = queryTree.getParseTree();
             SerializableTreeNode changeParseTree = new Gson().fromJson(candidateChange.getJSONParseTree(), SerializableTreeNode.class);
             changeParseTree.setConsistentParentChildRelations();
-            var pTree = TreeFactory.getAbstractTree(candidateChange.getFullChangeString(), getProgrammingLanguage()).getParseTree();
+
             Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
 
             if (matchingCounter < matchingLimit &&
-                matching.isMatch(pTree, getProgrammingLanguage().getParser(candidateChange.getFullChangeString()))) {
+                matching.isMatch(changeParseTree, getProgrammingLanguage().getParser(candidateChange.getFullChangeString()))) {
 
                 if (isNotEqualCodeChange(candidateChange)) {
                     matchingCounter++;
