@@ -2,6 +2,7 @@ package matching;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.Tree;
+import org.antlr.v4.runtime.tree.Trees;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import research.diffsearch.tree.TreeUtils;
@@ -18,8 +19,6 @@ import java.util.*;
  * multiple possible matches. This exploration is implemented as work list-based
  * algorithm that maintains each possible match as a NodeMap.
  * There may be multiple matches, but the algorithm stops as soon as one found.
- *
- *
  */
 public class Matching {
 
@@ -104,15 +103,21 @@ public class Matching {
         changeNodes.addAll(computeNodes(changeNew));
         Set<String> leaves = new HashSet<>();
         for (Tree n : changeNodes) {
-            if (n.getChildCount() == 0) {
-                leaves.add(TreeUtils.getCompleteNodeText(n, Arrays.asList(queryParser.getRuleNames())));
+            var nodeText = Trees.getNodeText(n, Arrays.asList(queryParser.getRuleNames()));
+            if (n.getChildCount() == 0 &&
+                Arrays.stream(queryParser.getRuleNames()).noneMatch(nodeText::equals)) {
+                leaves.add(nodeText);
             }
         }
 
         // if any of the leaves to match don't appear in the change, certainly no match
         for (Tree n : nodesToMatch) {
-            if (n.getChildCount() == 0 && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL) {
-                if (!leaves.contains(TreeUtils.getCompleteNodeText(n, Arrays.asList(queryParser.getRuleNames())))) {
+            var nodeText = Trees.getNodeText(n, Arrays.asList(queryParser.getRuleNames()));
+            if (n.getChildCount() == 0
+                && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL
+                && Arrays.stream(queryParser.getRuleNames()).noneMatch(nodeText::equals)) {
+                
+                if (!leaves.contains(Trees.getNodeText(n, Arrays.asList(queryParser.getRuleNames())))) {
                     return true;
                 }
             }
@@ -122,7 +127,7 @@ public class Matching {
 
     private boolean validateMatchingCandidate(NodeMap m, NodeUtil nodeUtil) {
         return validateMatchingCandidateSingleTree(m, m.queryLeftRoot, m.queryRightRoot, nodeUtil)
-                && validateMatchingCandidateSingleTree(m, m.treeLeftRoot, m.treeRightRoot, nodeUtil);
+               && validateMatchingCandidateSingleTree(m, m.treeLeftRoot, m.treeRightRoot, nodeUtil);
     }
 
     private boolean validateMatchingCandidateSingleTree(NodeMap m, Tree query, Tree change, NodeUtil nodeUtil) {
@@ -177,13 +182,13 @@ public class Matching {
     }
 
     private List<ImmutablePair<Tree, Tree>> subtreeCandidates(Tree queryOld, Tree queryNew,
-                                                                        Tree treeOld, Tree treeNew,
-                                                                        NodeUtil nodeUtil) {
+                                                              Tree treeOld, Tree treeNew,
+                                                              NodeUtil nodeUtil) {
         List<ImmutablePair<Tree, Tree>> result = new ArrayList<>();
         for (Tree nOld : computeNodes(treeOld)) {
             for (Tree nNew : computeNodes(treeNew)) {
                 if ((nodeUtil.isMatchingNormalNode(queryOld, nOld) | nodeUtil.isMatchingEmpty(queryOld, nOld)) &&
-                        (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew)))
+                    (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew)))
                     result.add(new ImmutablePair<>(nOld, nNew));
             }
         }
