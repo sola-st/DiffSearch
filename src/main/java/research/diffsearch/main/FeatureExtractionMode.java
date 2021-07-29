@@ -17,7 +17,6 @@ import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgressWatcher;
-import research.diffsearch.util.Util;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -97,27 +96,16 @@ public class FeatureExtractionMode extends App {
 
         logger.debug("Feature vector length: {}", featureExtractionPipeline.getTotalFeatureVectorLength());
 
-        List<String> changesLines = newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)));
         DocumentFrequencyCounter featureFrequencyCounter = new DocumentFrequencyCounter();
-        var numberOfLines = changesLines.size();
+        var numberOfLines = getNumberOfLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
         logger.debug("Corpus size: {}", numberOfLines);
 
-        // first parse code changes
-        Pipeline
-                // check for correct formatting and illegal characters
-                .from(Util::formatCodeChange)
-                // parse with ANTLR
-                .connect(FeatureExtractionMode::parseCodeChange)
-                .connect(FeatureExtractionMode::toSerializableTree)
-                .parallelUntilHere(Config.threadCount)
-                // show progress in console:
-                .connect(new ProgressWatcher<>("Parsing code changes"))
-                // store parse trees in file
-                .connect(getJSONFileWriterPipeline(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)))
-                .executeIgnoreResults(changesLines);
+        var basePipeline = Pipeline.from(FeatureExtractionMode::deserializeTree);
+        if (Config.LOW_RAM) {
+            basePipeline = Pipeline.from(FeatureExtractionMode::parseCodeChange);
+        }
 
-        // extract features
-        Pipeline.from(FeatureExtractionMode::deserializeTree)
+        var extractionPipeline = basePipeline
                 .connect(featureExtractionPipeline)
                 .parallelUntilHere(Config.threadCount)
                 // count features for tfidf
@@ -126,13 +114,22 @@ public class FeatureExtractionMode extends App {
                 .connect(new ProgressWatcher<>("Feature extraction"))
                 // create binary vectors if needed
                 .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
-                .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
-                .executeIgnoreResults(getAllLines(getTreesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
+                .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)));
+
+        if (Config.LOW_RAM) {
+            // parse manually
+            extractionPipeline
+                    .executeIgnoreResults(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
+        } else {
+            // use serialized trees
+            extractionPipeline
+                    .executeIgnoreResults(getAllLines(getTreesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
+        }
 
         if (Config.TFIDF) {
             Pipeline.from(FeatureExtractionMode::stringArrayToDoubleArray)
                     // calculate tfidf weights
-                    .connect(new TfIdfTransformer(featureFrequencyCounter, changesLines.size()))
+                    .connect(new TfIdfTransformer(featureFrequencyCounter, ((List<String>) newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)))).size()))
                     .connect(FeatureVector::new)
                     .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE) + ".tfidf"))
                     .connect(new ProgressWatcher<>("TFIDF"))
@@ -154,10 +151,6 @@ public class FeatureExtractionMode extends App {
 
     private static ParseTree parseCodeChange(String cc) {
         return TreeFactory.getAbstractTree(cc, Config.PROGRAMMING_LANGUAGE).getParseTree();
-    }
-
-    private static Tree toSerializableTree(ParseTree absTree) {
-        return SerializableTreeNode.fromTree(absTree, Config.PROGRAMMING_LANGUAGE.getRuleNames());
     }
 
     private static Tree deserializeTree(String json) {

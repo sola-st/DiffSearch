@@ -117,7 +117,7 @@ public class Matching {
                 && nodeUtil.getKind(n) == NodeUtil.Kind.NORMAL
                 && Arrays.stream(queryParser.getRuleNames()).noneMatch(nodeText::equals)) {
                 
-                if (!leaves.contains(Trees.getNodeText(n, Arrays.asList(queryParser.getRuleNames())))) {
+                if (!leaves.contains(nodeText)) {
                     return true;
                 }
             }
@@ -186,10 +186,11 @@ public class Matching {
                                                               NodeUtil nodeUtil) {
         List<ImmutablePair<Tree, Tree>> result = new ArrayList<>();
         for (Tree nOld : computeNodes(treeOld)) {
-            for (Tree nNew : computeNodes(treeNew)) {
-                if ((nodeUtil.isMatchingNormalNode(queryOld, nOld) | nodeUtil.isMatchingEmpty(queryOld, nOld)) &&
-                    (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew)))
-                    result.add(new ImmutablePair<>(nOld, nNew));
+            if (nodeUtil.isMatchingNormalNode(queryOld, nOld) | nodeUtil.isMatchingEmpty(queryOld, nOld)) {
+                for (Tree nNew : computeNodes(treeNew)) {
+                    if (nodeUtil.isMatchingNormalNode(queryNew, nNew) | nodeUtil.isMatchingEmpty(queryNew, nNew))
+                        result.add(new ImmutablePair<>(nOld, nNew));
+                }
             }
         }
         return result;

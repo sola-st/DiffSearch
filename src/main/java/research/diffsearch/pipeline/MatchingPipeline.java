@@ -87,8 +87,7 @@ public class MatchingPipeline
     private boolean checkCandidate(CodeChange candidateChange) {
         try {
             Tree parseTreeQuery = queryTree.getParseTree();
-            SerializableTreeNode changeParseTree = new Gson().fromJson(candidateChange.getJSONParseTree(), SerializableTreeNode.class);
-            changeParseTree.setConsistentParentChildRelations();
+            Tree changeParseTree = getTree(candidateChange);
 
             Matching matching = new Matching(parseTreeQuery, queryTree.getParser());
 
@@ -104,6 +103,17 @@ public class MatchingPipeline
             logger.error("Error in " + candidateChange.toString(), e);
         }
         return false;
+    }
+
+    private Tree getTree(CodeChange candidateChange) {
+        if (Config.LOW_RAM) {
+            return TreeFactory.getAbstractTree(candidateChange.getFullChangeString(), getProgrammingLanguage())
+                    .getParseTree();
+        } else {
+            SerializableTreeNode changeParseTree = new Gson().fromJson(candidateChange.getJSONParseTree(), SerializableTreeNode.class);
+            changeParseTree.setConsistentParentChildRelations();
+            return changeParseTree;
+        }
     }
 
     public static boolean isNotEqualCodeChange(CodeChange codeChangeWeb) {

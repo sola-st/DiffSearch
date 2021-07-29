@@ -78,6 +78,8 @@ public class Config {
      */
     public static boolean MEASURE_RECALL = false;
 
+    public static boolean PARSE_MODE = false;
+
     /**
      * The query that gets executed if DiffSearch is in {@link Config#QUERY_MODE}.
      */
@@ -152,6 +154,8 @@ public class Config {
      * Port of the web server for each programming language.
      */
     public static int port_web = 8843;
+
+    public static boolean LOW_RAM = false;
 
     public static final int port_web_java = 8843;
     public static final int port_web_python = 8844;

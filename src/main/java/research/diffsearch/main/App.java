@@ -40,6 +40,20 @@ public abstract class App implements Runnable, Closeable {
         logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
         logger.debug("Using {} threads", Config.threadCount);
 
+        App app = getApp();
+
+        if (app != null) {
+            app.run();
+
+            // after execution
+            app.stopPythonServer();
+            app.close();
+        } else {
+            logger.error("No DiffSearch mode selected.");
+        }
+    }
+
+    private static App getApp() {
         App app = null;
         if (Config.WEB_GUI) {
             app = new WebGUIMode();
@@ -55,25 +69,23 @@ public abstract class App implements Runnable, Closeable {
             app = new BatchMode();
         } else if (Config.ANALYSIS_MODE) {
             app = new AnalysisMode();
+        } else if (Config.PARSE_MODE) {
+            app = new ParseMode();
         } else if (Config.MEASURE_RECALL) {
             app = new App() {
                 @Override
                 public void run() {
-                    new FeatureExtractionMode().run();
-                    new BatchMode().run();
+                    var extractionMode = new FeatureExtractionMode();
+                    extractionMode.run();
+                    extractionMode.close();
+                    var batchMode = new BatchMode();
+                    batchMode.run();
+                    batchMode.stopPythonServer();
+                    batchMode.close();
                 }
             };
         }
-
-        if (app != null) {
-            app.run();
-
-            // after execution
-            app.stopPythonServer();
-            app.close();
-        } else {
-            logger.error("No DiffSearch mode selected.");
-        }
+        return app;
     }
 
     /**
@@ -184,7 +196,7 @@ public abstract class App implements Runnable, Closeable {
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());
 
-        return matching.isMatch(changeJavaTree.getParseTree(), changeJavaTree.getParser());
+        return matching.isMatch(changeTree, changeJavaTree.getParser());
     }
 
     public static boolean runJunit_Python(String query, String candidate) {
@@ -206,10 +218,11 @@ public abstract class App implements Runnable, Closeable {
         Tree queryTree = queryJavascriptTree.getParseTree();
 
         JavascriptTree changeJavascriptTree = new JavascriptTree(candidate);
-        Tree changeTree = changeJavascriptTree.getParseTree();
+        System.out.println(changeJavascriptTree.getParseTree().toStringTree(changeJavascriptTree.getParser()));
+        System.out.println(queryJavascriptTree.getParseTree().toStringTree(changeJavascriptTree.getParser()));
 
         Matching matching = new Matching(queryTree, queryJavascriptTree.getParser());
 
-        return matching.isMatch(changeTree, changeJavascriptTree.getParser());
+        return matching.isMatch(changeJavascriptTree.getParseTree(), changeJavascriptTree.getParser());
     }
 }

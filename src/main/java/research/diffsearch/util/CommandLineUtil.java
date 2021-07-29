@@ -58,7 +58,9 @@ public class CommandLineUtil {
                         .numberOfArgs(2)
                         .optionalArg(true)
                         .desc("executes a batch of queries. First argument is the input query file, second argument the output text file.")
-                        .build());
+                        .build())
+                .addOption("pa", "parse-mode", false, "Parses code changes to parse trees")
+                .addOption("lr", "lower-ram", false, "Uses less RAM at the cost of longer search time");
     }
 
     public static void parseArgs(String[] args) {
@@ -82,6 +84,8 @@ public class CommandLineUtil {
             Config.SILENT = commandLine.hasOption("silent");
             Config.BATCH = commandLine.hasOption("b");
             Config.ANALYSIS_MODE = commandLine.hasOption("a");
+            Config.PARSE_MODE = commandLine.hasOption("pa");
+            Config.LOW_RAM = commandLine.hasOption("lr");
 
             if (commandLine.hasOption("a")) {
                 Config.query = commandLine.getOptionValue("a");
