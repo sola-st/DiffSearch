@@ -93,8 +93,8 @@ public class AppTest_Python extends TestCase {
 
     //@org.junit.jupiter.api.Test
     public void test8() throws Exception {
-        String query = "<...> ID = ID <...>  --> <...> ID = ID <...> ";
-        String candidate = "f() x = y f() -->  f() y = z f() ";
+        String query =   "ID = ID" + " --> <...>" + System.lineSeparator() + "ID = ID"+ System.lineSeparator() + "<...>";
+        String candidate = "ID = ID" + " --> f()" + System.lineSeparator() + "ID = ID"+ System.lineSeparator() + "<...>";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
