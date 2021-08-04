@@ -37,7 +37,7 @@ public abstract class App implements Runnable, Closeable {
     public static void main(String[] args) {
         logger.debug(System.getProperty("java.vendor"));
         CommandLineUtil.parseArgs(args);
-        logger.info("DiffSearch for {}", Config.PROGRAMMING_LANGUAGE.toString());
+        logger.info("DiffSearch {} for {}", Config.DIFFSEARCH_VERSION, Config.PROGRAMMING_LANGUAGE.toString());
         logger.debug("Using {} threads", Config.threadCount);
 
         App app = getApp();

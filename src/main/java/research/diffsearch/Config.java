@@ -10,6 +10,7 @@ import research.diffsearch.util.ProgrammingLanguage;
  */
 public class Config {
 
+    public static String DIFFSEARCH_VERSION = "1.2";
     /**
      * Path to the nearest neighbor search python file.
      */

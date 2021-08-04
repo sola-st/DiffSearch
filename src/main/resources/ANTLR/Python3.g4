@@ -133,16 +133,16 @@ tokens { INDENT, DEDENT }
 //         single_input (NEWLINE single_input)? '-->'? single_input (NEWLINE single_input)?;
 
 program
-    : querySnippet NEWLINE? QUERY_ARROW querySnippet NEWLINE? //MOD
+    : querySnippet+ NEWLINE? QUERY_ARROW NEWLINE? querySnippet+ NEWLINE? //MOD
     ;
 
 querySnippet
-    : simple_stmt
-    | compound_stmt
-    | stmt
-    | async_funcdef
-    | funcdef
-    | WILDCARD
+    : simple_stmt NEWLINE?
+    | compound_stmt NEWLINE?
+    | stmt NEWLINE?
+    | async_funcdef NEWLINE?
+    | funcdef NEWLINE?
+    | WILDCARD NEWLINE?
     | EMPTY    //MOD
     ;
 
@@ -223,7 +223,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' suite?;
 with_item: test ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
-suite: simple_stmt | NEWLINE? INDENT? stmt+ DEDENT? | 'BLK<' NUMBER '>' | 'BLK' | NEWLINE? INDENT? WILDCARD DEDENT? NEWLINE?; //MOD
+suite: simple_stmt | NEWLINE? INDENT? stmt+ DEDENT? | 'BLK<' NUMBER '>' | 'BLK' | NEWLINE? INDENT? WILDCARD DEDENT? NEWLINE? ; //MOD
 
 test: or_test ('if' or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
