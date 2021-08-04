@@ -29,7 +29,8 @@ def searching(index_path,
               tfidf,
               changes_path,
               prop_path,
-              trees_path):
+              trees_path,
+              low_ram):
     """
     Sets up a server for faiss nearest neighbour searches.
 
@@ -67,8 +68,9 @@ def searching(index_path,
     with open(prop_path) as f:
         changes_info = f.readlines()
 
-    with open(trees_path) as f:
-        changes_trees = f.readlines()
+    if low_ram:
+        with open(trees_path) as f:
+            changes_trees = f.readlines()
 
     logger.info('Server started and listening')
 
@@ -150,9 +152,10 @@ def searching(index_path,
                     for item in index_list:
                         f.write("%s" % changes_info[item])
 
-                with open('./src/main/resources/Features_Vectors/candidate_changes_trees.txt', 'w') as f:
-                    for item in index_list:
-                        f.write("%s" % changes_trees[item])
+                if low_ram:
+                    with open('./src/main/resources/Features_Vectors/candidate_changes_trees.txt', 'w') as f:
+                        for item in index_list:
+                            f.write("%s" % changes_trees[item])
 
                 logger.info(f"Searching done in {time.time() - start} seconds")
 
@@ -169,4 +172,5 @@ searching(index_path=str(sys.argv[1]),
           tfidf=sys.argv[8] == "true",
           changes_path=sys.argv[9],
           prop_path=sys.argv[10],
-          trees_path=sys.argv[11])
+          trees_path=sys.argv[11],
+          low_ram=sys.argv[11] == "true")

@@ -94,7 +94,7 @@ public class OnlinePipeline implements
                 var numberOfCandidates = getNumberOfLines(CANDIDATE_CHANGES);
 
                 var candidates = getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO,
-                        CANDIDATE_CHANGES_TREES, numberOfCandidates);
+                        Config.LOW_RAM ? null : CANDIDATE_CHANGES_TREES, numberOfCandidates);
                 DiffsearchResult dfsResult = new DiffsearchResult(input, candidates)
                         .setCandidateChangeCount(candidates.size());
 

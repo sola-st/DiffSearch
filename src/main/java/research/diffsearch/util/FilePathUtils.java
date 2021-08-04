@@ -4,6 +4,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.base.CodeChange;
@@ -153,11 +154,18 @@ public class FilePathUtils {
 
     public static Iterable<CodeChange> getCodeChanges(String codeChangeFilePath,
                                                       String infoFilePath,
-                                                      String parseTreesFilePath) {
+                                                      @Nullable String parseTreesFilePath) {
         return () -> new Iterator<>() {
+
+
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
             final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
-            final Iterator<String> treesIterator = getAllLines(parseTreesFilePath).iterator();
+            Iterator<String> treesIterator = null;
+            {
+                if (parseTreesFilePath != null) {
+                    treesIterator = getAllLines(parseTreesFilePath).iterator();
+                }
+            }
 
             int index = -1;
 
@@ -165,6 +173,7 @@ public class FilePathUtils {
             public boolean hasNext() {
                 return codeChangeIterator.hasNext()
                        && infoIterator.hasNext()
+                       && treesIterator != null
                        && treesIterator.hasNext();
             }
 
@@ -172,7 +181,7 @@ public class FilePathUtils {
             public CodeChange next() {
                 String candidateUrl = infoIterator.next();
                 String candidate = codeChangeIterator.next();
-                String parseTreeJson = treesIterator.next();
+                String parseTreeJson = treesIterator == null ? null : treesIterator.next();
 
                 String[] candidateParts = candidate.split("-->");
                 String[] urlLine =
