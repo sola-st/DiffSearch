@@ -173,8 +173,8 @@ public class FilePathUtils {
             public boolean hasNext() {
                 return codeChangeIterator.hasNext()
                        && infoIterator.hasNext()
-                       && treesIterator != null
-                       && treesIterator.hasNext();
+                       && treesIterator == null
+                       || treesIterator.hasNext();
             }
 
             @Override
