@@ -32,30 +32,33 @@ parser grammar JavaParser;
 options { tokenVocab=JavaLexer; }
 
 program
-    : querySnippet NEWLINE? QUERY_ARROW NEWLINE? querySnippet NEWLINE? //MOD
+    : querySnippet NEWLINE? QUERY_ARROW NEWLINE? querySnippet NEWLINE? EOF//MOD
     ;
 
 querySnippet
     : packageDeclaration
-    | importDeclaration
-    | enumDeclaration
+    | importDeclaration+
     | enumConstant
-    | interfaceDeclaration
-    | memberDeclaration
-    | interfaceMethodDeclaration
-    | genericInterfaceMethodDeclaration
+    | typeDeclaration
+    | modifier* memberDeclaration
+    //| interfaceMethodDeclaration
+    //| genericInterfaceMethodDeclaration
     | variableDeclarator
     | literal
     | annotation
     | elementValuePair
     | annotationTypeDeclaration
-    | multipleStatements
-    | blockStatement
     | block
     | expression
     | parExpression
     | expressionList
-    | methodCall
+    | multipleStatements
+    | blockStatement
+    | '.'? methodCall
+    | formalParameterList
+    | '}' (ELSE statement)
+    | '}' (catchClause+ finallyBlock? | finallyBlock)
+    | '}' WHILE parExpression ';'?
     | WILDCARD
     | EMPTY    //MOD
     ;
@@ -95,6 +98,7 @@ classOrInterfaceModifier
     | ABSTRACT
     | FINAL    // FINAL for class only -- does not apply to interfaces
     | STRICTFP
+    | WILDCARD
     ;
 
 variableModifier
@@ -122,7 +126,7 @@ typeBound
     ;
 
 enumDeclaration
-    : ENUM identifier (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'
+    : ENUM identifier (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'?
     ;
 
 enumConstants
@@ -142,11 +146,11 @@ interfaceDeclaration
     ;
 
 classBody
-    : '{' classBodyDeclaration* '}'
+    : '{' classBodyDeclaration* '}'?
     ;
 
 interfaceBody
-    : '{' interfaceBodyDeclaration* '}'
+    : '{' interfaceBodyDeclaration* '}'?
     ;
 
 classBodyDeclaration
@@ -175,7 +179,7 @@ memberDeclaration
 methodDeclaration
     : typeTypeOrVoid identifier formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
-      methodBody
+      methodBody?
     ;
 
 methodBody
@@ -270,7 +274,7 @@ arrayInitializer
     : '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
-classOrInterfaceType
+  classOrInterfaceType
     : identifier typeArguments? ('.' identifier typeArguments?)*
     ;
 
@@ -284,11 +288,11 @@ qualifiedNameList
     ;
 
 formalParameters
-    : '(' formalParameterList? ')'
+    : '(' formalParameterList? ')'?
     ;
 
 formalParameterList
-    : formalParameter (',' formalParameter)* (',' lastFormalParameter)?
+    : formalParameter (',' formalParameter?)* (',' lastFormalParameter)?
     | lastFormalParameter
     | WILDCARD
     ;
@@ -348,7 +352,7 @@ elementValue
     ;
 
 elementValueArrayInitializer
-    : '{' (elementValue (',' elementValue)*)? (',')? '}'
+    : '{' (elementValue (',' elementValue)*)? (',')? '}'?
     ;
 
 annotationTypeDeclaration
@@ -356,7 +360,7 @@ annotationTypeDeclaration
     ;
 
 annotationTypeBody
-    : '{' (annotationTypeElementDeclaration)* '}'
+    : '{' (annotationTypeElementDeclaration)* '}'?
     ;
 
 annotationTypeElementDeclaration
@@ -392,13 +396,14 @@ defaultValue
 // STATEMENTS / BLOCKS
 
 block
-    : NEWLINE? '{' NEWLINE? multipleStatements NEWLINE? '}'?
+    : NEWLINE? '{' NEWLINE? multipleStatements NEWLINE? '}'
       | NEWLINE? '{' NEWLINE? WILDCARD NEWLINE? '}'?  //MOD
+      | NEWLINE? '{'
     ;
 
 multipleStatements
     :
-    | blockStatement*
+    | blockStatement+
     //MOD
     ;
 
@@ -432,13 +437,13 @@ statement
 //    | RETURN EXPR ';'
 //    | THROW EXPR ';'
     | ASSERT expression (':' expression)? ';'
-    | IF parExpression statement? (ELSE statement)?
-    | FOR '(' forControl ')' statement?
-    | WHILE parExpression statement?
+    | IF parExpression (statement | block) (ELSE (statement | block))?
+    | FOR '(' forControl ')' (statement | block)?
+    | WHILE parExpression (statement | block)?
     | DO statement WHILE parExpression ';'
     | TRY block (catchClause+ finallyBlock? | finallyBlock)
     | TRY resourceSpecification block catchClause* finallyBlock?
-    | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'
+    | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'?
     | SYNCHRONIZED parExpression block
     | RETURN expression? ';'
     | THROW expression ';'
@@ -508,7 +513,7 @@ enhancedForControl
 // EXPRESSIONS
 
 parExpression
-    :  '(' EXPR ')' | '(' expression ')'
+    :  '(' EXPR ')'? | '(' expression ')'?
     | EXPR
     //MOD
     ;
@@ -520,10 +525,10 @@ expressionList
     ;
 
 methodCall
-    : identifier '(' expressionList? ')'
-    | EXPR '(' expressionList? ')'
-    | THIS '(' expressionList? ')'
-    | SUPER '(' expressionList? ')'
+    : identifier '(' expressionList? ')'?
+    | EXPR '(' expressionList? ')'?
+    | THIS '(' expressionList? ')'?
+    | SUPER '(' expressionList? ')'?
     ;
 
 binary_operators: '*'|'/'|'%'|'+'|'-'|'<' '<' | '>' '>' '>' | '>' '>'| '<=' | '>=' | '>' | '<'
@@ -580,6 +585,7 @@ expression
     | expression '::' typeArguments? identifier
     | typeType '::' (typeArguments? identifier | NEW)
     | classType '::' typeArguments? NEW
+    | WILDCARD
     ;
 
 //unary_operators: '+'|'-' | '++' |'--' | '~'|'!' | unOP | unOP<0> | unOP<1> | unOP<2> | unOP<3>;

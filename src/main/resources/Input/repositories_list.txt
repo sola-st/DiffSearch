@@ -1,1 +1,7 @@
-https://github.com/Activiti/Activiti.git
+https://github.com/square/okhttp
+https://github.com/zxing/zxing
+https://github.com/libgdx/libgdx
+https://github.com/google/guava
+https://github.com/iluwatar/java-design-patterns
+https://github.com/square/retrofit
+https://github.com/alibaba/dubbo
