@@ -46,7 +46,7 @@ public class AppTest_JavaScript extends TestCase {
     //@org.junit.jupiter.api.Test
     public void test2() throws Exception {
         String query = "if(EXPR<0>){ID OP LT;} --> if(EXPR<1>){ID OP LT;}";
-        String candidate = "if(x>0){x=5;} --> if(x<0){x=5;}";
+        String candidate = "if(x>0){x=5;} --> if(x<0){x=5;}";;
 
         assertTrue(App.runJunit_JavaScript(query, candidate));
     }

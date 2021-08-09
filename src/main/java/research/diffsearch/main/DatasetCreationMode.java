@@ -2,27 +2,83 @@ package research.diffsearch.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.Change_extraction;
+import research.diffsearch.ChangeExtractor;
+import research.diffsearch.Config;
+import research.diffsearch.pipeline.base.Pipeline;
 
-public class DatasetCreationMode extends App{
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static org.apache.commons.io.FileUtils.deleteQuietly;
+import static research.diffsearch.util.FilePathUtils.*;
+
+public class DatasetCreationMode extends App {
     private static final Logger logger = LoggerFactory.getLogger(DatasetCreationMode.class);
+    private static final ExecutorService executors = Executors.newFixedThreadPool(Config.threadCount);
 
     @Override
     public void run() {
-        long change_number = 0;
 
-        //if(!clone_GitHub_repositories())
-          //  logger.info("ERROR DURING CLONING GITHUB REPOSITORIES.\n");
+        Pipeline.<File, File>from(file -> new ChangeExtractor(new File(Config.repositoryPath), Config.PROGRAMMING_LANGUAGE)
+                        .extractCodeChangesToFile(file))
+                .parallelUntilHere(Config.threadCount)
+                .executeIgnoreResults(listFilesOfDirectory(Config.repositoryPath, ".patch"));
 
-        //git_diff();
 
-        /* CHANGES EXTRACTED FROM A GIT DIFF OUTPUT*/
+        var outputFile = new File(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
 
-        logger.info("EXTRACTION FROM REPOSITORIES STARTED.\n");
+            deleteQuietly(outputFile);
+            deleteQuietly(new File(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
 
-        change_number = Change_extraction.analyze_diff_file_new_propagation();
 
-        logger.info("EXTRACTION FROM FILE DONE WITH " + change_number + " CHANGES.\n");
+        try(var outputWriter = new BufferedWriter(new FileWriter(outputFile, true))) {
 
+            var treeWriter = new BufferedWriter(new FileWriter(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
+
+            for (File f : listFilesOfDirectory(Config.repositoryPath, ".cc")) {
+                for (String line : getAllLines(f.getAbsolutePath())) {
+                    outputWriter.write(line);
+                    outputWriter.newLine();
+                }
+                var treeFile = new File(f.getPath() + "tree");
+                for (String line : getAllLines(treeFile.getAbsolutePath())) {
+                    treeWriter.write(line);
+                    treeWriter.newLine();
+                }
+                deleteQuietly(treeFile);
+
+            }
+
+            for (File f : listFilesOfDirectory(Config.repositoryPath, ".cc")) {
+                deleteQuietly(f);
+                var treeFile = new File(f.getPath() + "tree");
+                deleteQuietly(treeFile);
+
+            }
+            treeWriter.close();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+
+
+        logger.info("Change extraction finished.");
     }
+
+    public static List<File> listFilesOfDirectory(String directoryName, String fileExtension) {
+        return List.of(Optional.ofNullable(
+                        Paths.get(directoryName)
+                                .toAbsolutePath()
+                                .normalize()
+                                .toFile()
+                                .listFiles((dir, name) -> name.endsWith(fileExtension)))
+                .orElse(new File[0]));
+    }
+
 }

@@ -15,6 +15,11 @@ public class AnalysisMode extends App {
         String query = Config.query;
         logger.info("Analysing " + query);
         var tree = TreeFactory.getAbstractTree(query, Config.PROGRAMMING_LANGUAGE);
+
+        if (tree.getParser().getNumberOfSyntaxErrors() > 0 ) {
+            logger.warn("Code change has syntax errors.");
+        }
+
         Util.printParseTree(tree);
         Util.printFeatureVectorAnalysis(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true)
                 .extractFeatures(tree.getParseTree()));

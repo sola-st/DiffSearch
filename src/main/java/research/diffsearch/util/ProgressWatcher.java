@@ -36,7 +36,6 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
     public void process(T input, int index, IndexedConsumer<T> outputConsumer) {
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
-            logger.info("{} started", progressName);
         }
         if (currentStepIndex < steps.length) {
             if (index / (double) size >= steps[currentStepIndex]) {
@@ -65,6 +64,7 @@ public class ProgressWatcher<T> implements Pipeline<T, T> {
     @Override
     public void before(int size) {
         this.size = size;
+        logger.info("{} started", progressName);
     }
 
     @Override

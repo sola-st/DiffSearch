@@ -56,6 +56,17 @@ public class FilePathUtils {
         }
     }
 
+    public static String getChangesJsonFilePath(ProgrammingLanguage language) {
+        switch (language) {
+            case PYTHON:
+                return "./src/main/resources/Features_Vectors/changes_json_py.txt";
+            case JAVASCRIPT:
+                return "./src/main/resources/Features_Vectors/changes_json_js.txt";
+            default:
+                return "./src/main/resources/Features_Vectors/changes_json_java.txt";
+        }
+    }
+
     public static String getFeatureCSVPath(ProgrammingLanguage language) {
         switch (language) {
             case PYTHON:
@@ -192,7 +203,7 @@ public class FilePathUtils {
                 }
                 if (urlLine.length >= 2) {
                     return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
-                            .setCommitUrl(urlLine[0])
+                            .setCommit(urlLine[0])
                             .setCommitLines(urlLine[1])
                             .setJSONParseTree(parseTreeJson)
                             .setFullChangeString(candidate)

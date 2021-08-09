@@ -3,6 +3,7 @@ package research.diffsearch.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
+import research.diffsearch.Mode;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.tree.AbstractTree;
@@ -10,15 +11,14 @@ import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static research.diffsearch.util.FilePathUtils.getChangesFilePath;
+import static research.diffsearch.util.FilePathUtils.getNumberOfLines;
 
 /**
  * @author Paul Bredl
@@ -154,14 +154,14 @@ public class Util {
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_py.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_py.txt";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_py.csv";
-                if (Config.WEB_GUI)
+                if (Mode.WEB_GUI)
                     Config.port_web = Config.port_web_python;
                 break;
             case JAVASCRIPT:
                 Config.changes_string_path = "./src/main/resources/Features_Vectors/changes_strings_js.txt";
                 Config.changes_string_prop_path = "./src/main/resources/Features_Vectors/changes_strings_prop_js.txt";
                 Config.changes_feature_vectors = "./src/main/resources/Features_Vectors/changes_feature_vectors_js.csv";
-                if (Config.WEB_GUI)
+                if (Mode.WEB_GUI)
                     Config.port_web = Config.port_web_javascript;
                 break;
             default:
@@ -171,15 +171,9 @@ public class Util {
                 Config.port_web = Config.port_web_java;
         }
 
-        Path path = Paths.get(Config.changes_string_path);
 
-        try {
+        Config.code_changes_num = getNumberOfLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
 
-            Config.code_changes_num = Files.lines(path).count();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static String formatCodeChange(String result) {

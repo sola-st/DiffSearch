@@ -1,8 +1,12 @@
 package research.diffsearch.pipeline.base;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.jgit.annotations.Nullable;
 
-import java.util.Objects;
+import static java.text.MessageFormat.format;
+import static java.util.Objects.requireNonNullElseGet;
+import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 
 /**
  * This POJO represents a code change. It contains the old and new part of the code change as well as information
@@ -11,19 +15,21 @@ import java.util.Objects;
  * @author Paul Bredl
  */
 public class CodeChange {
-    public String url = "";
-    public String hunkLines = "";
+    public String commit = "";
+    public transient String hunkLines = "";
     public String codeChangeOld;
     public String codeChangeNew;
-    public String fullChangeString = null;
-    public String projectname = "";
-    public String codeChange = "";
-    public String fixPatch = "";
+    public transient String fullChangeString = null;
+    public String projectName = "";
+    public String fileNameNew = "";
+    public String fileNameOld = "";
     @Nullable
-    public String JSONParseTree = null;
+    public transient String JSONParseTree = null;
+    public int lineOld;
+    public int lineNew;
 
     // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
-    public int rank = 0;
+    public transient int rank = 0;
 
     public CodeChange(String codeChangeOld, String codeChangeNew) {
         this.codeChangeOld = codeChangeOld;
@@ -36,32 +42,55 @@ public class CodeChange {
 
     @Override
     public String toString() {
-        return Objects.requireNonNullElseGet(fullChangeString, () -> codeChangeOld + " --> " + codeChangeNew);
+        return requireNonNullElseGet(fullChangeString, () -> codeChangeOld + " --> " + codeChangeNew);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         CodeChange that = (CodeChange) o;
-        return Objects.equals(url, that.url) &&
-               Objects.equals(hunkLines, that.hunkLines) &&
-               Objects.equals(codeChangeOld, that.codeChangeOld) &&
-               Objects.equals(codeChangeNew, that.codeChangeNew);
+
+        return new EqualsBuilder()
+                .append(lineOld, that.lineOld)
+                .append(lineNew, that.lineNew)
+                .append(commit, that.commit)
+                .append(codeChangeOld, that.codeChangeOld)
+                .append(codeChangeNew, that.codeChangeNew)
+                .append(fullChangeString, that.fullChangeString)
+                .append(projectName, that.projectName)
+                .append(fileNameNew, that.fileNameNew)
+                .append(fileNameOld, that.fileNameOld).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, hunkLines, codeChangeOld, codeChangeNew);
+        return new HashCodeBuilder(23, 37)
+                .append(commit).append(codeChangeOld)
+                .append(codeChangeNew).append(fullChangeString)
+                .append(projectName).append(fileNameNew)
+                .append(fileNameOld).append(lineOld)
+                .append(lineNew).toHashCode();
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public CodeChange setCommit(String commit) {
+        this.commit = commit;
+        return this;
     }
 
     public String getCommitUrl() {
-        return url;
-    }
-
-    public CodeChange setCommitUrl(String url) {
-        this.url = url;
-        return this;
+        return format("https://github.com/{0}/commit/{1}#diff-{2}{3}{4}",
+                projectName.replace('.', '/'),
+                commit,
+                sha256Hex(fileNameNew),
+                codeChangeOld.equals("_") ? "R" : "L",
+                codeChangeOld.equals("_") ? Integer.toString(lineNew) : Integer.toString(lineOld));
     }
 
     public String getHunkLines() {
@@ -92,7 +121,7 @@ public class CodeChange {
     }
 
     public String getFullChangeString() {
-        return fullChangeString;
+        return requireNonNullElseGet(fullChangeString, () -> format("{0} --> {1}", codeChangeOld, codeChangeNew));
     }
 
     public CodeChange setFullChangeString(String fullChangeString) {
@@ -110,20 +139,11 @@ public class CodeChange {
     }
 
     public String getProjectName() {
-        return projectname;
+        return projectName;
     }
 
     public CodeChange setProjectName(String projectName) {
-        this.projectname = projectName;
-        return this;
-    }
-
-    public String getFixPatch() {
-        return fixPatch;
-    }
-
-    public CodeChange setFixPatch(String fixPatch) {
-        this.fixPatch = fixPatch;
+        this.projectName = projectName;
         return this;
     }
 
@@ -133,6 +153,42 @@ public class CodeChange {
 
     public CodeChange setJSONParseTree(String jsonParseTree) {
         this.JSONParseTree = jsonParseTree;
+        return this;
+    }
+
+    public String getFileNameNew() {
+        return fileNameNew;
+    }
+
+    public CodeChange setFileNameNew(String fileNameNew) {
+        this.fileNameNew = fileNameNew;
+        return this;
+    }
+
+    public String getFileNameOld() {
+        return fileNameOld;
+    }
+
+    public CodeChange setFileNameOld(String fileNameOld) {
+        this.fileNameOld = fileNameOld;
+        return this;
+    }
+
+    public int getLineOld() {
+        return lineOld;
+    }
+
+    public CodeChange setLineOld(int lineOld) {
+        this.lineOld = lineOld;
+        return this;
+    }
+
+    public int getLineNew() {
+        return lineNew;
+    }
+
+    public CodeChange setLineNew(int lineNew) {
+        this.lineNew = lineNew;
         return this;
     }
 

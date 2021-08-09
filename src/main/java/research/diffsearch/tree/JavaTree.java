@@ -17,6 +17,7 @@ public class JavaTree extends AbstractTree {
         lexer = initializeLexer(JavaLexer::new);
         tokens = initializeTokens(CommonTokenStream::new);
         parser = initializeParser(JavaParser::new);
+        parser.setProfile(true);
 
         initializeErrorListeners();
 

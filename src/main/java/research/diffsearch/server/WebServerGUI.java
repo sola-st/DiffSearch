@@ -49,16 +49,12 @@ public class WebServerGUI extends DiffSearchWebServer {
 		String lang = "";
 		// looks for post data
 		while ((line = in.readLine()) != null && (!line.isEmpty())) {
-		    // System.out.println(line);
-			// if (line.contains("GET /api?")) {
 			if (line.contains("?Text1=") && line.contains("Text2=")) {
 				logger.info(line);
-				// auxLine = line.substring(9, line.indexOf(" HTTP/1.1"));
 				auxLine = line.substring(line.indexOf("?Text1=") + 1, line.indexOf(" HTTP/1.1"));
 			}
 		}
 		StringBuilder postData = new StringBuilder();
-		//List<CodeChangeWeb> outputList = new ArrayList<>();
 		DiffsearchResult result = null;
 
 		long durationMatching;
@@ -66,7 +62,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 
 		String query = "";
 
-		lang = auxLine.substring(auxLine.lastIndexOf("=") + 1, auxLine.length());
+		lang = auxLine.substring(auxLine.lastIndexOf("=") + 1);
 		// for (int i = 0; i < auxLine.length());
 		for (int i = 0; i < auxLine.length() - lang.length() - "&Language=".length(); i++) {
 			postData.append((char) auxLine.charAt(i));
@@ -87,7 +83,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		long startTimeMatching = System.currentTimeMillis();
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
-		if (auxLine.length() > 0) {
+		if (!auxLine.isEmpty()) {
 			flagFirstConnection = true;
 			logger.info("Search started.");
 			logger.info(postData.toString());
@@ -140,10 +136,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 		boolean incorrect = false;
 		for (CodeChange change : outputList) {
 			try {
-				String[] parts = { change.codeChangeOld, change.codeChangeNew, change.hunkLines, change.url };
-
-				// TODO look into
-				if (parts.length == 1) {
+				if (change == CodeChange.INVALID_QUERY_CODE_CHANGE) {
 					incorrect = true;
 					channel.write(ByteBuffer.wrap("The query is not correct, please try again.\n".getBytes()));
 					break;
@@ -156,8 +149,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 			}
 		}
 		if (incorrect) {
-			CodeChange temp = new CodeChange("The query is not correct, please try again."," ");
-			outputList.set(0, temp);
+			outputList.set(0, CodeChange.INVALID_QUERY_CODE_CHANGE);
 		}
 
 		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));

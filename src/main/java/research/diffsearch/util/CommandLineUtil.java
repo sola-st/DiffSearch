@@ -4,6 +4,7 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
+import research.diffsearch.Mode;
 
 import static java.lang.Byte.parseByte;
 import static java.lang.Integer.parseInt;
@@ -29,6 +30,7 @@ public class CommandLineUtil {
                 .addOption("oj", "only-java", false, "does not start the python server")
                 .addOption("p", "port", true, "set the port for the web interface")
                 .addOption("q", "query", true, "process a query")
+                .addOption("d", "dataset-creation", false, "extract code changes from patch files")
                 .addOption("r", "recall", false, "measure recall of queries (slow!)")
                 .addOption("s", "silent", false, "omit large console outputs")
                 .addOption("py_port", true, "set the port for the python server")
@@ -60,7 +62,13 @@ public class CommandLineUtil {
                         .desc("executes a batch of queries. First argument is the input query file, second argument the output text file.")
                         .build())
                 .addOption("pa", "parse-mode", false, "Parses code changes to parse trees")
-                .addOption("lr", "lower-ram", false, "Uses less RAM at the cost of longer search time");
+                .addOption("lr", "lower-ram", false, "Uses less RAM at the cost of longer search time")
+                .addOption(Option.builder("clone")
+                        .optionalArg(true)
+                        .numberOfArgs(1)
+                        .desc("Clone a list of repositories")
+                        .build())
+                .addOption("gitdiff", false, "Extracts log from repositories.");
     }
 
     public static void parseArgs(String[] args) {
@@ -74,18 +82,20 @@ public class CommandLineUtil {
             }
 
             Config.ONLY_JAVA = commandLine.hasOption("oj");
-            Config.NORMAL = commandLine.hasOption("n");
-            Config.WEB_GUI = commandLine.hasOption("g");
-            Config.WEB = commandLine.hasOption("w");
+            Mode.NORMAL = commandLine.hasOption("n");
+            Mode.WEB_GUI = commandLine.hasOption("g");
+            Mode.WEB = commandLine.hasOption("w");
             Config.LOG_FILE = commandLine.hasOption("l");
-            Config.QUERY_MODE = commandLine.hasOption("q");
+            Mode.QUERY_MODE = commandLine.hasOption("q");
             Config.MEASURE_RECALL = commandLine.hasOption("r");
-            Config.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
+            Mode.CORPUS_FEATURE_EXTRACTION = commandLine.hasOption("fe");
             Config.SILENT = commandLine.hasOption("silent");
-            Config.BATCH = commandLine.hasOption("b");
-            Config.ANALYSIS_MODE = commandLine.hasOption("a");
-            Config.PARSE_MODE = commandLine.hasOption("pa");
+            Mode.BATCH = commandLine.hasOption("b");
+            Mode.ANALYSIS_MODE = commandLine.hasOption("a");
+            Mode.PARSE_MODE = commandLine.hasOption("pa");
             Config.LOW_RAM = commandLine.hasOption("lr");
+            Mode.GIT_LOG_EXTRACTION = commandLine.hasOption("gitdiff");
+            Mode.DATASET_CREATION = commandLine.hasOption("d");
 
             if (commandLine.hasOption("a")) {
                 Config.query = commandLine.getOptionValue("a");
@@ -157,6 +167,13 @@ public class CommandLineUtil {
             }
             if (commandLine.hasOption("gurl")) {
                 Config.web_url = commandLine.getOptionValue("gurl");
+            }
+            if (commandLine.hasOption("clone")) {
+                Mode.GIT_CLONE = true;
+                var path = commandLine.getOptionValue("clone");
+                if (path != null && !path.isBlank()) {
+                    Config.listOfRepositoriesPath = path;
+                }
             }
         } catch (ParseException | NumberFormatException exception) {
             logger.error(exception.getMessage());

@@ -433,6 +433,13 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
+    public void test411() throws Exception {
+        String query = "ID OP func.apply(this, arguments); --> ID OP apply(this, func, arguments);";
+        String candidate = "ret = func.apply(this, arguments); --> ret = apply(this, func, arguments);";
+
+        assertTrue(App.runJunit(query, candidate));
+    }
+
     public void test42() throws Exception {
         String query = " while (EXPR) {-->while (ID(<...>)) {";
         String candidate = " while (true) { --> while (isIdlingEventEnabled()) {";

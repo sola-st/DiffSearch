@@ -124,6 +124,7 @@ public class SerializableTreeNode implements Serializable, Tree {
         }
     }
 
+
     @Override
     public Object getPayload() {
         return nodeLabel;

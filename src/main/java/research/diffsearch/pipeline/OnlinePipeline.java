@@ -3,6 +3,7 @@ package research.diffsearch.pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
+import research.diffsearch.Mode;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
@@ -13,7 +14,6 @@ import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
-import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 import research.diffsearch.util.Util;
@@ -43,9 +43,6 @@ public class OnlinePipeline implements
     private final Socket pythonSocket;
     private final ProgrammingLanguage language;
 
-    private static final int numberOfDocuments
-            = FilePathUtils.getNumberOfLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
-
     public OnlinePipeline(Socket pythonSocket, ProgrammingLanguage language) {
         this.pythonSocket = pythonSocket;
         this.language = language;
@@ -70,7 +67,7 @@ public class OnlinePipeline implements
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
                     .connectIf(Config.TFIDF, (input1, index) -> {
-                        new TfIdfTransformer(finalFrequencyCounter, numberOfDocuments).process(input1.getVector(), index);
+                        new TfIdfTransformer(finalFrequencyCounter, (int) Config.code_changes_num).process(input1.getVector(), index);
                         return input1;
                     })
                     .connectIf(!Config.TFIDF && Config.QUERY_MULTIPLICATION, OnlinePipeline::multiplyVector)
@@ -82,7 +79,7 @@ public class OnlinePipeline implements
                 return DiffsearchResult.invalidQuery(input);
             }
 
-            if (Config.ANALYSIS_MODE) {
+            if (Mode.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
                 AbstractTree tree = TreeFactory.getAbstractTree(input, getProgrammingLanguage());
                 System.out.println(tree.getTreeString());

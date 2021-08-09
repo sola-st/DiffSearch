@@ -5,6 +5,7 @@
 /target/classes/research/diffsearch/*
 target/test-classes/research/diffsearch/*
 
+src/main/resources/GitHub_Java/
 src/main/resources/Features_Vectors/candidate_changes.txt
 src/main/resources/Features_Vectors/changes_strings.txt
 src/main/resources/Features_Vectors/changes_gitdiff.txt

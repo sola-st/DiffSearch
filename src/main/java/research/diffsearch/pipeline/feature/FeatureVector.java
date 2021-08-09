@@ -2,7 +2,7 @@ package research.diffsearch.pipeline.feature;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import research.diffsearch.Config;
+import research.diffsearch.Mode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ public class FeatureVector {
     private final int countBits;
     private final int quadraticProbingMaxCount;
 
-    private boolean featureVectorAnalysis = Config.ANALYSIS_MODE;
+    private boolean featureVectorAnalysis = Mode.ANALYSIS_MODE;
 
     /**
      * Creates a new feature vector for the given code change.

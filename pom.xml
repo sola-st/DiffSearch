@@ -122,7 +122,11 @@
             <artifactId>doxia-core</artifactId>
             <version>1.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.7</version>
+        </dependency>
     </dependencies>
 
     <build>

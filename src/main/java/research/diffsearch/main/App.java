@@ -2,10 +2,12 @@ package research.diffsearch.main;
 
 import ProgrammingLanguage.Java.JavaParser;
 import matching.Matching;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
+import research.diffsearch.Mode;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.*;
 import research.diffsearch.util.CommandLineUtil;
@@ -39,6 +41,9 @@ public abstract class App implements Runnable, Closeable {
         CommandLineUtil.parseArgs(args);
         logger.info("DiffSearch {} for {}", Config.DIFFSEARCH_VERSION, Config.PROGRAMMING_LANGUAGE.toString());
         logger.debug("Using {} threads", Config.threadCount);
+        if (Config.LOW_RAM) {
+            logger.info("DiffSearch in low ram mode.");
+        }
 
         App app = getApp();
 
@@ -55,21 +60,21 @@ public abstract class App implements Runnable, Closeable {
 
     private static App getApp() {
         App app = null;
-        if (Config.WEB_GUI) {
+        if (Mode.WEB_GUI) {
             app = new WebGUIMode();
-        } else if (Config.WEB) {
+        } else if (Mode.WEB) {
             app = new WebMode();
-        } else if (Config.NORMAL) {
+        } else if (Mode.NORMAL) {
             app = new NormalMode();
-        } else if (Config.QUERY_MODE) {
+        } else if (Mode.QUERY_MODE) {
             app = new QueryMode();
-        } else if (Config.CORPUS_FEATURE_EXTRACTION) {
+        } else if (Mode.CORPUS_FEATURE_EXTRACTION) {
             app = new FeatureExtractionMode();
-        } else if (Config.BATCH) {
+        } else if (Mode.BATCH) {
             app = new BatchMode();
-        } else if (Config.ANALYSIS_MODE) {
+        } else if (Mode.ANALYSIS_MODE) {
             app = new AnalysisMode();
-        } else if (Config.PARSE_MODE) {
+        } else if (Mode.PARSE_MODE) {
             app = new ParseMode();
         } else if (Config.MEASURE_RECALL) {
             app = new App() {
@@ -84,6 +89,12 @@ public abstract class App implements Runnable, Closeable {
                     batchMode.close();
                 }
             };
+        } else if (Mode.GIT_CLONE) {
+            app = new GitCloneMode();
+        } else if (Mode.GIT_LOG_EXTRACTION) {
+            app = new GitDiffMode();
+        } else if (Mode.DATASET_CREATION) {
+            app = new DatasetCreationMode();
         }
         return app;
     }
@@ -118,7 +129,8 @@ public abstract class App implements Runnable, Closeable {
                         Boolean.toString(Config.TFIDF),
                         FilePathUtils.getChangesFilePath(Config.PROGRAMMING_LANGUAGE),
                         FilePathUtils.getChangesInfoFilePath(Config.PROGRAMMING_LANGUAGE),
-                        FilePathUtils.getTreesFilePath(Config.PROGRAMMING_LANGUAGE));
+                        FilePathUtils.getTreesFilePath(Config.PROGRAMMING_LANGUAGE),
+                        Boolean.toString(Config.LOW_RAM));
 
                 pythonRunner.runAndWaitUntil(input -> input.toLowerCase().contains("server started"));
 
@@ -186,13 +198,13 @@ public abstract class App implements Runnable, Closeable {
     public static boolean runJunit(String query, String candidate) {
         JavaTree queryJavaTree = new JavaTree(query);
 
-        Tree queryTree = queryJavaTree.getParseTree();
+        ParseTree queryTree = queryJavaTree.getParseTree();
 
         JavaTree changeJavaTree = new JavaTree(candidate);
         Tree changeTree = SerializableTreeNode.fromTree(changeJavaTree.getParseTree(), Arrays.asList(JavaParser.ruleNames));
         System.out.println(TreeUtils.getCompleteNodeText(changeTree, ProgrammingLanguage.JAVA.getRuleNames()));
-        System.out.println(TreeUtils.getCompleteNodeText(changeJavaTree.getParseTree(), ProgrammingLanguage.JAVA.getRuleNames()));
         System.out.println(changeJavaTree.getParseTree().toStringTree(changeJavaTree.getParser()));
+        System.out.println(queryTree.toStringTree(queryJavaTree.getParser()));
 
         Matching matching = new Matching(queryTree, queryJavaTree.getParser());
 

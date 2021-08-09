@@ -22,12 +22,10 @@ public class Config {
      */
     public static String PYTHON_CMD = "python3";
 
-    public static String GITDIFF_FILE = "";
-
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -40,37 +38,10 @@ public class Config {
     public static boolean LOG_FILE = false;
 
     /**
-     * Run DiffSearch as a command line app.
-     */
-    public static boolean NORMAL = false;
-
-    /**
-     * Run DiffSearch as a web app.
-     */
-    public static boolean WEB = false;
-
-    /**
-     * Run DiffSearch as a web gui app.
-     */
-    public static boolean WEB_GUI = true;
-
-    /**
      * If true, DiffSearch won't start any python files but assumes that they are already started.
      * Useful to distribute python parts and java parts of DiffSearch.
      */
     public static boolean ONLY_JAVA = false;
-
-    /**
-     * If true, DiffSearch starts in query mode. This will execute a single query.
-     *
-     * @see Config#query
-     */
-    public static boolean QUERY_MODE = false;
-
-    /**
-     * If true, detailed feature vector analysis and parse tree will be printed.
-     */
-    public static boolean ANALYSIS_MODE = false;
 
     /**
      * If true, DiffSearch will measure the recall of the queries and save the results.
@@ -79,10 +50,8 @@ public class Config {
      */
     public static boolean MEASURE_RECALL = false;
 
-    public static boolean PARSE_MODE = false;
-
     /**
-     * The query that gets executed if DiffSearch is in {@link Config#QUERY_MODE}.
+     * The query that gets executed if DiffSearch is in {@link Mode#QUERY_MODE}.
      */
     public static String query = "";
 
@@ -90,7 +59,6 @@ public class Config {
      * WIP. Removes some console outputs.
      */
     public static boolean SILENT = false;
-    public static boolean DATASET_CREATION = false;
 
     /**
      * Number of threads to use.
@@ -98,13 +66,7 @@ public class Config {
     public static int threadCount = Runtime.getRuntime().availableProcessors() - 4;
 
     /**
-     * If true, DiffSearch will run in Batch mode. This will process all queries of a text file and
-     * save the results to an output file. This will not store results if {@link Config#SILENT} is true.
-     */
-    public static boolean BATCH = false;
-
-    /**
-     * The path of the batch file that will processed in the {@link Config#BATCH}-mode.
+     * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
     public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
 
@@ -112,14 +74,6 @@ public class Config {
      * The path to the file were the results
      */
     public static String batchOutput = "./src/main/resources/batchOutput.txt";
-    public static String githubJava = "./src/main/resources/GitHub_Java";
-
-    /**
-     * If true, DiffSearch will not run to execute queries but to extract the features of the corpus
-     * and build an index.
-     */
-    public static boolean CORPUS_FEATURE_EXTRACTION = false;
-
     /**
      * Defines the feature extractors that are used.
      */
@@ -226,4 +180,10 @@ public class Config {
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
     public static int nprobe = 1;
+
+    public static String repositoryPath = "../dfs_repos/GitHub_Java/";
+    public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list.txt";
+
+    public static String GITDIFF_FILE = "";
+
 }

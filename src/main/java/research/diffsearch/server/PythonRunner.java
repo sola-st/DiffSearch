@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  *
  * @author Paul Bredl
  */
-public class PythonRunner {
+public class  PythonRunner {
 
     private final List<String> args = new ArrayList<>();
     private StartedProcess pythonProcess;
