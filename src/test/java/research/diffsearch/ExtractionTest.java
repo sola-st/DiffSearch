@@ -23,7 +23,7 @@ public class ExtractionTest extends TestCase {
 
             var javaTree = getAbstractTree(codeChange.getFullChangeString().replaceAll("\n", " "), JAVA);
             var parsedTree = SerializableTreeNode.fromTree(javaTree.getParseTree(),
-                    JAVA.getRuleNames());
+                    JAVA);
 
             assertEquals("Parse tree and tree do not match at " + index,
                     changeTree.toTreeString().replaceAll("\\s+", " "),

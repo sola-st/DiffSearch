@@ -1,8 +1,12 @@
 package research.diffsearch.pipeline.feature.extractor;
 
 import org.antlr.v4.runtime.tree.Tree;
+import org.antlr.v4.runtime.tree.Trees;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.util.ProgrammingLanguage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This feature extractor uses another {@link AbstractRecursiveFeatureExtractor} and extracts features
@@ -21,20 +25,48 @@ public class DividedFeatureExtractor implements FeatureExtractor {
     @Override
     public void extractFeatures(Tree tree, FeatureVector.Section section, boolean isQuery) {
 
-        if (tree.getChildCount() == 3) {
-            baseExtractor.extractFeaturesRecursive(tree.getChild(0),
-                    section.getSubsection(baseExtractor.getName() + " [old]",
-                            0, baseExtractor.getFeatureVectorSectionLength()),
-                    isQuery);
+        if (tree.getChildCount() >= 3) {
+            for (var child : getRootsOfOldPart(tree)) {
+                baseExtractor.extractFeaturesRecursive(child,
+                        section.getSubsection(baseExtractor.getName() + " [old]",
+                                0, baseExtractor.getFeatureVectorSectionLength()),
+                        isQuery);
+            }
 
-            baseExtractor.extractFeaturesRecursive(tree.getChild(2),
-                    section.getSubsection(baseExtractor.getName() + "[new]",
-                            baseExtractor.getFeatureVectorSectionLength(),
-                            baseExtractor.getFeatureVectorSectionLength()),
-                    isQuery);
+            for (var child : getRootsOfNewPart(tree)) {
+                baseExtractor.extractFeaturesRecursive(child,
+                        section.getSubsection(baseExtractor.getName() + " [new]",
+                                baseExtractor.getFeatureVectorSectionLength(),
+                                baseExtractor.getFeatureVectorSectionLength()),
+                        isQuery);
+            }
         } else {
             baseExtractor.extractFeaturesRecursive(tree, section, isQuery);
         }
+    }
+
+    public List<Tree> getRootsOfOldPart(Tree tree) {
+        var result = new ArrayList<Tree>();
+        for (int i = 0; i < tree.getChildCount(); i++) {
+            var child = tree.getChild(i);
+            if (Trees.getNodeText(child, getProgrammingLanguage().getRuleNames()).trim().equals("-->")) {
+                break;
+            }
+            result.add(child);
+        }
+        return result;
+    }
+
+    public List<Tree> getRootsOfNewPart(Tree tree) {
+        var result = new ArrayList<Tree>();
+        for (int i = tree.getChildCount() - 1; i >= 0; i--) {
+            var child = tree.getChild(i);
+            if (Trees.getNodeText(child, getProgrammingLanguage().getRuleNames()).trim().equals("-->")) {
+                break;
+            }
+            result.add(child);
+        }
+        return result;
     }
 
     @Override

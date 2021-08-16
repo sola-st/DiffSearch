@@ -4,6 +4,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.eclipse.jgit.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.base.Pipeline;
@@ -96,14 +97,13 @@ public class RecallPipeline implements
                 logger.debug("Need to calculate expected value");
 
                 // load all code changes from file
-                var corpusSize = getNumberOfLines(getChangesFilePath(language));
+                var corpusSize = getNumberOfLines(getChangesJsonFilePath(language));
 
                 logger.debug("corpus size: {}", corpusSize);
 
                 var codeChanges = getCodeChanges(
-                        getChangesFilePath(language),
-                        getChangesInfoFilePath(language),
-                        getTreesFilePath(language),
+                        getChangesJsonFilePath(language),
+                        Config.LOW_RAM ? null : getTreesFilePath(language),
                         corpusSize);
 
                 var dfsResult = new DiffsearchResult(query, codeChanges)

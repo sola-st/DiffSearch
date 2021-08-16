@@ -2,9 +2,11 @@ package research.diffsearch.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import research.diffsearch.ChangeExtractor;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.pipeline.extraction.ChangeExtractor;
+import research.diffsearch.pipeline.extraction.GitDiffExtractor;
+import research.diffsearch.util.ProgressWatcher;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,19 +14,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static research.diffsearch.util.FilePathUtils.*;
 
 public class DatasetCreationMode extends App {
     private static final Logger logger = LoggerFactory.getLogger(DatasetCreationMode.class);
-    private static final ExecutorService executors = Executors.newFixedThreadPool(Config.threadCount);
 
     @Override
     public void run() {
+
+        var absPath = Paths.get(Config.repositoryPath).toAbsolutePath().normalize();
+
+        logger.info("Extracting commit logs...");
+        new GitDiffExtractor(absPath.toString())
+                .parallelUntilHere(Config.threadCount)
+                .connect(new ProgressWatcher<>("Extracting commit logs"))
+                .executeIgnoreResults(List.of(Objects.requireNonNull(
+                        absPath.toFile().listFiles(File::isDirectory))));
 
         Pipeline.<File, File>from(file -> new ChangeExtractor(new File(Config.repositoryPath), Config.PROGRAMMING_LANGUAGE)
                         .extractCodeChangesToFile(file))
@@ -34,11 +43,11 @@ public class DatasetCreationMode extends App {
 
         var outputFile = new File(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
 
-            deleteQuietly(outputFile);
-            deleteQuietly(new File(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
+        deleteQuietly(outputFile);
+        deleteQuietly(new File(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
 
 
-        try(var outputWriter = new BufferedWriter(new FileWriter(outputFile, true))) {
+        try (var outputWriter = new BufferedWriter(new FileWriter(outputFile, true))) {
 
             var treeWriter = new BufferedWriter(new FileWriter(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
 

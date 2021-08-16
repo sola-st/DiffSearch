@@ -62,7 +62,7 @@ public class OnlinePipeline implements
             DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
                     .connect(q -> TreeFactory.getAbstractTree(q, getProgrammingLanguage()))
-                    .connect(t -> SerializableTreeNode.fromTree(t.getParseTree(), getProgrammingLanguage().getRuleNames()))
+                    .connect(t -> SerializableTreeNode.fromTree(t.getParseTree(), getProgrammingLanguage()))
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
                     // transform to binary vector if configured
                     .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
@@ -73,24 +73,18 @@ public class OnlinePipeline implements
                     .connectIf(!Config.TFIDF && Config.QUERY_MULTIPLICATION, OnlinePipeline::multiplyVector)
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .execute(input);
-            // query was invalid:
-            if (featureVector.isEmpty()) {
-                logger.warn("Invalid query:" + input);
-                return DiffsearchResult.invalidQuery(input);
-            }
 
-            if (Mode.ANALYSIS_MODE) {
+            if (featureVector.isPresent() && Mode.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
                 AbstractTree tree = TreeFactory.getAbstractTree(input, getProgrammingLanguage());
                 System.out.println(tree.getTreeString());
             }
 
-
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {
                 var numberOfCandidates = getNumberOfLines(CANDIDATE_CHANGES);
 
-                var candidates = getCodeChanges(CANDIDATE_CHANGES, CANDIDATE_CHANGES_INFO,
+                var candidates = getCodeChanges(CANDIDATE_CHANGES,
                         Config.LOW_RAM ? null : CANDIDATE_CHANGES_TREES, numberOfCandidates);
                 DiffsearchResult dfsResult = new DiffsearchResult(input, candidates)
                         .setCandidateChangeCount(candidates.size());

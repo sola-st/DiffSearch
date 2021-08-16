@@ -39,7 +39,7 @@ public class TimeoutPipeline<I, O> implements Pipeline<I, O> {
                     try {
                         if (!processed[index]) {
                             processed[index] = true;
-                            LoggerFactory.getLogger(getClass()).warn("Timout for " + input);
+                            LoggerFactory.getLogger(getClass()).warn("Timout for " + input.toString().lines().findFirst().orElse(" an input"));
                             outputConsumer.accept(defaultResult, index);
                         }
                     } catch (Exception e) {

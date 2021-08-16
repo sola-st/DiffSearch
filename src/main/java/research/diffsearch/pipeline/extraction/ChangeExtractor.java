@@ -1,4 +1,4 @@
-package research.diffsearch;
+package research.diffsearch.pipeline.extraction;
 
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -181,7 +181,10 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     }
 
     private static String getCommit(String line) {
-        return line.replace("commit ", "").trim();
+        return line
+                .replace("commit ", "")
+                .replaceAll("\\s\\(from .*\\)", "")
+                .trim();
     }
 
     private static boolean isCommitLine(String line) {
@@ -196,7 +199,9 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         codeChange.setProjectName(projectName);
         codeChange.setCommitLines(position);
         codeChange.setCommit(commit);
-        codeChange.setFileNameNew(fileNameNew);
+        if (!fileNameNew.equals(fileNameOld)) {
+            codeChange.setFileNameNew(fileNameNew);
+        }
         codeChange.setFileNameOld(fileNameOld);
         codeChange.setLineOld(lineOld);
         codeChange.setLineNew(lineNew);
@@ -251,6 +256,10 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
             return;
         }
         codeChange.setJSONParseTree(jsonTree);
+
+        if (numberOfChanges < 100 && numberOfChanges > 90) {
+            System.out.println(gson.toJson(codeChange));
+        }
 
         try {
             writer.write(gson.toJson(codeChange));
@@ -349,7 +358,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     private boolean checkCodeChange(String changeString) {
 
         AbstractTree tree = TreeFactory.getAbstractTree(changeString.replaceAll("\n", " "), language);
-        SerializableTreeNode treeNode = SerializableTreeNode.fromTree(tree.getParseTree(), language.getRuleNames());
+        SerializableTreeNode treeNode = SerializableTreeNode.fromTree(tree.getParseTree(), language);
         var result = tree.getParser().getNumberOfSyntaxErrors() <= 0
                || (treeNode.getChildCount() >= 3
                    && treeNode.getChild(0).getChildCount() > 0

@@ -24,7 +24,8 @@ public class GitDiffExtractor implements Pipeline<File, File> {
 
     @Override
     public File process(File input, int index) {
-        try {
+        try(var out = new BufferedOutputStream(
+                new FileOutputStream(new File(pathPatches + "/" + input.getName() + ".patch")))) {
             logger.info("Extracting batch of {}", input);
             new ProcessExecutor()
                     .directory(input)
@@ -33,9 +34,8 @@ public class GitDiffExtractor implements Pipeline<File, File> {
                     .start().getFuture().get();
             new ProcessExecutor()
                     .directory(input)
-                    .command("git", "log", "-p", "-m", "--minimal", "--", "*.java")
-                    .redirectOutput(new BufferedOutputStream(
-                            new FileOutputStream(new File(pathPatches + "/" + input.getName() + ".patch"))))
+                    .command("git", "log", "-p", "--", "*.java")
+                    .redirectOutput(out)
                     .start().getFuture().get();
             logger.info("Extracting batch of {} finished.", input);
         } catch (IOException | InterruptedException | ExecutionException e) {

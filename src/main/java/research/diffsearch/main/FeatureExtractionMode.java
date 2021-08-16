@@ -6,12 +6,14 @@ import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
+import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.FeatureExtractionPipeline;
 import research.diffsearch.pipeline.feature.FeatureVector;
 import research.diffsearch.pipeline.feature.RemoveCollisionPipeline;
 import research.diffsearch.pipeline.feature.count.DocumentFrequencyCounter;
 import research.diffsearch.pipeline.feature.count.TfIdfTransformer;
+import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.SerializableTreeNode;
 import research.diffsearch.tree.TreeFactory;
@@ -20,9 +22,8 @@ import research.diffsearch.util.ProgressWatcher;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static research.diffsearch.pipeline.feature.FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline;
 import static research.diffsearch.util.FilePathUtils.*;
 
@@ -44,6 +45,13 @@ public class FeatureExtractionMode extends App {
 
         try {
             var featureExtractionPipeline = getDefaultFeatureExtractionPipeline(false);
+
+            logger.info(featureExtractionPipeline
+                    .getFeatureExtractors()
+                    .stream()
+                    .map(FeatureExtractor::getName)
+                    .collect(Collectors.joining(",")));
+
             extractFeaturesToFile(featureExtractionPipeline);
             runPythonIndexing(featureExtractionPipeline);
         } catch (Exception e) {
@@ -97,15 +105,11 @@ public class FeatureExtractionMode extends App {
         logger.debug("Feature vector length: {}", featureExtractionPipeline.getTotalFeatureVectorLength());
 
         DocumentFrequencyCounter featureFrequencyCounter = new DocumentFrequencyCounter();
-        var numberOfLines = getNumberOfLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
+        var numberOfLines = getNumberOfLines(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
         logger.debug("Corpus size: {}", numberOfLines);
 
-        var basePipeline = Pipeline.from(FeatureExtractionMode::deserializeTree);
-        if (Config.LOW_RAM) {
-            basePipeline = Pipeline.from(FeatureExtractionMode::parseCodeChange);
-        }
-
-        var extractionPipeline = basePipeline
+        Pipeline.<CodeChange, Tree>from(codeChange->
+                        TreeFactory.getTreeFromCodeChange(codeChange, Config.PROGRAMMING_LANGUAGE))
                 .connect(featureExtractionPipeline)
                 .parallelUntilHere(Config.threadCount)
                 // count features for tfidf
@@ -114,22 +118,15 @@ public class FeatureExtractionMode extends App {
                 .connect(new ProgressWatcher<>("Feature extraction"))
                 // create binary vectors if needed
                 .connectIf(!Config.USE_COUNT_VECTORS && !Config.TFIDF, new RemoveCollisionPipeline())
-                .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)));
+                .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE)))
+                .executeIgnoreResults(getCodeChanges(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE),
+                        Config.LOW_RAM ? null : getTreesFilePath(Config.PROGRAMMING_LANGUAGE)), numberOfLines);
 
-        if (Config.LOW_RAM) {
-            // parse manually
-            extractionPipeline
-                    .executeIgnoreResults(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
-        } else {
-            // use serialized trees
-            extractionPipeline
-                    .executeIgnoreResults(getAllLines(getTreesFilePath(Config.PROGRAMMING_LANGUAGE), numberOfLines));
-        }
-
+        System.gc();
         if (Config.TFIDF) {
             Pipeline.from(FeatureExtractionMode::stringArrayToDoubleArray)
                     // calculate tfidf weights
-                    .connect(new TfIdfTransformer(featureFrequencyCounter, ((List<String>) newArrayList(getAllLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE)))).size()))
+                    .connect(new TfIdfTransformer(featureFrequencyCounter, numberOfLines))
                     .connect(FeatureVector::new)
                     .connect(getVectorFileWriterPipeline(getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE) + ".tfidf"))
                     .connect(new ProgressWatcher<>("TFIDF"))

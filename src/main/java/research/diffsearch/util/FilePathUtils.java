@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Paul Bredl
@@ -132,20 +131,18 @@ public class FilePathUtils {
     /**
      * Loads all code changes from disk.
      *
-     * @param codeChangeFilePath path to the code changes (text in format x --> y)
-     * @param infoFilePath       path to the commit info of the code changes.
+     * @param codeChangeFilePath path to the json code changes
      * @param treesFilePath      path to the json tress of the code changes.
      * @param size               number of code changes of the corpus.
      * @return a collection of all code changes at the given paths.
      */
     public static Collection<CodeChange> getCodeChanges(String codeChangeFilePath,
-                                                        String infoFilePath,
                                                         String treesFilePath,
                                                         int size) {
         return new AbstractCollection<>() {
             @Override
             public Iterator<CodeChange> iterator() {
-                return getCodeChanges(codeChangeFilePath, infoFilePath, treesFilePath).iterator();
+                return getCodeChanges(codeChangeFilePath, treesFilePath).iterator();
             }
 
             @Override
@@ -157,20 +154,17 @@ public class FilePathUtils {
 
     public static Collection<CodeChange> getCodeChanges(ProgrammingLanguage lang) {
         return getCodeChanges(
-                getChangesFilePath(lang),
-                getChangesInfoFilePath(lang),
+                getChangesJsonFilePath(lang),
                 getTreesFilePath(lang),
-                getNumberOfLines(getChangesFilePath(lang)));
+                getNumberOfLines(getChangesJsonFilePath(lang)));
     }
 
     public static Iterable<CodeChange> getCodeChanges(String codeChangeFilePath,
-                                                      String infoFilePath,
                                                       @Nullable String parseTreesFilePath) {
         return () -> new Iterator<>() {
 
-
+            final Gson gson = new Gson();
             final Iterator<String> codeChangeIterator = getAllLines(codeChangeFilePath).iterator();
-            final Iterator<String> infoIterator = getAllLines(infoFilePath).iterator();
             Iterator<String> treesIterator = null;
             {
                 if (parseTreesFilePath != null) {
@@ -178,41 +172,27 @@ public class FilePathUtils {
                 }
             }
 
-            int index = -1;
+            int index = 0;
 
             @Override
             public boolean hasNext() {
                 return codeChangeIterator.hasNext()
-                       && infoIterator.hasNext()
                        && treesIterator == null
                        || treesIterator.hasNext();
             }
 
             @Override
             public CodeChange next() {
-                String candidateUrl = infoIterator.next();
-                String candidate = codeChangeIterator.next();
+                String codeChangeJson = codeChangeIterator.next();
                 String parseTreeJson = treesIterator == null ? null : treesIterator.next();
 
-                String[] candidateParts = candidate.split("-->");
-                String[] urlLine =
-                        Util.computeCandidateUrl(candidateUrl).split("-->");
                 index++;
-                if (candidateParts.length < 2) {
-                    return CodeChange.ERROR_CODE_CHANGE;
+                var codeChange = gson.fromJson(codeChangeJson, CodeChange.class);
+                codeChange.setRank(index);
+                if (parseTreeJson != null) {
+                    codeChange.setJSONParseTree(parseTreeJson);
                 }
-                if (urlLine.length >= 2) {
-                    return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
-                            .setCommit(urlLine[0])
-                            .setCommitLines(urlLine[1])
-                            .setJSONParseTree(parseTreeJson)
-                            .setFullChangeString(candidate)
-                            .setRank(index + 1);
-                }
-                return new CodeChange(candidateParts[0].trim(), candidateParts[1].trim())
-                        .setJSONParseTree(parseTreeJson)
-                        .setFullChangeString(candidate)
-                        .setRank(index + 1);
+                return codeChange;
             }
         };
     }
@@ -286,13 +266,9 @@ public class FilePathUtils {
         };
     }
 
-    public static <T> Pipeline<List<T>, List<T>> getListFileWriterPipeline(String path) throws IOException {
-        return getStringFileWriterPipeline(path, input -> input.stream().map(Object::toString)
-                .collect(Collectors.joining("\n")));
-    }
-
     public static Pipeline<FeatureVector, FeatureVector> getVectorFileWriterPipeline(String path) throws IOException {
-        return getStringFileWriterPipeline(path, Util::featureVectorToString);
+        return getStringFileWriterPipeline(path, Util::featureVectorToString)
+                .connect(FeatureVector::clear);
     }
 
     public static <T> Pipeline<T, T> getJSONFileWriterPipeline(String path) throws IOException {

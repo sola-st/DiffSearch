@@ -21,7 +21,7 @@ public class ParseMode extends App {
     @Override
     public void run() {
         var lang = Config.PROGRAMMING_LANGUAGE;
-        var numberOfLines = getNumberOfLines(getChangesFilePath(lang));
+        var numberOfLines = getNumberOfLines(getChangesJsonFilePath(lang));
 
         try {
             // first parse code changes
@@ -36,7 +36,7 @@ public class ParseMode extends App {
                     .connect(new ProgressWatcher<>("Parsing code changes"))
                     // store parse trees in file
                     .connect(getJSONFileWriterPipeline(getTreesFilePath(lang)))
-                    .executeIgnoreResults(getAllLines(getChangesFilePath(lang), numberOfLines));
+                    .executeIgnoreResults(getAllLines(getChangesJsonFilePath(lang), numberOfLines));
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -47,6 +47,6 @@ public class ParseMode extends App {
     }
 
     private static Tree toSerializableTree(ParseTree absTree) {
-        return SerializableTreeNode.fromTree(absTree, Config.PROGRAMMING_LANGUAGE.getRuleNames());
+        return SerializableTreeNode.fromTree(absTree, Config.PROGRAMMING_LANGUAGE);
     }
 }

@@ -1,6 +1,5 @@
 package research.diffsearch.main;
 
-import ProgrammingLanguage.Java.JavaParser;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Tree;
@@ -20,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 
 /**
  * Main class and starting point of DiffSearch.
@@ -91,8 +89,6 @@ public abstract class App implements Runnable, Closeable {
             };
         } else if (Mode.GIT_CLONE) {
             app = new GitCloneMode();
-        } else if (Mode.GIT_LOG_EXTRACTION) {
-            app = new GitDiffMode();
         } else if (Mode.DATASET_CREATION) {
             app = new DatasetCreationMode();
         }
@@ -127,8 +123,7 @@ public abstract class App implements Runnable, Closeable {
                         Boolean.toString(Config.RANGE_SEARCH),
                         Integer.toString(Config.k_max),
                         Boolean.toString(Config.TFIDF),
-                        FilePathUtils.getChangesFilePath(Config.PROGRAMMING_LANGUAGE),
-                        FilePathUtils.getChangesInfoFilePath(Config.PROGRAMMING_LANGUAGE),
+                        FilePathUtils.getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE),
                         FilePathUtils.getTreesFilePath(Config.PROGRAMMING_LANGUAGE),
                         Boolean.toString(Config.LOW_RAM));
 
@@ -201,7 +196,7 @@ public abstract class App implements Runnable, Closeable {
         ParseTree queryTree = queryJavaTree.getParseTree();
 
         JavaTree changeJavaTree = new JavaTree(candidate);
-        Tree changeTree = SerializableTreeNode.fromTree(changeJavaTree.getParseTree(), Arrays.asList(JavaParser.ruleNames));
+        Tree changeTree = SerializableTreeNode.fromTree(changeJavaTree.getParseTree(), ProgrammingLanguage.JAVA);
         System.out.println(TreeUtils.getCompleteNodeText(changeTree, ProgrammingLanguage.JAVA.getRuleNames()));
         System.out.println(changeJavaTree.getParseTree().toStringTree(changeJavaTree.getParser()));
         System.out.println(queryTree.toStringTree(queryJavaTree.getParser()));

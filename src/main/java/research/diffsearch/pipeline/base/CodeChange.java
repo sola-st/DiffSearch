@@ -1,5 +1,6 @@
 package research.diffsearch.pipeline.base;
 
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.jgit.annotations.Nullable;
@@ -15,17 +16,30 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
  * @author Paul Bredl
  */
 public class CodeChange {
+    @SerializedName("c")
     public String commit = "";
     public transient String hunkLines = "";
+
+    @SerializedName("o")
     public String codeChangeOld;
+    @SerializedName("n")
     public String codeChangeNew;
     public transient String fullChangeString = null;
+
+    @SerializedName("p")
     public String projectName = "";
-    public String fileNameNew = "";
+
+    @SerializedName("fn")
+    public String fileNameNew = null;
+
+    @SerializedName("f")
     public String fileNameOld = "";
     @Nullable
     public transient String JSONParseTree = null;
+
+    @SerializedName("l")
     public int lineOld;
+    @SerializedName("lN")
     public int lineNew;
 
     // rank is only given if this is a result of a search query. This is the position in the list of candidate changes
@@ -60,9 +74,7 @@ public class CodeChange {
                 .append(codeChangeOld, that.codeChangeOld)
                 .append(codeChangeNew, that.codeChangeNew)
                 .append(fullChangeString, that.fullChangeString)
-                .append(projectName, that.projectName)
-                .append(fileNameNew, that.fileNameNew)
-                .append(fileNameOld, that.fileNameOld).isEquals();
+                .append(projectName, that.projectName).isEquals();
     }
 
     @Override
@@ -70,8 +82,7 @@ public class CodeChange {
         return new HashCodeBuilder(23, 37)
                 .append(commit).append(codeChangeOld)
                 .append(codeChangeNew).append(fullChangeString)
-                .append(projectName).append(fileNameNew)
-                .append(fileNameOld).append(lineOld)
+                .append(projectName).append(lineOld)
                 .append(lineNew).toHashCode();
     }
 
@@ -88,7 +99,7 @@ public class CodeChange {
         return format("https://github.com/{0}/commit/{1}#diff-{2}{3}{4}",
                 projectName.replace('.', '/'),
                 commit,
-                sha256Hex(fileNameNew),
+                sha256Hex(getFileNameNew()),
                 codeChangeOld.equals("_") ? "R" : "L",
                 codeChangeOld.equals("_") ? Integer.toString(lineNew) : Integer.toString(lineOld));
     }
@@ -157,6 +168,9 @@ public class CodeChange {
     }
 
     public String getFileNameNew() {
+        if (fileNameNew == null) {
+            return fileNameOld;
+        }
         return fileNameNew;
     }
 

@@ -16,7 +16,7 @@ import time
 logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-logger.info("Starting python")
+logger.info("Starting nearest neighbor search server...")
 
 
 def searching(index_path,
@@ -28,7 +28,6 @@ def searching(index_path,
               k_max,
               tfidf,
               changes_path,
-              prop_path,
               trees_path,
               low_ram):
     """
@@ -43,8 +42,8 @@ def searching(index_path,
     :param k_max: number of additional features to consider for the range search
     :param tfidf: if vectors contain tfidf weights
     :param changes_path: path to the code changes.
-    :param prop_path: path to the properties of the code changes.
     :param trees_path: path to the parse trees of the code changes.
+    :param low_ram: do not load json trees from disk to memory.
     """
 
     # server #
@@ -59,16 +58,15 @@ def searching(index_path,
     logger.debug("Index read.")
     logger.debug(f"k = {k}")
     logger.debug(f"Range search={range_search}")
+    if low_ram:
+        logger.debug("low ram mode")
 
     serversocket.listen(5)
 
     with open(changes_path) as f:
         changes_strings = f.readlines()
 
-    with open(prop_path) as f:
-        changes_info = f.readlines()
-
-    if low_ram:
+    if not low_ram:
         with open(trees_path) as f:
             changes_trees = f.readlines()
 
@@ -148,11 +146,7 @@ def searching(index_path,
                     for item in index_list:
                         f.write("%s" % changes_strings[item])
 
-                with open('./src/main/resources/Features_Vectors/candidate_changes_info.txt', 'w') as f:
-                    for item in index_list:
-                        f.write("%s" % changes_info[item])
-
-                if low_ram:
+                if not low_ram:
                     with open('./src/main/resources/Features_Vectors/candidate_changes_trees.txt', 'w') as f:
                         for item in index_list:
                             f.write("%s" % changes_trees[item])
@@ -171,6 +165,5 @@ searching(index_path=str(sys.argv[1]),
           k_max=int(sys.argv[7]),
           tfidf=sys.argv[8] == "true",
           changes_path=sys.argv[9],
-          prop_path=sys.argv[10],
-          trees_path=sys.argv[11],
+          trees_path=sys.argv[10],
           low_ram=sys.argv[11] == "true")

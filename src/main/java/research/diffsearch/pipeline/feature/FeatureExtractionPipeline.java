@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.pipeline.feature.extractor.FeatureExtractor;
+import research.diffsearch.tree.SerializableTreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,12 @@ public class FeatureExtractionPipeline <T extends Tree> implements Pipeline<T, F
                 startPosition += extractor.getFeatureVectorSectionLength();
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            e.printStackTrace();
+        }
+
+        if (codeChangeTree instanceof SerializableTreeNode) {
+            var treeNode = (SerializableTreeNode) codeChangeTree;
+            treeNode.clear();
         }
 
         return featureVector;

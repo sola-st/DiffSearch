@@ -68,7 +68,7 @@ public class Config {
     /**
      * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
-    public static String batchFilePath = "./src/main/resources/queriesForRecall.txt";
+    public static String batchFilePath = "./new_queries.txt";
 
     /**
      * The path to the file were the results
@@ -93,7 +93,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 1000;
 
     /**
      * The number of bits per feature that are used for unary counting

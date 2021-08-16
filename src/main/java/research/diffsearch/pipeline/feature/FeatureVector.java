@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  */
 public class FeatureVector {
 
-    private final double[] vector;
-    private final Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
+    private double[] vector;
+    private Map<Section, List<Feature>> typeToFeaturesMap = new HashMap<>();
     private final int countBits;
     private final int quadraticProbingMaxCount;
 
@@ -125,6 +125,12 @@ public class FeatureVector {
                 .map(Map.Entry::getValue)
                 .findAny()
                 .orElse(Collections.emptyList());
+    }
+
+    public FeatureVector clear() {
+        this.vector = null;
+        this.typeToFeaturesMap = null;
+        return null;
     }
 
     /**

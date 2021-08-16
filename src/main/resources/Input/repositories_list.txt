@@ -5,3 +5,10 @@ https://github.com/google/guava
 https://github.com/iluwatar/java-design-patterns
 https://github.com/square/retrofit
 https://github.com/alibaba/dubbo
+https://github.com/jfeinstein10/SlidingMenu
+https://github.com/netty/netty
+https://github.com/JakeWharton/ActionBarSherlock
+https://github.com/chrisbanes/Android-PullToRefresh
+https://github.com/alibaba/fastjson
+https://github.com/deeplearning4j/deeplearning4j
+https://github.com/JakeWharton/ViewPagerIndicator

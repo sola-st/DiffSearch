@@ -67,8 +67,7 @@ public class CommandLineUtil {
                         .optionalArg(true)
                         .numberOfArgs(1)
                         .desc("Clone a list of repositories")
-                        .build())
-                .addOption("gitdiff", false, "Extracts log from repositories.");
+                        .build());
     }
 
     public static void parseArgs(String[] args) {
@@ -94,7 +93,6 @@ public class CommandLineUtil {
             Mode.ANALYSIS_MODE = commandLine.hasOption("a");
             Mode.PARSE_MODE = commandLine.hasOption("pa");
             Config.LOW_RAM = commandLine.hasOption("lr");
-            Mode.GIT_LOG_EXTRACTION = commandLine.hasOption("gitdiff");
             Mode.DATASET_CREATION = commandLine.hasOption("d");
 
             if (commandLine.hasOption("a")) {

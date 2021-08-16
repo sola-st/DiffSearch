@@ -17,7 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static research.diffsearch.util.FilePathUtils.getChangesFilePath;
+import static research.diffsearch.util.FilePathUtils.getChangesJsonFilePath;
 import static research.diffsearch.util.FilePathUtils.getNumberOfLines;
 
 /**
@@ -172,7 +172,7 @@ public class Util {
         }
 
 
-        Config.code_changes_num = getNumberOfLines(getChangesFilePath(Config.PROGRAMMING_LANGUAGE));
+        Config.code_changes_num = getNumberOfLines(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
 
     }
 
