@@ -84,6 +84,7 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
                         (o, innerIndex) -> ParallelPipeline.this.manageQueue(o, innerIndex, outputConsumer));
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
+                e.printStackTrace();
             }
         });
     }
