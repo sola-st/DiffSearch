@@ -142,13 +142,11 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     }
 
     private void parseLineNumbers() {
-        var positions = position.split("([, ])");
-        if (positions.length < 4) {
-            System.out.println(position);
-        }
-        assert positions.length == 4;
-        lineOld = Integer.parseInt(positions[0].replaceAll("-", "").trim());
-        lineNew = Integer.parseInt(positions[2].replaceAll("\\+", "").trim());
+        var positionsParts = position.split(" ");
+        var positionsOld = positionsParts[0].split(",");
+        var positionsNew = positionsParts[1].split(",");
+        lineOld = Integer.parseInt(positionsOld[0].replaceAll("-", "").trim());
+        lineNew = Integer.parseInt(positionsNew[0].replaceAll("\\+", "").trim());
     }
 
     private static boolean startsWithSpace(String line) {
