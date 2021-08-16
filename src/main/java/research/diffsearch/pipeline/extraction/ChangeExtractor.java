@@ -313,10 +313,10 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         String old = change.getCodeChangeOld();
         String newS = change.getCodeChangeNew();
 
-        if (old.endsWith(",")) {
+        if (old.endsWith(",") && old.length() >= 2) {
             old = old.substring(0, old.length() - 2);
         }
-        if (newS.endsWith(",")) {
+        if (newS.endsWith(",") && newS.length() >= 2) {
             newS = newS.substring(0, newS.length() - 2);
         }
         if (checkCodeChange(old + "-->" + newS)) {
