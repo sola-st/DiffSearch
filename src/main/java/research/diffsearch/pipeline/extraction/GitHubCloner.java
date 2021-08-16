@@ -30,7 +30,7 @@ public class GitHubCloner implements Pipeline<String, String> {
         try {
             new ProcessExecutor()
                     .directory(dir)
-                    .command("git", "clone", input, subfolder)
+                    .command("git", "clone", "--bare", input, subfolder)
                     .redirectOutput(new Slf4jInfoOutputStream(logger))
                     .execute();
         } catch (IOException | InterruptedException | TimeoutException e) {

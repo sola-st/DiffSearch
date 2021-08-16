@@ -257,10 +257,6 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         }
         codeChange.setJSONParseTree(jsonTree);
 
-        if (numberOfChanges < 100 && numberOfChanges > 90) {
-            System.out.println(gson.toJson(codeChange));
-        }
-
         try {
             writer.write(gson.toJson(codeChange));
             writer.newLine();
