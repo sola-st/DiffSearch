@@ -143,6 +143,9 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
 
     private void parseLineNumbers() {
         var positions = position.split("([, ])");
+        if (positions.length < 4) {
+            System.out.println(position);
+        }
         assert positions.length == 4;
         lineOld = Integer.parseInt(positions[0].replaceAll("-", "").trim());
         lineNew = Integer.parseInt(positions[2].replaceAll("\\+", "").trim());
