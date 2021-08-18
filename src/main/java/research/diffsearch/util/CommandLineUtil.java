@@ -22,6 +22,7 @@ public class CommandLineUtil {
     public static Options buildCLIOptions() {
         return new Options()
                 .addOption("pyc", "py-command", true, "command to run python")
+                .addOption("scalability", "scalability", false, "command to run scability evaluation")
                 .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("l", "log", false, "save log to file")
                 .addOption("n", "normal", false, "launch DiffSearch in normal mode")
@@ -94,6 +95,7 @@ public class CommandLineUtil {
             Mode.PARSE_MODE = commandLine.hasOption("pa");
             Config.LOW_RAM = commandLine.hasOption("lr");
             Mode.DATASET_CREATION = commandLine.hasOption("d");
+            Mode.SCALABILITY = commandLine.hasOption("scalability");
 
             if (commandLine.hasOption("a")) {
                 Config.query = commandLine.getOptionValue("a");

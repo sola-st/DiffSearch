@@ -1,7 +1,10 @@
 package research.diffsearch;
 
 public class Mode {
-
+    /**
+     * Run DiffSearch Evaluation as a command line app.
+     */
+    public static boolean SCALABILITY = false;
     /**
      * Run DiffSearch as a command line app.
      */
