@@ -38,14 +38,15 @@ public class DatasetCreationMode extends App {
         Pipeline.<File, File>from(file -> new ChangeExtractor(new File(Config.repositoryPath), Config.PROGRAMMING_LANGUAGE)
                         .extractCodeChangesToFile(file))
                 .parallelUntilHere(Config.threadCount)
+                .connect(new ProgressWatcher<>("Extracting code changes"))
                 .executeIgnoreResults(listFilesOfDirectory(Config.repositoryPath, ".patch"));
-
+        logger.info("Finished extraction");
 
         var outputFile = new File(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
 
         deleteQuietly(outputFile);
         deleteQuietly(new File(getTreesFilePath(Config.PROGRAMMING_LANGUAGE)));
-
+        logger.info("Saving code changes...");
 
         try (var outputWriter = new BufferedWriter(new FileWriter(outputFile, true))) {
 
@@ -64,6 +65,8 @@ public class DatasetCreationMode extends App {
                 deleteQuietly(treeFile);
 
             }
+
+            logger.info("Deleting temp files...");
 
             for (File f : listFilesOfDirectory(Config.repositoryPath, ".cc")) {
                 deleteQuietly(f);

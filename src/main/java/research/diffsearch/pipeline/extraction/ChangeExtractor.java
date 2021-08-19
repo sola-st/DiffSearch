@@ -61,7 +61,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         // List<File> files = listPatchFilesOfDirectory(pathInput);
 //        logger.info("Extracting code changes from {} files.", files.size());
         try {
-            logger.info("Extracting code changes from {}", f.toString());
+            // logger.info("Extracting code changes from {}", f.toString());
             workListOld = new ArrayList<>();
             workListNew = new ArrayList<>();
             previousPrefix = ' ';
@@ -357,7 +357,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         AbstractTree tree = TreeFactory.getAbstractTree(changeString.replaceAll("\n", " "), language);
         SerializableTreeNode treeNode = SerializableTreeNode.fromTree(tree.getParseTree(), language);
         var result = tree.getParser().getNumberOfSyntaxErrors() <= 0
-               || (treeNode.getChildCount() >= 3
+               || (treeNode.getChildCount() == 3
                    && treeNode.getChild(0).getChildCount() > 0
                    && treeNode.getChild(1).getNodeLabel().trim().equals("-->")
                    && treeNode.getChild(2).getChildCount() > 0);

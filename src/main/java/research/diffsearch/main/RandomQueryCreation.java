@@ -14,7 +14,7 @@ public class RandomQueryCreation {
 
     public static void main(String[] args) {
         String pathout = "./new_queries.txt";
-        int n = 10;
+        int n = 20;
         var language = ProgrammingLanguage.JAVA;
 
         var codeChangesC = FilePathUtils.getCodeChanges(language);
@@ -25,6 +25,7 @@ public class RandomQueryCreation {
                 .sorted()
                 .boxed()
                 .map(i -> Iterables.get(codeChangesC, i))
+                .peek(x -> System.out.println(x.getFullChangeString().replaceAll("\n", " ")))
                 .collect(Collectors.toList());
 
         var trees = samples.stream()
@@ -43,6 +44,8 @@ public class RandomQueryCreation {
 
         }
 
+        System.out.println("Queries:");
+
         trees.stream().map(node -> node.getCompleteNodeText(language.getRuleNames()))
                 .map(text -> text.replace(" <EOF>", ""))
                 .forEach(System.out::println);
@@ -60,14 +63,14 @@ public class RandomQueryCreation {
 //            final double escalate = 0.1;
 //        };
         var probabilities = new Object() {
-            final double expr = 0.4;
-            final double id = 1;
-            final double lt = 1;
-            final double binOp = 1;
-            final double unOp = 1;
-            final double op = 0.8;
+            final double expr = 0.3;
+            final double id = 0.9;
+            final double lt = 0.9;
+            final double binOp = 0.9;
+            final double unOp = 0.9;
+            final double op = 0.6;
             final double wildcard = 0.05;
-            final double escalate = 0.5;
+            final double escalate = 0.0;
         };
         var label = node.getNodeLabel();
 
