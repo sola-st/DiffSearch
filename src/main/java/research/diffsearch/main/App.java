@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.Mode;
+import research.diffsearch.pipeline.EffectivenessPipeline;
 import research.diffsearch.pipeline.ScalabilityPipeline;
 import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.*;
@@ -77,6 +78,8 @@ public abstract class App implements Runnable, Closeable {
             app = new AnalysisMode();
         } else if (Mode.PARSE_MODE) {
             app = new ParseMode();
+        } else if (Mode.EFFECTIVENESS) {
+            app = new EffectivenessPipeline();
         } else if (Mode.SCALABILITY) {
             runScalabilityPipeline();
         } else if (Config.MEASURE_RECALL) {

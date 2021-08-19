@@ -41,4 +41,6 @@ public class Mode {
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
     public static boolean GIT_CLONE = false;
+
+    public static boolean EFFECTIVENESS = false;
 }

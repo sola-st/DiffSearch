@@ -22,6 +22,7 @@ public class CommandLineUtil {
     public static Options buildCLIOptions() {
         return new Options()
                 .addOption("pyc", "py-command", true, "command to run python")
+                .addOption("effectiveness", "effectiveness", false, "command to run effectiveness evaluation")
                 .addOption("scalability", "scalability", false, "command to run scability evaluation")
                 .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("l", "log", false, "save log to file")
@@ -96,6 +97,7 @@ public class CommandLineUtil {
             Config.LOW_RAM = commandLine.hasOption("lr");
             Mode.DATASET_CREATION = commandLine.hasOption("d");
             Mode.SCALABILITY = commandLine.hasOption("scalability");
+            Mode.EFFECTIVENESS = commandLine.hasOption("effectiveness");
 
             if (commandLine.hasOption("a")) {
                 Config.query = commandLine.getOptionValue("a");
