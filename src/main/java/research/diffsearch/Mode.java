@@ -1,7 +1,10 @@
 package research.diffsearch;
 
 public class Mode {
-
+    /**
+     * Run DiffSearch Evaluation as a command line app.
+     */
+    public static boolean SCALABILITY = false;
     /**
      * Run DiffSearch as a command line app.
      */
@@ -38,4 +41,6 @@ public class Mode {
     public static boolean CORPUS_FEATURE_EXTRACTION = false;
 
     public static boolean GIT_CLONE = false;
+
+    public static boolean EFFECTIVENESS = false;
 }
