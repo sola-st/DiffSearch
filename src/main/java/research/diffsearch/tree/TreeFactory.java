@@ -44,13 +44,6 @@ public class TreeFactory {
             result = gson.fromJson(change.getJSONParseTree(), SerializableTreeNode.class);
         }
 
-        change.setJSONParseTree(null);
-        change.setCodeChangeNew(null);
-        change.setCodeChangeOld(null);
-        change.setFileNameOld(null);
-        change.setFileNameNew(null);
-        change.setProjectName(null);
-        change.setCommit(null);
         return result;
     }
 }
