@@ -81,7 +81,7 @@ public abstract class App implements Runnable, Closeable {
         } else if (Mode.EFFECTIVENESS) {
             app = new EffectivenessPipeline();
         } else if (Mode.SCALABILITY) {
-            runScalabilityPipeline();
+            app = new ScalabilityMode();
         } else if (Config.MEASURE_RECALL) {
             app = new App() {
                 @Override
@@ -176,6 +176,13 @@ public abstract class App implements Runnable, Closeable {
         if (faissSocket == null) {
             faissSocket = new Socket(Config.host, Config.port);
         }
+        return faissSocket;
+    }
+
+    protected static Socket getNewFaissSocket() throws IOException {
+
+        faissSocket = new Socket(Config.host, Config.port);
+
         return faissSocket;
     }
 

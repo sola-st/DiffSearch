@@ -49,30 +49,18 @@ public class ScalabilityPipeline {
 
                pythonRunner.runAndWaitUntilEnd();
 
-               try {
+             //  try {
                    pos++;
-                   FeatureExtractionMode.runPythonIndexing_scalability(i, partitions[pos]);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-//
-//                /* ************************************************
-//                 * SEARCH PYTHON STAGE (FAISS)
-//                 **************************************************/
 
-               // Skip FAISS stage if the dataset is small
-               //PipelineOld.port_close(Config.port);
-               //App.startPythonServer();
-               //Socket socket = new Socket(Config.host, Config.port);
                /* ********************************
                 * SEARCH PYTHON STAGE (FAISS)
-                * ********************************/
-           //    logger.info("CLOSING PORT.\n");
-               //PipelineOld.port_close(Config.port);
+                * ********************************
+                */
 
-//                startPythonServer();
-//                Socket socket = getFaissSocket();
-//                Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.getScalabilityInputPath(programmingLanguage));
+
+               // startPythonServer();
+              //  Socket socket = getFaissSocket();
+               // Iterable<String> allLines = FilePathUtils.getAllLines(FilePathUtils.getScalabilityInputPath(programmingLanguage));
 //
 //                buffWriterFeatures.write(i + ",");
 //
