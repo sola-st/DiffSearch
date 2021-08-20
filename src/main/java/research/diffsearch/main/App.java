@@ -81,7 +81,7 @@ public abstract class App implements Runnable, Closeable {
         } else if (Mode.EFFECTIVENESS) {
             app = new EffectivenessPipeline();
         } else if (Mode.SCALABILITY) {
-            runScalabilityPipeline();
+            app = new ScalabilityMode();
         } else if (Config.MEASURE_RECALL) {
             app = new App() {
                 @Override

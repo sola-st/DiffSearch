@@ -21,7 +21,7 @@ public class EffectivenessPipeline extends App {
 
     private String readLine() {
         //System.out.println("Enter a query or --exit to quit.");
-        return "ID.ID<0>(<...>); --> ID.ID<0>(<...>);";
+        return "ID.ID<0>(); --> ID.ID<0>();";
     }
 
     @Override
