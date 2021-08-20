@@ -1,6 +1,5 @@
 package research.diffsearch.pipeline;
 
-import com.google.gson.Gson;
 import matching.Matching;
 import org.antlr.v4.runtime.tree.Tree;
 import org.slf4j.Logger;
@@ -110,7 +109,7 @@ public class MatchingPipeline
             return TreeFactory.getAbstractTree(candidateChange.getFullChangeString(), getProgrammingLanguage())
                     .getParseTree();
         } else {
-            SerializableTreeNode changeParseTree = new Gson().fromJson(candidateChange.getJSONParseTree(), SerializableTreeNode.class);
+            SerializableTreeNode changeParseTree = TreeFactory.getTreeFromCodeChange(candidateChange, getProgrammingLanguage());
             changeParseTree.setConsistentParentChildRelations();
             return changeParseTree;
         }

@@ -116,7 +116,7 @@ public class OnlinePipeline implements
                     writer.close();
                 }
 
-                logger.info("Found {} results.", candidates.size());
+                logger.info("Found {} results.", codeChanges.size());
 
                 return new DiffsearchResult(input, codeChanges)
                         .setCandidateChangeCount(candidates.size())
