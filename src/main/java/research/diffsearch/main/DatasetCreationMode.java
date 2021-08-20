@@ -29,7 +29,7 @@ public class DatasetCreationMode extends App {
         var absPath = Paths.get(Config.repositoryPath).toAbsolutePath().normalize();
 
         logger.info("Extracting commit logs...");
-        new GitDiffExtractor(absPath.toString())
+        new GitDiffExtractor(absPath.toString(), Config.PROGRAMMING_LANGUAGE)
                 .parallelUntilHere(Config.threadCount)
                 .connect(new ProgressWatcher<>("Extracting commit logs"))
                 .executeIgnoreResults(List.of(Objects.requireNonNull(

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.slf4j.Slf4jErrorOutputStream;
 import research.diffsearch.pipeline.base.Pipeline;
+import research.diffsearch.util.ProgrammingLanguage;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -18,8 +19,11 @@ public class GitDiffExtractor implements Pipeline<File, File> {
 
     private final String pathPatches;
 
-    public GitDiffExtractor(String pathPatches) {
+    private final ProgrammingLanguage language;
+
+    public GitDiffExtractor(String pathPatches, ProgrammingLanguage language) {
         this.pathPatches = Paths.get(pathPatches).toAbsolutePath().normalize().toString();
+        this.language = language;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class GitDiffExtractor implements Pipeline<File, File> {
                     .start().getFuture().get();
             new ProcessExecutor()
                     .directory(input)
-                    .command("git", "log", "-p", "--", "*.java")
+                    .command("git", "log", "-p", "--", "*." + language.getSuffix())
                     .redirectOutput(out)
                     .start().getFuture().get();
             logger.info("Extracting batch of {} finished.", input);
