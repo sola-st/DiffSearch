@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.slf4j.Slf4jErrorOutputStream;
+import research.diffsearch.Mode;
 import research.diffsearch.pipeline.base.Pipeline;
 import research.diffsearch.util.ProgrammingLanguage;
 
@@ -31,6 +32,7 @@ public class GitDiffExtractor implements Pipeline<File, File> {
         try(var out = new BufferedOutputStream(
                 new FileOutputStream(new File(pathPatches + "/" + input.getName() + ".patch")))) {
             logger.info("Extracting batch of {}", input);
+
             new ProcessExecutor()
                     .directory(input)
                     .command("git", "config", "diff.renameLimit", "99999")
@@ -38,7 +40,7 @@ public class GitDiffExtractor implements Pipeline<File, File> {
                     .start().getFuture().get();
             new ProcessExecutor()
                     .directory(input)
-                    .command("git", "log", "-p", "--", "*." + language.getSuffix())
+                    .command("git", "log", "-p", "--until=2019-01-28" ,"--", "*." + language.getSuffix())
                     .redirectOutput(out)
                     .start().getFuture().get();
             logger.info("Extracting batch of {} finished.", input);
