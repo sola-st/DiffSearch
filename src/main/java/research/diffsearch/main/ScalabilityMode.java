@@ -25,13 +25,13 @@ public class ScalabilityMode extends App {
     public void run() {
         StringBuilder sb = null;
         PrintWriter writer = null;
-        int[] changes = {10000, 50000};
+        int[] changes = {10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
         int[] partitions = {2, 8, 14, 32, 50, 63, 75, 87, 105, -1};
-        int delay = 5;
+        //int delay = 5;
         int pos = -1;
 
         try {
-            OutputStream os = new FileOutputStream("./src/main/resources/Scalability/Java/java_results_scalability.csv");
+            OutputStream os = new FileOutputStream("./src/main/resources/Scalability/Java/Java_results_scalability.csv");
             writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8), true);
             sb = new StringBuilder();
         } catch (FileNotFoundException e) {
