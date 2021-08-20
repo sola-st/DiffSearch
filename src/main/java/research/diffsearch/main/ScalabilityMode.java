@@ -56,7 +56,7 @@ public class ScalabilityMode extends App {
 
                 startPythonServer();
 
-                Socket socketFaiss = getFaissSocket();
+                Socket socketFaiss = getNewFaissSocket();
                 String nextLine;
 
 
@@ -81,17 +81,16 @@ public class ScalabilityMode extends App {
                     sb.append(durationMatching / 1000.0 + ",");
                 }
                 sb.append("\n");
-                close();
+                socketFaiss.close();
+                //close();
                 stopPythonServer();
 
             } catch (IOException | InterruptedException exception) {
                 logger.error(exception.getMessage(), exception);
             }
-
-            writer.write(sb.toString());
-            writer.close();
         }
-
+        writer.write(sb.toString());
+        writer.close();
 
     }
 }

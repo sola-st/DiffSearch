@@ -179,6 +179,13 @@ public abstract class App implements Runnable, Closeable {
         return faissSocket;
     }
 
+    protected static Socket getNewFaissSocket() throws IOException {
+
+        faissSocket = new Socket(Config.host, Config.port);
+
+        return faissSocket;
+    }
+
     public void close() {
         try {
             if (faissSocket != null) {
