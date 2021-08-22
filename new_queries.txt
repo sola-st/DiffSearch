@@ -27,7 +27,7 @@ reverseColumnsInPlace( sigb . slice ( LT ) ) ; --> if ( rnnDataFormat == EXPR.NC
 final ID<ILoggingEvent> ID = new DefaultTimeBasedFileNamingAndTriggeringPolicy<>( ) ; --> final TimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> triggeringPolicy ; if ( maxFileSize binOP null ) { ID = new DefaultTimeBasedFileNamingAndTriggeringPolicy < > ( ) ; } else { SizeAndTimeBasedFNATP < ILoggingEvent > maxFileSizeTriggeringPolicy = new ID<> ( ) ; maxFileSizeTriggeringPolicy.setMaxFileSize ( EXPR ) ; EXPR = ID ; }
 @ Override public boolean remove ( Object o ) { --> @ ID public boolean remove ( ID o ) {
 import ID . google . caliper . Benchmark ; --> _
-setContentView ( ID . ID ) ; --> setContentView ( R . layout . actionbar_menu ) ;
+setContentView(<...>); --> setContentView(R.layout.actionbar_menu);
 return getAnimation ( EXPR , LT ) ; --> return getAnimation ( id , false ) ;
 ID descriptor ; if ( EXPR ) { ID OP new ID ( resolve ( path ) , TextureAtlas . class , new ID . ID ( ) ) ; } else { TextureLoader . TextureParameter ID = new TextureLoader . TextureParameter ( ) ; --> ID resolved = ID ( path ) ;
 rayTestCB . setM_collisionObject ( EXPR ) ; ID . setM_closestHitFraction ( EXPR ) ; ID . ID ( ) . setValue ( rayFrom . x , rayFrom . ID , ID . ID ) ; rayTestCB . getM_rayToWorld ( ) . ID ( rayTo . x , rayTo . y , rayTo . z ) ; --> rayTestCB . setCollisionObject ( EXPR ) ; ID . setClosestHitFraction ( EXPR ) ; ID . getRayFromWorld ( ) . setValue ( rayFrom . ID , rayFrom . y , rayFrom . ID ) ; ID . ID ( ) . ID ( rayTo . x , rayTo . ID , ID . z ) ;
@@ -35,7 +35,7 @@ import static org . junit . Assert . assertArrayEquals ; import static org . ID 
 ChannelFuture ID = ID . connect ( new InetSocketAddress ( host , ID ) ) ; --> ChannelFuture f = ID . connect ( ) . sync ( ) ;
 extension.ID ( <...> ) ; --> EXPR.getMainClass ( ) . ID ( "com.example.SpringBootExtensionMainClass" ) ;
 private String ID = null ; --> private UUID uuid = LT ;
-ID . ID ( EXPR ) ; --> typeMapping . put ( EXPR ) ;
+ID . ID (<...>) ; --> typeMapping . put(<...>) ;
 import com . ID . zxing . ID ; import com . google . zxing . MonochromeBitmapSource ; import com . google . zxing . ID ; import com . google . ID . common . BitArray ; import com . google . zxing . ID . ID ; --> import com . google . zxing . common . BaseMonochromeBitmapSource ;
 private File ID ; --> private final ID ID ;
 import java . util . ID ; --> _
@@ -48,14 +48,14 @@ Integer flag = ID.ID( ID[LT]) ; ID ID = EXPR ; ID ID = ID . ID ( ID [ LT ] ) ; -
 ID . ID ( new ID ( EXPR , ID . array ( ) ) ) ; --> EXPR . add ( new ID ( ID , payload . ID ( ) ) ) ;
 _ --> public void dispose ( ) {  }
 import ID . nd4j . ID . ID ; --> _
-ID . create ( new ID<ID> ( ) { @ID public ID call ( ) throws ID { EXPR ; EXPR ; if ( ID ) { throw new IllegalStateException ( "Fail" ) ; } return 25 ; } } ) ; --> EXPR ;
-ID . that ( EXPR ) . has ( ) . exactly ( --> ID . ID (
+public void urlsCanBeRetrieved ( ) { --> void ID ( ) {
+ID . that ( <...> ) . has ( ) . exactly ( --> ID . ID (
 import static ID . google . ID . ID . BstSide . LEFT ; import static ID . google . ID . ID . ID . RIGHT ; --> _
 private static boolean ID ( Iterable<?> ID , Iterable<?> iterable2 ) { ID<?> ID = ID . iterator ( ) ; ID<?> ID = iterable2 . ID ( ) ; while ( iterator1 . ID ( ) ) { if ( ! ID . ID ( ) ) { return LT ; } if ( <...> ) { return false ; } } return EXPR ; } --> _
 EXPR . ID ( ID ) ; --> <...> ;
 _ --> ID . ID . ID ( LT , EXPR , EXPR , LT ) ;
 return EXPR ; --> <...>
-ID ( <...> ) ; --> ID ( LT , ID.getAccessLogPattern ( ) ) ;
+ID( <...> ); --> ID(LT, ID.getAccessLogPattern()) ;
 ID ( EXPR binOP ( <...> ) + LT binOP ID , ID , EXPR[ ID ] ) ; --> assertThat ( EXPR ) . isEqualTo ( EXPR ) . as ( EXPR binOP ID binOP LT + EXPR ) ;
 import java.ID.ID ; --> _
 EXPR ; --> _
@@ -67,9 +67,9 @@ throw new ID ( EXPR binOP graphType ) ; --> <...>
 _ --> @ID
 @ID protected void ID ( ) { --> void ID ( ) {
 return EXPR ; --> return ID ( EXPR ) ;
-if ( EXPR ) EXPR . ID ( EXPR ) ; --> if ( ID.DEBUG ) ID.ID( EXPR, LT binOP title ) ;
+if (<...>) ID.ID (<...>) ; --> if ( ID.DEBUG ) ID.ID( EXPR, LT binOP title ) ;
 listSelectedIndex OP ( int ) EXPR ; --> ID = ( int ) <...> ;
-EXPR ; --> EXPR . ID . ID ( LT , EXPR , EXPR , LT ) ;
+EXPR; --> ID.ID.ID(LT, EXPR, EXPR, LT);
 public class ID { --> class ID {
 if ( <...> ) { --> if ( <...> binOP ID ) {
 ID.ID(EXPR); EXPR; EXPR; --> EXPR
