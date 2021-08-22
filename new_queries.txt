@@ -2,7 +2,7 @@ return new MySqlStatementParser(sql); --> return new MySqlStatementParser(sql, k
 _ --> import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleLabelStatement;
 for (Invoker minvoker : counter.keySet()) { Long count = counter.get(minvoker).get(); --> for (Map.Entry<Invoker, AtomicLong> entry : counter.entrySet()) { Long count = entry.getValue().get();
 } else if (JavaSerializer.getWriteReplace(cl) != null) serializer = new JavaSerializer(cl, _loader); --> } else if (isZoneId(cl))  serializer = ZoneIdSerializer.getInstance(); else if (JavaSerializer.getWriteReplace(cl) != null) serializer = new JavaSerializer(cl, _loader);
-public List merge( List... items ) { List result = new ArrayList(); for( List item : items ) { if ( item != null ) { result.addAll( item ); } --> public List<Object> merge(List<Object>... items) { List<Object> result = new ArrayList<Object>(); for (List<Object> item : items) { if (item != null) { result.addAll(item); }
+final boolean containsKey(@Nullable Object key) { --> final boolean containsKey(@CheckForNull Object key) {
 protected boolean archive = true; --> private boolean archive = true;
 Entry<K, V>[] entryArray, --> @Nullable Entry<K, V>[] entryArray,
 @GwtIncompatible("TODO") --> @GwtIncompatible // TODO
@@ -15,7 +15,7 @@ public MockXADataSourceWrapper wrapper() { --> MockXADataSourceWrapper wrapper()
 _ --> @Configuration
 _ --> import org.springframework.boot.actuate.autoconfigure.metrics.export.datadog.DatadogMetricsExportAutoConfiguration;
 ReportScheduler scheduler = new ReportScheduler(metricRegistry, consoleReporter); --> // 使用slf4j reporter,并使用默认logger名字 Slf4jReporter slf4jReporter = new Slf4jReporter(); ReportScheduler scheduler = new ReportScheduler(metricRegistry, slf4jReporter);
-public ResponseEntity<Order> getOrderById(@Min(1) @Max(5) @ApiParam(value = "ID of pet that needs to be fetched",required=true) @PathVariable("order_id") Long orderId) { --> public ResponseEntity<Order> getOrderById(@Min(1L) @Max(5L) @ApiParam(value = "ID of pet that needs to be fetched",required=true) @PathVariable("order_id") Long orderId) {
+lexer.nextToken(); --> lexer.nextToken(JSONToken.COMMA);
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2016-04-17T17:50:52.711+08:00") --> @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2016-04-28T10:36:54.900+02:00")
 _ --> this.jedisSocketFactory = new DefaultJedisSocketFactory(hostAndPort, this.clientConfig);
 _ --> ID.setRelayLogs(true);
@@ -40,36 +40,36 @@ import com . ID . zxing . ID ; import com . google . zxing . MonochromeBitmapSou
 private File ID ; --> private final ID ID ;
 import java . util . ID ; --> _
 _ --> import com . alibaba . druid . ID . ID . ID . ID . ID . ID ;
-Assert . ID ( EXPR , ID . getFields ( ) . ID ( ) ) ; EXPR ; ID . ID ( LT , visitor . getFields ( ) . ID ( new Column ( "users" , "groupId" ) ) ) ; ID . ID ( EXPR ) ; EXPR . assertEquals ( EXPR ) ; ID . ID ( <...> ) ; --> <...>
+<...> --> EXPR OP ID ( ID ) ;
 ID ID = new TraceAfterEvent ( EXPR , new ID ( startMillis ) , EXPR ) ; --> ID event = <...> ;
-if ( ID . ID ( ) != null ) { ID . ID ( ) . ID ( ( ) -> { ID timeoutResponse = new Response ( ID . ID ( ) ) ; ID . ID ( EXPR ) ; EXPR ; ID . received ( ID . ID ( ) , EXPR , LT ) ; } ) ; --> if ( EXPR ) { EXPR ; } else { ID ( <...> ) ;
+String ID = ID . ID ( EXPR ) ; --> { ID ID = SQLUtils . ID ( stmt ) ;
 public void ID ( ID ID , float ID , float ID , int ID ) { --> public void ID ( @ ID ID ID , float ID , float ID , int ID ) {
-Integer flag = ID.ID( ID[LT]) ; ID ID = EXPR ; ID ID = ID . ID ( ID [ LT ] ) ; --> <...>
+Integer flag = ID.ID( ID[LT]) ; ID ID = <...>; ID ID = ID . ID ( ID[LT] ) ; --> <...>
 ID . ID ( new ID ( EXPR , ID . array ( ) ) ) ; --> EXPR . add ( new ID ( ID , payload . ID ( ) ) ) ;
 _ --> public void dispose ( ) {  }
 import ID . nd4j . ID . ID ; --> _
 public void urlsCanBeRetrieved ( ) { --> void ID ( ) {
-ID . that ( <...> ) . has ( ) . exactly ( --> ID . ID (
+ID . ID ( ssl , ID ) ; --> _
 import static ID . google . ID . ID . BstSide . LEFT ; import static ID . google . ID . ID . ID . RIGHT ; --> _
 private static boolean ID ( Iterable<?> ID , Iterable<?> iterable2 ) { ID<?> ID = ID . iterator ( ) ; ID<?> ID = iterable2 . ID ( ) ; while ( iterator1 . ID ( ) ) { if ( ! ID . ID ( ) ) { return LT ; } if ( <...> ) { return false ; } } return EXPR ; } --> _
 EXPR . ID ( ID ) ; --> <...> ;
 _ --> ID . ID . ID ( LT , EXPR , EXPR , LT ) ;
 return EXPR ; --> <...>
-ID( <...> ); --> ID(LT, ID.getAccessLogPattern()) ;
+_ --> protected String toString ( ID ID ) { return EXPR . ID ( ) ; }
 ID ( EXPR binOP ( <...> ) + LT binOP ID , ID , EXPR[ ID ] ) ; --> assertThat ( EXPR ) . isEqualTo ( EXPR ) . as ( EXPR binOP ID binOP LT + EXPR ) ;
 import java.ID.ID ; --> _
 EXPR ; --> _
 this . ID ( ) . ID ( ID . ID ( ) ) ; --> ID ( ID . ID ( ) ) ;
 _ --> import java . ID . ID ;
-if ( ID . ID ( ) binOP EXPR ) { --> if ( EXPR binOP ID . ID ) {
+if ( ID.ID() binOP <...> ) { --> if (<...> binOP ID.ID ) {
 public boolean ID ( @ID ID ID ) { --> public boolean ID( @ID ID ID ) {
 throw new ID ( EXPR binOP graphType ) ; --> <...>
 _ --> @ID
 @ID protected void ID ( ) { --> void ID ( ) {
 return EXPR ; --> return ID ( EXPR ) ;
 if (<...>) ID.ID (<...>) ; --> if ( ID.DEBUG ) ID.ID( EXPR, LT binOP title ) ;
-listSelectedIndex OP ( int ) EXPR ; --> ID = ( int ) <...> ;
-EXPR; --> ID.ID.ID(LT, EXPR, EXPR, LT);
+if ( EXPR ) return LT ; --> if ( ID binOP ID . ID ) return LT ;
+EXPR --> ID.ID.ID(LT, LT, LT, LT);
 public class ID { --> class ID {
 if ( <...> ) { --> if ( <...> binOP ID ) {
 ID.ID(EXPR); EXPR; EXPR; --> EXPR
