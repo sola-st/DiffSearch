@@ -6,9 +6,6 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.pipeline.MatchingPipeline;
 import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.Pipeline;
-import research.diffsearch.tree.AbstractTree;
-import research.diffsearch.tree.SerializableTreeNode;
-import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.ProgrammingLanguageDependent;
 
@@ -87,7 +84,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
             jsonWriter.close();
             logger.info("Found {} code changes in {}", numberOfChanges, f.getName());
             logger.warn("Could not parse {} code changes ({}%)", errors,
-                    (int) (((double) errors) / (double) numberOfChanges * 100));
+                    (int) (((double) errors) / (double) (numberOfChanges + errors) * 100));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -229,6 +226,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
                 if (isValidCodeChange(codeChange.getCodeChangeOld(), codeChange.getCodeChangeNew())) {
                     if (!tryErrorCorrectionWithPreviousAndNextLine(codeChange)
                         && !tryErrorCorrectionWithRemovedComma(codeChange)) {
+                        // System.out.println(codeChange.getFullChangeString().replaceAll("\n", ""));
                         errors++;
                     } else {
                         saveCodeChange(codeChange);
@@ -354,16 +352,18 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
 
     private boolean checkCodeChange(String changeString) {
 
-        AbstractTree tree = TreeFactory.getAbstractTree(changeString.replaceAll("\n", " "), language);
-        SerializableTreeNode treeNode = SerializableTreeNode.fromTree(tree.getParseTree(), language);
-        var result = tree.getParser().getNumberOfSyntaxErrors() <= 0
-               || (treeNode.getChildCount() == 4
-                   && treeNode.getChild(0).getChildCount() > 0
-                   && treeNode.getChild(1).getNodeLabel().trim().equals("-->")
-                   && treeNode.getChild(2).getChildCount() > 0);
-        if (result) {
-            jsonTree = gson.toJson(treeNode);
-        }
-        return result;
+//        AbstractTree tree = TreeFactory.getAbstractTree(changeString.replaceAll("\n", " "), language);
+//        SerializableTreeNode treeNode = SerializableTreeNode.fromTree(tree.getParseTree(), language);
+//        var result = tree.getParser().getNumberOfSyntaxErrors() <= 0
+//               || (treeNode.getChildCount() == 4
+//                   && treeNode.getChild(0).getChildCount() > 0
+//                   && treeNode.getChild(1).getNodeLabel().trim().equals("-->")
+//                   && treeNode.getChild(2).getChildCount() > 0);
+//        if (result) {
+//            jsonTree = gson.toJson(treeNode);
+//        }
+//        return result;
+        jsonTree = "";
+        return true;
     }
 }
