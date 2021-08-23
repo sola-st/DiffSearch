@@ -6,7 +6,7 @@ final boolean containsKey(@Nullable Object key) { --> final boolean containsKey(
 protected boolean archive = true; --> private boolean archive = true;
 Entry<K, V>[] entryArray, --> @Nullable Entry<K, V>[] entryArray,
 @GwtIncompatible("TODO") --> @GwtIncompatible // TODO
-public void surfaceCreated(Application app) --> public void surfaceCreated( )
+_ --> String lastSaveFilename = "", lastSaveBMFilename = "", lastOpenFilename = "";
 refid = builderAssistant.applyCurrentNamespace(refid); --> refid = builderAssistant.applyCurrentNamespace(refid, true);
 Assert.assertTrue(promise.syncUninterruptibly().getNow() instanceof PortUnreachableException); --> assertTrue(promise.syncUninterruptibly().getNow() instanceof PortUnreachableException);
 message.headers().set(HttpHeaderNames.CONTENT_TYPE, "TEXT/HTML; CHARSET=UTF-8"); --> message.headers().set(HttpHeaderNames.CONTENT_TYPE, UPPER_CASE_NORMAL_CONTENT_TYPE);
@@ -43,7 +43,7 @@ _ --> import com . alibaba . druid . ID . ID . ID . ID . ID . ID ;
 <...> --> EXPR OP ID ( ID ) ;
 ID ID = new TraceAfterEvent ( EXPR , new ID ( startMillis ) , EXPR ) ; --> ID event = <...> ;
 String ID = ID . ID ( EXPR ) ; --> { ID ID = SQLUtils . ID ( stmt ) ;
-public void ID ( ID ID , float ID , float ID , int ID ) { --> public void ID ( @ ID ID ID , float ID , float ID , int ID ) {
+_ --> ID ID = LT , ID = "" , ID = LT ;
 Integer flag = ID.ID( ID[LT]) ; ID ID = <...>; ID ID = ID . ID ( ID[LT] ) ; --> <...>
 ID . ID ( new ID ( EXPR , ID . array ( ) ) ) ; --> EXPR . add ( new ID ( ID , payload . ID ( ) ) ) ;
 _ --> public void dispose ( ) {  }
@@ -62,7 +62,7 @@ EXPR ; --> _
 this . ID ( ) . ID ( ID . ID ( ) ) ; --> ID ( ID . ID ( ) ) ;
 _ --> import java . ID . ID ;
 if ( ID.ID() binOP <...> ) { --> if (<...> binOP ID.ID ) {
-public boolean ID ( @ID ID ID ) { --> public boolean ID( @ID ID ID ) {
+ID . ID ( LT , EXPR ) ; --> ID ( EXPR , ID ) ;
 throw new ID ( EXPR binOP graphType ) ; --> <...>
 _ --> @ID
 @ID protected void ID ( ) { --> void ID ( ) {
