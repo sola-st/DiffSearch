@@ -20,3 +20,7 @@ https://github.com/apache/storm
 https://github.com/xetorthio/jedis
 https://github.com/dropwizard/dropwizard
 https://github.com/swagger-api/swagger-codegen
+https://github.com/code4craft/webmagic
+https://github.com/junit-team/junit
+https://github.com/Trinea/android-common
+https://github.com/nhaarman/ListViewAnimations
