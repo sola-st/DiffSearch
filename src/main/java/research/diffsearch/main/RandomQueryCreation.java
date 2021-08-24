@@ -14,7 +14,7 @@ public class RandomQueryCreation {
 
     public static void main(String[] args) {
         String pathout = "./new_queries.txt";
-        int n = 20;
+        int n = 5;
         var language = ProgrammingLanguage.JAVA;
 
         var codeChangesC = FilePathUtils.getCodeChanges(language);
@@ -63,13 +63,13 @@ public class RandomQueryCreation {
 //            final double escalate = 0.1;
 //        };
         var probabilities = new Object() {
-            final double expr = 0.3;
+            final double expr = 0.2;
             final double id = 0.9;
             final double lt = 0.9;
             final double binOp = 0.9;
             final double unOp = 0.9;
-            final double op = 0.6;
-            final double wildcard = 0.05;
+            final double op = 0.5;
+            final double wildcard = 0.03;
             final double escalate = 0.0;
         };
         var label = node.getNodeLabel();

@@ -124,7 +124,7 @@ public class FilePathUtils {
         try {
             return Iterators.size(FileUtils.lineIterator(new File(filePath)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return 0;
         }
     }
 
