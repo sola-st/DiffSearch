@@ -68,17 +68,21 @@ public class ScalabilityMode extends App {
 
                 //Read File Line By Line
                 while ((nextQuery = br.readLine()) != null) {
-                    long startTimeMatching = System.currentTimeMillis();
-                    new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
-                            // add recall pipeline if necessary
-                            .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextQuery))
-                            .peek(result -> logger.info("Found {} results", result.getResults().size()))
-                            .peek(Util::printOutputList)
-                            .execute(nextQuery);
-                    long durationMatching = (System.currentTimeMillis() - startTimeMatching);
-                    logger.info("Final matching time: " + durationMatching / 1000.0);
+                    long time_sum = 0;
+                    for(int j=1;j<=10;j++) {
+                        long startTimeMatching = System.currentTimeMillis();
+                        new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                                // add recall pipeline if necessary
+                                .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextQuery))
+                                .peek(result -> logger.info("Found {} results", result.getResults().size()))
+                                .peek(Util::printOutputList)
+                                .execute(nextQuery);
+                        time_sum += (System.currentTimeMillis() - startTimeMatching);
+
+                    }
+                    logger.info("Final matching time: " + time_sum / 10000.0);
                     assert sb != null;
-                    sb.append(durationMatching / 1000.0 + ",");
+                    sb.append(time_sum / 10000.0 + ",");
                 }
                 sb.append("\n");
                 socketFaiss.close();
