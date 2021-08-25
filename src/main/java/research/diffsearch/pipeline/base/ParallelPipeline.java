@@ -48,13 +48,15 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
     }
 
     private void passOnResult(O o, int innerIndex, IndexedConsumer<O> outputConsumer) {
-        if (innerIndex == currentIndex.get()) {
-            currentIndex.getAndIncrement();
+        synchronized (currentIndex) {
+            if (innerIndex == currentIndex.get()) {
+                currentIndex.getAndIncrement();
 
-            outputConsumer.accept(o, innerIndex);
-        } else {
-            // process later
-            queue.put(innerIndex, Optional.ofNullable(o));
+                outputConsumer.accept(o, innerIndex);
+            } else {
+                // process later
+                queue.put(innerIndex, Optional.ofNullable(o));
+            }
         }
     }
 
@@ -65,9 +67,11 @@ public class ParallelPipeline<I, O> implements Pipeline<I, O> {
                 passOnResult(o, innerIndex, outputConsumer);
                 // check queued vales
                 for (var entry : queue.entrySet()) {
-                    if (entry.getKey() == currentIndex.get()) {
-                        queue.remove(entry.getKey());
-                        passOnResult(entry.getValue().orElse(null), entry.getKey(), outputConsumer);
+                    synchronized (currentIndex) {
+                        if (entry.getKey() == currentIndex.get()) {
+                            queue.remove(entry.getKey());
+                            passOnResult(entry.getValue().orElse(null), entry.getKey(), outputConsumer);
+                        }
                     }
                 }
             } catch (Exception e) {
