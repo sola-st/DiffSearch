@@ -1,7 +1,7 @@
 return new MySqlStatementParser(sql); --> return new MySqlStatementParser(sql, keepComments);
 _ --> import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleLabelStatement;
 for (Invoker minvoker : counter.keySet()) { Long count = counter.get(minvoker).get(); --> for (Map.Entry<Invoker, AtomicLong> entry : counter.entrySet()) { Long count = entry.getValue().get();
-} else if (JavaSerializer.getWriteReplace(cl) != null) serializer = new JavaSerializer(cl, _loader); --> } else if (isZoneId(cl))  serializer = ZoneIdSerializer.getInstance(); else if (JavaSerializer.getWriteReplace(cl) != null) serializer = new JavaSerializer(cl, _loader);
+private List<RequestMatcher> getDelegateMatchers( ServerProperties serverProperties) { --> private List<RequestMatcher> getDelegateMatchers( WebMvcProperties serverProperties) {
 final boolean containsKey(@Nullable Object key) { --> final boolean containsKey(@CheckForNull Object key) {
 protected boolean archive = true; --> private boolean archive = true;
 Entry<K, V>[] entryArray, --> @Nullable Entry<K, V>[] entryArray,
@@ -24,7 +24,7 @@ import ID.apache.dubbo.common.Constants; --> _
 _ --> import static org.hamcrest.MatcherAssert.ID;
 EXPR.ID(ID, AuthUtils.SERVICE , "localhost" , null , serer_callback_handler ) ; --> ID.ID(ID, AuthUtils . SERVICE , EXPR , null , server_callback_handler );
 reverseColumnsInPlace( sigb . slice ( LT ) ) ; --> if ( rnnDataFormat == EXPR.NCW ) { reverseColumnsInPlace ( EXPR ) ; } else { reverseColumnsInPlace ( EXPR.ID ( LT ).permute ( 1 ,0 ) ) ; }
-final ID<ILoggingEvent> ID = new DefaultTimeBasedFileNamingAndTriggeringPolicy<>( ) ; --> final TimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> triggeringPolicy ; if ( maxFileSize binOP null ) { ID = new DefaultTimeBasedFileNamingAndTriggeringPolicy < > ( ) ; } else { SizeAndTimeBasedFNATP < ILoggingEvent > maxFileSizeTriggeringPolicy = new ID<> ( ) ; maxFileSizeTriggeringPolicy.setMaxFileSize ( EXPR ) ; EXPR = ID ; }
+ID . assertEquals ( EXPR , ID . getId ( ) ) ; --> Assertions . ID (<...> ) ;
 @ Override public boolean remove ( Object o ) { --> @ ID public boolean remove ( ID o ) {
 import ID . google . caliper . Benchmark ; --> _
 setContentView(<...>); --> setContentView(R.layout.actionbar_menu);
