@@ -270,7 +270,7 @@ expressionStatement expressionStatement expressionStatement*
 /// Block :
 ///     { StatementList? }
 block
- : '{' statementList? '}'?
+ : '{' statementList '}'?
  ;
 
 /// StatementList :
