@@ -44,7 +44,7 @@ public class ScalabilityPipeline {
                        Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
                        Integer.toString(Config.nlist),
                        Integer.toString(i),
-                       Integer.toString(2),
+                       Integer.toString(-1),
                        Boolean.toString(Config.TFIDF));
 
                pythonRunner.runAndWaitUntilEnd();

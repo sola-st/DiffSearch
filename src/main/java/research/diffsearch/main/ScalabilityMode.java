@@ -26,7 +26,8 @@ public class ScalabilityMode extends App {
         StringBuilder sb = null;
         PrintWriter writer = null;
         int[] changes = {10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
-        int[] partitions = {2, 8, 14, 32, 50, 63, 75, 87, 105, -1};
+        //int[] partitions = {2, 8, 14, 32, 50, 63, 75, 87, 105, -1};
+        int[] partitions = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         //int delay = 5;
         int pos = -1;
 

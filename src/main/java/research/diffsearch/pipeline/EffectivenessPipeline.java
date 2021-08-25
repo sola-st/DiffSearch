@@ -35,7 +35,7 @@ public class EffectivenessPipeline extends App {
             Socket socketFaiss = getFaissSocket();
             String nextQuery;
 
-            FileInputStream fstream = new FileInputStream("./src/main/resources/Effectiveness/11/queries.txt");
+            FileInputStream fstream = new FileInputStream("./src/main/resources/Effectiveness/8/queries.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
             while ((nextQuery = br.readLine()) != null)  {
