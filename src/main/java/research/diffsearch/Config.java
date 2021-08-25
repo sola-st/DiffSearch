@@ -25,7 +25,7 @@ public class Config {
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
