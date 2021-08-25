@@ -98,7 +98,7 @@ public class OnlinePipeline implements
 
                     //BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/result_changes.txt"));
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream("./src/main/resources/Features_Vectors/result_changes.json"), "UTF-8"
+                            new FileOutputStream("./src/main/resources/Effectiveness/11/Results/"+ input.replace(" ","") +".json"), "UTF-8"
                     ));
                     Gson gson = new Gson();
 

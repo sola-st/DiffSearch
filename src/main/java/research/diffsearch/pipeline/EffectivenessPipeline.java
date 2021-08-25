@@ -9,7 +9,10 @@ import research.diffsearch.pipeline.OnlinePipeline;
 import research.diffsearch.pipeline.RecallPipeline;
 import research.diffsearch.util.Util;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -30,17 +33,20 @@ public class EffectivenessPipeline extends App {
             startPythonServer();
 
             Socket socketFaiss = getFaissSocket();
-            String nextLine;
+            String nextQuery;
 
-            while (!(nextLine = readLine()).equals("--exit")) {
+            FileInputStream fstream = new FileInputStream("./src/main/resources/Effectiveness/11/queries.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+            while ((nextQuery = br.readLine()) != null)  {
                 new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                         // add recall pipeline if necessary
-                        .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextLine))
+                        .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextQuery))
                         .peek(result -> logger.info("Found {} results", result.getResults().size()))
                         .peek(Util::printOutputList)
-                        .execute(nextLine);
+                        .execute(nextQuery);
                 System.out.println("ok");
-                break;
+
             }
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);
