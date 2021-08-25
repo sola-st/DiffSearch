@@ -43,7 +43,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     private String lineBeforeCodeChange;
     private String jsonTree;
 
-    private static final int MAX_LENGTH = 50;
+    private static final int MAX_LENGTH = 300;
 
     private BufferedWriter writer;
     private BufferedWriter jsonWriter;

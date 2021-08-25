@@ -83,7 +83,7 @@ public class Config {
      * The number of candidate changes that are used to find results. DiffSearch will consider
      * this number of code changes while processing a query.
      */
-    public static int k = 1000;
+    public static int k = 5000;
 
     /**
      * Maximum number of candidate changes to consider. Only relevant for range search.
@@ -182,7 +182,7 @@ public class Config {
     public static int nprobe = 1;
 
     public static String repositoryPath = "../dfs_repos/GitHub_JAVA/";
-    public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list.txt";
+    public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
 
     public static String GITDIFF_FILE = "";
 
