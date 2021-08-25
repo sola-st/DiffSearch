@@ -37,7 +37,7 @@ public class DatasetCreationMode extends App {
 
         Pipeline.<File, File>from(file -> new ChangeExtractor(new File(Config.repositoryPath), Config.PROGRAMMING_LANGUAGE)
                         .extractCodeChangesToFile(file))
-                .parallelUntilHere(Config.threadCount)
+                //.parallelUntilHere(Config.threadCount)
                 .connect(new ProgressWatcher<>("Extracting code changes"))
                 .executeIgnoreResults(listFilesOfDirectory(Config.repositoryPath, ".patch"));
         logger.info("Finished extraction");
