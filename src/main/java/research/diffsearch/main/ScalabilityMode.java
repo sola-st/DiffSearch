@@ -26,13 +26,14 @@ public class ScalabilityMode extends App {
         StringBuilder sb = null;
         PrintWriter writer = null;
         int[] changes = {10000, 50000, 100000, 250000, 400000, 500000, 600000, 700000, 850000, 1000000};
-        //int[] partitions = {2, 8, 14, 32, 50, 63, 75, 87, 105, -1};
-        int[] partitions = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        //int[] changes = {10000, 50000};
+        int[] partitions = {2, 8, 14, 32, 50, 63, 75, 87, 105, -1};
+        //int[] partitions = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         //int delay = 5;
         int pos = -1;
 
         try {
-            OutputStream os = new FileOutputStream("./src/main/resources/Scalability/Java/Java_results_scalability.csv");
+            OutputStream os = new FileOutputStream("./src/main/resources/Scalability/"+Config.PROGRAMMING_LANGUAGE+"/"+Config.PROGRAMMING_LANGUAGE+"_Results_scalability.csv");
             writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8), true);
             sb = new StringBuilder();
         } catch (FileNotFoundException e) {
@@ -62,7 +63,7 @@ public class ScalabilityMode extends App {
 
 
                 // Open the file
-                FileInputStream fstream = new FileInputStream("./src/main/resources/Scalability/Java/scalability_queries_java.txt");
+                FileInputStream fstream = new FileInputStream("./src/main/resources/Scalability/"+Config.PROGRAMMING_LANGUAGE+"/scalability_queries.txt");
                 BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
                 String nextQuery;
@@ -70,7 +71,7 @@ public class ScalabilityMode extends App {
                 //Read File Line By Line
                 while ((nextQuery = br.readLine()) != null) {
                     long time_sum = 0;
-                    for(int j=1;j<=10;j++) {
+                    for(int j=1;j<=5;j++) {
                         long startTimeMatching = System.currentTimeMillis();
                         new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                                 // add recall pipeline if necessary
@@ -81,9 +82,9 @@ public class ScalabilityMode extends App {
                         time_sum += (System.currentTimeMillis() - startTimeMatching);
 
                     }
-                    logger.info("Final matching time: " + time_sum / 10000.0);
+                    logger.info("Final matching time: " + time_sum / 5000.0);
                     assert sb != null;
-                    sb.append(time_sum / 10000.0 + ",");
+                    sb.append(time_sum / 5000.0 + ",");
                 }
                 sb.append("\n");
                 socketFaiss.close();
