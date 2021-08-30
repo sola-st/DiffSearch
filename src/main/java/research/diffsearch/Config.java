@@ -25,7 +25,7 @@ public class Config {
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -93,7 +93,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 1000;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
 
     /**
      * The number of bits per feature that are used for unary counting
