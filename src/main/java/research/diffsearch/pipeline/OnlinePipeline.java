@@ -24,6 +24,7 @@ import java.net.Socket;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import static research.diffsearch.util.FilePathUtils.*;
 //import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
@@ -56,9 +57,12 @@ public class OnlinePipeline implements
                 frequencyCounter = new DocumentFrequencyCounter();
                 frequencyCounter.loadFromFile();
             }
+
+            long startTime3 = System.currentTimeMillis();
             // write feature vector to file
             DocumentFrequencyCounter finalFrequencyCounter = frequencyCounter;
             var featureVector = Pipeline.from(Util::formatCodeChange)
+                    //.filter((Predicate<String>) Util::checkIfQueryIsValid)
                     .connect(q -> TreeFactory.getAbstractTree(q, getProgrammingLanguage()))
                     .connect(t -> SerializableTreeNode.fromTree(t.getParseTree(), getProgrammingLanguage()))
                     .connect(FeatureExtractionPipeline.getDefaultFeatureExtractionPipeline(true))
@@ -72,12 +76,19 @@ public class OnlinePipeline implements
                     .connect(getVectorFileWriterPipeline(QUERY_FEATURE_VECTORS_CSV))
                     .execute(input);
 
+            logger.info("Writing feature file time " + (System.currentTimeMillis() - startTime3)/1000.0);
+
+            //if (featureVector.isEmpty()) {
+            //    return DiffsearchResult.invalidQuery(input);
+           // }
+
             if (featureVector.isPresent() && Mode.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
                 AbstractTree tree = TreeFactory.getAbstractTree(input, getProgrammingLanguage());
                 System.out.println(tree.getTreeString());
             }
 
+            long startTime2 = System.currentTimeMillis();
             // matching in this pipeline
             if (sendMessageToPythonServer(pythonSocket)) {
                 var numberOfCandidates = getNumberOfLines(CANDIDATE_CHANGES);
@@ -94,22 +105,15 @@ public class OnlinePipeline implements
                         .map(DiffsearchResult::getResults)
                         .orElse(Collections.emptyList());
 
+                logger.info("Matching time " + (System.currentTimeMillis() - startTime2)/1000.0);
+
                 if(Mode.EFFECTIVENESS) {
 
                     //BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/result_changes.txt"));
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream("./src/main/resources/Effectiveness/1/Results/"+ input.replace(" ","") +".json"), "UTF-8"
+                            new FileOutputStream("./src/main/resources/Effectiveness/"+ Config.simpleBugPattern +"/Results/"+ input.replace(" ","") +".json"), "UTF-8"
                     ));
                     Gson gson = new Gson();
-
-                   // Collection<CodeChange> list = gson.fromJson("./src/main/resources/Features_Vectors/result_changes.json", new TypeToken<Collection<CodeChange>>() {}.getType());
-                    //Stream<CodeChange> combinedStream = Stream.concat(
-                      //      list.stream(),
-                        //    codeChanges.stream());
-
-                    //list += codeChanges;
-
-                    //String json2 = gson.toJson(combinedStream);
 
                     String json = gson.toJson(codeChanges);
                     writer.write(json);
@@ -132,6 +136,7 @@ public class OnlinePipeline implements
     }
 
     public static boolean sendMessageToPythonServer(Socket socket) {
+        long startTime = System.currentTimeMillis();
         try {
             Objects.requireNonNull(socket);
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -148,6 +153,7 @@ public class OnlinePipeline implements
             logger.error(e.getMessage(), e);
             return false;
         }
+        logger.info("FAISS time " + (System.currentTimeMillis() - startTime)/1000.0);
         return true;
     }
 

@@ -1,5 +1,8 @@
 package research.diffsearch.util;
 
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import research.diffsearch.Config;
@@ -180,12 +183,27 @@ public class Util {
         return result.replaceAll("\r", "").replaceAll("\n", "");
     }
 
+    private class MyErrorListener extends BaseErrorListener {
+        boolean hasSyntaxError = false;
+
+        @Override
+        public void syntaxError(Recognizer r, Object symbol, int line, int pos, String msg, RecognitionException e) {
+            hasSyntaxError = true;
+        }
+    }
+
+
     public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
+
         var queryTree = TreeFactory.getAbstractTree(query, language);
         var parseTree = queryTree.getParseTree();
         var parser = queryTree.getParser();
 
         return !(TreeUtils.nodeCount(parseTree, Arrays.asList(parser.getRuleNames()), 0) <= 5 || queryTree.isError());
+    }
+
+    public static boolean checkIfQueryIsValid(String query) {
+        return checkIfQueryIsValid(query, Config.PROGRAMMING_LANGUAGE);
     }
 
     public static boolean isQueryPlaceholder(String nodeText) {

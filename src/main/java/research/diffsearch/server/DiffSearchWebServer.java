@@ -73,14 +73,20 @@ public class DiffSearchWebServer extends Thread {
         boolean flagFirstConnection = false;
 
         String query = "";
+        boolean valid_query = true;
 
         long startTimeMatching = System.currentTimeMillis();
         if (postDataI > 0) {
             flagFirstConnection = true;
             query = getQuery(postData);
-
-            result = performSearch(query);
-            // Util.printOutputList(result);
+            if(Util.checkIfQueryIsValid(query)){
+                result = performSearch(query);
+            }
+            else{
+                logger.trace("INVALID QUERY");
+                valid_query = false;
+                DiffsearchResult.invalidQuery(query);
+            }
         }
 
         durationMatching = System.currentTimeMillis() - startTimeMatching;
@@ -91,6 +97,8 @@ public class DiffSearchWebServer extends Thread {
         FileLock lock = channel.lock();
         if (result != null) {
             writeOutput(out, result, durationMatching, channel);
+        } else if (!valid_query) {
+            writeNoValidQuery(out, durationMatching, query, channel);
         } else if (flagFirstConnection) {
             writeNoMatchingCodeFound(out, durationMatching, query, channel);
         }
@@ -211,6 +219,24 @@ public class DiffSearchWebServer extends Thread {
                                     "==================================" +
                                     "================================" +
                                     "============================================================\n\n").getBytes()));
+    }
+
+    protected void writeNoValidQuery(PrintWriter out, long durationMatching, String result, FileChannel chan)
+            throws IOException {
+        out.println("<center><H3><span style='color: #000000'>" +
+                "Invalid query, try again. <span style='color: #0071e3'>");
+
+        chan.write(ByteBuffer.wrap(
+                (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()) + "\n").getBytes()));
+        chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r", "") + "\n").getBytes()));
+
+        chan.write(ByteBuffer.wrap(
+                ("Invalid query, try again. <span style='color: #0071e3'>").getBytes()));
+
+        chan.write(ByteBuffer.wrap(("=========================================================" +
+                "==================================" +
+                "================================" +
+                "============================================================\n\n").getBytes()));
     }
 
     protected static String getQuery(StringBuilder postData) {

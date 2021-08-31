@@ -7,6 +7,7 @@ import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.ProgrammingLanguage;
+import research.diffsearch.util.Util;
 
 import java.io.*;
 import java.net.Socket;
@@ -83,6 +84,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		long startTimeMatching = System.currentTimeMillis();
 		logger.info(Config.PROGRAMMING_LANGUAGE.name());
+		boolean valid_query = true;
+
 		if (!auxLine.isEmpty()) {
 			flagFirstConnection = true;
 			logger.info("Search started.");
@@ -90,9 +93,16 @@ public class WebServerGUI extends DiffSearchWebServer {
 			query = getQuery(postData);
 
 			try {
-				result = performSearch(query);
-				//Util.printOutputList(result, startTimeMatching);
+				if(Util.checkIfQueryIsValid(query)){
+					result = performSearch(query);
+				}
+				else{
+					logger.trace("INVALID QUERY");
+					valid_query = false;
+					DiffsearchResult.invalidQuery(query);
+				}
 			} catch (Exception e) {
+				valid_query = false;
 				e.printStackTrace();
 			}
 			logger.info("Search ended.");
@@ -109,7 +119,9 @@ public class WebServerGUI extends DiffSearchWebServer {
 		assert result != null;
 		if (!result.getResults().isEmpty()) {
 			writeOutput(out, result, durationMatching,  channel);
-		} else {
+		} else if (!valid_query) {
+			writeNoValidQuery(out, durationMatching, query, channel);
+		}else {
 			writeNoMatchingCodeFound(out, durationMatching, query, channel);
 		}
 
@@ -182,6 +194,29 @@ public class WebServerGUI extends DiffSearchWebServer {
                                     "================================" +
                                     "============================================================\n\n").getBytes()));
     }
+
+	@Override
+	protected void writeNoValidQuery(PrintWriter out, long durationMatching,
+											String result, FileChannel chan) throws IOException {
+
+		List<CodeChange> outputList = new ArrayList<>();
+
+		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
+		var JSONOutput = new Gson().toJson(serverdata);
+		out.println(JSONOutput);
+
+		chan.write(ByteBuffer.wrap(
+				(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()) + "\n").getBytes()));
+		//chan.write(ByteBuffer.wrap(("QUERY: " + result.replaceAll("\r", "") + "\n").getBytes()));
+
+		chan.write(ByteBuffer.wrap(
+				("The query is invalid, please try again.='color: #0071e3'>").getBytes()));
+
+		chan.write(ByteBuffer.wrap(("=========================================================" +
+				"==================================" +
+				"================================" +
+				"============================================================\n\n").getBytes()));
+	}
 
     @Override
     protected void writeHeader(PrintWriter out) {

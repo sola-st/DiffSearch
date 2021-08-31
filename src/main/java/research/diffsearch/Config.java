@@ -25,7 +25,7 @@ public class Config {
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVASCRIPT;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -185,5 +185,6 @@ public class Config {
     public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
 
     public static String GITDIFF_FILE = "";
+    public static int simpleBugPattern = 1;
 
 }

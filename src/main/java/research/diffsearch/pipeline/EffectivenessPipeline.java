@@ -35,22 +35,30 @@ public class EffectivenessPipeline extends App {
             Socket socketFaiss = getFaissSocket();
             String nextQuery;
 
-            FileInputStream fstream = new FileInputStream("./src/main/resources/Effectiveness/1/queries.txt");
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            Config.simpleBugPattern = 0;
 
-            while ((nextQuery = br.readLine()) != null)  {
-                new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
-                        // add recall pipeline if necessary
-                        .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextQuery))
-                        .peek(result -> logger.info("Found {} results", result.getResults().size()))
-                        .peek(Util::printOutputList)
-                        .execute(nextQuery);
-                System.out.println("ok");
+            while(Config.simpleBugPattern < 12) {
 
+                Config.simpleBugPattern++;
+
+                FileInputStream fstream = new FileInputStream("./src/main/resources/Effectiveness/" + Config.simpleBugPattern + "/queries.txt");
+                BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+                while ((nextQuery = br.readLine()) != null) {
+                    new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
+                            // add recall pipeline if necessary
+                            .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, nextQuery))
+                            .peek(result -> logger.info("Found {} results", result.getResults().size()))
+                            .peek(Util::printOutputList)
+                            .execute(nextQuery);
+                    System.out.println("ok");
+
+                }
             }
         } catch (IOException exception) {
             logger.error(exception.getMessage(), exception);
         }
+
 
 
     }
