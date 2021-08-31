@@ -111,16 +111,20 @@ public interface Pipeline<I, O> {
 
         for (I input : inputs) {
             process(input, index, (result, index1) -> {
-                processed.getAndIncrement();
+                synchronized (processed) {
+                    processed.getAndIncrement();
+                }
                 if (collectedResults != null && result != null) {
                     synchronized (collectedResults) {
                         collectedResults.add(result);
                     }
                 }
-                if (processed.get() == size) {
-                    // all inputs processed
-                    synchronized (sync) {
-                        sync.notifyAll();
+                synchronized (processed) {
+                    if (processed.get() >= size) {
+                        // all inputs processed
+                        synchronized (sync) {
+                            sync.notifyAll();
+                        }
                     }
                 }
             });
