@@ -17,7 +17,8 @@ import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+// import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Paul Bredl
@@ -30,11 +31,11 @@ public class WebServerGUI extends DiffSearchWebServer {
     }
 
     public static class ServerData {
-    	List<CodeChange> outputList;
+        Collection<CodeChange> outputList;
 		String duration;
     	String changesnumber;
 
-    	public ServerData(List<CodeChange> list, String time, String number) {
+        public ServerData(Collection<CodeChange> list, String time, String number) {
        		outputList = list;
         	duration = time;
         	changesnumber = number;
@@ -116,8 +117,9 @@ public class WebServerGUI extends DiffSearchWebServer {
 		// The lock is not useful for now.
 		channel = serverLog.getChannel();
 		lock = channel.lock();
-		assert result != null;
-		if (!result.getResults().isEmpty()) {
+//		assert result != null;
+//		if (!result.getResults().isEmpty()) {
+		if (result != null) {
 			writeOutput(out, result, durationMatching,  channel);
 		} else if (!valid_query) {
 			writeNoValidQuery(out, durationMatching, query, channel);
@@ -128,13 +130,12 @@ public class WebServerGUI extends DiffSearchWebServer {
 		lock.release();
 		out.flush();
 		out.close();
-		// System.out.println("Connection closed with thread " + Thread.currentThread().getId());
 		logger.trace("Connection closed with thread " + Thread.currentThread().getId());
 	}
 
     @Override
 	protected void writeOutput(PrintWriter out, DiffsearchResult result, long durationMatching,
-			FileChannel channel) throws IOException {
+            FileChannel channel) throws IOException {
 		super.writeOutput(out, result, durationMatching,  channel);
 		var JSONOutput = new Gson().toJson(result.getResults());
         PrintWriter writer = new PrintWriter("./src/main/resources/GUI/Output/output.json", StandardCharsets.UTF_8);
@@ -143,9 +144,10 @@ public class WebServerGUI extends DiffSearchWebServer {
 	}
 
 
-    protected void writeOutputList(PrintWriter out, List<CodeChange> outputList, long durationMatching,
-			FileChannel channel) {
+    protected void writeOutputList(PrintWriter out, DiffsearchResult result, long durationMatching,
+    		FileChannel channel) {
 		boolean incorrect = false;
+		var outputList = result.getResults();
 		for (CodeChange change : outputList) {
 			try {
 				if (change == CodeChange.INVALID_QUERY_CODE_CHANGE) {
@@ -161,13 +163,13 @@ public class WebServerGUI extends DiffSearchWebServer {
 			}
 		}
 		if (incorrect) {
-			outputList.set(0, CodeChange.INVALID_QUERY_CODE_CHANGE);
+			outputList.add(CodeChange.INVALID_QUERY_CODE_CHANGE);
 		}
 
 		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
 
 		var JSONOutput = new Gson().toJson(serverdata);
-		// Writing the JSON file on the port 8843
+		// Writing the JSON file on the port 8843 (or 8844 or 8845)
         out.println(JSONOutput);
 	}
 
@@ -175,7 +177,7 @@ public class WebServerGUI extends DiffSearchWebServer {
     protected void writeNoMatchingCodeFound(PrintWriter out, long durationMatching,
     		String result, FileChannel chan) throws IOException {
 
-    	List<CodeChange> outputList = new ArrayList<>();
+        Collection<CodeChange> outputList = new ArrayList<>();
 
     	ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
     	var JSONOutput = new Gson().toJson(serverdata);
@@ -199,7 +201,9 @@ public class WebServerGUI extends DiffSearchWebServer {
 	protected void writeNoValidQuery(PrintWriter out, long durationMatching,
 											String result, FileChannel chan) throws IOException {
 
-		List<CodeChange> outputList = new ArrayList<>();
+		// List<CodeChange> outputList = new ArrayList<>();
+		Collection<CodeChange> outputList = new ArrayList<>();
+		outputList.add(new CodeChange("invalid query", "invalid query"));
 
 		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Long.toString(Config.code_changes_num));
 		var JSONOutput = new Gson().toJson(serverdata);
