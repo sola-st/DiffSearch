@@ -1,10 +1,25 @@
 # DiffSearch
 
-DiffSearch is a search engine for code changes. The input is a query that describes the code
-change and the output is a list of code changes. The following explains how the queries work.
-Then, your task is to formulate queries to find specific code changes.
+The source code of successful projects is evolving all the time,
+resulting in hundreds of thousands of code changes stored in source
+code repositories. This wealth of data can be useful, e.g., to find
+changes similar to a planned code change or examples of recurring
+code improvements. However, searching for specific kinds of code
+changes across a large number of code repositories is non-trivial.
 
-**Syntax and Semantics of Queries**
+This paper presents DiffSearch, the first scalable and precise search
+engine for code changes. Given a query that describes possibly
+abstracted versions of a code snippet before and after a change, the
+approach returns a set of changes that are guaranteed to match the
+query. To ensure scalability, DiffSearch indexes code changes in a
+one-time preprocessing step, mapping them into a feature space,
+and then performs an efficient search in the feature space for each
+query. The approach is designed in a mostly language-agnostic way,
+and we present implementations for Java, JavaScript, and Python.
+
+
+## Syntax and Semantics of Queries
+
 Queries are formulated in an extension of Java. The structure of a query is the following:
 
                                  old code --> new code
@@ -66,7 +81,7 @@ replaces some (potentially empty) code with a return statement that returns a va
                                             <...> --> return ID;
 
 
-**Examples of Queries and Matching Code Changes**
+## Examples of Queries and Matching Code Changes
 
 Query A:    
                	
@@ -116,13 +131,14 @@ Matching change C:
 
 
 
-This package contains the code of DiffSearch. If you want simply run the tool see the section "how to run".
+More DiffSearch queries are in our dedicated [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Good-queries-for-demonstration)
+      
 
-**Requirements**
+## Requirements
 - Java 11 and Python 3.7
 - [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
 
-**How to run**
+## How to run
 
 FOR THE DIFFSEARCH SERVER:
 
@@ -155,15 +171,7 @@ FOR THE DIFFSEARCH SERVER:
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
           
-  - More DiffSearch arguments:
-  
-        - Scalability experiments:   -Dexec.args="-s -lang java"
-        - Effectiveness experiments: -Dexec.args="-e -lang java"
-        - Recall experiments:        -Dexec.args="-r -lang java"
-        - Features extraction:       -Dexec.args="-fe -lang java"
-        - Dataset extraction:        -Dexec.args="-d -lang java"
-        - Old GUI:                   -Dexec.args="-w -lang java"
-        - Options for flag -lang: PYTHON, JAVA, JAVASCRIPT (case-insensitive)
+  - More DiffSearch arguments are in our [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters)
         
 
 FOR THE GUI:
