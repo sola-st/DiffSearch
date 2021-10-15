@@ -25,6 +25,7 @@ import static research.diffsearch.util.FilePathUtils.getNumberOfLines;
 
 /**
  * @author Paul Bredl
+ * @author Luca Di Grazia
  */
 public class Util {
 
