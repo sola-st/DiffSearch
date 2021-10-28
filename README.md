@@ -8,8 +8,12 @@ code improvements. However, searching for specific kinds of code
 changes across a large number of code repositories is non-trivial.
 
 This paper presents DiffSearch, the first scalable and precise search
-engine for code changes. Given a query that describes possibly
-abstracted versions of a code snippet before and after a change, the
+engine for code changes. 
+
+![Demo](images/demo.gif)
+
+
+Given a query that describes possibly abstracted versions of a code snippet before and after a change, the
 approach returns a set of changes that are guaranteed to match the
 query. To ensure scalability, DiffSearch indexes code changes in a
 one-time preprocessing step, mapping them into a feature space,
