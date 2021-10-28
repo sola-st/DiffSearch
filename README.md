@@ -17,6 +17,8 @@ and then performs an efficient search in the feature space for each
 query. The approach is designed in a mostly language-agnostic way,
 and we present implementations for Java, JavaScript, and Python.
 
+![Approach Overview](images/overview.png)
+
 
 ## Syntax and Semantics of Queries
 
