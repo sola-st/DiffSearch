@@ -8,7 +8,7 @@ code improvements. However, searching for specific kinds of code
 changes across a large number of code repositories is non-trivial.
 
 This paper presents DiffSearch, the first scalable and precise search
-engine for code changes. 
+engine for code changes. The demo of the tool is [online](http://129.69.217.114/diffsearch).
 
 ![Demo](images/demo.gif)
 
