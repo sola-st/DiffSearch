@@ -142,6 +142,7 @@ More DiffSearch queries are in our dedicated [Wiki page](https://github.com/luca
 
 ## Requirements
 - Java 11 and Python 3.7
+- Linux Operating System
 - [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
 
 ## How to run
@@ -159,9 +160,10 @@ FOR THE DIFFSEARCH SERVER:
       - pip3 install dask[dataframe]
 
   - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
-  - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1DOk5UpJiwBg4YkuQ43lk0qEu726iGLNY/view) )
-  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1ZISwrmRnNTLZSjS5tmOqU7QcH7Dd793z/view?usp=sharing) )
-  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/   (You can download the index [here](https://drive.google.com/file/d/1Dp1IALq9W8Ktu1nlBcP3h8oVP24wlo4Q/view?usp=sharing) )
+  - Download this [zip file](http://u.pc.cd/LpEitalK) with the dataset
+  - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/ 
+  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/
+  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/
   - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
 
   - Then:   
