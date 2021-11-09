@@ -5,15 +5,22 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.Mode;
 import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.pipeline.feature.FeatureVector;
+import research.diffsearch.server.PythonRunner;
 import research.diffsearch.tree.AbstractTree;
 import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -22,12 +29,14 @@ import java.util.stream.Collectors;
 
 import static research.diffsearch.util.FilePathUtils.getChangesJsonFilePath;
 import static research.diffsearch.util.FilePathUtils.getNumberOfLines;
+import static research.diffsearch.util.FilePathUtils.getIndexFilePath;
 
 /**
  * @author Paul Bredl
  * @author Luca Di Grazia
  */
 public class Util {
+	private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     public static void printOutputList(DiffsearchResult result) {
         printOutputList(result, System.out, true);
@@ -181,7 +190,8 @@ public class Util {
 
 
         Config.code_changes_num = getNumberOfLines(getChangesJsonFilePath(Config.PROGRAMMING_LANGUAGE));
-
+        set_faiss_index_size (Config.PROGRAMMING_LANGUAGE);
+        
     }
 
     public static String formatCodeChange(String result) {
@@ -216,5 +226,40 @@ public class Util {
         return keywords
                 .stream()
                 .anyMatch(nodeText::contains);
+    }
+    
+    public static void set_faiss_index_size (ProgrammingLanguage language) {
+
+		// get the used FAISS index size
+		// create a temporary file
+		String sizeFilename = "./src/main/resources/Features_Vectors/" + Config.PROGRAMMING_LANGUAGE + "index_size.txt";
+		File indexsizeFile = new File(sizeFilename);
+		try {
+			indexsizeFile.createNewFile();
+			var pythonRunner = new PythonRunner("./src/main/resources/Python/get_FAISS_index_size.py",
+					FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE), sizeFilename);
+			pythonRunner.runAndWaitUntil(input -> false);
+			// file index_size contains the index size in first line
+			if (indexsizeFile.exists()) {
+				try (BufferedReader br = new BufferedReader(new FileReader(sizeFilename))) {
+					Config.faiss_index_size = br.readLine();
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+					if (indexsizeFile.exists()) {
+						indexsizeFile.delete();
+					}
+				}
+			}
+			// remove the temporary File
+			indexsizeFile.delete();
+		} catch (IOException | InterruptedException exception) {
+			logger.error(exception.getMessage(), exception);
+			if (indexsizeFile.exists()) {
+				indexsizeFile.delete();
+			}
+		}
+		if (indexsizeFile.exists()) {
+			indexsizeFile.delete();
+		}
     }
 }

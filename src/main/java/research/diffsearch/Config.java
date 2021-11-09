@@ -33,6 +33,9 @@ public class Config {
 
     public static long code_changes_num = 0;
 
+    // index size as String for WebServerGUI
+    public static String faiss_index_size = "";
+
     //Constants that enable/disable part of the tool
 
     public static boolean LOG_FILE = false;

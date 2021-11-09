@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import research.diffsearch.Config;
 import research.diffsearch.pipeline.base.CodeChange;
 import research.diffsearch.pipeline.base.DiffsearchResult;
-import research.diffsearch.server.PythonRunner;
-import research.diffsearch.util.FilePathUtils;
 import research.diffsearch.util.ProgrammingLanguage;
 import research.diffsearch.util.Util;
 
@@ -56,37 +54,6 @@ public class WebServerGUI extends DiffSearchWebServer {
 		String auxLine = "";
 		String lang = "";
 
-		// get the used FAISS index size
-		// create a temporary file
-		String sizeFilename = "./src/main/resources/Features_Vectors/index_size.txt";
-		File indexsizeFile = new File(sizeFilename);
-		indexsizeFile.createNewFile();
-		try {
-			var pythonRunner = new PythonRunner("./src/main/resources/Python/get_FAISS_index_size.py",
-					FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE), sizeFilename);
-			pythonRunner.runAndWaitUntil(input -> false);
-			// file index_size contains the index size in first line
-			if (indexsizeFile.exists()) {
-				try (BufferedReader br = new BufferedReader(new FileReader(sizeFilename))) {
-					indexSize = br.readLine();
-				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
-					if (indexsizeFile.exists()) {
-						indexsizeFile.delete();
-					}
-				}
-			}
-			// remove the temporary File
-			indexsizeFile.delete();
-		} catch (IOException | InterruptedException exception) {
-			logger.error(exception.getMessage(), exception);
-			if (indexsizeFile.exists()) {
-				indexsizeFile.delete();
-			}
-		}
-		if (indexsizeFile.exists()) {
-			indexsizeFile.delete();
-		}
 		// looks for post data
 		while ((line = in.readLine()) != null && (!line.isEmpty())) {
 			if (line.contains("?Text1=") && line.contains("Text2=")) {
@@ -207,7 +174,7 @@ public class WebServerGUI extends DiffSearchWebServer {
 			e.commit = e.getCommitUrl();
 		});
 
-		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), indexSize);
+		ServerData serverdata = new ServerData(outputList, Double.toString(durationMatching / 1000.0), Config.faiss_index_size);
 
 		var JSONOutput = new Gson().toJson(serverdata);
 		// Writing the JSON file on the port 8843 (or 8844 or 8845)
