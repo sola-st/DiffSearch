@@ -1,0 +1,20 @@
+return test --> return None
+if training:\nuse_mems = use_mems if use_mems is not None else self.use_mems_train --> if training and inputs["use_mems"] is None:\ninputs["use_mems"] = self.use_mems_train
+words.arrange_submobjects(DOWN) --> words.arrange(DOWN)
+return test --> return None
+self.stdscr.clear() --> self.stdscr.erase()
+out = feed._handle_response(response) --> feed._handle_response(response)
+print_succ('Executed specified command via WMI') --> print_succ('{}:{} Executed command via WMIEXEC'.format(self.__win32Process.get_target(),settings.args.port))
+print("Creating table reference") --> print("Creating table [unicode_test] reference")
+if pc:\non_connect(pc) --> if pc and self.handler:\nevent(ON_CONNECT, pc, self.handler, self.config)
+matrix.highlight_columns(X_COLOR, Y_COLOR) --> matrix.set_color_columns(X_COLOR, Y_COLOR)
+return self._sep_token --> return None
+self.blob_write(extra_data) --> self.blob_writer.write(extra_data)
+items = rcol.perform_collect() --> rcol.perform_collect()\nitems = rcol.items
+exit(0) --> sys.exit(0)
+print('Epoch %d' % epoch) --> print('Epoch %d out of %d' % (epoch, self.nb_epoch))
+if license_: --> if license_ and show("license"):
+if download_mirrors: --> if download_mirrors or conf.settings['download_mirrors']:
+model.to_gpu() --> model.to_device(device)
+pg = p.path_group() --> pg = p.factory.path_group()
+outcome = RunExecutor.execute(self) --> outcome = RunExecutor.execute(self, False)
