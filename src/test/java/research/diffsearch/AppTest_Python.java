@@ -66,7 +66,7 @@ public class AppTest_Python extends TestCase {
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
-
+//
 //    //@org.junit.jupiter.api.Test
 //    public void test5() throws Exception {
 //        String query = "ID binOP<0> LT --> ID binOP<0> LT";
@@ -74,15 +74,15 @@ public class AppTest_Python extends TestCase {
 //
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test6() throws Exception {
-//        String query = "ID = ID --> ID = ID";
-//        String candidate = "x = y --> y = z";
-//
-//        assertTrue(App.runJunit_Python(query, candidate));
-//    }
-//
+
+    //@org.junit.jupiter.api.Test
+    public void test6() throws Exception {
+        String query = "ID = ID --> ID = ID";
+        String candidate = "x = y --> y = z";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
 //    //@org.junit.jupiter.api.Test
 //    public void test7() throws Exception {
 //        String query = "ID = ID --> ID = ID";
@@ -130,32 +130,32 @@ public class AppTest_Python extends TestCase {
 //
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test13() throws Exception {
-//        String query = "f(ID, ID) --> g(ID, ID)";
-//        String candidate = "f(a, b, c) --> g(d, e, f)";
-//
-//        assertFalse(App.runJunit_Python(query, candidate));
-//    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test14() throws Exception {
-//        String query = "f() <...> g() --> g()";
-//        String candidate = "f() h() g()  --> g()";
-//
-//        assertTrue(App.runJunit_Python(query, candidate));
-//    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test15() throws Exception {
-//        String query = "<...> --> try: <...>  except (ID): <...> ";
-//        String candidate = "f() h() g() --> g()";
-//
-//        assertFalse(App.runJunit_Python(query, candidate));
-//    }
-//
-//    //@org.junit.jupiter.api.Test
+
+    //@org.junit.jupiter.api.Test
+    public void test13() throws Exception {
+        String query = "f(ID, ID) --> g(ID, ID)";
+        String candidate = "f(a, b, c) --> g(d, e, f)";
+
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    //@org.junit.jupiter.api.Test
+    public void test14() throws Exception {
+        String query = "f() <...> g() --> g()";
+        String candidate = "f() h() g()  --> g()";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    //@org.junit.jupiter.api.Test
+    public void test15() throws Exception {
+        String query = "<...> --> try: <...>  except (ID): <...> ";
+        String candidate = "f() h() g() --> g()";
+
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    //@org.junit.jupiter.api.Test
 //    public void test16() throws Exception {
 //        String query = "<...> --> try: <...> except (ID): <...>";
 //        String candidate = "x=3 --> try: x=3 except (e):";
@@ -186,15 +186,15 @@ public class AppTest_Python extends TestCase {
 //
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test20() throws Exception {
-//        String query = "_ --> 1+1";
-//        String candidate = "1+1 --> 1+1+2";
-//
-//        assertFalse(App.runJunit_Python(query, candidate));
-//    }
-//
+
+    //@org.junit.jupiter.api.Test
+    public void test20() throws Exception {
+        String query = "_ --> 1+1";
+        String candidate = "1+1 --> 1+1+2";
+
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
 //    //@org.junit.jupiter.api.Test
 //    public void test21() throws Exception {
 //        String query = "abc.f=z --> _";
@@ -234,23 +234,23 @@ public class AppTest_Python extends TestCase {
 //
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test26() throws Exception {
-//        String query = "<...>\n" +
-//                "ID();\n" +
-//                "<...> --> <...>\n" +
-//                "ID(ID);\n" +
-//                "<...>";
-//        String candidate = "x =0;\n" +
-//                "foo();\n" +
-//                "x++; --> x=0;\n" +
-//                "foo();\n" +
-//                "x++;";
-//
-//        assertFalse(App.runJunit_Python(query, candidate));
-//    }
-//
+
+    //@org.junit.jupiter.api.Test
+    public void test26() throws Exception {
+        String query = "<...>\n" +
+                "ID();\n" +
+                "<...> --> <...>\n" +
+                "ID(ID);\n" +
+                "<...>";
+        String candidate = "x =0;\n" +
+                "foo();\n" +
+                "x++; --> x=0;\n" +
+                "foo();\n" +
+                "x++;";
+
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
 //    //@org.junit.jupiter.api.Test
 //    public void test25() throws Exception {
 //        String query = "ID<0>(EXPR);\n" +
@@ -306,15 +306,15 @@ public class AppTest_Python extends TestCase {
 //
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
-//
-//    //@org.junit.jupiter.api.Test
-//    public void test30() throws Exception {
-//        String query = "if EXPR: ID = ID --> if EXPR: ID = ID";
-//        String candidate = "if vmType == null: vmType = Type --> if vmType == null: vmType = defaultVmType";
-//
-//        assertTrue(App.runJunit_Python(query, candidate));
-//    }
-//
+
+    //@org.junit.jupiter.api.Test
+    public void test30() throws Exception {
+        String query = "if EXPR: ID = ID --> if EXPR: ID = ID";
+        String candidate = "if vmType == null: vmType = Type --> if vmType == null: vmType = defaultVmType";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
 //    //@org.junit.jupiter.api.Test
 //    public void test31() throws Exception {
 //        String query = "_ --> exit(EXPR)";
