@@ -71,7 +71,7 @@ public class Config {
     /**
      * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
-    public static String batchFilePath = "./src/main/resources/Recall/Input/queriesForRecall_PY.txt";
+    public static String batchFilePath = "./src/main/resources/queriesForRecall_PY.txt";
 
     /**
      * The path to the file were the results
@@ -96,7 +96,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 2000;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
 
     /**
      * The number of bits per feature that are used for unary counting
@@ -177,17 +177,19 @@ public class Config {
     /**
      * FAISS parameter, number of clusters of the index.
      */
-    public static int nlist = 1;
+    public static int nlist = 1024;
 
     /**
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
-    public static int nprobe = 1;
+    public static int nprobe = 32;
 
     public static String repositoryPath = "../dfs_repos/GitHub_JAVA/";
     public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
 
     public static String GITDIFF_FILE = "";
     public static int simpleBugPattern = 1;
+
+    public static double FAISS_scalability_time = 0;
 
 }

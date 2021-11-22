@@ -21,10 +21,10 @@ import research.diffsearch.util.Util;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import static research.diffsearch.util.FilePathUtils.*;
 //import static research.diffsearch.util.QueryUtil.checkIfQueryIsValid;
@@ -80,7 +80,7 @@ public class OnlinePipeline implements
 
             //if (featureVector.isEmpty()) {
             //    return DiffsearchResult.invalidQuery(input);
-           // }
+            // }
 
             if (featureVector.isPresent() && Mode.ANALYSIS_MODE) {
                 Util.printFeatureVectorAnalysis(featureVector.get());
@@ -111,7 +111,7 @@ public class OnlinePipeline implements
 
                     //BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/resources/Features_Vectors/result_changes.txt"));
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream("./src/main/resources/Effectiveness/"+ Config.simpleBugPattern +"/Results/"+ input.replace(" ","") +".json"), "UTF-8"
+                            new FileOutputStream("./src/main/resources/Effectiveness/" + Config.simpleBugPattern + "/Results/" + input.replace(" ", "") + ".json"), StandardCharsets.UTF_8
                     ));
                     Gson gson = new Gson();
 
@@ -121,6 +121,7 @@ public class OnlinePipeline implements
                 }
 
                 logger.info("Found {} results.", codeChanges.size());
+
 
                 return new DiffsearchResult(input, codeChanges)
                         .setCandidateChangeCount(candidates.size())

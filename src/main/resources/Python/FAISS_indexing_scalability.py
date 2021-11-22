@@ -39,7 +39,7 @@ def indexing(feature_in, index_out, dimension, nlist, nchanges, part, tfidf=Fals
             quantiser = faiss.IndexFlatIP(dimension)
             metric = faiss.METRIC_INNER_PRODUCT
 
-        index = faiss.IndexIVFFlat(quantiser, dimension, nlist, metric)
+        index = faiss.IndexIVFFlat(quantiser, dimension, 10, metric)
 
         np_array = np.ascontiguousarray(changes_feature_vectors)
 
