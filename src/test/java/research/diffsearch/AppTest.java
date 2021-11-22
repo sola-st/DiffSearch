@@ -587,11 +587,11 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-    public void test67() throws Exception {
-        String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
-        String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
-        assertTrue(App.runJunit(query, candidate));
-    }
+//    public void test67() throws Exception {
+//        String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
+//        String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
+//        assertTrue(App.runJunit(query, candidate));
+//    }
 
     public void test68() throws Exception {
         String query = "ID.ID() binOP LT --> ID.ID() binOP LT";
@@ -599,10 +599,10 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-    public void test69() throws Exception {
-        String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
-        String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
-        assertTrue(App.runJunit(query, candidate));
-    }
+//    public void test69() throws Exception {
+//        String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
+//        String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
+//        assertTrue(App.runJunit(query, candidate));
+//    }
 
 }
