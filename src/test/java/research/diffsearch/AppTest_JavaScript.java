@@ -115,7 +115,7 @@ public class AppTest_JavaScript extends TestCase {
 //        assertFalse(App.runJunit_JavaScript(query, candidate));
 //    }
 //
-//    //@org.junit.jupiter.api.Test
+    //@org.junit.jupiter.api.Test
 //    public void test11() throws Exception {
 //        String query = "{ <...> ID<0>(); <...> ID<0>(); } --> { <...> ID<1>(); <...> ID<1>(); }";
 //        String candidate = "{ g(); f(); h(); j(); f(); } --> {  g(); z(); h(); j(); z(); }";
