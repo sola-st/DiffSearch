@@ -73,7 +73,6 @@ public class ScalabilityMode extends App {
                 //Read File Line By Line
                 while ((nextQuery = br.readLine()) != null) {
                     long time_sum = 0;
-                    long faiss_sum = 0;
 
                     for (int j = 1; j <= 1; j++) {
                         long startTimeMatching = System.currentTimeMillis();
