@@ -71,12 +71,12 @@ public class Config {
     /**
      * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
-    public static String batchFilePath = "./src/main/resources/queriesForRecall_PY.txt";
+    public static String batchFilePath = "./src/main/resources/Recall/Input/queriesForRecall_PY.txt";
 
     /**
      * The path to the file were the results
      */
-    public static String batchOutput = "./src/main/resources/batchOutput.txt";
+    public static String batchOutput = "./src/main/resources/Recall/Output/Python/batchOutput.txt";
     /**
      * Defines the feature extractors that are used.
      */
