@@ -76,7 +76,7 @@ public class Config {
     /**
      * The path to the file were the results
      */
-    public static String batchOutput = "./src/main/resources/Recall/Output/Python/batchOutput.txt";
+    public static String batchOutput = "./src/main/resources/Recall/Output/Python/recall_result_python.txt";
     /**
      * Defines the feature extractors that are used.
      */
