@@ -1,0 +1,78 @@
+success_callback(); --> _$0
+ID('skin-blue-light'); --> _$0
+if (value) {expressions.push(value); --> argsComma.push(value);$0
+if (ID<0> != undefined) --> if (ID<0>)$0
+this.ID<0>(EXPR); --> this.ID<0>(EXPR);$0
+<...> = EXPR<0>;--><...> = EXPR<0> binOP EXPR;$0
+_ --> ID.ID({routerClasses: 'page-current'});$0
+ID = ID.ID(<...>); -->_$0
+if (ID<0>) {expressions.push(ID<0>); --> argsComma.push(ID<0>);$0
+ID<0> = timeFilled; --> ID<0> = timeFilled * 1000;$0
+if (ID binOP ID) -->  if (<...>)$0
+if (roomUrl == null) --> if (roomUrl === null)$0
+_ --> ID.ID({ID: EXPR});$0
+_ --> ID.ID({ID: LT});$0
+ID(ID) --> await ID(ID)$1
+ID(<...>);-->_$0
+while (LT) --> while (EXPR)$0
+lastTradeTimestamp = timeFilled; --> lastTradeTimestamp = timeFilled * 1000;$0
+ID: EXPR;-->_$0
+if (ID<0> != ID) --> if (ID<0>)$0
+if (ID<0> == null) --> if (ID<0> === null)$0
+var buttonEl = ID<0>; --> var $buttonEl = $(ID<0>);$0
+if (ID) { ID.ID(<...>); --><...>$0
+ID<0>.timeout(LT); --> ID<0>.timeout(LT);$0
+return ID.ready(); --> _$0
+_ --> throw ID;}return LT;}$0
+_ --> 'hasCORS': false,$0
+<...> --> await <...>$0
+ID(<...>);-->ID(ID);$2
+if (ID<0> binOP null)-->if (ID<0> binOP null)$0
+sleep(delay) --> await sleep(delay)$0
+if (a != undefined) --> if (a)$0
+body = this.ID(ID); --> _$0
+while (LT) --> while (ID)$0
+_ --> throw e;}return LT;}$0
+if (ID<0> == LT) --> if (ID<0> === LT)$0
+ID<0>(); --> ID<0>(error);$0
+return ID.ID(); --> _$0
+var attr = new ID.Attr(ID, ID); --> var attr = this.ownerDocument.ID(ID, ID);$0
+ID = this.ID(ID); --> _$0
+return ID; --> return LT;$0
+ID(<...>); --> _$0
+_ --> ID.ID = ID();$0
+if (ID<0>) {ID.ID(ID<0>); --> ID.ID(ID<0>);$0
+var buttonEl = this; --> var $buttonEl = $(this);$0
+var ID = ID; --> var ID  = $(ID);$0
+ID: ID;  --> _$0
+body = this.json(params); --> _$0
+ID<0> = ID; --> ID<0> = ID * 1000;$0
+_ --> LT :LT,$0
+_ --> this.setState({routerClasses: 'page-current'});$0
+_ --> 'hasCORS': LT,$0
+_-->throw EXPR;$0
+if(EXPR) --> if(EXPR),$0
+ID(true); --> _$0
+this.timeout(200); --> this.timeout(1500);$0
+while (<...>) --> while (<...>)$0
+return ID; --> return null;$0
+var attr = new core.Attr(name, value); --> var attr = this.ownerDocument.createAttribute(name, value);$0
+_ --> ID.ID = ID(<...>);$0
+var ID<0> = new ID.ID(<...>); -->var ID<0> = ID.ID.ID(<...>);$0
+while (true) --> while (current)$0
+ID<0>: LT --> ID<0>: LT$2369
+ID<0>(); --> ID<0>(ID);$0
+_ --> this.audioController = audioControllerFactory();$0
+return input; --> return null;$0
+_ --> ID.ID = audioControllerFactory();$0
+position: relative; --> _$0
+var ID = <...>; --> var ID = ID(<...>);$0
+ID(LT); --> _$0
+_ --> throw e;}return true;}$0
+return ID.ID(<...>);-->_$0
+getDesktopStreamFailed(); --> getDesktopStreamFailed(error);$0
+change_skin('skin-blue-light'); --> _$0
+ID(delay) --> await ID(delay)$0
+ID: relative; --> _$0
+ID<0>.ID<1>(LT); --> ID<0>.ID<1>(LT);$0
+return app.ready(); --> _$0
