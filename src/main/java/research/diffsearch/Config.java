@@ -76,7 +76,7 @@ public class Config {
     /**
      * The path to the file were the results
      */
-    public static String batchOutput = "./src/main/resources/Recall/Output/JS/recall_results_JS.txt";
+    public static String batchOutput = "./src/main/resources/batchOutput.txt";
     /**
      * Defines the feature extractors that are used.
      */
