@@ -30,6 +30,7 @@ def indexing(feature_in, index_out, dimension, nlist, nchanges, part, tfidf=Fals
 
         # make faiss available
         # n = len(changes_feature_vectors)               # number of vectors
+        logger.debug("2");
         logger.debug("Dimension: " + str(dimension))
         logger.info("Starting indexing")
         quantiser = faiss.IndexFlatL2(dimension)
