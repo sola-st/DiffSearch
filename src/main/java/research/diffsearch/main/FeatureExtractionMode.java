@@ -70,7 +70,7 @@ public class FeatureExtractionMode extends App {
             // - nlist (number of clusters)
             // - tfidf (true or false)
             var pythonRunner = new PythonRunner(
-                    "./src/main/resources/Python/FAISS_indexing_python.py",
+                    "./src/main/resources/Python/FAISS_indexing.py",
                     FilePathUtils.getFeatureCSVPath(Config.PROGRAMMING_LANGUAGE),
                     FilePathUtils.getIndexFilePath(Config.PROGRAMMING_LANGUAGE),
                     Integer.toString(featureExtractionPipeline.getTotalFeatureVectorLength()),
