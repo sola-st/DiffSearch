@@ -87,7 +87,7 @@ public class FeatureExtractionMode extends App {
     public static void runPythonIndexing_scalability(int maxLines, int part) throws IOException, InterruptedException {
         if (!Config.ONLY_JAVA) {
             var pythonRunner = new PythonRunner(
-                    "./src/main/resources/Python/FAISS_indexing.py",
+                    "./src/main/resources/Python/FAISS_indexing_python.py",
                     "Features_Vectors/changes_feature_vectors_py.csv",
                     "Features_Vectors/faiss_Python.index",
                     Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),

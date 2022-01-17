@@ -20,6 +20,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     changes_feature_vectors = changes_feature_vectors.iloc[:, :]
     # changes_feature_vectors = changes_feature_vectors.values[0:, :-1]
     changes_feature_vectors = changes_feature_vectors.astype('float32')
+    nlist = 1
     logger.debug(f"nlist = {nlist}")
 
     #######################################################################
