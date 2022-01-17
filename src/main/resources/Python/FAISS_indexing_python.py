@@ -52,5 +52,9 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
 
     faiss.write_index(index, str(index_out))
 
-
+logger.info(sys.argv[1])
+logger.info(sys.argv[2])
+logger.info(sys.argv[3])
+logger.info(sys.argv[4])
+logger.info(sys.argv[5])
 indexing(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5] == 'true')
