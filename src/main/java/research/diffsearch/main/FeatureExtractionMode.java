@@ -88,8 +88,8 @@ public class FeatureExtractionMode extends App {
         if (!Config.ONLY_JAVA) {
             var pythonRunner = new PythonRunner(
                     "./src/main/resources/Python/FAISS_indexing.py",
-                    "Features_Vectors/changes_feature_vectors_java.csv",
-                    "Features_Vectors/faiss_java.index",
+                    "Features_Vectors/changes_feature_vectors_py.csv",
+                    "Features_Vectors/faiss_Python.index",
                     Integer.toString(getDefaultFeatureExtractionPipeline(false).getTotalFeatureVectorLength()),
                     Integer.toString(maxLines),
                     Integer.toString(part));
