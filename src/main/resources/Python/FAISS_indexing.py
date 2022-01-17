@@ -57,4 +57,4 @@ def indexing(feature_in, index_out, dimension, nchanges, part):
 
 
 # print(str(sys.argv[-3]), str(sys.argv[-2]), str(sys.argv[-1]))
-indexing(sys.argv[-5], sys.argv[-4], int(sys.argv[-3]), int(sys.argv[-2]), int(sys.argv[-1]))
+indexing(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5] == 'true')
