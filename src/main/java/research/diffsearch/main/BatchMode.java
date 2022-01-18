@@ -36,7 +36,7 @@ public class BatchMode extends App {
             Socket socketFaiss = getFaissSocket();
 
             var queries = newArrayList(getAllLines(Config.batchFilePath));
-
+            System.out.println("Query list size" + queries.size());
             new OnlinePipeline(socketFaiss, Config.PROGRAMMING_LANGUAGE)
                     .connectIf(Config.MEASURE_RECALL, new RecallPipeline(Config.PROGRAMMING_LANGUAGE, queries))
                     .peek(result -> Util.printOutputList(result,
