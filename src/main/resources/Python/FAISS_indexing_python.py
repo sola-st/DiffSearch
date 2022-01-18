@@ -32,7 +32,14 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     # n = len(changes_feature_vectors)               # number of vectors
     logger.debug("Dimension: " + str(dimension))
     logger.info("Starting indexing")
-    quantiser = faiss.IndexFlatL2(dimension)
+    # quantiser = faiss.IndexFlatL2(dimension)
+    # metric = faiss.METRIC_L2
+    nlist = 1
+    M = int(dimension / 8)
+    nbits = 8
+    logger.info("Starting quantizer...")
+    quantiser = faiss.IndexPQ(dimension, M, nbits)
+    logger.info("Quantiser set")
     metric = faiss.METRIC_L2
 
     if tfidf:
