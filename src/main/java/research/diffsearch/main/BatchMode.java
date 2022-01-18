@@ -42,8 +42,9 @@ public class BatchMode extends App {
                     .peek(result -> Util.printOutputList(result,
                             new PrintStream(outputStream, true), false))
                     .execute(queries);
-
+            System.out.println("line 45");
         } catch (IOException exception) {
+            System.out.println("Exception occured");
             logger.error(exception.getMessage(), exception);
         }
     }
