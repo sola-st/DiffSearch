@@ -34,29 +34,19 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     logger.info("Starting indexing")
     # quantiser = faiss.IndexFlatL2(dimension)
     # metric = faiss.METRIC_L2
-    nlist = 9986
+    nlist = 1
     M = 8
     nbits = 8
-    logger.info("Starting quantizer...")
-    quantiser = faiss.IndexPQ(dimension, M, nbits)
-    logger.info("Quantiser set")
-    metric = faiss.METRIC_L2
 
     if tfidf:
         # quantiser = faiss.IndexFlatIP(dimension)
         # metric = faiss.METRIC_INNER_PRODUCT
-        nlist = 9986
+        nlist = 1
         M = 8
         nbits = 8
-        logger.info("Starting quantizer...")
-        quantiser = faiss.IndexPQ(dimension, M, nbits)
-        logger.info("Quantiser set")
-        metric = faiss.METRIC_L2
 
     # index = faiss.IndexIVFFlat(quantiser, dimension, nlist, metric)
-    logger.info("Starting IVFPQ indexing")
-    index = faiss.IndexIVFPQ(quantiser, dimension, nlist, M, nbits, metric)
-    logger.info("Done IVFPQ indexing")
+    index = faiss.IndexPQ(dimension, M, nbits)
 
     np_array = np.ascontiguousarray(changes_feature_vectors)
 
