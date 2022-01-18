@@ -36,7 +36,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     # metric = faiss.METRIC_L2
     nlist = 1
     M = int(dimension / 8)
-    nbits = 4
+    nbits = 12
     logger.info("Starting quantizer...")
     quantiser = faiss.IndexPQ(dimension, M, nbits)
     logger.info("Quantiser set")
@@ -47,7 +47,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
         # metric = faiss.METRIC_INNER_PRODUCT
         nlist = 1
         M = int(dimension / 8)
-        nbits = 4
+        nbits = 12
         logger.info("Starting quantizer...")
         quantiser = faiss.IndexPQ(dimension, M, nbits)
         logger.info("Quantiser set")
