@@ -31,9 +31,9 @@ public class RecallPipeline implements
         Pipeline<DiffsearchResult, DiffsearchResult>, ProgrammingLanguageDependent {
 
     private static final Logger logger = LoggerFactory.getLogger(RecallPipeline.class);
-    private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/Output/JS/ExpectedValues_java.csv";
-    private static final String RECALL_VALUES_FILE = "./src/main/resources/Recall/Output/JS/RecallResults_java.csv";
-    private static final String EXPECTED_RESULTS_FILE = "./src/main/resources/Recall/Output/JS/expected_java.txt";
+    private static final String EXPECTED_VALUES_FILE = "./src/main/resources/Recall/Output/Python/ExpectedValues_python_IVFPQ.csv";
+    private static final String RECALL_VALUES_FILE = "./src/main/resources/Recall/Output/Python/RecallResults_java_IVFPQ.csv";
+    private static final String EXPECTED_RESULTS_FILE = "./src/main/resources/Recall/Output/Python/expected_java_IVFPQ.txt";
 
     private final ProgrammingLanguage language;
     private final List<String> queries;
