@@ -1,0 +1,80 @@
+return test --> return None$1$1$1,0$1,0$1,0$00:00:02,720
+if add_constraints: --> if add_constraints and c:$1$1$1,0$1,0$1,0$00:00:02,844
+words.arrange_submobjects(DOWN) --> words.arrange(DOWN)$5$5$1,0$1,0$0,3333333333333333$00:00:03,112
+return test --> return None$1$1$1,0$1,0$1,0$00:00:02,720
+self.stdscr.clear() --> self.stdscr.erase()$2$2$1,0$1,0$1,0$00:00:02,714
+out = feed._handle_response(response) --> feed._handle_response(response)$8$8$1,0$1,0$1,0$00:00:02,435
+print_succ('Executed specified command via WMI') --> print_succ('{}:{} Executed command via WMIEXEC'.format(self.__win32Process.get_target(),settings.args.port))$1$1$1,0$1,0$1,0$00:00:02,991
+print("Creating table reference") --> print("Creating table [unicode_test] reference")$1$1$1,0$1,0$1,0$00:00:02,833
+if tools_paths: --> if tools_paths or tools_env_vars:$1$1$1,0$1,0$1,0$00:00:02,659
+matrix.highlight_columns(X_COLOR, Y_COLOR) --> matrix.set_color_columns(X_COLOR, Y_COLOR)$31$31$1,0$1,0$1,0$00:00:02,889
+return self._sep_token --> return None$1$1$1,0$1,0$1,0$00:00:02,793
+self.blob_write(extra_data) --> self.blob_writer.write(extra_data)$1$1$1,0$1,0$1,0$00:00:02,800
+items = rcol.perform_collect() --> rcol.perform_collect()\nitems = rcol.items$5$5$1,0$1,0$1,0$00:00:02,734
+exit(0) --> sys.exit(0)$6$6$1,0$1,0$1,0$00:00:03,010
+print('Epoch %d' % epoch) --> print('Epoch %d out of %d' % (epoch, self.nb_epoch))$1$1$1,0$1,0$1,0$00:00:03,183
+if license_: --> if license_ and show("license"):$1$1$1,0$1,0$1,0$00:00:02,460
+if download_mirrors: --> if download_mirrors or conf.settings['download_mirrors']:$1$1$1,0$1,0$1,0$00:00:02,674
+model.to_gpu() --> model.to_device(device)$6$6$1,0$1,0$1,0$00:00:02,763
+pg = p.path_group() --> pg = p.factory.path_group()$2$2$1,0$1,0$1,0$00:00:02,798
+outcome = RunExecutor.execute(self) --> outcome = RunExecutor.execute(self, False)$2$2$1,0$1,0$1,0$00:00:02,416
+return ID --> return None$107$105$0,9813084112149533$0,9813084112149533$1,0$00:00:02,837
+if ID: --> if ID and c:$1$1$1,0$1,0$1,0$00:00:02,729
+words.ID(DOWN) --> words.ID(DOWN)$5$5$1,0$1,0$0,3333333333333333$00:00:03,002
+return test --> return LT$1$1$1,0$1,0$0,25$00:00:02,190
+self.stdscr.ID() --> self.stdscr.ID()$2$2$1,0$1,0$1,0$00:00:02,898
+out = ID<0>._handle_response(response) --> ID<0>._handle_response(response)$8$8$1,0$1,0$1,0$00:00:02,927
+ID('Executed specified command via WMI') --> ID('{}:{} Executed command via WMIEXEC'.format(self.__win32Process.get_target(),settings.args.port))$1$1$1,0$1,0$1,0$00:00:03,039
+ID("Creating table reference") --> ID("Creating table [unicode_test] reference")$1$1$1,0$1,0$1,0$00:00:02,237
+if ID: --> if ID or tools_env_vars:$1$1$1,0$1,0$1,0$00:00:02,954
+ID<0>.highlight_columns(X_COLOR, Y_COLOR) --> ID<0>.set_color_columns(X_COLOR, Y_COLOR)$35$35$1,0$1,0$1,0$00:00:02,609
+return self.ID --> return None$10$10$1,0$1,0$1,0$00:00:02,562
+self.blob_write(ID) --> self.blob_writer.write(ID)$2$2$1,0$1,0$1,0$00:00:02,960
+items = rcol.ID<0>() --> rcol.ID<0>()\nitems = rcol.items$5$5$1,0$1,0$1,0$00:00:02,616
+ID<0>(0) --> sys.ID<0>(0)$6$6$1,0$1,0$1,0$00:00:03,071
+ID<0>('Epoch %d' % epoch) --> ID<0>('Epoch %d out of %d' % (epoch, self.nb_epoch))$1$1$1,0$1,0$1,0$00:00:03,028
+if ID: --> if ID and show("license"):$1$1$1,0$1,0$1,0$00:00:02,667
+if ID<0>: --> if ID<0> or conf.settings['download_mirrors']:$1$1$1,0$1,0$1,0$00:00:02,603
+ID<0>.to_gpu() --> ID<0>.to_device(device)$8$8$1,0$1,0$1,0$00:00:04,471
+pg = p.ID<0>() --> pg = p.factory.ID<0>()$2$2$1,0$1,0$1,0$00:00:02,395
+outcome = RunExecutor.ID<0>(self) --> outcome = RunExecutor.ID<0>(self, False)$2$2$1,0$1,0$1,0$00:00:02,431
+return ID --> return LT$1972$1647$0,8351926977687627$0,8351926977687627$1,0$00:00:02,404
+if ID: --> if ID and ID:$46$46$1,0$1,0$1,0$00:00:03,167
+ID.ID(DOWN) --> ID.ID(DOWN)$75$75$1,0$1,0$1,0$00:00:03,339
+return ID.ID --> return LT$83$73$0,8795180722891566$0,8795180722891566$1,0$00:00:02,528
+self.ID.ID() --> self.ID.ID()$735$724$0,9850340136054422$0,9850340136054422$1,0$00:00:02,637
+out = ID<0>.ID(response) --> ID<0>.ID(response)$8$8$1,0$1,0$1,0$00:00:02,428
+return ID.ID(LT) --> return ID.ID(LT)$677$669$0,9881831610044313$0,9881831610044313$1,0$00:00:03,359
+ID.ID.ID(LT) --> ID.ID.ID(LT)$2033$1763$0,8671913428430891$0,8671913428430891$1,0$00:00:02,828
+if ID: --> if ID or ID:$33$33$1,0$1,0$1,0$00:00:02,630
+ID<0>.ID(X_COLOR, Y_COLOR) --> ID<0>.ID(X_COLOR, Y_COLOR)$74$74$1,0$1,0$1,0$00:00:02,694
+return self.ID --> return LT$47$40$0,851063829787234$0,851063829787234$1,0$00:00:02,619
+self.ID(ID) --> self.blob_writer.ID(ID)$2$2$1,0$1,0$1,0$00:00:02,588
+items = ID.ID<0>() --> ID.ID<0>()\nitems = rcol.items$5$5$1,0$1,0$1,0$00:00:02,674
+ID<0>(0) --> ID.ID<0>(0)$8$8$1,0$1,0$1,0$00:00:02,933
+ID<0>('Epoch %d' % ID) --> ID<0>('Epoch %d out of %d' % (ID, self.nb_epoch))$1$1$1,0$1,0$1,0$00:00:02,843
+if ID: --> if ID and ID("license"):$1$1$1,0$1,0$1,0$00:00:02,373
+if ID<0>: --> if ID<0> or ID.settings['download_mirrors']:$1$1$1,0$1,0$1,0$00:00:02,669
+ID<0>.to_gpu() --> ID<0>.ID(device)$8$8$1,0$1,0$1,0$00:00:02,490
+pg = p.ID<0>() --> pg = p.ID.ID<0>()$2$2$1,0$1,0$1,0$00:00:02,549
+outcome = ID.ID<0>(self) --> outcome = ID.ID<0>(self, False)$2$2$1,0$1,0$1,0$00:00:02,619
+return EXPR --> return EXPR$28046$4746$0,16922199244098982$0,9492$1,0$00:00:02,282
+if EXPR: --> if ID and ID:$47$47$1,0$1,0$1,0$00:00:02,789
+while EXPR: <...> --> while EXPR: <...>$354$354$1,0$1,0$1,0$00:00:02,321
+return ID.ID(<...>) --> return EXPR$6839$3734$0,5459862553004825$0,7468$1,0$00:00:02,649
+ID.ID.ID(<...>) --> self.ID.ID()$788$56$0,07106598984771574$0,07106598984771574$0,5$00:00:02,627
+ID = ID<0>.ID(<...>) --> ID<0>.ID(<...>)$541$361$0,66728280961183$0,66728280961183$1,0$00:00:02,466
+ID.ID(<...>) --> ID.ID()$6809$473$0,06946688206785137$0,0946$1,0$00:00:02,524
+ID.ID() --> ID.ID(<...>)$7130$920$0,12903225806451613$0,184$1,0$00:00:02,552
+if EXPR: --> if ID or ID:$37$37$1,0$1,0$1,0$00:00:02,497
+return ID<0>.ID(EXPR) --> return ID<0>.ID(EXPR)$1139$1119$0,9824407374890255$0,9824407374890255$0,5$00:00:03,268
+return ID --> return ID(<...>)$327$250$0,764525993883792$0,764525993883792$1,0$00:00:02,666
+ID.ID(<...>) --> ID.ID.ID(<...>)$1750$1087$0,6211428571428571$0,6211428571428571$0,1$00:00:02,728
+ID = ID.ID<0>(<...>) --> ID.ID<0>(<...>)$353$277$0,7847025495750708$0,7847025495750708$1,0$00:00:02,648
+ID<0>(<...>) --> ID.ID<0>(<...>)$625$422$0,6752$0,6752$1,0$00:00:02,498
+ID<0>(EXPR) --> ID<0>(EXPR % (ID, ID.ID))$326$2$0,006134969325153374$0,006134969325153374$2,3849272597185786E-4$00:00:02,392
+if ID: --> if ID and ID(EXPR):$7$7$1,0$1,0$1,0$00:00:02,909
+if ID<0>: --> if ID<0> or EXPR:$48$48$1,0$1,0$1,0$00:00:02,794
+ID<0>.ID() --> ID<0>.ID(<...>)$6706$776$0,11571726811810319$0,1552$1,0$00:00:02,844
+ID = ID.ID<0>(<...>) --> ID = ID.ID.ID<0>(<...>)$1138$917$0,8057996485061512$0,8057996485061512$1,0$00:00:03,029
+ID = ID.ID<0>(EXPR) --> ID = ID.ID<0>(EXPR, EXPR)$525$492$0,9371428571428572$0,9371428571428572$0,3333333333333333$00:00:03,626
