@@ -35,15 +35,13 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     # quantiser = faiss.IndexFlatL2(dimension)
     # metric = faiss.METRIC_L2
     nlist = 1
-    M = 8
-    nbits = 8
-    quantiser = faiss.IndexFlatL2(dimension)
+    quantiser = faiss.IndexScalarQuantizer(dimension,faiss.ScalarQuantizer.QT_8bit)
 
     if tfidf:
         # quantiser = faiss.IndexFlatIP(dimension)
         metric = faiss.METRIC_INNER_PRODUCT
 
-    index = faiss.IndexLSH(dimension, 8)
+    index = faiss.IndexIVFScalarQuantizer(quantiser, dimension, nlist, faiss.ScalarQuantizer.QT_8bit)
     # index = faiss.IndexPQ(d,M,nbits)
 
     np_array = np.ascontiguousarray(changes_feature_vectors)
