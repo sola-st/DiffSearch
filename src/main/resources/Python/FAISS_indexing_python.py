@@ -34,11 +34,10 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     logger.info("Starting indexing")
     # quantiser = faiss.IndexFlatL2(dimension)
     # metric = faiss.METRIC_L2
-    nlist = 9986
+    nlist = 1
     M = 8
     nbits = 8
-    quantiser = faiss.IndexPQ(dimension, M, nbits)
-    metric = faiss.METRIC_L2
+    quantiser = faiss.IndexFlatL2(dimension)
 
     if tfidf:
         # quantiser = faiss.IndexFlatIP(dimension)
