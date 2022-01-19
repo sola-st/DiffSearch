@@ -34,7 +34,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     logger.info("Starting indexing")
     # quantiser = faiss.IndexFlatL2(dimension)
     # metric = faiss.METRIC_L2
-    quantiser = faiss.IndexScalarQuantizer(dimension)
+    quantiser = faiss.IndexScalarQuantizer(dimension, faiss.ScalarQuantizer.QT_8bit_direct)
 
     if tfidf:
         # quantiser = faiss.IndexFlatIP(dimension)
