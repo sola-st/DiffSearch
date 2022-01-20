@@ -71,7 +71,7 @@ public class Config {
     /**
      * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
-    public static String batchFilePath = "./src/main/resources/Recall/Input/queriesForRecall_PY.txt";
+    public static String batchFilePath = "./src/main/resources/Recall/Input/queriesForRecall_JS.txt";
 
     /**
      * The path to the file were the results
