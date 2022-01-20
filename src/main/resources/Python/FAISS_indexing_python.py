@@ -37,7 +37,7 @@ def indexing(feature_in, index_out, dimension, nlist, tfidf=False):
     nlist = 1
     M = 8
     nbits = 8
-    quantiser = faiss.IndexFlatL2(dimension)
+    quantiser = faiss.IndexScalarQuantizer(dimension, faiss.ScalarQuantizer.QT_8bit)
 
     if tfidf:
         quantiser = faiss.IndexFlatIP(dimension)
