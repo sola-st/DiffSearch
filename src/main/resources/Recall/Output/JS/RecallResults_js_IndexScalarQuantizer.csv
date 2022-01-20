@@ -4,7 +4,7 @@ var attr = new core.Attr(name, value); --> var attr = this.ownerDocument.createA
 change_skin('skin-blue-light'); --> _$1$1$1,0$1,0$1,0$00:00:02,216
 position: relative; --> _$2$2$1,0$1,0$1,0$00:00:02,640
 sleep(delay) --> await sleep(delay)$1$1$1,0$1,0$1,0$00:00:02,877
-var buttonEl = this; --> var $buttonEl = $(this);$1$1$1,0$1,0$1,0$00:00:02,489
+var buttonEl = this; --> var buttonEl = (this);$1$1$1,0$1,0$1,0$00:00:02,489
 this.timeout(200); --> this.timeout(1500);$1$1$1,0$1,0$1,0$00:00:02,743
 _ --> this.audioController = audioControllerFactory();$9$9$1,0$1,0$1,0$00:00:02,553
 body = this.json(params); --> _$5$5$1,0$1,0$1,0$00:00:02,740
@@ -24,7 +24,7 @@ var attr = new ID.Attr(ID, ID); --> var attr = this.ownerDocument.ID(ID, ID);$1$
 ID('skin-blue-light'); --> _$1$1$1,0$1,0$1,0$00:00:02,143
 ID: relative; --> _$2$2$1,0$1,0$1,0$00:00:02,414
 ID(delay) --> await ID(delay)$1$1$1,0$1,0$1,0$00:00:02,733
-var buttonEl = ID<0>; --> var $buttonEl = $(ID<0>);$1$1$1,0$1,0$1,0$00:00:02,366
+var buttonEl = ID<0>; --> var buttonEl = (ID<0>);$1$1$1,0$1,0$1,0$00:00:02,366
 ID<0>.timeout(LT); --> ID<0>.timeout(LT);$46$46$1,0$1,0$1,0$00:00:02,457
 _ --> ID.ID = audioControllerFactory();$9$9$1,0$1,0$1,0$00:00:02,359
 body = this.ID(ID); --> _$14$14$1,0$1,0$1,0$00:00:02,478
@@ -44,7 +44,7 @@ var attr = new ID.Attr(ID, ID); --> var attr = this.ownerDocument.ID(ID, ID);$1$
 ID(LT); --> _$470$441$0,9382978723404255$0,9382978723404255$1,0$00:00:02,487
 ID: ID;  --> _$95$95$1,0$1,0$1,0$00:00:02,456
 ID(ID) --> await ID(ID)$86$86$1,0$1,0$1,0$00:00:02,846
-var ID = ID; --> var ID  = $(ID);$1$1$1,0$1,0$1,0$00:00:02,211
+var ID = ID; --> var ID  = (ID);$1$1$1,0$1,0$1,0$00:00:02,211
 ID<0>.ID<1>(LT); --> ID<0>.ID<1>(LT);$2153$1865$0,8662331630283325$0,8662331630283325$1,0$00:00:02,664
 _ --> ID.ID = ID();$30$28$0,9333333333333333$0,9333333333333333$0,017241379310344827$00:00:02,346
 ID = this.ID(ID); --> _$51$51$1,0$1,0$0,5$00:00:02,565
