@@ -161,8 +161,7 @@ FOR THE DIFFSEARCH SERVER:
 
   - Extra:
       
-      - If you received the error: " OSError: [Errno 98] Address already in use"
-        - Use the following commands:
+      - If you received the error: " OSError: [Errno 98] Address already in use", you can use the following commands:
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
           
