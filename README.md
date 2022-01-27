@@ -137,13 +137,14 @@ Matching change C:
 
 
 
-More DiffSearch queries are in our dedicated [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Good-queries-for-demonstration)
+More DiffSearch queries are in our dedicated [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Good-queries-for-demonstration).
       
 
 ## Requirements
 - Java 11 and Python 3.7
-- Linux Operating System
+- Linux Operating System, such as [Ubuntu](https://ubuntu.com/)
 - [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
+- [Maven](https://maven.apache.org/) -> apt install maven
 
 ## How to run
 
