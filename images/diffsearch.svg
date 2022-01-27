@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.0"
+        width="229.83745pt"
+        height="79.532654pt"
+        viewBox="0 0 229.83745 79.532654"
+        preserveAspectRatio="xMidYMid meet"
+        id="svg1141"
+        sodipodi:docname="diffsearch.svg"
+        inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+        xmlns="http://www.w3.org/2000/svg"
+>
+    <defs
+            id="defs1145">
+        <linearGradient
+                inkscape:collect="always"
+                id="linearGradient88355">
+            <stop
+                    style="stop-color:#bd2c00;stop-opacity:1;"
+                    offset="0"
+                    id="stop88351"/>
+            <stop
+                    style="stop-color:#6cc644;stop-opacity:1"
+                    offset="1"
+                    id="stop88353"/>
+        </linearGradient>
+        <linearGradient
+                inkscape:collect="always"
+                xlink:href="#linearGradient88355"
+                id="linearGradient89134"
+                x1="403.13315"
+                y1="1461.4349"
+                x2="903.74854"
+                y2="1461.4349"
+                gradientUnits="userSpaceOnUse"
+                gradientTransform="translate(260.34041,292.45664)"/>
+        <linearGradient
+                inkscape:collect="always"
+                xlink:href="#linearGradient88355"
+                id="linearGradient89142"
+                x1="679.38458"
+                y1="1460.6016"
+                x2="1180"
+                y2="1460.6016"
+                gradientUnits="userSpaceOnUse"
+                gradientTransform="translate(-292.16257,294.12324)"/>
+        <linearGradient
+                inkscape:collect="always"
+                xlink:href="#linearGradient88355"
+                id="linearGradient940"
+                gradientUnits="userSpaceOnUse"
+                gradientTransform="translate(290.43631,-292.11536)"
+                x1="426.23306"
+                y1="1543.1324"
+                x2="850.25122"
+                y2="1959.9449"/>
+    </defs>
+    <sodipodi:namedview
+            id="namedview1143"
+            pagecolor="#ffffff"
+            bordercolor="#666666"
+            borderopacity="1.0"
+            inkscape:pageshadow="2"
+            inkscape:pageopacity="0.0"
+            inkscape:pagecheckerboard="0"
+            inkscape:document-units="pt"
+            showgrid="false"
+            inkscape:zoom="1.8707143"
+            inkscape:cx="181.48148"
+            inkscape:cy="33.944253"
+            inkscape:window-width="1920"
+            inkscape:window-height="1116"
+            inkscape:window-x="0"
+            inkscape:window-y="0"
+            inkscape:window-maximized="1"
+            inkscape:current-layer="g1139"/>
+    <metadata
+            id="metadata1105">
+        Created by potrace 1.16, written by Peter Selinger 2001-2019
+    </metadata>
+    <g
+            transform="matrix(0.1,0,0,-0.1,-38.722201,200.53265)"
+            fill="#000000"
+            stroke="none"
+            id="g1139">
+        <path
+                d="m 1034.4363,1703.8844 c -43.99999,-19 -63.99999,-53 -63.99999,-105 0,-59 -33,-125 -75,-151 -19,-12 -63,-24 -101,-29 -55,-6 -71,-13 -91,-34.9999 -65,-75 2,-190 100,-172 55,10 87,55 87,120 0,95.9999 60,155.9999 166.99999,166.9999 58,6 71,11 95,38 75,84 -16,212 -118,167 z"
+                id="path1107"
+                style="opacity:1;fill:url(#linearGradient940);fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"/>
+        <path
+                d="m 1013.9249,1396.2549 c -38.00001,-32 -46.00001,-65 -28.00001,-109 29.00001,-70 112.00001,-83 161.00001,-24 42,50 31,114 -25,143 -42,22 -74,19 -108,-10 z"
+                id="path1109"
+                style="fill:#6cc644;fill-opacity:1"/>
+        <path
+                d="m 418.56003,1384.9876 c -21,-22 -29,-39 -29,-66 0,-27 8,-44 29,-66 75,-74 201.00004,5 161.00004,102 -28.00004,66 -109.00004,81 -161.00004,30 z"
+                id="path1111"
+                style="fill:#bd2c00;fill-opacity:1"/>
+        <path
+                d="m 716.83743,1976.1232 c -27,-24 -32,-37 -38,-95 -11,-108 -59,-155 -166,-166 -59,-6 -71,-11 -96,-39 -66,-73 -15,-172 87,-172 55,0 94,44 94,108 0,106 76,182 183,182 40,0 53,5 78,29 24,24 29,38 29,76 0,95 -100,140 -171,77 z"
+                id="path1131"
+                style="fill:url(#linearGradient89142);fill-opacity:1"/>
+        <path
+                d="m 419.37183,1975.4849 c -25,-21 -31,-33 -31,-66 0,-50 13,-74 51,-94 95,-48 185.00002,81 110,157 -39,38 -87,39 -130,3 z"
+                id="path1137"
+                style="fill:#6cc644;fill-opacity:1"/>
+        <text
+                xml:space="preserve"
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:280px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#483737;stroke-width:7.5"
+                x="1261.1238"
+                y="-1692.6478"
+                id="text4960"
+                transform="scale(1,-1)"><tspan
+         sodipodi:role="line"
+         id="tspan4958"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:280px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#483737;stroke-width:7.5"
+         x="1261.1238"
+         y="-1692.6478">DiffSearch</tspan></text>
+        <text
+                xml:space="preserve"
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:140px;line-height:1.25;font-family:RaghuMalayalamSans;-inkscape-font-specification:RaghuMalayalamSans;letter-spacing:0px;word-spacing:0px;fill:#6c5353;fill-opacity:1;stroke-width:7.5"
+                x="1981.7654"
+                y="-1473.0936"
+                id="text11138"
+                transform="scale(1,-1)"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;fill:#6c5353;fill-opacity:1;stroke-width:7.5"
+         x="1981.7654"
+         y="-1473.0936"
+         id="tspan11140">A Search Engine for </tspan>
+            <tspan
+                    sodipodi:role="line"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;fill:#6c5353;fill-opacity:1;stroke-width:7.5"
+                    x="1981.7654"
+                    y="-1277.5328"
+                    id="tspan72350">Code Changes</tspan></text>
+        <path
+                d="m 993.0889,1975.2899 c -27,-24 -32,-37 -38,-95 -11,-108 -59,-155 -166,-166 -59,-6 -71,-11 -96,-39 -66,-73 -15,-172 87,-172 55,0 94,44 94,108 0,106 76,182 183,182 40,0 53,5 78,29 24,24 29,38 29,76 0,95 -100,140 -171,77 z"
+                id="path1131-3"
+                style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient89134);fill-opacity:1"/>
+    </g>
+</svg>

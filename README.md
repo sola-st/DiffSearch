@@ -1,4 +1,4 @@
-# DiffSearch
+![Title](images/diffsearch.png)
 
 The source code of successful projects is evolving all the time,
 resulting in hundreds of thousands of code changes stored in source
@@ -149,33 +149,19 @@ More DiffSearch queries are in our dedicated [Wiki page](https://github.com/luca
 
 FOR THE DIFFSEARCH SERVER:
 
-  - clone the repository: https://github.com/lucaresearch/DiffSearch.git
-  - Type the commands:  
-      - virtualenv -p /usr/bin/python3 diffsearch-env     
-      - source diffsearch-env/bin/activate  
-      - pip3 install faiss-cpu 
-      - pip3 install numpy     
-      - pip3 install pandas
-      - pip3 install pygit2
-      - pip3 install dask[dataframe]
+  - Install:
+      - chmod 754 installDiffSearch.sh
+      - sed -i -e 's/\r$//' installDiffSearch.sh
+      - ./installDiffSearch.sh
 
-  - Create the folder "Features_Vectors" in DiffSearch/src/main/resources/
-  - Download this [zip file](http://u.pc.cd/LpEitalK) with the dataset
-  - Copy the file "faiss_java.index" in DiffSearch/src/main/resources/Features_Vectors/ 
-  - Copy the file "changes_strings_java.txt" in DiffSearch/src/main/resources/Features_Vectors/
-  - Copy the file "changes_strings_prop_java.txt" in DiffSearch/src/main/resources/Features_Vectors/
-  - Create an empty file "server_log.log" in DiffSearch/src/main/resources/Features_Vectors/
-
-  - Then:   
+  - Run:   
       - mvn compile  
       - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"
 
   - Extra:
       
       - If you received the error: " OSError: [Errno 98] Address already in use"
-      
-      - Use the following commands:
-           
+        - Use the following commands:
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
           

@@ -61,6 +61,7 @@ public class Config {
     /**
      * WIP. Removes some console outputs.
      */
+
     public static boolean SILENT = false;
 
     /**
@@ -177,12 +178,12 @@ public class Config {
     /**
      * FAISS parameter, number of clusters of the index.
      */
-    public static int nlist = 1024;
+    public static int nlist = 1;
 
     /**
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
-    public static int nprobe = 32;
+    public static int nprobe = 1;
 
     public static String repositoryPath = "../dfs_repos/GitHub_JAVA/";
     public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
