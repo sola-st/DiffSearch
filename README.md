@@ -1,4 +1,10 @@
-![Title](images/diffsearch.png)
+![Title](images/diffsearch.jpg)
+
+
+<p align="center">
+   <img src="images/diffsearch.jpg"/>
+</p>
+
 
 The source code of successful projects is evolving all the time,
 resulting in hundreds of thousands of code changes stored in source
