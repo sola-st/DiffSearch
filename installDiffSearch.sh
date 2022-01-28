@@ -1,10 +1,8 @@
 #!/bin/bash -e
 # Script to install DiffSearch
-# To get the direct download link: https://bydik.com/onedrive-direct-link/
 
 # Run the script:
 #chmod 754 installDiffSearch.sh
-#sed -i -e 's/\r$//' installDiffSearch.sh
 #./installDiffSearch.sh
 
 echo Cloning repository..
@@ -86,6 +84,7 @@ else
   rm -rf diffsearch-env 1>&2
   exit 1
 fi
+# To get the direct download link: https://bydik.com/onedrive-direct-link/
 if wget -O DiffSearch/src/main/resources/Features_Vectors/index.zip 'https://onedrive.live.com/download?cid=C19790BB35A78C2C&resid=C19790BB35A78C2C%2114267&authkey=AJp_CBLDdCH1X1A'; then
   echo Downloaded the zip file
 else
