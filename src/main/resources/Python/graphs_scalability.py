@@ -12,7 +12,6 @@ def plot_method(path):
 		plt.rc('xtick',labelsize=18)
 		plt.rc('ytick',labelsize=18)
 
-
 		#Reading csv feature vectors files
 		data = pd.read_csv('./'+path+'/scalability.csv', header=None, sep= ',').iloc[:, :].values[0:, :].astype('float32')
 

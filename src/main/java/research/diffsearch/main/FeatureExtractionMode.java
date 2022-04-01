@@ -52,7 +52,7 @@ public class FeatureExtractionMode extends App {
                     .map(FeatureExtractor::getName)
                     .collect(Collectors.joining(",")));
 
-            extractFeaturesToFile(featureExtractionPipeline);
+            //extractFeaturesToFile(featureExtractionPipeline);
             runPythonIndexing(featureExtractionPipeline);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

@@ -44,6 +44,8 @@ public class ScalabilityMode extends App {
             pos++;
             Config.nlist = (int) (Math.sqrt(i));
             Config.nprobe = (int) (32 * (Config.nlist / 1000.0));
+            Config.k = i;
+            Config.k_max = i;
 
             try {
                 var pythonRunner = new PythonRunner(
@@ -61,8 +63,6 @@ public class ScalabilityMode extends App {
                 startPythonServer();
 
                 Socket socketFaiss = getNewFaissSocket();
-                String nextLine;
-
 
                 // Open the file
                 FileInputStream fstream = new FileInputStream("./src/main/resources/Scalability/"+Config.PROGRAMMING_LANGUAGE+"/scalability_queries.txt");

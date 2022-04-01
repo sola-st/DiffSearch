@@ -72,7 +72,7 @@ public class Config {
     /**
      * The path of the batch file that will processed in the {@link Mode#BATCH}-mode.
      */
-    public static String batchFilePath = "./src/main/resources/queriesForRecall_PY.txt";
+    public static String batchFilePath = "./src/main/resources/queriesForRecall_JAVA.txt";
 
     /**
      * The path to the file were the results
@@ -173,17 +173,17 @@ public class Config {
      * After this number of seconds, the matching process gets cancelled and its assumed that a
      * candidate is not a match.
      */
-    public static int matchingTimeoutSeconds = 10;
+    public static int matchingTimeoutSeconds = 120;
 
     /**
      * FAISS parameter, number of clusters of the index.
      */
-    public static int nlist = 1;
+    public static int nlist = 1024;
 
     /**
      * FAISS parameter, number of clusters considers while performing nearest neighbor search.
      */
-    public static int nprobe = 1;
+    public static int nprobe = 32;
 
     public static String repositoryPath = "../dfs_repos/GitHub_JAVA/";
     public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
