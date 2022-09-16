@@ -17,11 +17,7 @@ import research.diffsearch.tree.ParseTreeNode;
 import research.diffsearch.tree.TreeFactory;
 import research.diffsearch.tree.TreeUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -29,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static research.diffsearch.util.FilePathUtils.getChangesJsonFilePath;
 import static research.diffsearch.util.FilePathUtils.getNumberOfLines;
-import static research.diffsearch.util.FilePathUtils.getIndexFilePath;
 
 /**
  * @author Paul Bredl
@@ -39,6 +34,7 @@ public class Util {
 	private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     public static void printOutputList(DiffsearchResult result) {
+        Config.results = result;
         printOutputList(result, System.out, true);
     }
 

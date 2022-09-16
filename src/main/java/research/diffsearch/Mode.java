@@ -1,6 +1,7 @@
 package research.diffsearch;
 
 public class Mode {
+    public static boolean QUERYRESULT = false;
     /**
      * Run DiffSearch Evaluation as a command line app.
      */

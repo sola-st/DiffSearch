@@ -1,5 +1,6 @@
 package research.diffsearch;
 
+import research.diffsearch.pipeline.base.DiffsearchResult;
 import research.diffsearch.util.ProgrammingLanguage;
 
 /**
@@ -20,12 +21,14 @@ public class Config {
     /**
      * The command to run a python file.
      */
-    public static String PYTHON_CMD = "python3";
+    public static String PYTHON_CMD = "/home/luca/anaconda3/bin/python3.8";
 
     /**
      * The programming language of the code changes.
      */
-    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.PYTHON;
+    public static ProgrammingLanguage PROGRAMMING_LANGUAGE = ProgrammingLanguage.JAVA;
+
+    public static DiffsearchResult results;
 
     public static String changes_string_path = "";
     public static String changes_string_prop_path = "";
@@ -97,7 +100,7 @@ public class Config {
     /**
      * The length of the feature vectors.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 250;
 
     /**
      * The number of bits per feature that are used for unary counting
@@ -186,7 +189,7 @@ public class Config {
     public static int nprobe = 32;
 
     public static String repositoryPath = "../dfs_repos/GitHub_JAVA/";
-    public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_java.txt";
+    public static String listOfRepositoriesPath = "./src/main/resources/Input/repositories_list_oliver.txt";
 
     public static String GITDIFF_FILE = "";
     public static int simpleBugPattern = 1;

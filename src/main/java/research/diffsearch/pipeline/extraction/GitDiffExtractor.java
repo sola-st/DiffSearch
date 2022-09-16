@@ -32,18 +32,18 @@ public class GitDiffExtractor implements Pipeline<File, File> {
                 new FileOutputStream(new File(pathPatches + "/" + input.getName() + ".patch")))) {
             logger.info("Extracting batch of {}", input);
 
-     //       new ProcessExecutor()
-       //             .directory(input)
-         //           .command("git", "config", "diff.renameLimit", "99999")
-           //         .redirectOutput(new Slf4jErrorOutputStream(logger))
-             //       .start().getFuture().get();
-    //        new ProcessExecutor()
-      //              .directory(input)
-        //            .command("git", "log", "-p","--", "*." + language.getSuffix())
-          //          .redirectOutput(out)
-            //        .start().getFuture().get();
+            new ProcessExecutor()
+                    .directory(input)
+                    .command("git", "config", "diff.renameLimit", "99999")
+                    .redirectOutput(new Slf4jErrorOutputStream(logger))
+                    .start().getFuture().get();
+            new ProcessExecutor()
+                    .directory(input)
+                    .command("git", "log", "-p", "--", "*." + language.getSuffix())
+                    .redirectOutput(out)
+                    .start().getFuture().get();
             logger.info("Extracting batch of {} finished.", input);
-        } catch (IOException e){// | InterruptedException | ExecutionException e) {
+        } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
         return new File(pathPatches + input.getName() + ".patch");
