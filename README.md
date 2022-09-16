@@ -165,7 +165,7 @@ FOR THE DIFFSEARCH SERVER:
           - fuser -k 5002/tcp
           - fuser -k 8843/tcp
           
-  - More DiffSearch arguments are in our [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters)
+  - More DiffSearch arguments are in the [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters)
         
 
 FOR THE GUI:
