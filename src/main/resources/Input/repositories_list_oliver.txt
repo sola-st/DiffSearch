@@ -1,0 +1,4 @@
+https://github.com/JabRef/jabref.git
+https://github.com/eclipse/winery.git
+https://github.com/oracle/graal.git
+https://github.com/eclipse/eclipse-collections.git
