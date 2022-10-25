@@ -37,6 +37,7 @@ public class AppTest_AbstractQueryJava extends TestCase {
 
         String output = AbstractQueryMode.runJunit(input);
 
+        
         System.out.println("\n\nInput : " + input);
         System.out.println("Output: " + output);
         assertEquals(output, expected_output);
