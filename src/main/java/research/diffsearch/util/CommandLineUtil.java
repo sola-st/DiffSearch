@@ -27,6 +27,7 @@ public class CommandLineUtil {
                 .addOption("relation", "relation", false, "command to run query - results analysis")
                 .addOption("lang", "language", true, "the programming language (python, javascript or java")
                 .addOption("l", "log", false, "save log to file")
+                .addOption("abstract", "abstract-query", false, "Abstract a query")
                 .addOption("n", "normal", false, "launch DiffSearch in normal mode")
                 .addOption("g", "web-gui", false, "launch in web GUI mode")
                 .addOption("w", "web", false, "launch DiffSearch with web interface")
@@ -100,6 +101,7 @@ public class CommandLineUtil {
             Mode.SCALABILITY = commandLine.hasOption("scalability");
             Mode.EFFECTIVENESS = commandLine.hasOption("effectiveness");
             Mode.QUERYRESULT = commandLine.hasOption("relation");
+            Mode.ABSTRACT_QUERY = commandLine.hasOption("abstract");
 
             if (commandLine.hasOption("a")) {
                 Config.query = commandLine.getOptionValue("a");

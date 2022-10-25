@@ -98,6 +98,8 @@ public abstract class App implements Runnable, Closeable {
             app = new GitCloneMode();
         } else if (Mode.DATASET_CREATION) {
             app = new DatasetCreationMode();
+        } else if (Mode.ABSTRACT_QUERY) {
+            app = new AbstractQueryMode();
         }
         return app;
     }
