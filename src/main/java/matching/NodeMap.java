@@ -9,20 +9,18 @@ import java.util.*;
  * Each instance of this class represents one (partial) mapping constructed during the matching.
  * The mapping assumes that there are wildcards between all nodes, i.e., for the final matching,
  * one still needs to check whether the query and the change match with the actually given wildcards.
- *
- *
  */
 public class NodeMap {
 
-    private HashMap<Tree, Tree> nodeMap = new HashMap<>();
-    private Set<Tree> usedValueNodes = new HashSet<>();
-    private HashMap<String, String> namedPlaceholders = new HashMap<>();
+    private final HashMap<Tree, Tree> nodeMap = new HashMap<>();
+    private final Set<Tree> usedValueNodes = new HashSet<>();
+    private final HashMap<String, String> namedPlaceholders = new HashMap<>();
     final public Tree queryLeftRoot;
     final public Tree queryRightRoot;
     final public Tree treeLeftRoot;
     final public Tree treeRightRoot;
 
-    private NodeUtil nodeUtil;
+    private final NodeUtil nodeUtil;
 
     public NodeMap(Tree queryLeftRoot, Tree queryRightRoot,
                    Tree treeLeftRoot, Tree treeRightRoot, NodeUtil nodeUtil) {
@@ -81,6 +79,49 @@ public class NodeMap {
         } else if (kind == NodeUtil.Kind.EMPTY) {
             if (nodeUtil.isMatchingEmpty(k, v)) {
                 return updatedCopy(k, v);
+            }
+        }
+        return null;
+    }
+
+    public Tree checkNodeMatch(Tree k, Tree v) {
+        if (nodeMap.containsKey(k) || usedValueNodes.contains(v)) {
+            return null;
+        }
+
+        NodeUtil.Kind kind = nodeUtil.getKind(k);
+        assert (kind != NodeUtil.Kind.WILDCARD); // wildcards shouldn't be among the nodes to match
+        if (kind == NodeUtil.Kind.NORMAL) {
+            if (nodeUtil.isMatchingNormalNode(k, v)) {
+                return k;
+            }
+        } else if (kind == NodeUtil.Kind.UNNAMED_PLACEHOLDER) {
+            if (nodeUtil.isMatchingPlaceholder(k, v)) {
+                return k;
+            }
+        } else if (kind == NodeUtil.Kind.NAMED_PLACEHOLDER) {
+            String placeholder = nodeUtil.namedPlaceholderToString(k);
+            String boundSubtree = namedPlaceholders.get(placeholder);
+            String currentSubtree = nodeUtil.querySubtreeToString(v);
+            if (boundSubtree == null) {
+                // first time we see this placeholder, bind to the subtree
+                if (nodeUtil.isMatchingPlaceholder(k, v)) {
+                    namedPlaceholders.put(placeholder, currentSubtree);
+                    return k;
+                } else {
+                    return null;
+                }
+            } else {
+                // we've seen this placeholder before; make sure it is consistently bound
+                if (boundSubtree.contains(currentSubtree)) {
+                    return k;
+                } else {
+                    return null;
+                }
+            }
+        } else if (kind == NodeUtil.Kind.EMPTY) {
+            if (nodeUtil.isMatchingEmpty(k, v)) {
+                return k;
             }
         }
         return null;
