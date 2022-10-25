@@ -19,7 +19,7 @@ import java.util.List;
 public class AbstractQueryMode extends App {
     private static Parser queryParser;
 
-    public static List<String> check_old(Tree change, Parser parser) {
+    public static List<String> check(Tree change, Parser parser, Boolean newPart) {
         List<String> output = new LinkedList<>();
         queryParser = parser;
         NodeUtil nodeUtil = new NodeUtil(parser, parser);
@@ -36,7 +36,9 @@ public class AbstractQueryMode extends App {
         }
 
         List<Tree> nodesToMatch = computeNodes(queryOld);
-        //nodesToMatch.addAll(computeNodes(queryNew));
+        if (newPart) {
+            nodesToMatch = computeNodes(queryNew);
+        }
 
         // explore possible mapping until matching mapping found
         while (!workList.isEmpty()) {
@@ -52,65 +54,13 @@ public class AbstractQueryMode extends App {
             Tree treeParent = m.get(queryParent);
             assert (treeParent != null);
 
-            output.add(isPossibilePlaceholder(unmatchedQueryNode, parser));
             int startIdx = m.indexOfLastMatchedChild(treeParent);
             for (int i = startIdx; i < treeParent.getChildCount(); i++) {
                 Tree treeCandidateNode = treeParent.getChild(i);
                 NodeMap updatedMap = m.checkAndUpdate(unmatchedQueryNode, treeCandidateNode);
-
-                if (updatedMap != null) {
-                    if (updatedMap.nextUnmatchedNode(nodesToMatch) == null) {
-                        // found match, under assumption that wildcards exist between all nodes
-                        return output;
-
-                    } else {
-                        workList.add(updatedMap);
-
-                    }
+                if (m.checkNodeMatch(unmatchedQueryNode, treeCandidateNode) != null) {
+                    output.add(isPossibilePlaceholder(unmatchedQueryNode, parser));
                 }
-            }
-        }
-        return output;
-    }
-
-    public static List<String> check_new(Tree change, Parser parser) {
-        List<String> output = new LinkedList<>();
-        queryParser = parser;
-        NodeUtil nodeUtil = new NodeUtil(parser, parser);
-
-        // initialize work list with node pairs that match the query's old+new subtrees
-        LinkedList<NodeMap> workList = new LinkedList<>();
-        Tree queryOld = nodeUtil.extractOldSubtree(change);
-        Tree queryNew = nodeUtil.extractNewSubtree(change);
-        Tree changeOld = nodeUtil.extractOldSubtree(change);
-        Tree changeNew = nodeUtil.extractNewSubtree(change);
-        for (Pair<Tree, Tree> nodePair : subtreeCandidates(queryOld, queryNew, changeOld, changeNew, nodeUtil)) {
-            NodeMap m = new NodeMap(queryOld, nodePair.getLeft(), queryNew, nodePair.getRight(), nodeUtil);
-            workList.add(m);
-        }
-
-        List<Tree> nodesToMatch = computeNodes(queryNew);
-        //nodesToMatch.addAll(computeNodes(queryNew));
-
-        // explore possible mapping until matching mapping found
-        while (!workList.isEmpty()) {
-            NodeMap m = workList.removeLast();
-
-            Tree unmatchedQueryNode = m.nextUnmatchedNode(nodesToMatch);
-
-            if (unmatchedQueryNode == null) {
-                return output;
-            }
-
-            Tree queryParent = unmatchedQueryNode.getParent();
-            Tree treeParent = m.get(queryParent);
-            assert (treeParent != null);
-
-            output.add(isPossibilePlaceholder(unmatchedQueryNode, parser));
-            int startIdx = m.indexOfLastMatchedChild(treeParent);
-            for (int i = startIdx; i < treeParent.getChildCount(); i++) {
-                Tree treeCandidateNode = treeParent.getChild(i);
-                NodeMap updatedMap = m.checkAndUpdate(unmatchedQueryNode, treeCandidateNode);
 
                 if (updatedMap != null) {
                     if (updatedMap.nextUnmatchedNode(nodesToMatch) == null) {
@@ -142,7 +92,7 @@ public class AbstractQueryMode extends App {
         } else if (vParentText.equals("binary_operators")
                 || vParentText.equals("binOperator")
                 || vParentText.equals("bin_op")) {
-            return "BIN_OP";
+            return "binOP";
         } else if (vParentText.equals("assign_operators")
                 || vParentText.equals("assignmentOperator")
                 || vParentText.equals("expr_stmt")) {
@@ -190,12 +140,16 @@ public class AbstractQueryMode extends App {
         return result;
     }
 
-    public static String runJunit(String input) {
+    public static String runJunit(String input, Boolean DEBUG) {
         JavaTree InputTree = new JavaTree(input);
         ParseTree Tree = InputTree.getParseTree();
 
-        List<String> output_old = check_old(Tree, InputTree.getParser());
-        List<String> output_new = check_new(Tree, InputTree.getParser());
+        if (DEBUG) {
+            System.out.println(Tree.toStringTree(InputTree.getParser()));
+        }
+
+        List<String> output_old = check(Tree, InputTree.getParser(), false);
+        List<String> output_new = check(Tree, InputTree.getParser(), true);
 
         // remove elemnt from list
         while (output_old.remove("")) {
@@ -220,8 +174,8 @@ public class AbstractQueryMode extends App {
 
         ParseTree Tree = InputTree.getParseTree();
         System.out.println(Tree.toStringTree(InputTree.getParser()));
-        List<String> output_old = check_old(Tree, InputTree.getParser());
-        List<String> output_new = check_new(Tree, InputTree.getParser());
+        List<String> output_old = check(Tree, InputTree.getParser(), false);
+        List<String> output_new = check(Tree, InputTree.getParser(), true);
 
         // remove elemnt from list
         while (output_old.remove("")) {
