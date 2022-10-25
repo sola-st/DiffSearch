@@ -1,0 +1,307 @@
+ # Candidate 1
+  139  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  140  16 14:33:59 cd DiffSearch_UserStudy/
+  141  16 14:33:59 lah
+  142  16 14:33:59 ls
+  143  16 14:33:59 cd Dataset/
+  144  16 14:33:59 lah
+  145  16 14:33:59 ls
+  146  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  147  16 14:33:59 grep  -Pzo  '\-return (\d+)\n\+return (.*?)\'  dataset.patch
+  148  16 14:33:59 grep  -Pzo  '\-return (\d+)\n\+return (.*?)\.(.*?)\'  dataset.patch
+  149  16 14:33:59 grep  -Pzo  '\-return (\d+)\n\+return (.*?)\.(.*?)'  dataset.patch
+  150  16 14:33:59 grep  -Pzo  '\-return (\d+)\n\+return (.*?).(.*?)'  dataset.patch
+  151  16 14:33:59 grep  -Pzo  '\-return (.*?)\n\+return (.*?).(.*?)'  dataset.patch
+  152  16 14:33:59 grep  -Pzo  '\-\((.*),(.*)\)\n\+\((.*),(.)\)'  dataset.patch
+  153  16 14:33:59 grep  -Pzo  '\-(.*)\((.*),(.*)\)\n\+(.*)\((.*),(.)\)'  dataset.patch
+  154  16 14:33:59 q
+  155  16 14:33:59 grep  -Pzo  '\+import (.*)\.(.*)'  dataset.patch
+  156  16 14:33:59 grep  -Pzo  '\-(.*)\n\+(.*)\.close'  dataset.patch
+  157  16 14:33:59 grep  -Pzo  '\-(.*)\n\+(.*)\.close\('  dataset.patch
+  158  16 14:33:59 grep  -Pzo  '\-if \((.*) == null\) {\n\+if \((.*) != null\) {'  dataset.patch
+  159  16 14:33:59 grep  -Pzo  '\-if \((.*) == null\) \{\n\+if \((.*) != null\) \{'  dataset.patch
+  160  16 14:33:59 grep  -Pzo  '\-(.*)\.(.*)'  dataset.patch
+  161  16 14:33:59 grep  -Pzo  '\-(.*)\.\((.*)\)'  dataset.patch
+  162  16 14:33:59 grep  -Pzo  '\+assert (.*)'  dataset.patch
+  163  16 14:33:59 grep  -Pzo  '\+assert '  dataset.patch
+  164  16 14:33:59 grep  -Pzo  '\+assert'  dataset.patch
+  165  16 14:33:59 grep  -Pzo  '\+ (.*) assert (.*)'  dataset.patch
+  166  16 14:33:59 grep  -Pzo  '\-(.*)\n\+try {\n (.*)\n}'  dataset.patch
+  167  16 14:33:59 grep  -Pzo  '\-while\((.*)\)\n\+while\((.*)\)'  dataset.patch
+  168  16 14:33:59 grep  -Pzo  '\-while\((.*?)\)\n\+while\((.*?)\)'  dataset.patch
+  169  16 14:33:59 grep  -Pzo  '\-while\((.*?)\)(.*?)\n\+while\((.*?)\)'  dataset.patch
+  170  16 14:33:59 grep  -Pzo  '\-System.out.println\((.*)\)'  dataset.patch
+  
+  # Candidate 2
+  171  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  172  16 14:33:59 ll
+  173  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  174  16 14:33:59 grep  -Pzo  '\-(\s*)return\((.*?)\){(\s*)\n\+(\s*)return\((.*?)\){'  dataset.patch
+  175  16 14:33:59 grep  -Pzo  'return'  dataset.patch
+  176  16 14:33:59 grep  return dataset.patch
+  177  16 14:33:59 grep --help
+  178  16 14:33:59 grep "import somePkg.SomeClass"  dataset.patch
+  179  16 14:33:59 grep "import s"  dataset.patch
+  180  16 14:33:59 grep -m 50 "import s"  dataset.patch
+  181  16 14:33:59 grep -m 50 "import "  dataset.patch
+  182  16 14:33:59 grep -m 50 "+ file.close"  dataset.patch
+  183  16 14:33:59 grep -m 50 ".close"  dataset.patch
+  184  16 14:33:59 grep -m 50 ".close("  dataset.patch
+  185  16 14:33:59 grep -m 50 "!= null"  dataset.patch
+  186  16 14:33:59 grep -m 50 "== null"  dataset.patch
+  187  16 14:33:59 grep  -Pzo  '\-(\s*)null\((.*?)\){(\s*)\n\+(\s*)null\((.*?)\){'  dataset.patch
+  188  16 14:33:59 grep  -Pzo  '\-(\s*)==null\((.*?)\){(\s*)\n\+(\s*)!=null\((.*?)\){'  dataset.patch
+  189  16 14:33:59 grep  -Pzo  '\-(\s*)== null\((.*?)\){(\s*)\n\+(\s*)!= null\((.*?)\){'  dataset.patch
+  190  16 14:33:59 grep  -Pzo  '\-(.*?)== null\((.*?)\){(\s*)\n\+(\s*)!= null\((.*?)\){'  dataset.patch
+  191  16 14:33:59 grep  -Pzo  '\-)== null\((.*?)\){(.*?)\n\+(.*?)!= null\((.*?)\){'  dataset.patch
+  192  16 14:33:59 grep  -Pzo  '\-(.*?)== null'  dataset.patch
+  193  16 14:33:59 grep -m 50 -Pzo  '\-(.*?) ('  dataset.patch
+  194  16 14:33:59 grep -m 50 -Pzo  '\-(.*?)\('  dataset.patch
+  195  16 14:33:59 grep -m 50 -Pzo  '\-(.*?)\(\n'  dataset.patch
+  196  16 14:33:59 grep -m 50 -Pzo  '+ try'  dataset.patch
+  197  16 14:33:59 grep -m 50 '+ try'  dataset.patch
+  198  16 14:33:59 grep -m 50 -Pzo  '\-(.*?)try'  dataset.patch
+  199  16 14:33:59 grep -m 50 -Pzo  '\+(.*?)try'  dataset.patch
+  200  16 14:33:59 grep -m 50 '- while' dataset.patch
+  201  16 14:33:59 grep '- while' dataset.patch
+  202  16 14:33:59 grep '\- while' dataset.patch
+  203  16 14:33:59 grep -m 50 '+ while'  dataset.patch
+  204  16 14:33:59 grep -m 50 '- while'  dataset.patch
+  205  16 14:33:59 grep -m 50 '\+ while'  dataset.patch
+  206  16 14:33:59 grep -m 50 'while'  dataset.patch
+  207  16 14:33:59 head -n 50  dataset.patch
+  208  16 14:33:59 grep -m 50 'while'  dataset.patch
+  209  16 14:33:59 grep -m 50 'System.out.println('  dataset.patch
+  210  16 14:33:59 history
+  211  16 14:33:59 ll /dev/tty
+  212  16 14:33:59 ll /dev/tty*
+  213  16 14:33:59 ll /dev/vcs
+  214  16 14:33:59 ll /dev/vcs*
+  215  16 14:33:59 screendump --help
+  216  16 14:33:59 history
+  217  16 14:33:59 exit
+  
+  # Candidate 3
+  218  16 14:33:59 ls
+  219  16 14:33:59 cd DiffSearch_UserStudy/
+  220  16 14:33:59 ls
+  221  16 14:33:59 cd Dataset/
+  222  16 14:33:59 ls
+  223  16 14:33:59 grep -Pzo '\-\s*return [0-9]+;\n\+\s*return .+\(\);\n' dataset.patch 
+  224  16 14:33:59 grep -Pzo '\+\s*import [a-zA-Z]+\.[a-zA-Z]+\n' dataset.patch 
+  225  16 14:33:59 grep -Pzo '\+\s*import [a-zA-Z]+\.[a-zA-Z]+;\n' dataset.patch 
+  226  16 14:33:59 grep -Pzo '.+\n\+\s*import [a-zA-Z]+\.[a-zA-Z]+;\n.+\n' dataset.patch 
+  227  16 14:33:59 grep -Pzo '.+\n\+\s*.+\.close\(\);\n.+\n\n' dataset.patch 
+  228  16 14:33:59 grep -Pzo '\+\s*.+\.close\(\);\n' dataset.patch 
+  229  16 14:33:59 grep -Pzo '\-\s*if \(.+ \=\= null\) \{\n\+\s*if \(.+ \!\= null\)\n' dataset.patch 
+  230  16 14:33:59 grep -Pzo '\-\s*if \(.+ == null\) \{\n\+\s*if \(.+ != null\)\n' dataset.patch 
+  231  16 14:33:59 grep -Pzo '\-\s*if\(.+ \=\= null\) \{\n\+\s*if\(.+ \!\= null\)\n' dataset.patch 
+  232  16 14:33:59 grep -Pzo '\-\s*if \(.+ \=\= null\) \{\n\+\s*if \(.+ \!\= null\) \{\n' dataset.patch 
+  233  16 14:33:59 grep -Pzo '\-\s*[a-zA-Z]+\([a-zA-Z]+\);\n' dataset.patch 
+  234  16 14:33:59 grep -Pzo '\-\s*[a-zA-Z]+\([a-zA-Z]+\);\n.+\n' dataset.patch 
+  235  16 14:33:59 grep -Pzo '\+\s*assert\(.+\);\n' dataset.patch 
+  236  16 14:33:59 grep -Pzo '\+\s*try\{\n([~\+\-].+\n)+\+\s*} catch \(.+\n' dataset.patch 
+  237  16 14:33:59 grep -Pzo '\-\s*while \((?<x>.+)\) \{\n\+\s*while \(~<x>\) \{\n' dataset.patch 
+  238  16 14:33:59 grep -Pzo '\-\s*while \((?<x>.+)\) \{\n\+\s*while \((!<x>)\) \{\n' dataset.patch 
+  239  16 14:33:59 grep -Pzo '\-\s*while \((?<x>.+)\) \{\n\+\s*while \(.+\) \{\n' dataset.patch 
+  240  16 14:33:59 grep -Pzo '\-\s*System\.out\.println\(.+\);\n' dataset.patch 
+  
+  # Candidate 4
+  241  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  242  16 14:33:59 ls
+  243  16 14:33:59 grep -Pzo 'return \n'
+  244  16 14:33:59 grep -Pzo 'return \n' dataset.patch
+  245  16 14:33:59 cat dataset.patch 
+  246  16 14:33:59 grep -Pzo '+import *.*' dataset.patch
+  247  16 14:33:59 grep -Pzo '\+import *.*' dataset.patch
+  248  16 14:33:59 grep -Pzo '\+*.close()' dataset.patch
+  249  16 14:33:59 grep -Pzo '\-*\=\=null*\+\!\=null*' dataset.patch
+  250  16 14:33:59 grep -Pzo '\-*\=\=null*\+\!\=null' dataset.patch
+  251  16 14:33:59 grep -Pzo '\-*\=\=null*\+\!\=null*' dataset.patch
+  252  16 14:33:59 grep -Pzo '\+*assert\(*\)' dataset.patch
+  253  16 14:33:59 grep -Pzo '\+*assert*\(*\)' dataset.patch
+  254  16 14:33:59 grep -Pzo '\+*try\{*\}*catch\{*\}*' dataset.patch
+  255  16 14:33:59 grep -Pzo '\-*System\.out\.println*' dataset.patch
+  
+  # Candidate 5
+  256  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  257  16 14:33:59 ls
+  258  16 14:33:59 less dataset.patch 
+  259  16 14:33:59 egrep '-\s*return.*;\n+\s*return.*\(\);'
+  260  16 14:33:59 egrep '-\s*return.*;\n+\s*return.*\(\);' dataset.patch 
+  261  16 14:33:59 grep -e '-\s*return.*;\n+\s*return.*\(\);' dataset.patch 
+  262  16 14:33:59 grep -Pe '-\s*return.*;\n+\s*return.*\(\);' dataset.patch 
+  263  16 14:33:59 grep -Pyo '-\s*return.*;\n+\s*return.*\(\);' dataset.patch 
+  264  16 14:33:59 grep -Pzo '-\s*return.*;\n+\s*return.*\(\);' dataset.patch 
+  265  16 14:33:59 grep -Pzo '\-\s*([a-zA-Z]+)\((.+), (.+)\)\n\+\s*\1\(\3, \2\);' dataset.patch 
+  266  16 14:33:59 egrep -Pzo '\-\s*([a-zA-Z]+)\((.+), (.+)\)\n\+\s*\1\(\3, \2\);' dataset.patch 
+  267  16 14:33:59 egrep '\+\s*import' dataset.patch 
+  268  16 14:33:59 egrep '\+\s*import' dataset.patch | less
+  269  16 14:33:59 egrep '\+\s*import' dataset.patch | wc -l
+  270  16 14:33:59 egrep '\+\s*([a-zA-Z0-9_]+)\.close\(\)' dataset.patch | less
+  271  16 14:33:59 egrep '\+\s*([a-zA-Z0-9_]+)\.close\(\)' dataset.patch | wc -l
+  272  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  273  16 14:33:59 grep  -Po  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  274  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  275  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?) == null\){(\s*)\n\+(\s*)if\((.*?) != null\){'  dataset.patch
+  276  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)== null\){(\s*)\n\+(\s*)if\((.*?)!= null\){'  dataset.patch
+  277  16 14:33:59 egrep  '\-([a-zA-Z0-9_]+)\(.*\)'  dataset.patch
+  278  16 14:33:59 egrep  '\-([a-zA-Z0-9_]+)\(.*\)'  dataset.patch | less
+  279  16 14:33:59 egrep  '^-([a-zA-Z0-9_]+)\(.*\)'  dataset.patch | less
+  280  16 14:33:59 egrep  '^-\s*([a-zA-Z0-9_]+)\(.*\)'  dataset.patch | less
+  281  16 14:33:59 egrep  '^-\s*([a-zA-Z0-9_]+)\([^,]*\)'  dataset.patch | less
+  282  16 14:33:59 egrep  '^-\s*([a-zA-Z0-9_]+)\([^,]*\)'  dataset.patch | wc -l
+  283  16 14:33:59 egrep '^\+\s*assert' dataset.patch 
+  284  16 14:33:59 egrep '^\+\s*assert ' dataset.patch 
+  285  16 14:33:59 egrep '^\+\s*assert ' dataset.patch | less
+  286  16 14:33:59 egrep '^\+\s*assert ' dataset.patch | wc -l
+  287  16 14:33:59 egrep '^\+\s*try \{' dataset.patch | wc -l
+  288  16 14:33:59 egrep '^\+\s*try \{' dataset.patch | less
+  289  16 14:33:59 egrep '^\+\s*try \{' -C10 dataset.patch | less
+  290  16 14:33:59 egrep '^\+\s*while.+' dataset.patch 
+  291  16 14:33:59 egrep -B1 '^\+\s*while.+' dataset.patch | less
+  292  16 14:33:59 egrep -C1 '^\+\s*while.+' dataset.patch | less
+  293  16 14:33:59 egrep '^-\s*System\.out\.println' dataset.patch | less
+  294  16 14:33:59 egrep '^-\s*System\.out\.println' dataset.patch | wc -l
+  295  16 14:33:59 clear
+  
+  # Candidate 6
+  296  16 14:33:59 ls
+  297  16 14:33:59 cd DiffSearch_UserStudy/
+  298  16 14:33:59 ls
+  299  16 14:33:59 cd Dataset/
+  300  16 14:33:59 ls
+  301  16 14:33:59 cat dataset.patch 
+  302  16 14:33:59 clear
+  303  16 14:33:59 grep  -Pzo  'retur'  dataset.patch
+  304  16 14:33:59 grep  -Pzo  '\-(\s*)return true(\s*)\n\+(\s*)return get'  dataset.patch
+  305  16 14:33:59 grep  -Pzo  '\-(\s*)return true(\s*)\n\+(\s*)return m'  dataset.patch
+  306  16 14:33:59 grep  -Pzo  '\-(\s*)return true(\s*)\n\+(\s*)return '  dataset.patch
+  307  16 14:33:59 grep  -Pzo  '\-(\s*)return true\s*\n\+(\s*)return '  dataset.patch
+  308  16 14:33:59 grep  -Pzo  '\-(\s*)return true\s*\n\+\s*return '  dataset.patch
+  309  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  310  16 14:33:59 clear
+  311  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+  312  16 14:33:59 clear
+  313  16 14:33:59 grep  -Pzo  '\n\+(\s*)import'  dataset.patch
+  314  16 14:33:59 grep  -Pzo  '\n\+(\s*)import (.*)\n'  dataset.patch
+  315  16 14:33:59 grep  -Pzo  '\n\+(\s*)(.*).close()(.*)'  dataset.patch
+  316  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*)==null\){(\s*)\n\+(\s*)if\((.*)!=null\){'  dataset.patch
+  317  16 14:33:59 clear
+  318  16 14:33:59 grep  -Pzo  '\n\-(\s*)([a-z]*)\(([a-z]*)\)(.*)\n'  dataset.patch
+  319  16 14:33:59 grep  -Pzo  '\n\+(\s*)(.*)assertEquals\((.*)\n'  dataset.patch 
+  320  16 14:33:59 grep  -Pzo  '\n\+(\s*)wh\{(.*)\}(.*)catch\{(.*)\}\n'  dataset.patch 
+  321  16 14:33:59 grep  -Pzo  '\-(\s*)while\((.*)\){(\s*)\n\+(\s*)while\((.*)\){'  dataset.patch
+  322  16 14:33:59 grep  -Pzo  '\-(\s*)while\((.*)(\s*)\n\+(\s*)while\('  dataset.patch
+  323  16 14:33:59 grep  -Pzo  '\-(\s*)while\((.*)(\s*)\n\+(\s*)while\((.*)'  dataset.patch
+  324  16 14:33:59 clear
+  325  16 14:33:59 grep  -Pzo  '\-(.*)System\.out\.println\((.*)\n'  dataset.patch
+  
+  # Candidate 7
+  326  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  327  16 14:33:59 grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){' dataset.patch
+  328  16 14:33:59 grep  -Pzo  '\-return \w+;\n\+return \w+\(' dataset.patch
+  329  16 14:33:59 grep  -Pzo  '+import .*;\n' dataset.patch
+  330  16 14:33:59 grep  -Pzo  '+import .*' dataset.patch
+  331  16 14:33:59 grep  -Pzo  '+import \w' dataset.patch
+  332  16 14:33:59 grep  -Pzo  '\+import .*' dataset.patch
+  333  16 14:33:59 grep  -Pzo  '\+\w+\.close\(\)' dataset.patch
+  334  16 14:33:59 grep  -Pzo  '\+.*\w+\.close\(\)' dataset.patch^
+  335  16 14:33:59 grep  -Pzo  '\-if \(\w+ == null\).*\n\+.*\w+\dsstudy@mule:~/DiffSearch_UserStudy/Dataset$ grep  -Pzo  '\-if \(\w+ == null\).*\n\+.*\w+\.close\(\' dataset.patch' dataset.patch
+  336  16 14:33:59 grep  -Pzo  '\-.*\w+\(\w+\);'
+  337  16 14:33:59 grep  -Pzo  '\-\s*\w+\(\w+\);'
+  338  16 14:33:59 grep  -Pzo  '\-\s*assert .*;'
+  339  16 14:33:59 grep  -Pzo  '\+\s*assert .*;'
+  340  16 14:33:59 grep  -Pzo  '\+assert .*;'
+  341  16 14:33:59 grep  -Pzo  '\+assert .*;' dataset.patch 
+  342  16 14:33:59 grep  -Pzo  '\+\s*assert .*;' dataset.patch
+  343  16 14:33:59 grep  -Pzo  '\-\s*(.*);\+\s*try \{\n\s*\1\s*\n}' dataset.patch
+  344  16 14:33:59 grep  -Pzo  '\-\s*(.*);\+\s*try \{\n\s*\1;\s*\n}' dataset.patch
+  345  16 14:33:59 grep  -Pzo  '\-\s*(.*);\+\s*while \{\n\s*\1;\s*\n}' dataset.patch
+  346  16 14:33:59 grep  -Pzo  '\-(\s*)while\((.*?)\){(\s*)\n\+(\s*)while\((.*?)\){'
+  347  16 14:33:59 grep  -Pzo  '\-(\s*)while\((.*?)\){(\s*)\n\+(\s*)while\((.*?)\){' dataset.patch 
+  348  16 14:33:59 grep  -Pzo  '\-System.out.println(' dataset.patch 
+  349  16 14:33:59 grep  -Pzo  '\-System.out.println\(' dataset.patch 
+  350  16 14:33:59 grep  -Pzo  '\-System.out.println:*;' dataset.patch 
+  351  16 14:33:59 grep  -Pzo  '\-System.out.println.*;' dataset.patch 
+  352  16 14:33:59 exit
+  
+  # Candidate 8
+  353  16 14:33:59 cd DiffSearch_UserStudy/
+  354  16 14:33:59 cd Dataset/
+  355  16 14:33:59 ll
+  356  16 14:33:59 grep -Pzi (.*?),(.*?)\+(.*?),(.*?)
+  357  16 14:33:59 grep -Pzi '(.*?),(.*?)'\+'(.*?),(.*?)' dataset.patch 
+  358  16 14:33:59 grep -Pzi '\+'(.*?).(.*?)' dataset.patch 
+  359  16 14:33:59 grep -Pzi '\+'(.*?).\(.*?)' dataset.patch 
+  360  16 14:33:59 grep -Pzi '\+(.*?).(.' dataset.patch 
+  361  16 14:33:59 grep -Pzi '\+import (.*?).(.*?)' dataset.patch 
+  
+  
+  # Candidate 9
+  382  16 14:33:59 cd DiffSearch_UserStudy/Dataset/
+  383  16 14:33:59 ls
+  384  16 14:33:59 grep '\-(\s*) return .*?(\s*); '
+  385  16 14:33:59 grep \-(\s*)(.*?)\(.*?\,.*?\)
+  386  16 14:33:59 grep \-(\s*)(.*?)\( .*? ,.*?\)
+  387  16 14:33:59 grep \-(\s*)(.*?) \( .*? ,.*?\)
+  388  16 14:33:59 grep _Pzo '\-(\s*) (.*?) \( .*? ,.*?\)'
+  389  16 14:33:59 grep -Pzo '\-(\s*) (.*?) \( .*? ,.*?\)'
+  390  16 14:33:59 grep -Pzo '\-(\s*)\n\+(\s*) import (.*?).(*?\)'
+  391  16 14:33:59 grep -Pzo '\-(\s*)\n \+(\s*) import (.*?).(*?\)'
+  392  16 14:33:59 grep -Pzo '\-(\s*)\n \+(\s*)(import)(.*?).(*?\)'
+  393  16 14:33:59 grep -Pzo '\-\n \+(\s*)(import)(.*?).(*?\)'
+  394  16 14:33:59 grep -Pzo '\-\n\+(\s*)(import)(.*?).(*?\)'
+  395  16 14:33:59 grep -Pzo '\-\n\+(\s*)(import).*?.*?'
+  396  16 14:33:59 grep -Pzo '\+(\s*).*?close()'
+  397  16 14:33:59 grep -Pzo '\+(\s*).*?.close()'
+  398  16 14:33:59 grep -Pzo '\+(\s*).*?.close\(\)'
+  399  16 14:33:59 grep -Pzo '\-(\s*).*? == null .*? \+(\s*).*?. != null .*?'
+  400  16 14:33:59 grep -Pzo '\-(\s*).*? == null .*? \+(\s*).*? != null .*?'
+  401  16 14:33:59 grep -Pzo '\-(\s*)(.*?) == null (.*?)\n \+(\s*)(.*?) != null (.*?)\n'
+  402  16 14:33:59 grep -Pzo '\-(\s*)(.*?)\(\)\n \+(\s*)'
+  403  16 14:33:59 grep -Pzo '\-(\s*)(.*?)\(\)\n\+(\s*)'
+  404  16 14:33:59 grep -Pzo '\-(\s*)(.*?)\((.*?)\)*\n\+(\s*)'
+  405  16 14:33:59 grep -Pzo '\-\n \+(\s*)assert(.*?);'
+  406  16 14:33:59 grep -Pzo '\-\n \+(\s*)assert\w;'
+  407  16 14:33:59 grep -Pzo '\-\n \+(\s*) assert \w*'
+  408  16 14:33:59 grep -Pzo '\-\w* \+(\s*)try{\w*}#'
+  409  16 14:33:59 grep -Pzo '\-\w* \+(\s*)try{\w*}'
+  410  16 14:33:59 grep  '\- while \(\w == \w\) \+(\s*) while \(\w+ == \w+\)'
+  411  16 14:33:59 grep  '\- while \(* == *\) \+(\s*) while \(* == *\)'
+  412  16 14:33:59 grep  '\-System.out.println(*);\n\+(\s*)'
+  413  16 14:33:59 grep  '\-System.out.println(*);\n'
+  414  16 14:34:11 ls
+  415  16 14:34:15 HISTTIMEFORMAT="%F %T "
+  416  16 14:34:47 history > userstudy.log
+  
+  
+  # Candidate 10
+   1661  grep  -Pzo  '\-(\s*)if\((.*?)\){(\s*)\n\+(\s*)if\((.*?)\){'  dataset.patch
+ 1662  clear
+ 1663  grep  -Pzo  ''  dataset.patch
+ 1664  clear
+ 1665  grep  -Pzo  '\-(return )\n\+(\s*)if\((.*?)\){'  dataset.patch
+ 1666  grep  -Pzo  '\-(return [a-zA-Z0-9]+)\n\+(return [a-z0-9A-Z_]+\(]\))if\((.*?)\){'  dataset.patch
+ 1667  grep  -Pzo  '\-(return [a-zA-Z0-9_]+([a-zA-Z0-9_], ))\n\+(return [a-z0-9A-Z_]+\(\))if\((.*?)\){'  dataset.patch
+ 1668  grep  -Pzo  '\-[]\+import [a-zA-Z0-9_]+.[a-zA-Z0-9_]*;'  dataset.patch
+ 1669  grep  -Pzo  '\+import [a-zA-Z0-9_]+.[a-zA-Z0-9_]+;'  dataset.patch
+ 1670  clear
+ 1671  grep  -Pzo  '\+[a-zA-Z0-9_]+.close()'  dataset.patch
+ 1672  grep  -Pzo  '\+[a-zA-Z0-9_]+.close\(\)'  dataset.patch
+ 1673  grep  -Pzo  '\+.*[a-zA-Z0-9_]+.close\(\)'  dataset.patch
+ 1674  grep  -Pzo  '\-if [ ]*[a-zA-Z0-9_][ ]*==[ ]*null\+if [ ]*[a-zA-Z0-9_][ ]*!=[ ]*null'  dataset.patch
+ 1675  grep  -Pzo  '\-if [ ]*[a-zA-Z0-9_]+[ ]*==[ ]*null\+if [ ]*[a-zA-Z0-9_]+[ ]*!=[ ]*null'  dataset.patch
+ 1676  grep  -Pzo  '\-[a-zA-Z0-9_]+\([a-zA-Z0-9_]+\)'  dataset.patch
+ 1677  grep  -Pzo  '^\+[ ]*assert +'  dataset.patch
+ 1678  grep  -Pzo  '^\+[ ]*assert .+'  dataset.patch
+ 1679  grep  -Pzo  '\+[ ]*assert .+'  dataset.patch
+ 1680  grep  -Pzo  '^\-try[ ]*{.* }[ ]*catch[ ]*{.*}\+'  dataset.patch
+ 1681  clear*
+ 1682  clear
+ 1683  grep  -Pzo  '^\-while[ ]*(.*)[ ]*{\+while[ ]*(.*)[ ]*{'  dataset.patch
+ 1684  grep  -Pzo  '^\-while[ ]*(.*)[ ]*{ \+while[ ]*(.*)[ ]*{'  dataset.patch
+ 1685  grep  -Pzo  '^\-System.out.println(.*)'  dataset.patch
+ 1686  grep  -Pzo  '^\-[ ]*System.out.println\(.*\)'  dataset.patch
+ 1687  grep  -Pzo  '\-[ ]*System.out.println\(.*\)'  dataset.patch
+
