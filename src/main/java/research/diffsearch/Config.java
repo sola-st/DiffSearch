@@ -17,11 +17,10 @@ public class Config {
      */
     public static String NEAREST_NEIGHBOR_SEARCH_PY = "./src/main/resources/Python/FAISS_Nearest_Neighbor_Search.py";
 
-    //public static String PYTHON_CMD= "/home/luca/anaconda3/bin/python3.7";
     /**
      * The command to run a python file.
      */
-    public static String PYTHON_CMD = "/home/luca/anaconda3/bin/python3.8";
+    public static String PYTHON_CMD = "python3";
 
     /**
      * The programming language of the code changes.
