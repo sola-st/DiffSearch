@@ -194,16 +194,6 @@ public class Util {
         return result.replaceAll("\r", "").replaceAll("\n", "");
     }
 
-    private class MyErrorListener extends BaseErrorListener {
-        boolean hasSyntaxError = false;
-
-        @Override
-        public void syntaxError(Recognizer r, Object symbol, int line, int pos, String msg, RecognitionException e) {
-            hasSyntaxError = true;
-        }
-    }
-
-
     public static boolean checkIfQueryIsValid(String query, ProgrammingLanguage language) {
 
         var queryTree = TreeFactory.getAbstractTree(query, language);
