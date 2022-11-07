@@ -65,6 +65,7 @@ public class  PythonRunner {
         var waiter = new Object();
         pythonProcess = new ProcessExecutor()
                 .command(args.toArray(new String[0]))
+                .environment(System.getenv())
                 .redirectOutput(new LogOutputStream() {
                     @Override
                     public void processLine(String s) {
