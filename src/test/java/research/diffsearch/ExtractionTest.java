@@ -9,8 +9,11 @@ import static research.diffsearch.tree.TreeFactory.getAbstractTree;
 import static research.diffsearch.util.FilePathUtils.*;
 import static research.diffsearch.util.ProgrammingLanguage.JAVA;
 
+import org.junit.jupiter.api.Test;
+
 public class ExtractionTest extends TestCase {
 
+    @Test
     public void testExtraction() {
         var ccIterator = getAllLines(getChangesJsonFilePath(JAVA)).iterator();
         var treesIterator = getAllLines(getTreesFilePath(JAVA)).iterator();
