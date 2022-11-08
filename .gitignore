@@ -115,3 +115,7 @@ patch/
 patch_python/
 Features_Vectors/
 target/
+
+# ANTLR4 generated files
+*.interp
+*.tokens
