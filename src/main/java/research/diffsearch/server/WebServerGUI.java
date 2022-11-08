@@ -87,9 +87,8 @@ public class WebServerGUI extends DiffSearchWebServer {
 			break;
 		}
 
-		logger.info(Config.PROGRAMMING_LANGUAGE.name());
+		logger.debug(Config.PROGRAMMING_LANGUAGE.name());
 		long startTimeMatching = System.currentTimeMillis();
-		logger.info(Config.PROGRAMMING_LANGUAGE.name());
 		boolean valid_query = true;
 
 		if (!auxLine.isEmpty()) {
