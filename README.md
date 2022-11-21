@@ -143,27 +143,27 @@ More DiffSearch queries are in our dedicated [Wiki page](https://github.com/luca
 ## Requirements
 - Java 11 and Python 3.7
 - Linux Operating System, such as [Ubuntu](https://ubuntu.com/)
-- [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> apt install antlr
-- [Maven](https://maven.apache.org/) -> apt install maven
+- [ANTLR 4](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) -> `apt install antlr`
+- [Maven](https://maven.apache.org/) -> `apt install maven`
 
 ## How to run
 
 FOR THE DIFFSEARCH SERVER:
 
   - Install:
-      - chmod 754 installDiffSearch.sh
-      - sed -i -e 's/\r$//' installDiffSearch.sh
-      - ./installDiffSearch.sh
+      - `chmod 754 installDiffSearch.sh`
+      - `sed -i -e 's/\r$//' installDiffSearch.sh`
+      - `./installDiffSearch.sh`
 
   - Run:   
-      - mvn compile  
-      - mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"
+      - `mvn compile`  
+      - `mvn exec:java -Dexec.mainClass=research.diffsearch.main.App -Dexec.args="-g -lang java"`
 
   - Extra:
       
       - If you received the error: " OSError: [Errno 98] Address already in use", you can use the following commands:
-          - fuser -k 5002/tcp
-          - fuser -k 8843/tcp
+          - `fuser -k 5002/tcp`
+          - `fuser -k 8843/tcp`
           
   - More DiffSearch arguments are in the [Wiki page](https://github.com/lucaresearch/DiffSearch/wiki/Commandline-Parameters)
         
@@ -171,5 +171,5 @@ FOR THE DIFFSEARCH SERVER:
 FOR THE GUI:
 
 - clone the repository: https://github.com/sola-st/DiffSearch-UI
-- Run the command: ng serve --proxy-config src/proxy.conf.json
+- Run the command: `ng serve --proxy-config src/proxy.conf.json`
 - Go in "http://localhost:4200/diffsearch" with your browser 

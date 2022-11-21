@@ -150,6 +150,56 @@
                 <version>4.7.1</version>
                 <executions>
                     <execution>
+                        <!-- Only Java grammars -->
+                        <id>java</id>
+                        <configuration>
+                            <sourceDirectory>src/main/resources/ANTLR</sourceDirectory>
+                            <includes>
+                                <include>JavaLexer.g4</include>
+                                <include>JavaParser.g4</include>
+                            </includes>
+                            <outputDirectory>src/main/java/ProgrammingLanguage/Java</outputDirectory>
+                            <arguments>
+                                <argument>-package</argument>
+                                <argument>ProgrammingLanguage.Java</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>python</id>
+                        <!-- Only Python grammars -->
+                        <configuration>
+                            <sourceDirectory>src/main/resources/ANTLR</sourceDirectory>
+                            <includes>
+                                <include>Python3.g4</include>
+                            </includes>
+                            <outputDirectory>src/main/java/ProgrammingLanguage/Python</outputDirectory>
+                            <arguments>
+                                <argument>-package</argument>
+                                <argument>ProgrammingLanguage.Python</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>javascript</id>
+                        <!-- Only Python grammars -->
+                        <configuration>
+                            <sourceDirectory>src/main/resources/ANTLR</sourceDirectory>
+                            <includes>
+                                <include>ECMAScript.g4</include>
+                            </includes>
+                            <outputDirectory>src/main/java/ProgrammingLanguage/JavaScript</outputDirectory>
+                            <arguments>
+                                <argument>-package</argument>
+                                <argument>ProgrammingLanguage.JavaScript</argument>
+                            </arguments>
+                        </configuration>
                         <goals>
                             <goal>antlr4</goal>
                         </goals>
