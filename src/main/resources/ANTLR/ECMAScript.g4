@@ -272,7 +272,7 @@ expressionStatement expressionStatement expressionStatement*
 /// Block :
 ///     { StatementList? }
 block
- : '{' statementList '}'?
+ : '{' statementList? '}'?
  ;
 
 /// StatementList :
@@ -666,7 +666,7 @@ singleExpression
  : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}'? # FunctionExpression
  | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
  | singleExpression '.' identifierName                                    # MemberDotExpression
- | singleExpression arguments  '{'?  functionBody '}'?                    # ArgumentsExpression
+ | singleExpression arguments  /*'{'?  functionBody '}'?  */                  # ArgumentsExpression
  | New singleExpression arguments?                                        # NewExpression
  | singleExpression {!here(LineTerminator)}?    ('++' | UNOP)             # PostIncrementExpression
  | singleExpression {!here(LineTerminator)}? ('--' | UNOP)                        # PostDecreaseExpression
