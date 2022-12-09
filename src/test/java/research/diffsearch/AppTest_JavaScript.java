@@ -601,6 +601,15 @@ public class AppTest_JavaScript extends TestCase {
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
+	// Should NOT match with the current grammar
+	// When test67 matches, then it ought to match
+	@Test
+	public void test67_essence() throws Exception {
+		String query = "EXPR<0> --> EXPR<0> && EXPR";
+		String candidate = "contentType == null --> contentType == null && charset == null";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
 	//
 	@Test
 	public void test68() throws Exception {
@@ -612,8 +621,8 @@ public class AppTest_JavaScript extends TestCase {
 	//
 	@Test
 	public void test69() throws Exception {
-		String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
-		String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
+		String query = "ID binOP ID<0>.ID<1>(ID<2>,ID)--> ID<0>.ID<1>(ID<2>)";
+		String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = clockSource.elapsedMillis(startTime); ";
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
