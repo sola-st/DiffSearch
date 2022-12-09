@@ -194,6 +194,8 @@ querySnippet
 	:block
 	| variableStatement
 	| emptyStatement
+	| singleExpression
+	| expressionSequence
 	| {_input.LA(1) != OpenBrace}? expressionStatement
 	| multipleStatement
 	| ifStatement
