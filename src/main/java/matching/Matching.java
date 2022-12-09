@@ -159,7 +159,10 @@ public class Matching {
                 return false;
             }
             if (queryIdx == query.getChildCount() - 1) {
-                if (changeIdx != change.getChildCount() - 1) {
+				if (nodeUtil.getKind(queryChild) == NodeUtil.Kind.NAMED_PLACEHOLDER
+				 || nodeUtil.getKind(queryChild) == NodeUtil.Kind.UNNAMED_PLACEHOLDER) {
+					break;	// if placeholder, we do not require the same amount of children
+				} else if (changeIdx != change.getChildCount() - 1) {
                     return false;
                 }
                 break; // done, all children matched
