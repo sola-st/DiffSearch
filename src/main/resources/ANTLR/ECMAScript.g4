@@ -683,6 +683,7 @@ singleExpression
  | singleExpression Instanceof singleExpression                           # InstanceofExpression
  | singleExpression In singleExpression                                   # InExpression
  | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
+ | singleExpression '?' singleExpression ':' singleExpression			  # TernaryOperatorExpression
  | EXPR                                                                   # GeneralExpressionclear
  | This                                                                   # ThisExpression
  | Identifier                                                             # IdentifierExpression
