@@ -430,7 +430,7 @@ public class AppTest_JavaScript extends TestCase {
 	@Test
 	public void test44() throws Exception {
 		String query = " <...> --> try {<...> } catch (<...>) {<...> }  ";
-		String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()); --> try { profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray())); } catch (InvalidInputException e) { Log.w(TAG, \"Invalid profile key ignored\", e); }  ";
+		String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()); --> try { profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray())); } catch (e) { Log.w(TAG, \"Invalid profile key ignored\", e); }  ";
 
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
