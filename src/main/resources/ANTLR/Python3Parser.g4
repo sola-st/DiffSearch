@@ -177,7 +177,7 @@ not_test: 'not' not_test | comparison;
 comparison: numeric_expr (comp_op numeric_expr)*;
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not';
+comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not' | BINOP;
 star_expr: '*' numeric_expr;
 numeric_expr: xor_expr ('|' xor_expr)*;
 xor_expr: and_expr ('^' and_expr)*;
