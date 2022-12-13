@@ -174,7 +174,8 @@
                         <configuration>
                             <sourceDirectory>src/main/resources/ANTLR</sourceDirectory>
                             <includes>
-                                <include>Python3.g4</include>
+                                <include>Python3Parser.g4</include>
+                                <include>Python3Lexer.g4</include>
                             </includes>
                             <outputDirectory>src/main/java/ProgrammingLanguage/Python</outputDirectory>
                             <arguments>

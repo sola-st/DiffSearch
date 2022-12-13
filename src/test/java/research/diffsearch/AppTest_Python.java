@@ -301,13 +301,13 @@ public class AppTest_Python extends TestCase {
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
 //
-//    @Test//error
-//    public void test29() throws Exception {
-//        String query = "_ --> if ID binOP LT: ID = LT;";
-//        String candidate = "_ --> if frequency < 1: frequency = 1";
-//
-//        assertTrue(App.runJunit_Python(query, candidate));
-//    }
+    @Test//error
+    public void test29() throws Exception {
+        String query = "_ --> if ID binOP LT: ID = LT;";
+        String candidate = "_ --> if frequency < 1: frequency = 1";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
 
     @Test
     public void test30() throws Exception {
@@ -317,13 +317,13 @@ public class AppTest_Python extends TestCase {
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
-//    @Test
-//    public void test31() throws Exception {
-//        String query = "_ --> exit(EXPR)";
-//        String candidate = "_ --> exit(x)";
-//
-//        assertTrue(App.runJunit_Python(query, candidate));
-//    }
+    @Test
+    public void test31() throws Exception {
+        String query = "_ --> exit(EXPR)";
+        String candidate = "_ --> exit(x)";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
 //
 //    @Test
 //    public void test32() throws Exception {
@@ -575,5 +575,12 @@ public class AppTest_Python extends TestCase {
 //        String candidate = "_ --> print('hello') ";
 //        assertTrue(App.runJunit_Python(query, candidate));
 //    }
+
+    @Test
+    public void test71() throws Exception {
+            String query = "a=1-->b=2";
+            String candidate = "a=1-->b=2";
+            assertTrue(App.runJunit_Python(query, candidate));
+        }
 
 }

@@ -122,3 +122,4 @@ target/
 
 # ANTLR4 generated Java source code
 src/main/java/ProgrammingLanguage/**/*.java
+src/main/resources/ANTLR/.antlr/
