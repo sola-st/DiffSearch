@@ -414,7 +414,7 @@ public class AppTest extends TestCase {
 
     @Test
     public void test39() throws Exception {
-        String query = " _ --> EXPR(ID);";
+        String query = " _ --> ID(ID);";
         String candidate = " _ --> foo(x,y);";
 
         assertFalse(App.runJunit(query, candidate));
@@ -615,7 +615,7 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-//    @Test
+	@Test
    public void test67() throws Exception {
        String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
        String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
@@ -629,9 +629,9 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-//    @Test
+	@Test
    public void test69() throws Exception {
-       String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
+       String query = "ID binOP ID<0>.ID<1>(ID<2>,ID) --> ID<0>.ID<1>(ID<2>)";
        String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
        assertTrue(App.runJunit(query, candidate));
    }
