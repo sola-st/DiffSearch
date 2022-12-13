@@ -167,7 +167,7 @@ positional_patterns: pattern (',' pattern)* ;
 keyword_patterns: keyword_pattern (',' keyword_pattern)* ;
 keyword_pattern: name '=' pattern ;
 
-expr: or_test ('if' or_test 'else' expr)? | lambdef;
+expr: or_test ('if' or_test 'else' expr)? | lambdef | EXPR;
 test_nocond: or_test | lambdef_nocond;
 lambdef: 'lambda' varargslist? ':' expr;
 lambdef_nocond: 'lambda' varargslist? ':' test_nocond;
