@@ -108,14 +108,14 @@ try_stmt: ('try' ':' block
             ('finally' ':' block)? |
            'finally' ':' block));
 with_stmt: 'with' with_item (',' with_item)*  ':' block;
-with_item: test ('as' numeric_expr)?;
+with_item: test ('as' test)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' name)?)?;
 block: simple_stmts | NEWLINE INDENT stmt+ DEDENT;
 match_stmt: 'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT ;
 subject_expr: star_named_expression ',' star_named_expressions? | test ;
 star_named_expressions: ',' star_named_expression+ ','? ;
-star_named_expression: '*' numeric_expr | test ;
+star_named_expression: '*' test | test ;
 case_block: 'case' patterns guard? ':' block ;
 guard: 'if' test ;
 patterns: open_sequence_pattern | pattern ;
