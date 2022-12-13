@@ -42,7 +42,25 @@ options {
 /*
  * lexer rules
  */
+
+// DiffSearch placeholders and domain specific syntax
 QUERY_ARROW : '-->';
+
+EXPR: EXPR_ANONYMOUS | EXPR_NAMED;
+EXPR_ANONYMOUS: 'EXPR';
+EXPR_NAMED: 'EXPR<' DIGIT* '>';
+
+ID: ID_ANONYMOUS | ID_NAMED;
+ID_ANONYMOUS: 'ID';
+ID_NAMED: 'ID<' DIGIT* '>';
+
+LT: LT_ANONYMOUS | LT_NAMED;
+LT_ANONYMOUS: 'LT';
+LT_NAMED: 'LT<' DIGIT* '>';
+
+BINOP: 'binOP';
+UNOP: 'unOP';
+OP: 'OP';
 
 STRING
  : STRING_LITERAL
