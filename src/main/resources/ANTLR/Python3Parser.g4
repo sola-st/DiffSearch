@@ -47,19 +47,19 @@ decorators: decorator+;
 decorated: decorators (classdef | funcdef | async_funcdef);
 
 async_funcdef: ASYNC funcdef;
-funcdef: 'def' name parameters ('->' test)? ':' block;
+funcdef: 'def' name parameters ('->' expr)? ':' block;
 
 parameters: '(' typedargslist? ')';
-typedargslist: (tfpdef ('=' test)? (',' tfpdef ('=' test)?)* (',' (
-        '*' tfpdef? (',' tfpdef ('=' test)?)* (',' ('**' tfpdef ','? )? )?
+typedargslist: (tfpdef ('=' expr)? (',' tfpdef ('=' expr)?)* (',' (
+        '*' tfpdef? (',' tfpdef ('=' expr)?)* (',' ('**' tfpdef ','? )? )?
       | '**' tfpdef ','? )? )?
-  | '*' tfpdef? (',' tfpdef ('=' test)?)* (',' ('**' tfpdef ','? )? )?
+  | '*' tfpdef? (',' tfpdef ('=' expr)?)* (',' ('**' tfpdef ','? )? )?
   | '**' tfpdef ','?);
-tfpdef: name (':' test)?;
-varargslist: (vfpdef ('=' test)? (',' vfpdef ('=' test)?)* (',' (
-        '*' vfpdef? (',' vfpdef ('=' test)?)* (',' ('**' vfpdef ','? )? )?
+tfpdef: name (':' expr)?;
+varargslist: (vfpdef ('=' expr)? (',' vfpdef ('=' expr)?)* (',' (
+        '*' vfpdef? (',' vfpdef ('=' expr)?)* (',' ('**' vfpdef ','? )? )?
       | '**' vfpdef (',')?)?)?
-  | '*' vfpdef? (',' vfpdef ('=' test)?)* (',' ('**' vfpdef ','? )? )?
+  | '*' vfpdef? (',' vfpdef ('=' expr)?)* (',' ('**' vfpdef ','? )? )?
   | '**' vfpdef ','?
 );
 vfpdef: name;
@@ -70,8 +70,8 @@ simple_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
 expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|testlist) |
                      ('=' (yield_expr|test_or_star_expr_list))*);
-annotated_assign: ':' test ('=' test)?;
-test_or_star_expr_list: (test|star_expr) (',' (test|star_expr))* ','?;
+annotated_assign: ':' expr ('=' expr)?;
+test_or_star_expr_list: (expr|star_expr) (',' (expr|star_expr))* ','?;
 augmenting_assign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
             '<<=' | '>>=' | '**=' | '//=');
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
@@ -82,7 +82,7 @@ break_stmt: 'break';
 continue_stmt: 'continue';
 return_stmt: 'return' testlist?;
 yield_stmt: yield_expr;
-raise_stmt: 'raise' (test ('from' test)?)?;
+raise_stmt: 'raise' (expr ('from' expr)?)?;
 import_stmt: import_name | import_from;
 import_name: 'import' dotted_as_names;
 // note below: the ('.' | '...') is necessary because '...' is tokenized as ELLIPSIS
@@ -95,12 +95,12 @@ dotted_as_names: dotted_as_name (',' dotted_as_name)*;
 dotted_name: name ('.' name)*;
 global_stmt: 'global' name (',' name)*;
 nonlocal_stmt: 'nonlocal' name (',' name)*;
-assert_stmt: 'assert' test (',' test)?;
+assert_stmt: 'assert' expr (',' expr)?;
 
 compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | decorated | async_stmt | match_stmt;
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
-if_stmt: 'if' test ':' block ('elif' test ':' block)* ('else' ':' block)?;
-while_stmt: 'while' test ':' block ('else' ':' block)?;
+if_stmt: 'if' expr ':' block ('elif' expr ':' block)* ('else' ':' block)?;
+while_stmt: 'while' expr ':' block ('else' ':' block)?;
 for_stmt: 'for' exprlist 'in' testlist ':' block ('else' ':' block)?;
 try_stmt: ('try' ':' block
            ((except_clause ':' block)+
@@ -108,16 +108,16 @@ try_stmt: ('try' ':' block
             ('finally' ':' block)? |
            'finally' ':' block));
 with_stmt: 'with' with_item (',' with_item)*  ':' block;
-with_item: test ('as' test)?;
+with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
-except_clause: 'except' (test ('as' name)?)?;
+except_clause: 'except' (expr ('as' name)?)?;
 block: simple_stmts | NEWLINE INDENT stmt+ DEDENT;
 match_stmt: 'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT ;
-subject_expr: star_named_expression ',' star_named_expressions? | test ;
+subject_expr: star_named_expression ',' star_named_expressions? | expr ;
 star_named_expressions: ',' star_named_expression+ ','? ;
-star_named_expression: '*' test | test ;
+star_named_expression: '*' expr | expr ;
 case_block: 'case' patterns guard? ':' block ;
-guard: 'if' test ;
+guard: 'if' expr ;
 patterns: open_sequence_pattern | pattern ;
 pattern: as_pattern | or_pattern ;
 as_pattern: or_pattern 'as' pattern_capture_target ;
@@ -167,9 +167,9 @@ positional_patterns: pattern (',' pattern)* ;
 keyword_patterns: keyword_pattern (',' keyword_pattern)* ;
 keyword_pattern: name '=' pattern ;
 
-test: or_test ('if' or_test 'else' test)? | lambdef;
+expr: or_test ('if' or_test 'else' expr)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
-lambdef: 'lambda' varargslist? ':' test;
+lambdef: 'lambda' varargslist? ':' expr;
 lambdef_nocond: 'lambda' varargslist? ':' test_nocond;
 or_test: and_test ('or' and_test)*;
 and_test: not_test ('and' not_test)*;
@@ -193,17 +193,17 @@ atom: '(' (yield_expr|testlist_comp)? ')'
    | '{' dictorsetmaker? '}'
    | name | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' ;
 name : NAME | '_' | 'match' | ID;
-testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* ','? );
+testlist_comp: (expr|star_expr) ( comp_for | (',' (expr|star_expr))* ','? );
 trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name ;
 subscriptlist: subscript_ (',' subscript_)* ','?;
-subscript_: test | test? ':' test? sliceop?;
-sliceop: ':' test?;
+subscript_: expr | expr? ':' expr? sliceop?;
+sliceop: ':' expr?;
 exprlist: (numeric_expr|star_expr) (',' (numeric_expr|star_expr))* ','?;
-testlist: test (',' test)* ','?;
-dictorsetmaker: ( ((test ':' test | '**' numeric_expr)
-                   (comp_for | (',' (test ':' test | '**' numeric_expr))* ','?)) |
-                  ((test | star_expr)
-                   (comp_for | (',' (test | star_expr))* ','?)) );
+testlist: expr (',' expr)* ','?;
+dictorsetmaker: ( ((expr ':' expr | '**' numeric_expr)
+                   (comp_for | (',' (expr ':' expr | '**' numeric_expr))* ','?)) |
+                  ((expr | star_expr)
+                   (comp_for | (',' (expr | star_expr))* ','?)) );
 
 classdef: 'class' name ('(' arglist? ')')? ':' block;
 
@@ -218,10 +218,10 @@ arglist: argument (',' argument)* ','?;
 // Illegal combinations and orderings are blocked in ast.c:
 // multiple (test comp_for) arguments are blocked; keyword unpackings
 // that precede iterable unpackings are blocked; etc.
-argument: ( test comp_for? |
-            test '=' test |
-            '**' test |
-            '*' test );
+argument: ( expr comp_for? |
+            expr '=' expr |
+            '**' expr |
+            '*' expr );
 
 comp_iter: comp_for | comp_if;
 comp_for: ASYNC? 'for' exprlist 'in' or_test comp_iter?;
@@ -231,6 +231,6 @@ comp_if: 'if' test_nocond comp_iter?;
 encoding_decl: name;
 
 yield_expr: 'yield' yield_arg?;
-yield_arg: 'from' test | testlist;
+yield_arg: 'from' expr | testlist;
 
 strings: STRING+ ;
