@@ -192,7 +192,7 @@ atom: '(' (yield_expr|testlist_comp)? ')'
    | '[' testlist_comp? ']'
    | '{' dictorsetmaker? '}'
    | name | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' ;
-name : NAME | '_' | 'match' ;
+name : NAME | '_' | 'match' | ID;
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* ','? );
 trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name ;
 subscriptlist: subscript_ (',' subscript_)* ','?;
