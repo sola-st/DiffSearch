@@ -108,14 +108,14 @@ try_stmt: ('try' ':' block
             ('finally' ':' block)? |
            'finally' ':' block));
 with_stmt: 'with' with_item (',' with_item)*  ':' block;
-with_item: test ('as' expr)?;
+with_item: test ('as' numeric_expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' name)?)?;
 block: simple_stmts | NEWLINE INDENT stmt+ DEDENT;
 match_stmt: 'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT ;
 subject_expr: star_named_expression ',' star_named_expressions? | test ;
 star_named_expressions: ',' star_named_expression+ ','? ;
-star_named_expression: '*' expr | test ;
+star_named_expression: '*' numeric_expr | test ;
 case_block: 'case' patterns guard? ':' block ;
 guard: 'if' test ;
 patterns: open_sequence_pattern | pattern ;
@@ -174,12 +174,12 @@ lambdef_nocond: 'lambda' varargslist? ':' test_nocond;
 or_test: and_test ('or' and_test)*;
 and_test: not_test ('and' not_test)*;
 not_test: 'not' not_test | comparison;
-comparison: expr (comp_op expr)*;
+comparison: numeric_expr (comp_op numeric_expr)*;
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not';
-star_expr: '*' expr;
-expr: xor_expr ('|' xor_expr)*;
+star_expr: '*' numeric_expr;
+numeric_expr: xor_expr ('|' xor_expr)*;
 xor_expr: and_expr ('^' and_expr)*;
 and_expr: shift_expr ('&' shift_expr)*;
 shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
@@ -198,10 +198,10 @@ trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name ;
 subscriptlist: subscript_ (',' subscript_)* ','?;
 subscript_: test | test? ':' test? sliceop?;
 sliceop: ':' test?;
-exprlist: (expr|star_expr) (',' (expr|star_expr))* ','?;
+exprlist: (numeric_expr|star_expr) (',' (numeric_expr|star_expr))* ','?;
 testlist: test (',' test)* ','?;
-dictorsetmaker: ( ((test ':' test | '**' expr)
-                   (comp_for | (',' (test ':' test | '**' expr))* ','?)) |
+dictorsetmaker: ( ((test ':' test | '**' numeric_expr)
+                   (comp_for | (',' (test ':' test | '**' numeric_expr))* ','?)) |
                   ((test | star_expr)
                    (comp_for | (',' (test | star_expr))* ','?)) );
 
