@@ -71,7 +71,7 @@ simple_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
 expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|testlist) |
                      ('=' (yield_expr|test_or_star_expr_list))*);
 annotated_assign: ':' expr ('=' expr)?;
-test_or_star_expr_list: (expr|star_expr) (',' (expr|star_expr))* ','?;
+test_or_star_expr_list: (expr) (',' (expr))* ','?;
 augmenting_assign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
             '<<=' | '>>=' | '**=' | '//=');
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
@@ -167,43 +167,44 @@ positional_patterns: pattern (',' pattern)* ;
 keyword_patterns: keyword_pattern (',' keyword_pattern)* ;
 keyword_pattern: name '=' pattern ;
 
-expr: or_test ('if' or_test 'else' expr)? | lambdef | EXPR;
-test_nocond: or_test | lambdef_nocond;
-lambdef: 'lambda' varargslist? ':' expr;
-lambdef_nocond: 'lambda' varargslist? ':' test_nocond;
-or_test: and_test ('or' and_test)*;
-and_test: not_test ('and' not_test)*;
-not_test: 'not' not_test | comparison;
-comparison: numeric_expr (comp_op numeric_expr)*;
+expr:
+    'lambda' varargslist? ':' expr
+    | 'not' expr
+    | '*' expr
+    | expr ('or' expr)+
+    | expr ('and' expr)+
+    | expr ('|' expr)+
+    | expr ('^' expr)+
+    | expr (comp_op expr)+
+    | expr ('&' expr)+
+    | expr (('<<'|'>>') expr)+
+    | expr (('+'|'-') expr)+
+    | expr (('*'|'@'|'/'|'%'|'//') expr)+
+    | ('+'|'-'|'~') expr | power
+    | expr 'if' expr 'else' expr
+    | EXPR;
+
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not' | BINOP;
-star_expr: '*' numeric_expr;
-numeric_expr: xor_expr ('|' xor_expr)*;
-xor_expr: and_expr ('^' and_expr)*;
-and_expr: shift_expr ('&' shift_expr)*;
-shift_expr: arith_expr (('<<'|'>>') arith_expr)*;
-arith_expr: term (('+'|'-') term)*;
-term: factor (('*'|'@'|'/'|'%'|'//') factor)*;
-factor: ('+'|'-'|'~') factor | power;
-power: atom_expr ('**' factor)?;
+power: atom_expr ('**' expr)?;
 atom_expr: AWAIT? atom trailer*;
 atom: '(' (yield_expr|testlist_comp)? ')'
    | '[' testlist_comp? ']'
    | '{' dictorsetmaker? '}'
    | name | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' ;
 name : NAME | '_' | 'match' | ID;
-testlist_comp: (expr|star_expr) ( comp_for | (',' (expr|star_expr))* ','? );
+testlist_comp: (expr) ( comp_for | (',' (expr))* ','? );
 trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name ;
 subscriptlist: subscript_ (',' subscript_)* ','?;
 subscript_: expr | expr? ':' expr? sliceop?;
 sliceop: ':' expr?;
-exprlist: (numeric_expr|star_expr) (',' (numeric_expr|star_expr))* ','?;
+exprlist: (expr) (',' (expr))* ','?;
 testlist: expr (',' expr)* ','?;
-dictorsetmaker: ( ((expr ':' expr | '**' numeric_expr)
-                   (comp_for | (',' (expr ':' expr | '**' numeric_expr))* ','?)) |
-                  ((expr | star_expr)
-                   (comp_for | (',' (expr | star_expr))* ','?)) );
+dictorsetmaker: ( ((expr ':' expr | '**' expr)
+                   (comp_for | (',' (expr ':' expr | '**' expr))* ','?)) |
+                  ((expr)
+                   (comp_for | (',' (expr))* ','?)) );
 
 classdef: 'class' name ('(' arglist? ')')? ':' block;
 
@@ -224,8 +225,8 @@ argument: ( expr comp_for? |
             '*' expr );
 
 comp_iter: comp_for | comp_if;
-comp_for: ASYNC? 'for' exprlist 'in' or_test comp_iter?;
-comp_if: 'if' test_nocond comp_iter?;
+comp_for: ASYNC? 'for' exprlist 'in' expr comp_iter?;
+comp_if: 'if' expr comp_iter?;
 
 // not used in grammar, but may appear in "node" passed from Parser to Compiler
 encoding_decl: name;
