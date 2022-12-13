@@ -607,7 +607,7 @@ public class AppTest_JavaScript extends TestCase {
 	public void test67_essence() throws Exception {
 		String query = "EXPR<0> --> EXPR<0> && EXPR";
 		String candidate = "contentType == null --> contentType == null && charset == null";
-		assertFalse(App.runJunit_JavaScript(query, candidate));
+		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
 	//

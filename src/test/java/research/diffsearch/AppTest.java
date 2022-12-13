@@ -630,10 +630,25 @@ public class AppTest extends TestCase {
     }
 
 	@Test
-   public void test69() throws Exception {
-       String query = "ID binOP ID<0>.ID<1>(ID<2>,ID) --> ID<0>.ID<1>(ID<2>)";
-       String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
-       assertTrue(App.runJunit(query, candidate));
-   }
+    public void test69() throws Exception {
+        String query = "ID binOP ID<0>.ID<1>(ID<2>,ID) --> ID<0>.ID<1>(ID<2>)";
+        String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now); --> timeout = hardTimeout - clockSource.elapsedMillis(startTime); ";
+        assertTrue(App.runJunit(query, candidate));
+    }
 
+       //Queries containing "void" give too many wrong results
+	@Test
+	public void test70() {
+        String query = "public void ID() { --> public void profileInlinedCall() { <...>";
+        String candidate = "public void test_with_type_2() { --> public void test_with_type_2_meaningles_char() { ";
+        assertFalse(App.runJunit(query, candidate));
+    }
+
+    //Queries containing "void" give too many wrong results
+	@Test
+    public void test71() {
+        String query = "public void ID<0>(ID ID) { --> public void ID<0>(ID ID) { <...> ";
+        String candidate = "public void releaseRequestingExecutor(ExecutorService executor) { --> public void dispose(ExecutorService executorService) { ";
+        assertFalse(App.runJunit(query, candidate));
+    }
 }
