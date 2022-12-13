@@ -38,9 +38,6 @@ options {
     tokenVocab=Python3Lexer;
 }
 
-// All comments that start with "///" are copy-pasted from
-// The Python Language Reference
-
 program
     : (NEWLINE | stmt)* NEWLINE? QUERY_ARROW NEWLINE? (NEWLINE | stmt)* NEWLINE? EOF
     ;
