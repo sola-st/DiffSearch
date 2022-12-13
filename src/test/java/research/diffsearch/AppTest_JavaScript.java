@@ -601,8 +601,6 @@ public class AppTest_JavaScript extends TestCase {
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
-	// Should NOT match with the current grammar
-	// When test67 matches, then it ought to match
 	@Test
 	public void test67_essence() throws Exception {
 		String query = "EXPR<0> --> EXPR<0> && EXPR";
