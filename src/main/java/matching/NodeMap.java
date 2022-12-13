@@ -59,7 +59,7 @@ public class NodeMap {
         } else if (kind == NodeUtil.Kind.NAMED_PLACEHOLDER) {
             String placeholder = nodeUtil.namedPlaceholderToString(k);
             String boundSubtree = namedPlaceholders.get(placeholder);
-            String currentSubtree = nodeUtil.querySubtreeToString(v);
+            String currentSubtree = nodeUtil.querySubtreeToString(v.getParent());
             if (boundSubtree == null) {
                 // first time we see this placeholder, bind to the subtree
                 if(nodeUtil.isMatchingPlaceholder(k, v)){
