@@ -44,23 +44,27 @@ options {
  */
 
 // DiffSearch placeholders and domain specific syntax
-QUERY_ARROW : '-->';
+QUERY_ARROW: QAF;
+fragment QAF: '-->';
 
 EXPR: EXPR_ANONYMOUS | EXPR_NAMED;
-EXPR_ANONYMOUS: 'EXPR';
-EXPR_NAMED: 'EXPR<' DIGIT* '>';
+fragment EXPR_ANONYMOUS: 'EXPR';
+fragment EXPR_NAMED: 'EXPR<' DIGIT+ '>';
 
 ID: ID_ANONYMOUS | ID_NAMED;
-ID_ANONYMOUS: 'ID';
-ID_NAMED: 'ID<' DIGIT* '>';
+fragment ID_ANONYMOUS: 'ID';
+fragment ID_NAMED: 'ID<' DIGIT+ '>';
 
 LT: LT_ANONYMOUS | LT_NAMED;
-LT_ANONYMOUS: 'LT';
-LT_NAMED: 'LT<' DIGIT* '>';
+fragment LT_ANONYMOUS: 'LT';
+fragment LT_NAMED: 'LT<' DIGIT+ '>';
 
-BINOP: 'binOP';
-UNOP: 'unOP';
-OP: 'OP';
+BINOP: BINOPF;
+fragment BINOPF: 'binOP';
+UNOP: UNOPF;
+fragment UNOPF: 'unOP';
+OP: OPF;
+fragment OPF: 'OP';
 
 STRING
  : STRING_LITERAL
