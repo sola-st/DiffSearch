@@ -169,17 +169,17 @@ keyword_pattern: name '=' pattern ;
 
 expr:
     'lambda' varargslist? ':' expr
-    | expr (BINOP expr)+
-    | expr ('or' expr)+
-    | expr ('and' expr)+
-    | expr ('|' expr)+
-    | expr ('^' expr)+
-    | expr (comp_op expr)+
-    | expr ('&' expr)+
-    | expr (('<<'|'>>') expr)+
-    | expr (('+'|'-') expr)+
-    | expr (('*'|'@'|'/'|'%'|'//') expr)+
-    | expr ('**' expr)+
+    | expr BINOP expr
+    | expr 'or' expr
+    | expr 'and' expr
+    | expr '|' expr
+    | expr '^' expr
+    | expr comp_op expr
+    | expr '&' expr
+    | expr ('<<'|'>>') expr
+    | expr ('+'|'-') expr
+    | expr ('*'|'@'|'/'|'%'|'//') expr
+    | expr '**' expr
     | ('+'|'-'|'~') expr 
     | 'not' expr
     | '*' expr
