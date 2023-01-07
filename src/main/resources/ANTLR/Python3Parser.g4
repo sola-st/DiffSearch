@@ -39,7 +39,7 @@ options {
 }
 
 program
-    : (NEWLINE | stmt)* NEWLINE? QUERY_ARROW NEWLINE? (NEWLINE | stmt)* NEWLINE? EOF
+    : stmt NEWLINE? QUERY_ARROW NEWLINE? stmt NEWLINE? EOF
     ;
 
 decorator: '@' dotted_name ( '(' arglist? ')' )? NEWLINE;
@@ -68,7 +68,7 @@ stmt: simple_stmts | compound_stmt;
 simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE;
 simple_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
-expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|testlist) |
+expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|exprlist) |
                      ('=' (yield_expr|test_or_star_expr_list))*);
 annotated_assign: ':' expr ('=' expr)?;
 test_or_star_expr_list: (expr) (',' (expr))* ','?;
@@ -80,7 +80,7 @@ pass_stmt: 'pass';
 flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
 break_stmt: 'break';
 continue_stmt: 'continue';
-return_stmt: 'return' testlist?;
+return_stmt: 'return' exprlist?;
 yield_stmt: yield_expr;
 raise_stmt: 'raise' (expr ('from' expr)?)?;
 import_stmt: import_name | import_from;
@@ -101,7 +101,7 @@ compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef 
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
 if_stmt: 'if' expr ':' block ('elif' expr ':' block)* ('else' ':' block)?;
 while_stmt: 'while' expr ':' block ('else' ':' block)?;
-for_stmt: 'for' exprlist 'in' testlist ':' block ('else' ':' block)?;
+for_stmt: 'for' exprlist 'in' exprlist ':' block ('else' ':' block)?;
 try_stmt: ('try' ':' block
            ((except_clause ':' block)+
             ('else' ':' block)?
@@ -169,8 +169,7 @@ keyword_pattern: name '=' pattern ;
 
 expr:
     'lambda' varargslist? ':' expr
-    | 'not' expr
-    | '*' expr
+    | expr (BINOP expr)+
     | expr ('or' expr)+
     | expr ('and' expr)+
     | expr ('|' expr)+
@@ -180,27 +179,27 @@ expr:
     | expr (('<<'|'>>') expr)+
     | expr (('+'|'-') expr)+
     | expr (('*'|'@'|'/'|'%'|'//') expr)+
-    | ('+'|'-'|'~') expr | power
+    | expr ('**' expr)+
+    | ('+'|'-'|'~') expr 
+    | 'not' expr
+    | '*' expr
     | expr 'if' expr 'else' expr
+    | AWAIT? atom trailer*
     | EXPR;
 
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
 comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not' | BINOP;
-power: atom_expr ('**' expr)?;
-atom_expr: AWAIT? atom trailer*;
-atom: '(' (yield_expr|testlist_comp)? ')'
-   | '[' testlist_comp? ']'
+atom: '(' (yield_expr|exprlist_comp)? ')'
+   | '[' exprlist_comp? ']'
    | '{' dictorsetmaker? '}'
-   | name | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' ;
+   | name | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False' | LT;
 name : NAME | '_' | 'match' | ID;
-testlist_comp: (expr) ( comp_for | (',' (expr))* ','? );
+exprlist_comp: (expr) ( comp_for | (',' (expr))* ','? );
 trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name ;
 subscriptlist: subscript_ (',' subscript_)* ','?;
-subscript_: expr | expr? ':' expr? sliceop?;
-sliceop: ':' expr?;
+subscript_: expr | expr? ':' expr? (':' expr?)?;
 exprlist: (expr) (',' (expr))* ','?;
-testlist: expr (',' expr)* ','?;
 dictorsetmaker: ( ((expr ':' expr | '**' expr)
                    (comp_for | (',' (expr ':' expr | '**' expr))* ','?)) |
                   ((expr)
@@ -232,6 +231,6 @@ comp_if: 'if' expr comp_iter?;
 encoding_decl: name;
 
 yield_expr: 'yield' yield_arg?;
-yield_arg: 'from' expr | testlist;
+yield_arg: 'from' expr | exprlist;
 
 strings: STRING+ ;
