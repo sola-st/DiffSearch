@@ -120,9 +120,7 @@ WITH : 'with';
 YIELD : 'yield';
 
 NEWLINE
- : ( {this.atStartOfInput()}?   SPACES
-   | ( '\r'? '\n' | '\r' | '\f' ) SPACES?
-   )
+ : ( ( '\r'? '\n' | '\r' | '\f' ) SPACES? )
    {this.onNewLine();}
  ;
 
