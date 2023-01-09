@@ -65,7 +65,7 @@ varargslist: (vfpdef ('=' expr)? (',' vfpdef ('=' expr)?)* (',' (
 vfpdef: name;
 
 stmt: simple_stmts | compound_stmt;
-simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE;
+simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE?;
 simple_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
 expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|exprlist) |
@@ -169,7 +169,6 @@ keyword_pattern: name '=' pattern ;
 
 expr:
     'lambda' varargslist? ':' expr
-    | expr BINOP expr
     | expr 'or' expr
     | expr 'and' expr
     | expr '|' expr
