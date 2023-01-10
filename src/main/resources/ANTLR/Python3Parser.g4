@@ -154,8 +154,8 @@ compound_stmt:
 	| match_stmt;
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
 if_stmt:
-	'if' expr ':' block ('elif' expr ':' block)* (
-		'else' ':' block
+	'if' expr ':' (
+		block ('elif' expr ':' block)* ('else' ':' block)?
 	)?;
 while_stmt: 'while' expr ':' block ('else' ':' block)?;
 for_stmt:
