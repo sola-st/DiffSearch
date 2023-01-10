@@ -111,7 +111,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' block;
 with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (expr ('as' name)?)?;
-block: simple_stmts | NEWLINE INDENT stmt+ DEDENT | WILDCARD;
+block: WILDCARD | simple_stmts | NEWLINE INDENT stmt+ DEDENT;
 match_stmt: 'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT ;
 subject_expr: star_named_expression ',' star_named_expressions? | expr ;
 star_named_expressions: ',' star_named_expression+ ','? ;
