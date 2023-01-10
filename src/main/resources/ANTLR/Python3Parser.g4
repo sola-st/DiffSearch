@@ -31,8 +31,7 @@ options {
 	tokenVocab = Python3Lexer;
 }
 
-program:
-	query_snippet QUERY_ARROW NEWLINE? query_snippet EOF;
+program: query_snippet QUERY_ARROW NEWLINE? query_snippet EOF;
 
 query_snippet: (expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?;
 
@@ -76,7 +75,10 @@ varargslist: (
 vfpdef: name;
 
 stmt: simple_stmts | compound_stmt;
-simple_stmts: simple_stmt (';' simple_stmt)* ';'?;
+simple_stmts:
+	simple_stmt
+	| ((simple_stmt ';') | WILDCARD)+ simple_stmt?;
+// simple_stmts: simple_stmt (';' simple_stmt)* ';'?;
 simple_stmt:
 	WILDCARD
 	| expr_stmt
