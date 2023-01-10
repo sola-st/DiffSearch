@@ -31,10 +31,10 @@ options {
 	tokenVocab = Python3Lexer;
 }
 
-program: query_snippet QUERY_ARROW NEWLINE? query_snippet EOF;
+program: query_snippet QUERY_ARROW query_snippet EOF;
 
 query_snippet:
-	(expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?
+	NEWLINE? (expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?
 	| EMPTY;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
