@@ -119,7 +119,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test11() throws Exception {
-        String query = "<...>\nID<0>()\n<...>\nID<0>() --> <...>\nID<1>()\n<...>\nID<1>()";
+        String query = "<...>\nID<0>()\n<...>\nID<0>()\n-->\n<...>\nID<1>()\n<...>\nID<1>()";
         String candidate = "g()\nf()\nh()\nj()\nf()\n-->\ng()\nz()\nh()\nj()\nz()";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -249,6 +249,22 @@ public class AppTest_Python extends TestCase {
                 "x+= 1 --> x=0\n" +
                 "foo()\n" +
                 "x+=1";
+
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    // Reduced test 26. The problem is probably with the matching code, since the parse trees look fine.
+    // The test case can be changed from matching to non-matching by removing the newline after the query arrow.
+    @Test
+    public void test26_essence() throws Exception {
+        String query =
+                "ID()\n" +
+                "-->\n" +
+                "ID(ID)";
+        String candidate = 
+                "foo()\n" +
+                "-->\n" +
+                "foo()" ;
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
