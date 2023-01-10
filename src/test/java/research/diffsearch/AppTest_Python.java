@@ -47,24 +47,24 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test2() throws Exception {
-        String query = "if(x>0): --> if(x<0):";
-        String candidate = "if(x>0): --> if(x<0):";
+        String query = "if x>0: --> if x<0:";
+        String candidate = "if x>0: --> if x<0:";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test3() throws Exception {
-        String query = "if(EXPR<0>):<...> --> if(EXPR<1>):<...>";
-        String candidate = "if(x>0):x=5 --> if(x<0):x=5";
+        String query = "if EXPR<0>:<...> --> if EXPR<1>:<...>";
+        String candidate = "if x>0:x=5 --> if x<0:x=5";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test4() throws Exception {
-        String query = "if(ID binOP<0> LT): --> if(ID binOP<1> LT):";
-        String candidate = "if(x<0): --> if(y<0):";
+        String query = "if ID binOP<0> LT: --> if ID binOP<1> LT:";
+        String candidate = "if x<0: --> if y<0:";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -72,7 +72,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test5() throws Exception {
         String query = "ID binOP<0> LT --> ID binOP<0> LT";
-        String candidate = "if(x<0): --> if(y<0):";
+        String candidate = "if x<0: --> if y<0:";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -87,8 +87,8 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test7() throws Exception {
-        String query = "ID = ID --> ID = ID";
-        String candidate = "x = y --> if(y = z):";
+        String query = "ID = ID --> ID := ID";
+        String candidate = "x = y --> if y := z:";
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
@@ -104,7 +104,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test9() throws Exception {
         String query = " <...> ID = ID <...>  -->  <...> ID = ID <...> ";
-        String candidate = " x = y f() } -->  f() y = z }";
+        String candidate = " x = y\nf() -->  f()\ny = z";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -112,7 +112,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test10() throws Exception {
         String query = "<...> ID = ID <...> --> <...> ID = ID <...>";
-        String candidate = "x = y f() --> f()";
+        String candidate = "x = y\nf() --> f()";
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
@@ -120,7 +120,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test11() throws Exception {
         String query = "<...> ID<0>() <...> ID<0>() --> <...> ID<1>() <...> ID<1>()";
-        String candidate = "g() f() h() j() f() --> g() z() h() j() z()";
+        String candidate = "g()\nf()\nh()\nj()\nf()\n-->\ng()\nz()\nh()\nj()\nz()";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -128,7 +128,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test12() throws Exception {
         String query = "<...> ID<0>() <...> ID<0>() --> <...> ID<1>() <...> ID<1>()";
-        String candidate = "g() f() h() j() f()  -->   g() z() h() j() z() ";
+        String candidate = "g()\nf()\nh()\nj()\nf() --> g()\nz()\nh()\nj()\nz()";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -144,31 +144,31 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test14() throws Exception {
         String query = "f() <...> g() --> g()";
-        String candidate = "f() h() g()  --> g()";
+        String candidate = "f()\nh()\ng() --> g()";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test15() throws Exception {
-        String query = "<...> --> try: <...>  except (ID): <...> ";
-        String candidate = "f() h() g() --> g()";
+        String query = "<...> --> try: <...>\nexcept (ID): <...> ";
+        String candidate = "f()\nh()\ng() --> g()";
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test16() throws Exception {
-        String query = "<...> --> try: <...> except (ID): <...>";
-        String candidate = "x=3 --> try: x=3 except (e):";
+        String query = "<...> --> try: <...>\nexcept (ID): <...>";
+        String candidate = "x=3 --> try:\n    x=3\nexcept (e):";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test17() throws Exception {
-        String query = "<...> --> try: <...> except (ID): <...>";
-        String candidate = "x=3 --> try: x=3 except (e): println(\"oops\")";
+        String query = "<...> --> try: <...>\nexcept (ID): <...>";
+        String candidate = "x=3 --> try:\n    x=3\nexcept (e):\nprint(\"oops\")";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -207,8 +207,8 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test22() throws Exception {
-        String query = " <...> ID<0>(); <...> ID<0>(); } --> <...> ID<1>(); <...> ID<1>(); }";
-        String candidate = " g(); f(); h(); j(); f(); } -->   g(); z(); h(); j(); m(); }";
+        String query = " <...> ID<0>(); <...> ID<0>(); --> <...> ID<1>(); <...> ID<1>();";
+        String candidate = " g(); f(); h(); j(); f(); --> g(); z(); h(); j(); m();";
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
@@ -224,15 +224,15 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test24() throws Exception {
         String query = "<...>\n" +
-                "ID();\n" +
+                "ID()\n" +
                 "<...> --> <...>\n" +
-                "ID(ID);\n" +
+                "ID(ID)\n" +
                 "<...>";
-        String candidate = "x =0;\n" +
-                "foo();\n" +
-                "x++; --> x=0;\n" +
-                "foo(x);\n" +
-                "x++;";
+        String candidate = "x =0\n" +
+                "foo()\n" +
+                "x += 1 --> x=0\n" +
+                "foo(x)\n" +
+                "x += 1";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -240,70 +240,70 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test26() throws Exception {
         String query = "<...>\n" +
-                "ID();\n" +
+                "ID()\n" +
                 "<...> --> <...>\n" +
-                "ID(ID);\n" +
+                "ID(ID)\n" +
                 "<...>";
-        String candidate = "x =0;\n" +
-                "foo();\n" +
-                "x++; --> x=0;\n" +
-                "foo();\n" +
-                "x++;";
+        String candidate = "x =0\n" +
+                "foo()\n" +
+                "x+= 1 --> x=0\n" +
+                "foo()\n" +
+                "x+=1";
 
         assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test25() throws Exception {
-        String query = "ID<0>(EXPR);\n" +
-                "ID<1>(EXPR);\n" +
+        String query = "ID<0>(EXPR)\n" +
+                "ID<1>(EXPR)\n" +
                 "-->\n" +
-                "ID<1>(EXPR);\n" +
-                "ID<0>(EXPR);";
-        String candidate = "foo1(x+1);\n" +
-                "foo2(x+2);\n" +
+                "ID<1>(EXPR)\n" +
+                "ID<0>(EXPR)";
+        String candidate = "foo1(x+1)\n" +
+                "foo2(x+2)\n" +
                 "-->\n" +
-                "foo2(x+2);\n" +
-                "foo1(x+1);";
+                "foo2(x+2)\n" +
+                "foo1(x+1)";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test27() throws Exception {
-        String query = "EXPR<0>.next();\n" +
+        String query = "EXPR<0>.next()\n" +
                 "-->\n" +
-                "if (EXPR<0>.hasNext()) \n" +
-                "  EXPR<0>.next();\n" +
-                "}";
-        String candidate = "x.next();\n" +
+                "if EXPR<0>.hasNext(): \n" +
+                "    EXPR<0>.next()\n" +
+                "";
+        String candidate = "x.next()\n" +
                 "-->\n" +
-                "if (x.hasNext()) \n" +
-                "  x.next();\n" +
-                "}";
+                "if x.hasNext():\n" +
+                "    x.next()\n" +
+                "";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test28() throws Exception {
-        String query = "EXPR<0>.ID<0>();\n" +
+        String query = "EXPR<0>.ID<0>()\n" +
                 "-->\n" +
-                "if (EXPR<0> != null)\n" +
-                "  EXPR<0>.ID<0>();\n" +
-                "}";
-        String candidate = "x.start();\n" +
+                "if EXPR<0> != None:\n" +
+                "    EXPR<0>.ID<0>()\n" +
+                "";
+        String candidate = "x.start()\n" +
                 "-->\n" +
-                "if (x != null) \n" +
-                "  x.start();\n" +
-                "}";
+                "if x != None: \n" +
+                "    x.start()\n" +
+                "";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test29() throws Exception {
-        String query = "_ --> if ID binOP LT: ID = LT;";
+        String query = "_ --> if ID binOP LT: ID = LT";
         String candidate = "_ --> if frequency < 1: frequency = 1";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -312,7 +312,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test30() throws Exception {
         String query = "if EXPR: ID = ID --> if EXPR: ID = ID";
-        String candidate = "if vmType == null: vmType = Type --> if vmType == null: vmType = defaultVmType";
+        String candidate = "if vmType == None: vmType = Type --> if vmType == None: vmType = defaultVmType";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
@@ -335,24 +335,24 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test33() throws Exception {
-       String query = " if ID != null: --> if ID == null:";
-       String candidate = " if x != null: --> if x == null:";
+       String query = " if ID != None: --> if ID == None:";
+       String candidate = " if x != None: --> if x == None:";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test38() throws Exception {
-       String query = " if EXPR != null: --> if EXPR == null:";
-       String candidate = " if x != null: --> if x == null:";
+       String query = " if EXPR != None: --> if EXPR == None:";
+       String candidate = " if x != None: --> if x == None:";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test34() throws Exception {
-       String query = " _ --> EXPR(EXPR);";
-       String candidate = " _ --> foo(x);";
+       String query = " _ --> EXPR(EXPR)";
+       String candidate = " _ --> foo(x)";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
@@ -384,8 +384,8 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test39() throws Exception {
-       String query = " _ --> ID(ID);";
-       String candidate = " _ --> foo(x,y);";
+       String query = " _ --> ID(ID)";
+       String candidate = " _ --> foo(x,y)";
 
        assertFalse(App.runJunit_Python(query, candidate));
    }
@@ -409,7 +409,7 @@ public class AppTest_Python extends TestCase {
    @Test
    public void test42() throws Exception {
        String query = " while EXPR:-->while ID(<...>):";
-       String candidate = " while (true): --> while (isIdlingEventEnabled()):";
+       String candidate = " while True: --> while isIdlingEventEnabled():";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
@@ -424,8 +424,8 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test44() throws Exception {
-       String query = " <...> --> try :<...>  except (<...>) :<...>   ";
-       String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try : profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray())) catch (e): Log.w(TAG, \"Invalid profile key ignored\", e)";
+       String query = " <...> --> try: <...>\nexcept <...> : <...>   ";
+       String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try: profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray()))\nexcept Exception as e: Log.w(TAG, \"Invalid profile key ignored\", e)";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
@@ -447,7 +447,7 @@ public class AppTest_Python extends TestCase {
    @Test
    public void test47() throws Exception {
        String query = " ID binOP<0> LT -->  ID binOP<1> LT ";
-       String candidate = " return mError != null and !mCancel and !mEof --> return mError is null is !mCancel is !mEof;";
+       String candidate = " return mError != None and not mCancel and not mEof --> return mError is None is not mCancel is not mEof";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
@@ -467,22 +467,22 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test50() throws Exception {
-       String query = " while(true):  --> while(EXPR): ";
-       String candidate = " while(true): --> while(x>0):";
+       String query = " while True:  --> while EXPR: ";
+       String candidate = " while True: --> while x>0:";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test51() throws Exception {
-       String query = " while(true):  --> while(EXPR) ";
-       String candidate = " while(true): --> while(x>0):";
+       String query = " while True:  --> while EXPR ";
+       String candidate = " while True: --> while x>0:";
        assertFalse(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test54() throws Exception {
        String query = " EXPR<0> binOP EXPR<1> --> EXPR<0> binOP EXPR<1> ";
-       String candidate = " return mError != null; --> return mError == null;";
+       String candidate = " return mError != None --> return mError == None";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
@@ -495,7 +495,7 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test55() throws Exception {
-       String query = "if EXPR<0>:<...> --> if EXPR|| EXPR<0>:<...> ";
+       String query = "if EXPR<0>:<...> --> if EXPR or EXPR<0>:<...> ";
        String candidate = " if foo(): --> if subtypeProps or foo():";
        assertTrue(App.runJunit_Python(query, candidate));
    }
@@ -530,15 +530,15 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test59() throws Exception {
-       String query = "ID<0> unOP --> ID<0> unOP  ";
-       String candidate = " x++ --> x--";
+       String query = "ID<0> binOP LT<0> --> ID<0> binOP LT<0>  ";
+       String candidate = " x+=1 --> x-=1";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test60() throws Exception {
-       String query = "<...> ID(<...>): --> <...> ID(<...>) throws ID :";
-       String candidate = " def run():--> def run() throws InterruptedException";
+       String query = "<...> ID(<...>): --> <...> ID(<...>) -> ID:";
+       String candidate = " def run():--> def run() -> int:";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
@@ -566,28 +566,28 @@ public class AppTest_Python extends TestCase {
    @Test
    public void test65() throws Exception {
        String query = "unOP EXPR<0> --> unOP EXPR<0>";
-       String candidate = " --x --> ++x";
+       String candidate = " not x --> * x";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test66() throws Exception {
        String query = "unOP EXPR<0> --> EXPR<0>";
-       String candidate = " !x --> x";
+       String candidate = " not x --> x";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test67() throws Exception {
-       String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) :";
-       String candidate = "if contetType == null : --> if contentType == null and charset == null :";
+       String query = "if EXPR<0>: --> if EXPR<0> and EXPR :";
+       String candidate = "if contentType == None : --> if contentType == None and charset == None :";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
    @Test
    public void test68() throws Exception {
        String query = "ID.ID() binOP LT --> ID.ID() binOP LT";
-       String candidate = "return found.size() == 1 ? found.iterator().next(): null --> return found.size() >= 1 ? found.iterator().next(): null  ";
+       String candidate = "return found.iterator().next() if found.size() == 1 else None --> return found.iterator().next() if found.size() >= 1 else None  ";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
