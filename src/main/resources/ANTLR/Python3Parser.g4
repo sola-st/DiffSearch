@@ -34,7 +34,7 @@ options {
 program: query_snippet QUERY_ARROW query_snippet EOF;
 
 query_snippet:
-	NEWLINE? (expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?
+	(expr | stmts | WILDCARD) NEWLINE*
 	| EMPTY;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
@@ -76,6 +76,8 @@ varargslist: (
 	);
 vfpdef: name;
 
+
+stmts: NEWLINE? (stmt NEWLINE+)* stmt NEWLINE?;
 stmt: simple_stmts | compound_stmt;
 simple_stmts:
 	simple_stmt
