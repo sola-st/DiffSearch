@@ -32,9 +32,9 @@ options {
 }
 
 program:
-	query_snippet NEWLINE? QUERY_ARROW NEWLINE? query_snippet NEWLINE? EOF;
+	query_snippet QUERY_ARROW NEWLINE? query_snippet EOF;
 
-query_snippet: expr | (stmt NEWLINE+)* stmt | WILDCARD;
+query_snippet: (expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
 decorators: decorator+;
@@ -76,7 +76,7 @@ varargslist: (
 vfpdef: name;
 
 stmt: simple_stmts | compound_stmt;
-simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE?;
+simple_stmts: simple_stmt (';' simple_stmt)* ';'?;
 simple_stmt:
 	WILDCARD
 	| expr_stmt
