@@ -93,6 +93,7 @@ public class NodeUtil {
         } else if (kText.equals("EXPR") || kText.matches("EXPR<[0-9]+>")) {
             return vText.equals("expression") || vText.equals("expr")
                    || vParentText.equals("expression")//v.getChildCount() == 0;
+                   || vParentText.equals("expr")
                    || vParentText.equals("methodCall")
                    || vParentText.equals("singleExpression");
         }
