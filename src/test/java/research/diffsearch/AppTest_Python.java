@@ -103,7 +103,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test9() throws Exception {
-        String query = " <...> ID = ID <...>  -->  <...> ID = ID <...> ";
+        String query = " <...>\nID = ID\n<...>  -->  <...>\nID = ID\n<...> ";
         String candidate = " x = y\nf() -->  f()\ny = z";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -111,7 +111,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test10() throws Exception {
-        String query = "<...> ID = ID <...> --> <...> ID = ID <...>";
+        String query = "<...>\nID = ID\n<...> --> <...>\nID = ID\n<...>";
         String candidate = "x = y\nf() --> f()";
 
         assertFalse(App.runJunit_Python(query, candidate));
@@ -119,7 +119,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test11() throws Exception {
-        String query = "<...> ID<0>() <...> ID<0>() --> <...> ID<1>() <...> ID<1>()";
+        String query = "<...>\nID<0>()\n<...>\nID<0>() --> <...>\nID<1>()\n<...>\nID<1>()";
         String candidate = "g()\nf()\nh()\nj()\nf()\n-->\ng()\nz()\nh()\nj()\nz()";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -127,7 +127,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test12() throws Exception {
-        String query = "<...> ID<0>() <...> ID<0>() --> <...> ID<1>() <...> ID<1>()";
+        String query = "<...>\nID<0>()\n<...>\nID<0>() --> <...>\nID<1>()\n<...>\nID<1>()";
         String candidate = "g()\nf()\nh()\nj()\nf() --> g()\nz()\nh()\nj()\nz()";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -143,7 +143,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test14() throws Exception {
-        String query = "f() <...> g() --> g()";
+        String query = "f()\n<...>\ng() --> g()";
         String candidate = "f()\nh()\ng() --> g()";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -175,7 +175,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test18() throws Exception {
-        String query = "<...> ID = 23 <...> --> <...>";
+        String query = "<...> ID = 23; <...> --> <...>";
         String candidate = "a=2;b=5;c=7;d=23;e=1;f=2; --> a=2;b=5;c=7;d=23;e=1;f=2;";
 
         assertTrue(App.runJunit_Python(query, candidate));
@@ -425,7 +425,7 @@ public class AppTest_Python extends TestCase {
    @Test
    public void test44() throws Exception {
        String query = " <...> --> try: <...>\nexcept <...> : <...>   ";
-       String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try: profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray()))\nexcept Exception as e: Log.w(TAG, \"Invalid profile key ignored\", e)";
+       String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try: profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray()))\nexcept e: Log.w(TAG, \"Invalid profile key ignored\", e)";
 
        assertTrue(App.runJunit_Python(query, candidate));
    }
