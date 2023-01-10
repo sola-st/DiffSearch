@@ -66,8 +66,8 @@ vfpdef: name;
 
 stmt: simple_stmts | compound_stmt;
 simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE?;
-simple_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
-             import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
+simple_stmt: expr_stmt | del_stmt | pass_stmt | flow_stmt |
+             import_stmt | global_stmt | nonlocal_stmt | assert_stmt | WILDCARD;
 expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|exprlist) |
                      ('=' (yield_expr|test_or_star_expr_list))*);
 annotated_assign: ':' expr ('=' expr)?;
@@ -111,7 +111,7 @@ with_stmt: 'with' with_item (',' with_item)*  ':' block;
 with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (expr ('as' name)?)?;
-block: simple_stmts | NEWLINE INDENT stmt+ DEDENT;
+block: simple_stmts | NEWLINE INDENT stmt+ DEDENT | WILDCARD;
 match_stmt: 'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT ;
 subject_expr: star_named_expression ',' star_named_expressions? | expr ;
 star_named_expressions: ',' star_named_expression+ ','? ;
@@ -173,7 +173,8 @@ expr:
     | unary_prefix_operators expr
     | expr 'if' expr 'else' expr
     | AWAIT? atom trailer*
-    | EXPR;
+    | EXPR
+    | WILDCARD;
 
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
@@ -221,7 +222,7 @@ dictorsetmaker: ( ((expr ':' expr | '**' expr)
                   ((expr)
                    (comp_for | (',' (expr))* ','?)) );
 
-classdef: 'class' name ('(' arglist? ')')? ':' block;
+classdef: 'class' name ('(' arglist? ')')? ':' block | WILDCARD;
 
 arglist: argument (',' argument)* ','?;
 
@@ -237,7 +238,8 @@ arglist: argument (',' argument)* ','?;
 argument: ( expr comp_for? |
             expr '=' expr |
             '**' expr |
-            '*' expr );
+            '*' expr |
+            WILDCARD );
 
 comp_iter: comp_for | comp_if;
 comp_for: ASYNC? 'for' exprlist 'in' expr comp_iter?;

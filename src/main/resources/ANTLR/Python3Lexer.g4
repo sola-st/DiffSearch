@@ -66,6 +66,9 @@ fragment UNOPF: 'unOP';
 OP: OPF;
 fragment OPF: 'OP';
 
+WILDCARD: WILDCARDF;
+fragment WILDCARDF: '<...>';
+
 STRING
  : STRING_LITERAL
  | BYTES_LITERAL
