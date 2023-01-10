@@ -31,9 +31,10 @@ options {
 	tokenVocab = Python3Lexer;
 }
 
-program: query_snippet NEWLINE? QUERY_ARROW NEWLINE? query_snippet NEWLINE? EOF;
+program:
+	query_snippet NEWLINE? QUERY_ARROW NEWLINE? query_snippet NEWLINE? EOF;
 
-query_snippet: expr | stmt;
+query_snippet: expr | (stmt NEWLINE+)* stmt | WILDCARD;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
 decorators: decorator+;
@@ -77,15 +78,16 @@ vfpdef: name;
 stmt: simple_stmts | compound_stmt;
 simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE?;
 simple_stmt:
-	expr_stmt
+	WILDCARD
+	| expr_stmt
 	| del_stmt
 	| pass_stmt
 	| flow_stmt
 	| import_stmt
 	| global_stmt
 	| nonlocal_stmt
-	| assert_stmt
-	| WILDCARD;
+	| assert_stmt;
+
 expr_stmt:
 	test_or_star_expr_list (
 		annotated_assign
@@ -174,7 +176,7 @@ with_stmt: 'with' with_item (',' with_item)* ':' block;
 with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (expr ('as' name)?)?;
-block: WILDCARD | simple_stmts | NEWLINE INDENT stmt+ DEDENT;
+block: WILDCARD | simple_stmts | NEWLINE INDENT (stmt NEWLINE+)* stmt DEDENT;
 match_stmt:
 	'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT;
 subject_expr:
