@@ -31,7 +31,9 @@ options {
 	tokenVocab = Python3Lexer;
 }
 
-program: stmt NEWLINE? QUERY_ARROW NEWLINE? stmt NEWLINE? EOF;
+program: query_snippet NEWLINE? QUERY_ARROW NEWLINE? query_snippet NEWLINE? EOF;
+
+query_snippet: expr | stmt;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
 decorators: decorator+;
