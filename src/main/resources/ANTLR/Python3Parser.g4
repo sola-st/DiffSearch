@@ -33,7 +33,9 @@ options {
 
 program: query_snippet QUERY_ARROW NEWLINE? query_snippet EOF;
 
-query_snippet: (expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?;
+query_snippet:
+	(expr | (stmt NEWLINE+)* stmt | WILDCARD) NEWLINE?
+	| EMPTY;
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
 decorators: decorator+;
