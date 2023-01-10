@@ -169,26 +169,43 @@ keyword_pattern: name '=' pattern ;
 
 expr:
     'lambda' varargslist? ':' expr
-    | expr 'or' expr
-    | expr 'and' expr
-    | expr '|' expr
-    | expr '^' expr
-    | expr comp_op expr
-    | expr '&' expr
-    | expr ('<<'|'>>') expr
-    | expr ('+'|'-') expr
-    | expr ('*'|'@'|'/'|'%'|'//') expr
-    | expr '**' expr
-    | ('+'|'-'|'~') expr 
-    | 'not' expr
-    | '*' expr
+    | expr bin_op expr
+    | unary_prefix_operators expr
     | expr 'if' expr 'else' expr
     | AWAIT? atom trailer*
     | EXPR;
 
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not' | BINOP;
+bin_op: '<'
+    | '>'
+    | '=='
+    | '>='
+    | '<='
+    | '<>'
+    | '!='
+    | 'in'
+    | ('not' 'in')
+    | 'is'
+    | ('is' 'not')
+    | 'or' 
+    | 'and' 
+    | '|'
+    | '&'
+    | '^'
+    | '<<'
+    | '>>'
+    | '**'
+    | '+'
+    | '-'
+    | '*'
+    | '@'
+    | '/'
+    | '%'
+    | '//'
+    | BINOP;
+
+unary_prefix_operators: '+'|'-'|'~'|'*'|'not';
 atom: '(' (yield_expr|exprlist_comp)? ')'
    | '[' exprlist_comp? ']'
    | '{' dictorsetmaker? '}'
