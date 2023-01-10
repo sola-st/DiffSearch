@@ -50,16 +50,16 @@ async_funcdef: ASYNC funcdef;
 funcdef: 'def' name parameters ('->' expr)? ':' block;
 
 parameters: '(' typedargslist? ')';
-typedargslist: (tfpdef ('=' expr)? (',' tfpdef ('=' expr)?)* (',' (
-        '*' tfpdef? (',' tfpdef ('=' expr)?)* (',' ('**' tfpdef ','? )? )?
+typedargslist: (tfpdef (assign expr)? (',' tfpdef (assign expr)?)* (',' (
+        '*' tfpdef? (',' tfpdef (assign expr)?)* (',' ('**' tfpdef ','? )? )?
       | '**' tfpdef ','? )? )?
-  | '*' tfpdef? (',' tfpdef ('=' expr)?)* (',' ('**' tfpdef ','? )? )?
+  | '*' tfpdef? (',' tfpdef (assign expr)?)* (',' ('**' tfpdef ','? )? )?
   | '**' tfpdef ','?);
 tfpdef: name (':' expr)?;
-varargslist: (vfpdef ('=' expr)? (',' vfpdef ('=' expr)?)* (',' (
-        '*' vfpdef? (',' vfpdef ('=' expr)?)* (',' ('**' vfpdef ','? )? )?
+varargslist: (vfpdef (assign expr)? (',' vfpdef (assign expr)?)* (',' (
+        '*' vfpdef? (',' vfpdef (assign expr)?)* (',' ('**' vfpdef ','? )? )?
       | '**' vfpdef (',')?)?)?
-  | '*' vfpdef? (',' vfpdef ('=' expr)?)* (',' ('**' vfpdef ','? )? )?
+  | '*' vfpdef? (',' vfpdef (assign expr)?)* (',' ('**' vfpdef ','? )? )?
   | '**' vfpdef ','?
 );
 vfpdef: name;
@@ -69,11 +69,12 @@ simple_stmts: simple_stmt (';' simple_stmt)* ';'? NEWLINE?;
 simple_stmt: expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt | WILDCARD;
 expr_stmt: test_or_star_expr_list (annotated_assign | augmenting_assign (yield_expr|exprlist) |
-                     ('=' (yield_expr|test_or_star_expr_list))*);
-annotated_assign: ':' expr ('=' expr)?;
+                     (assign (yield_expr|test_or_star_expr_list))*);
+annotated_assign: ':' expr (assign expr)?;
 test_or_star_expr_list: (expr) (',' (expr))* ','?;
-augmenting_assign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
-            '<<=' | '>>=' | '**=' | '//=');
+augmenting_assign: '+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
+            '<<=' | '>>=' | '**=' | '//=' | OP;
+assign: '=' | OP;
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
 del_stmt: 'del' exprlist;
 pass_stmt: 'pass';
@@ -165,7 +166,7 @@ class_pattern: name_or_attr '(' ')'
     ;
 positional_patterns: pattern (',' pattern)* ;
 keyword_patterns: keyword_pattern (',' keyword_pattern)* ;
-keyword_pattern: name '=' pattern ;
+keyword_pattern: name assign pattern ;
 
 expr:
     'lambda' varargslist? ':' expr
@@ -228,7 +229,7 @@ arglist: argument (',' argument)* ','?;
 
 // The reason that keywords are test nodes instead of NAME is that using NAME
 // results in an ambiguity. ast.c makes sure it's a NAME.
-// "test '=' test" is really "keyword '=' test", but we have no such token.
+// "test assign test" is really "keyword assign test", but we have no such token.
 // These need to be in a single rule to avoid grammar that is ambiguous
 // to our LL(1) parser. Even though 'test' includes '*expr' in star_expr,
 // we explicitly match '*' here, too, to give it proper precedence.
@@ -236,7 +237,7 @@ arglist: argument (',' argument)* ','?;
 // multiple (test comp_for) arguments are blocked; keyword unpackings
 // that precede iterable unpackings are blocked; etc.
 argument: ( expr comp_for? |
-            expr '=' expr |
+            expr assign expr |
             '**' expr |
             '*' expr |
             WILDCARD );
