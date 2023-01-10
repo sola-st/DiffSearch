@@ -59,12 +59,17 @@ LT: LT_ANONYMOUS | LT_NAMED;
 fragment LT_ANONYMOUS: 'LT';
 fragment LT_NAMED: 'LT<' DIGIT+ '>';
 
-BINOP: BINOPF;
-fragment BINOPF: 'binOP';
-UNOP: UNOPF;
-fragment UNOPF: 'unOP';
-OP: OPF;
-fragment OPF: 'OP';
+BINOP: BINOP_ANONYMOUS | BINOP_NAMED;
+fragment BINOP_ANONYMOUS: 'binOP';
+fragment BINOP_NAMED: 'binOP<' DIGIT+ '>';
+
+UNOP: UNOP_ANONYMOUS | UNOP_NAMED;
+fragment UNOP_ANONYMOUS: 'unOP';
+fragment UNOP_NAMED: 'unOP<' DIGIT+ '>';
+
+OP: OP_ANONYMOUS | OP_NAMED;
+fragment OP_ANONYMOUS: 'OP';
+fragment OP_NAMED: 'OP<' DIGIT+ '>';
 
 WILDCARD: WILDCARDF;
 fragment WILDCARDF: '<...>';
