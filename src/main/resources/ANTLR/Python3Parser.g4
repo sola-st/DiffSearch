@@ -268,8 +268,8 @@ expr:
 	| expr bin_op expr
 	| unary_prefix_operators expr
 	| expr 'if' expr 'else' expr
-	| AWAIT? atom trailer*
 	| EXPR
+	| AWAIT? atom trailer*
 	| WILDCARD;
 
 // <> isn't actually a valid comparison operator in Python. It's here for the sake of a __future__
