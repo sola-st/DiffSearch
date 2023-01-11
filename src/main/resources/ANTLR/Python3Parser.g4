@@ -268,19 +268,12 @@ expr:
 	| expr bin_op expr
 	| unary_prefix_operators expr
 	| expr 'if' expr 'else' expr
-	| EXPR
-	| AWAIT? (
-		'(' (yield_expr | exprlist_comp)? ')'
-		| '[' exprlist_comp? ']'
-		| '{' dictorsetmaker? '}'
-		| name
-		| literal
-		| EXPR
-		| '(' expr ')'
-		) trailer*
+	| AWAIT expr
+	| expr trailer+
 	| '(' (yield_expr | exprlist_comp)? ')'
 	| '[' exprlist_comp? ']'
 	| '{' dictorsetmaker? '}'
+	| EXPR
 	| name
 	| literal
 	| WILDCARD;
