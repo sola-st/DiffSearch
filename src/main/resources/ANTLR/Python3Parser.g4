@@ -265,14 +265,14 @@ keyword_pattern: name assign pattern;
 
 expr:
 	'lambda' varargslist? ':' expr
-	| expr bin_op expr
-	| unary_prefix_operators expr
-	| expr 'if' expr 'else' expr
-	| AWAIT expr
 	| expr trailer+
 	| '(' (yield_expr | exprlist_comp)? ')'
 	| '[' exprlist_comp? ']'
 	| '{' dictorsetmaker? '}'
+	| expr bin_op expr
+	| unary_prefix_operators expr
+	| expr 'if' expr 'else' expr
+	| AWAIT expr
 	| EXPR
 	| name
 	| literal
