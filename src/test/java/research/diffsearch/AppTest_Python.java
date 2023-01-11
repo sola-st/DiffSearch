@@ -546,7 +546,7 @@ public class AppTest_Python extends TestCase {
 
    @Test
    public void test59() throws Exception {
-       String query = "ID<0> binOP LT<0> --> ID<0> binOP LT<0>  ";
+       String query = "ID<0> OP LT<0> --> ID<0> OP LT<0>  ";
        String candidate = " x+=1 --> x-=1";
        assertTrue(App.runJunit_Python(query, candidate));
    }
