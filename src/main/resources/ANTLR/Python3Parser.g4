@@ -46,30 +46,30 @@ funcdef: 'def' name parameters ('->' expr)? ':' block?;
 
 parameters: '(' typedargslist? ')';
 typedargslist: (
-		tfpdef (assign expr)? (',' tfpdef (assign expr)?)* (
+		tfpdef (assign_operators expr)? (',' tfpdef (assign_operators expr)?)* (
 			',' (
-				'*' tfpdef? (',' tfpdef (assign expr)?)* (
+				'*' tfpdef? (',' tfpdef (assign_operators expr)?)* (
 					',' ('**' tfpdef ','?)?
 				)?
 				| '**' tfpdef ','?
 			)?
 		)?
-		| '*' tfpdef? (',' tfpdef (assign expr)?)* (
+		| '*' tfpdef? (',' tfpdef (assign_operators expr)?)* (
 			',' ('**' tfpdef ','?)?
 		)?
 		| '**' tfpdef ','?
 	);
 tfpdef: name (':' expr)?;
 varargslist: (
-		vfpdef (assign expr)? (',' vfpdef (assign expr)?)* (
+		vfpdef (assign_operators expr)? (',' vfpdef (assign_operators expr)?)* (
 			',' (
-				'*' vfpdef? (',' vfpdef (assign expr)?)* (
+				'*' vfpdef? (',' vfpdef (assign_operators expr)?)* (
 					',' ('**' vfpdef ','?)?
 				)?
 				| '**' vfpdef (',')?
 			)?
 		)?
-		| '*' vfpdef? (',' vfpdef (assign expr)?)* (
+		| '*' vfpdef? (',' vfpdef (assign_operators expr)?)* (
 			',' ('**' vfpdef ','?)?
 		)?
 		| '**' vfpdef ','?
@@ -97,12 +97,12 @@ simple_stmt:
 expr_stmt:
 	test_or_star_expr_list (
 		annotated_assign
-		| augmenting_assign (yield_expr | exprlist)
-		| (assign (yield_expr | test_or_star_expr_list))*
+		| binary_operators (yield_expr | exprlist)
+		| (assign_operators (yield_expr | test_or_star_expr_list))*
 	);
-annotated_assign: ':' expr (assign expr)?;
+annotated_assign: ':' expr (assign_operators expr)?;
 test_or_star_expr_list: (expr) (',' (expr))* ','?;
-augmenting_assign:
+binary_operators:
 	'+='
 	| '-='
 	| '*='
@@ -117,7 +117,7 @@ augmenting_assign:
 	| '**='
 	| '//='
 	| OP;
-assign: '=' | OP;
+assign_operators: '=' | OP;
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
 del_stmt: 'del' exprlist;
 pass_stmt: 'pass';
@@ -261,7 +261,7 @@ class_pattern:
 	| name_or_attr '(' positional_patterns ',' keyword_patterns ','? ')';
 positional_patterns: pattern (',' pattern)*;
 keyword_patterns: keyword_pattern (',' keyword_pattern)*;
-keyword_pattern: name assign pattern;
+keyword_pattern: name assign_operators pattern;
 
 expr:
 	'lambda' varargslist? ':' expr
@@ -350,7 +350,7 @@ arglist: argument (',' argument)* ','?;
 // unpackings are blocked; etc.
 argument: (
 		expr comp_for?
-		| expr assign expr
+		| expr assign_operators expr
 		| '**' expr
 		| '*' expr
 		| WILDCARD
