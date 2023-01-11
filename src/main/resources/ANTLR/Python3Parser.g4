@@ -39,10 +39,10 @@ query_snippet:
 
 decorator: '@' dotted_name ( '(' arglist? ')')? NEWLINE;
 decorators: decorator+;
-decorated: decorators (classdef | funcdef | async_funcdef);
+decorated: decorators (classdef | funcdef | async_funcdef)?;
 
 async_funcdef: ASYNC funcdef;
-funcdef: 'def' name parameters ('->' expr)? ':' block;
+funcdef: 'def' name parameters ('->' expr)? ':' block?;
 
 parameters: '(' typedargslist? ')';
 typedargslist: (
@@ -167,7 +167,7 @@ if_stmt:
 	'if' expr ':' (
 		block ('elif' expr ':' block)* ('else' ':' block)?
 	)?;
-while_stmt: 'while' expr ':' block ('else' ':' block)?;
+while_stmt: 'while' expr ':' (block ('else' ':' block)?)?;
 for_stmt:
 	'for' exprlist 'in' exprlist ':' (block ('else' ':' block)?)?;
 try_stmt: (
@@ -337,7 +337,7 @@ dictorsetmaker: (
 		| ((expr) (comp_for | (',' (expr))* ','?))
 	);
 
-classdef: 'class' name ('(' arglist? ')')? ':' block | WILDCARD;
+classdef: 'class' name ('(' arglist? ')')? ':' block? | WILDCARD;
 
 arglist: argument (',' argument)* ','?;
 
