@@ -169,7 +169,7 @@ if_stmt:
 	)?;
 while_stmt: 'while' expr ':' block ('else' ':' block)?;
 for_stmt:
-	'for' exprlist 'in' exprlist ':' block ('else' ':' block)?;
+	'for' exprlist 'in' exprlist ':' (block ('else' ':' block)?)?;
 try_stmt: (
 		'try' ':' (
 			block (except_clause ':' block?)+ ('else' ':' block?)? (
@@ -178,7 +178,7 @@ try_stmt: (
 			| 'finally' ':' block?
 		)?
 	);
-with_stmt: 'with' with_item (',' with_item)* ':' block;
+with_stmt: 'with' with_item (',' with_item)* ':' block?;
 with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (expr ('as' name)?)?;
@@ -187,7 +187,7 @@ block:
 	| simple_stmts
 	| NEWLINE INDENT stmts NEWLINE? DEDENT;
 match_stmt:
-	'match' subject_expr ':' NEWLINE INDENT case_block+ NEWLINE? DEDENT;
+	'match' subject_expr ':' (NEWLINE INDENT case_block+ NEWLINE? DEDENT)?;
 subject_expr:
 	star_named_expression ',' star_named_expressions?
 	| expr;
