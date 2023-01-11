@@ -185,9 +185,9 @@ except_clause: 'except' (expr ('as' name)?)?;
 block:
 	WILDCARD
 	| simple_stmts
-	| NEWLINE INDENT (stmt NEWLINE+)* stmt DEDENT;
+	| NEWLINE INDENT stmts NEWLINE? DEDENT;
 match_stmt:
-	'match' subject_expr ':' NEWLINE INDENT case_block+ DEDENT;
+	'match' subject_expr ':' NEWLINE INDENT case_block+ NEWLINE? DEDENT;
 subject_expr:
 	star_named_expression ',' star_named_expressions?
 	| expr;
