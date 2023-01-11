@@ -315,7 +315,8 @@ atom:
 	| 'None'
 	| 'True'
 	| 'False'
-	| LT;
+	| LT
+	| EXPR;
 name: NAME | '_' | 'match' | ID;
 exprlist_comp: (expr) ( comp_for | (',' (expr))* ','?);
 trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name;

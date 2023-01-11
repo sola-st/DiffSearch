@@ -94,6 +94,7 @@ public class NodeUtil {
             return vText.equals("expression") || vText.equals("expr")
                    || vParentText.equals("expression")//v.getChildCount() == 0;
                    || vParentText.equals("expr")
+                   || vParentText.equals("atom")
                    || vParentText.equals("methodCall")
                    || vParentText.equals("singleExpression");
         }
