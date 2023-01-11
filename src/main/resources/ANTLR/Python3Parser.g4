@@ -81,11 +81,11 @@ stmts: NEWLINE? (stmt NEWLINE+)* stmt NEWLINE?;
 stmt: simple_stmts | compound_stmt;
 simple_stmts:
 	simple_stmt
-	| ((simple_stmt ';') | WILDCARD)+ simple_stmt?;
+	| ((simple_stmt ';') | WILDCARD)+ simple_stmt?
+	| WILDCARD;
 // simple_stmts: simple_stmt (';' simple_stmt)* ';'?;
 simple_stmt:
-	WILDCARD
-	| expr_stmt
+	expr_stmt
 	| del_stmt
 	| pass_stmt
 	| flow_stmt
@@ -269,7 +269,20 @@ expr:
 	| unary_prefix_operators expr
 	| expr 'if' expr 'else' expr
 	| EXPR
-	| AWAIT? atom trailer*
+	| AWAIT? (
+		'(' (yield_expr | exprlist_comp)? ')'
+		| '[' exprlist_comp? ']'
+		| '{' dictorsetmaker? '}'
+		| name
+		| literal
+		| EXPR
+		| '(' expr ')'
+		) trailer*
+	| '(' (yield_expr | exprlist_comp)? ')'
+	| '[' exprlist_comp? ']'
+	| '{' dictorsetmaker? '}'
+	| name
+	| literal
 	| WILDCARD;
 
 // <> isn't actually a valid comparison operator in Python. It's here for the sake of a __future__
@@ -304,22 +317,20 @@ bin_op:
 	| BINOP;
 
 unary_prefix_operators: '+' | '-' | '~' | '*' | 'not';
-atom:
-	'(' (yield_expr | exprlist_comp)? ')'
-	| '[' exprlist_comp? ']'
-	| '{' dictorsetmaker? '}'
-	| name
-	| NUMBER
+name: NAME | '_' | 'match' | ID;
+literal: 
+	NUMBER
 	| STRING+
 	| '...'
 	| 'None'
 	| 'True'
 	| 'False'
-	| LT
-	| EXPR;
-name: NAME | '_' | 'match' | ID;
+	| LT;
 exprlist_comp: (expr) ( comp_for | (',' (expr))* ','?);
-trailer: '(' arglist? ')' | '[' subscriptlist ']' | '.' name;
+trailer:
+	'(' arglist? ')'
+	| '[' subscriptlist ']'
+	| '.' name;
 subscriptlist: subscript_ (',' subscript_)* ','?;
 subscript_: expr | expr? ':' expr? (':' expr?)?;
 exprlist: (expr) (',' (expr))* ','?;
