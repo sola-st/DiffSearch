@@ -265,7 +265,7 @@ keyword_pattern: name assign pattern;
 
 expr:
 	'lambda' varargslist? ':' expr
-	| expr trailer+
+	| expr trailer
 	| '(' (yield_expr | exprlist_comp)? ')'
 	| '[' exprlist_comp? ']'
 	| '{' dictorsetmaker? '}'
