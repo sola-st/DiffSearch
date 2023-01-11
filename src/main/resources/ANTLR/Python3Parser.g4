@@ -309,7 +309,7 @@ bin_op:
 	| '//'
 	| BINOP;
 
-unary_prefix_operators: '+' | '-' | '~' | '*' | 'not';
+unary_prefix_operators: '+' | '-' | '~' | '*' | 'not' | UNOP;
 name: NAME | '_' | 'match' | ID;
 literal: 
 	NUMBER
