@@ -651,7 +651,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test75() throws Exception {
-        String query = "ID<0>=1-->ID<0>=LT'";
+        String query = "ID<0>=1-->ID<0>=LT";
         String candidate = "a: int =1-->a: str='test'";
         assertTrue(App.runJunit_Python(query, candidate));
     }
