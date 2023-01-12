@@ -656,4 +656,39 @@ public class AppTest_Python extends TestCase {
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
+    @Test
+    public void test76() throws Exception {
+        String query = "ID<0>: ID<1> = LT --> ID<0>: ID<2> = LT";
+        String candidate = "a: int = 1 --> a: str='test'";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test77() throws Exception {
+        String query = "ID<0> = EXPR<0> --> ID<0>: ID = EXPR<0>";
+        String candidate = "a = 5 --> a: int = 5";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test78() throws Exception {
+        String query = "ID<0>: EXPR binOP EXPR --> ID<0>: EXPR";
+        String candidate = "a: int | str --> a: int";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test79() throws Exception {
+        String query = "def ID(ID<0>: <...>): --> def ID(ID<0>: <...>) -> EXPR:";
+        String candidate = "def foo(x: int): --> def bar(x: int) -> list[float]:";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test80() throws Exception {
+        String query = "def ID(ID<0>: <...>) -> EXPR<0>: --> def ID(ID<0>: <...>) -> EXPR<0>:";
+        String candidate = "def foo(x: int) -> list[float]: --> def bar(x: int) -> list[float]:";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
 }
