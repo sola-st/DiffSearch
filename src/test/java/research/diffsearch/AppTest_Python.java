@@ -169,7 +169,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test17() throws Exception {
         String query = "<...> --> try: <...>\nexcept (ID): <...>";
-        String candidate = "x=3 --> try:\n    x=3\nexcept (e):\nprint(\"oops\")";
+        String candidate = "x=3 --> try:\n    x=3\nexcept (e):\n    print(\"oops\")";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
