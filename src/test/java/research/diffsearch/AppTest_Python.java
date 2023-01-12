@@ -610,7 +610,7 @@ public class AppTest_Python extends TestCase {
    @Test
    public void test69() throws Exception {
        String query = "ID<0>.ID<1>(ID<2>,ID) binOP LT --> ID<0>.ID<1>(ID<2>)";
-       String candidate = "timeout = hardTimeout - clockSource.elapsedMillis(startTime, now) --> timeout = hardTimeout - clockSource.elapsedMillis(startTime) ";
+       String candidate = "timeout = clockSource.elapsedMillis(startTime, now) - 1000 --> timeout = hardTimeout - clockSource.elapsedMillis(startTime) ";
        assertTrue(App.runJunit_Python(query, candidate));
    }
 
