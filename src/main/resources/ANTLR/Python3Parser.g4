@@ -80,9 +80,9 @@ vfpdef: name;
 stmts: NEWLINE? (stmt NEWLINE+)* stmt NEWLINE?;
 stmt: simple_stmts | compound_stmt;
 simple_stmts:
-	simple_stmt
-	| ((simple_stmt ';') | WILDCARD)+ simple_stmt?
-	| WILDCARD;
+	WILDCARD
+	| simple_stmt
+	| ((simple_stmt ';') | WILDCARD)+ simple_stmt?;
 // simple_stmts: simple_stmt (';' simple_stmt)* ';'?;
 simple_stmt:
 	expr_stmt
