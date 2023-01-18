@@ -40,7 +40,7 @@ querySnippet
     | importDeclaration+
     | enumConstant
     | typeDeclaration
-    | modifier* memberDeclaration
+    | classBodyDeclaration
     //| interfaceMethodDeclaration
     //| genericInterfaceMethodDeclaration
     | variableDeclarator
