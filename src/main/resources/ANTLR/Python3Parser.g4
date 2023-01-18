@@ -321,7 +321,7 @@ literal:
 	| LT;
 exprlist_comp: (expr) ( comp_for | (',' (expr))* ','?);
 trailer:
-	'(' arglist? ')'
+	'(' (WILDCARD | arglist?) ')'
 	| '[' subscriptlist ']'
 	| '.' name;
 subscriptlist: subscript_ (',' subscript_)* ','?;
