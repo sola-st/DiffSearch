@@ -183,7 +183,7 @@ with_item: expr ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (expr ('as' name)?)?;
 block:
-	WILDCARD
+	WILDCARD NEWLINE?
 	| simple_stmts
 	| NEWLINE INDENT stmts NEWLINE? DEDENT;
 match_stmt:
