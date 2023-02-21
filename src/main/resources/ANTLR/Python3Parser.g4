@@ -42,11 +42,12 @@ decorators: decorator+;
 decorated: decorators (classdef | funcdef | async_funcdef)?;
 
 async_funcdef: ASYNC funcdef;
-funcdef: 'def' name parameters ('->' expr)? ':' block?;
+funcdef: ('def'| WILDCARD) name parameters ('->' expr)? ':' block?;
 
 parameters: '(' typedargslist? ')';
 typedargslist: (
-		tfpdef (assign_operators expr)? (',' tfpdef (assign_operators expr)?)* (
+		WILDCARD
+		| tfpdef (assign_operators expr)? (',' tfpdef (assign_operators expr)?)* (
 			',' (
 				'*' tfpdef? (',' tfpdef (assign_operators expr)?)* (
 					',' ('**' tfpdef ','?)?
