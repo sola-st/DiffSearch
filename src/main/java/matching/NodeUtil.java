@@ -115,7 +115,13 @@ public class NodeUtil {
     public Tree extractNewSubtree(Tree t) {
         // Managing the case in which there is a NEWLINE child
 
-        int n = 2;
+        int n = 1;
+
+        while (!t.getChild(n).toStringTree().equals("-->")){
+            n++;
+        }
+
+        n++;
 
         while (t.getChild(n).toStringTree().equals("\n")
                || Trees.getNodeText(t.getChild(n), changeParser).equals("\n")) {
