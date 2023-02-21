@@ -441,7 +441,7 @@ public class AppTest_Python extends TestCase {
     @Test
     public void test44() throws Exception {
         String query = " <...> --> try: <...>\nexcept <...> : <...>   ";
-        String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try: profileKey = Optional.fromNullable(new ProfileKey(details.getProfileKey().toByteArray()))\nexcept e: Log.w(TAG, \"Invalid profile key ignored\", e)";
+        String candidate = " profileKey = Optional.fromNullable(details.getProfileKey().toByteArray()) --> try: profileKey = Optional.fromNullable(ProfileKey(details.getProfileKey().toByteArray()))\nexcept e: Log.w(TAG, \"Invalid profile key ignored\", e)";
 
         assertTrue(App.runJunit_Python(query, candidate));
     }
