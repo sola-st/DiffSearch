@@ -455,7 +455,7 @@ public class AppTest_Python extends TestCase {
 
     @Test
     public void test46() throws Exception {
-        String query = " ID<0>.ID<1>(<...>) --> ID<2>.ID<1>(<...>)";
+        String query = " ID<0>.ID<1>(<...>)\n --> ID<2>.ID<1>(<...>)\n";
         String candidate = " when(context.getContextPath()).thenReturn(\"/context\") -->  when(request.getContextPath()).thenReturn(\"/context\")";
         assertFalse(App.runJunit_Python(query, candidate));
     }
