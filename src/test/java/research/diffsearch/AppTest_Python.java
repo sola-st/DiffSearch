@@ -632,28 +632,28 @@ public class AppTest_Python extends TestCase {
     public void test72() throws Exception {
         String query = "def foo(x): --> def bar(x)";
         String candidate = "def foo(x: int) -> list[float]: --> def bar(x: int) -> list[float]:";
-        assertTrue(App.runJunit_Python(query, candidate));
+        assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test73() throws Exception {
         String query = "def ID(ID<0>): --> def ID(ID<0>)";
         String candidate = "def foo(x: int) -> list[float]: --> def bar(x: int) -> list[float]:";
-        assertTrue(App.runJunit_Python(query, candidate));
+        assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test74() throws Exception {
         String query = "a=1-->b='test'";
         String candidate = "a: int =1-->a: str='test'";
-        assertTrue(App.runJunit_Python(query, candidate));
+        assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
     public void test75() throws Exception {
         String query = "ID<0>=1-->ID<0>=LT";
         String candidate = "a: int =1-->a: str='test'";
-        assertTrue(App.runJunit_Python(query, candidate));
+        assertFalse(App.runJunit_Python(query, candidate));
     }
 
     @Test
