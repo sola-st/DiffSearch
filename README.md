@@ -23,6 +23,17 @@ and we present implementations for Java, JavaScript, and Python.
 
 ![Approach Overview](images/overview.png)
 
+## How to cite the paper
+    @ARTICLE{9935264,
+        author={Grazia, Luca Di and Bredl, Paul and Pradel, Michael},
+        journal={IEEE Transactions on Software Engineering},
+        title={DiffSearch: A Scalable and Precise Search Engine for Code Changes},
+        year={2022},
+        volume={},
+        number={},
+        pages={1-16},
+        doi={10.1109/TSE.2022.3218859}
+    }
 
 ## Syntax and Semantics of Queries
 
@@ -173,15 +184,3 @@ FOR THE GUI:
 - clone the repository: https://github.com/sola-st/DiffSearch-UI
 - Run the command: `ng serve --proxy-config src/proxy.conf.json`
 - Go in "http://localhost:4200/diffsearch" with your browser 
-
-## How to cite the paper
-    @ARTICLE{9935264,
-        author={Grazia, Luca Di and Bredl, Paul and Pradel, Michael},
-        journal={IEEE Transactions on Software Engineering},
-        title={DiffSearch: A Scalable and Precise Search Engine for Code Changes},
-        year={2022},
-        volume={},
-        number={},
-        pages={1-16},
-        doi={10.1109/TSE.2022.3218859}
-    }
