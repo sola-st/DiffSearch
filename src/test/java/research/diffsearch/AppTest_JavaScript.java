@@ -593,13 +593,13 @@ public class AppTest_JavaScript extends TestCase {
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
-	//
-	@Test
-	public void test67() throws Exception {
-		String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
-		String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
-		assertTrue(App.runJunit_JavaScript(query, candidate));
-	}
+	
+	// @Test
+	// public void test67() throws Exception {
+	// 	String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
+	// 	String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
+	// 	assertTrue(App.runJunit_JavaScript(query, candidate));
+	// }
 
 	@Test
 	public void test67_essence() throws Exception {

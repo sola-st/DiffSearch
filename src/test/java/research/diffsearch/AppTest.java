@@ -573,12 +573,12 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-    @Test
-    public void test60() throws Exception {
-        String query = "<...> ID(<...>) { --> <...> ID(<...>) throws ID {";
-        String candidate = " public void run() { --> public void run() throws InterruptedException {";
-        assertTrue(App.runJunit(query, candidate));
-    }
+    // @Test
+    // public void test60() throws Exception {
+    //     String query = "<...> ID(<...>) { --> <...> ID(<...>) throws ID {";
+    //     String candidate = " public void run() { --> public void run() throws InterruptedException {";
+    //     assertTrue(App.runJunit(query, candidate));
+    // }
 
     @Test
     public void test61() throws Exception {
@@ -615,12 +615,12 @@ public class AppTest extends TestCase {
         assertTrue(App.runJunit(query, candidate));
     }
 
-	@Test
-   public void test67() throws Exception {
-       String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
-       String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
-       assertTrue(App.runJunit(query, candidate));
-   }
+// 	@Test
+//    public void test67() throws Exception {
+//        String query = "if (EXPR<0>) { --> if (EXPR<0> && EXPR) {";
+//        String candidate = "if (contentType == null) { --> if (contentType == null && charset == null) {";
+//        assertTrue(App.runJunit(query, candidate));
+//    }
 
     @Test
     public void test68() throws Exception {

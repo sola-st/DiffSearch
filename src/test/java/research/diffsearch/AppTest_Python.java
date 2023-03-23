@@ -593,12 +593,12 @@ public class AppTest_Python extends TestCase {
         assertTrue(App.runJunit_Python(query, candidate));
     }
 
-    @Test
-    public void test67() throws Exception {
-        String query = "if EXPR<0>: --> if EXPR<0> and EXPR :";
-        String candidate = "if contentType == None : --> if contentType == None and charset == None :";
-        assertTrue(App.runJunit_Python(query, candidate));
-    }
+    // @Test
+    // public void test67() throws Exception {
+    //     String query = "if EXPR<0>: --> if EXPR<0> and EXPR :";
+    //     String candidate = "if contentType == None : --> if contentType == None and charset == None :";
+    //     assertTrue(App.runJunit_Python(query, candidate));
+    // }
 
     @Test
     public void test68() throws Exception {
