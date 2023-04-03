@@ -189,7 +189,7 @@
                     </execution>
                     <execution>
                         <id>javascript</id>
-                        <!-- Only Python grammars -->
+                        <!-- Only JavaScript grammars -->
                         <configuration>
                             <sourceDirectory>src/main/resources/ANTLR</sourceDirectory>
                             <includes>
