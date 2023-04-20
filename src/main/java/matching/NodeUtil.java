@@ -88,10 +88,12 @@ public class NodeUtil {
                    || vParentText.equals("expr_stmt");
         } else if (kText.equals("unOP") || kText.matches("unOP<[0-9]+>")) {
             return vParentText.equals("unary_prefix_operators")
-                   || vParentText.equals("unary_postfix_operators");
+                   || vParentText.equals("unary_postfix_operators")
+				   || vParentText.equals("singleExpression");
         } else if (kText.equals("EXPR") || kText.matches("EXPR<[0-9]+>")) {
             return vText.equals("expression") || vText.equals("expr")
                    || vParentText.equals("expression")//v.getChildCount() == 0;
+                   || vParentText.equals("expr")
                    || vParentText.equals("methodCall")
                    || vParentText.equals("singleExpression");
         }
@@ -113,7 +115,13 @@ public class NodeUtil {
     public Tree extractNewSubtree(Tree t) {
         // Managing the case in which there is a NEWLINE child
 
-        int n = 2;
+        int n = 1;
+
+        while (!t.getChild(n).toStringTree().equals("-->")){
+            n++;
+        }
+
+        n++;
 
         while (t.getChild(n).toStringTree().equals("\n")
                || Trees.getNodeText(t.getChild(n), changeParser).equals("\n")) {

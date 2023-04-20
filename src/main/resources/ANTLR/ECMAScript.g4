@@ -194,6 +194,8 @@ querySnippet
 	:block
 	| variableStatement
 	| emptyStatement
+	| singleExpression
+	| expressionSequence
 	| {_input.LA(1) != OpenBrace}? expressionStatement
 	| multipleStatement
 	| ifStatement
@@ -270,7 +272,7 @@ expressionStatement expressionStatement expressionStatement*
 /// Block :
 ///     { StatementList? }
 block
- : '{' statementList '}'?
+ : '{' statementList? '}'?
  ;
 
 /// StatementList :
@@ -664,7 +666,7 @@ singleExpression
  : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}'? # FunctionExpression
  | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
  | singleExpression '.' identifierName                                    # MemberDotExpression
- | singleExpression arguments  '{'?  functionBody '}'?                    # ArgumentsExpression
+ | singleExpression arguments  /*'{'?  functionBody '}'?  */                  # ArgumentsExpression
  | New singleExpression arguments?                                        # NewExpression
  | singleExpression {!here(LineTerminator)}?    ('++' | UNOP)             # PostIncrementExpression
  | singleExpression {!here(LineTerminator)}? ('--' | UNOP)                        # PostDecreaseExpression
@@ -681,6 +683,7 @@ singleExpression
  | singleExpression Instanceof singleExpression                           # InstanceofExpression
  | singleExpression In singleExpression                                   # InExpression
  | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
+ | singleExpression '?' singleExpression ':' singleExpression			  # TernaryOperatorExpression
  | EXPR                                                                   # GeneralExpressionclear
  | This                                                                   # ThisExpression
  | Identifier                                                             # IdentifierExpression
@@ -709,7 +712,7 @@ assignmentOperator
  | '^='
  | '|='
  | '='
- | 'OP' | 'OP<0>' | 'OP<1>'  | 'OP<2>' | 'OP<3>'
+ | OP
  ;
 
 literal
@@ -950,7 +953,7 @@ Yield      : {strictMode}? 'yield';
 //Expressions
 QUERY_ARROW: '-->';
 
-EXPR: 'EXPR<0>' | 'EXPR<1>' | 'EXPR<2>' | 'EXPR<3>' | 'EXPR';//MOD
+EXPR: 'EXPR' | ('EXPR<'[0-9]+'>');//MOD
 
 EMPTY: '_'; //MOD
 
@@ -958,18 +961,22 @@ WILDCARD: '<...>'; //MOD
 
 NEWLINE: '\r'? '\n' | '\r' | '\f';//MOD
 
-UNOP: 'unOP' | 'unOP<0>' |'unOP<1>'| 'unOP<2>'| 'unOP<3>';
+UNOP: 'unOP' | ('unOP<'[0-9]+'>');
+
+OP: 'OP' | ('OP<'[0-9]+'>');
 
 // Literals
-LITERALS: 'LT<0>' | 'LT<1>' | 'LT<2>' | 'LT<3>' | 'LT'; //MOD
+LITERALS: 'LT' | ('LT<'[0-9]+'>'); //MOD
 
-binOperator: '||' | '&&' | '|'| '^'|'&' | '==' | '!=' | '===' | '!==' | '-' | '<<' | '>>' | '>>>' | '<' | '>' | '<=' | '>=' | '*' | '/' | '%' | '+' | '-' | 'binOP' | 'binOP<0>' | 'binOP<1>'  | 'binOP<2>' | 'binOP<3>';//MOD  ++ -- !   ~id
+BINOP: 'binOP' | ('binOP<'[0-9]+'>');
+
+binOperator: '||' | '&&' | '|'| '^'|'&' | '==' | '!=' | '===' | '!==' | '-' | '<<' | '>>' | '>>>' | '<' | '>' | '<=' | '>=' | '*' | '/' | '%' | '+' | '-' | BINOP;//MOD  ++ -- !   ~id
 
 //IDENTIFIER: 'ID' | 'ID<0>' | 'ID<1>' | 'ID<2>' |'ID<3>';
 
 /// 7.6 Identifier Names and Identifiers
 Identifier
- : IdentifierStart IdentifierPart* | 'ID' | 'ID<0>' | 'ID<1>' | 'ID<2>' |'ID<3>'
+ : IdentifierStart IdentifierPart* | 'ID' | ('ID<'[0-9]+'>')
  ;
 
 /// 7.8.4 String Literals

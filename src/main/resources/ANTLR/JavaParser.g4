@@ -40,7 +40,7 @@ querySnippet
     | importDeclaration+
     | enumConstant
     | typeDeclaration
-    | modifier* memberDeclaration
+    | classBodyDeclaration
     //| interfaceMethodDeclaration
     //| genericInterfaceMethodDeclaration
     | variableDeclarator
@@ -513,20 +513,19 @@ enhancedForControl
 // EXPRESSIONS
 
 parExpression
-    :  '(' EXPR ')'? | '(' expression ')'?
+    : '(' expression ')'?
     | EXPR
     //MOD
     ;
 
 expressionList
     : WILDCARD
-    | EXPR (',' EXPR)*
     |  expression (',' expression)*
     ;
 
 methodCall
     : identifier '(' expressionList? ')'?
-    | EXPR '(' expressionList? ')'?
+    //| lambdaExpression '(' expressionList? ')'?
     | THIS '(' expressionList? ')'?
     | SUPER '(' expressionList? ')'?
     ;
