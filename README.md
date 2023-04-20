@@ -28,10 +28,10 @@ and we present implementations for Java, JavaScript, and Python.
         author={Grazia, Luca Di and Bredl, Paul and Pradel, Michael},
         journal={IEEE Transactions on Software Engineering},
         title={DiffSearch: A Scalable and Precise Search Engine for Code Changes},
-        year={2022},
-        volume={},
-        number={},
-        pages={1-16},
+        year={2023},
+        volume={49},
+        number={4},
+        pages={2366-2380},
         doi={10.1109/TSE.2022.3218859}
     }
 
