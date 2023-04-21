@@ -624,4 +624,81 @@ public class AppTest_JavaScript extends TestCase {
 		assertTrue(App.runJunit_JavaScript(query, candidate));
 	}
 
+	@Test
+	public void test70() throws Exception {
+		String query = "unOP ID<0>(EXPR<0>); --> unOP ID<0>(EXPR<0>);";
+		String candidate = "++i; --> --i;";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
+	//@Test
+	//public void test71() throws Exception {
+	//	String query = "ID<0>.ID<1>() --> ID<1>(ID<0>)";
+	//	String candidate = "myObject.method() --> method(myObject)";
+//		assertTrue(App.runJunit_JavaScript(query, candidate));
+	//}
+
+	@Test
+	public void test72() throws Exception {
+		String query = "ID<0>(EXPR<0>).ID<1>(); --> ID<1>(ID<0>(EXPR<0>));";
+		String candidate = "myObject.method1().method2(); --> method2(method1(myObject));";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test73() throws Exception {
+		String query = "EXPR[EXPR] = EXPR; --> EXPR.set(EXPR, EXPR);";
+		String candidate = "myArray[index] = newValue; --> set(myArray, index, newValue);";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test74() throws Exception {
+		String query = "EXPR[EXPR]; --> get(<...>);";
+		String candidate = "myArray[index]; --> get(myArray, index);";
+		assertTrue(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test75() throws Exception {
+		String query = "ID<0>(EXPR<0>); --> EXPR<0>.ID<0>();";
+		String candidate = "myObject.method(arg); --> method(myObject, arg);";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test76() throws Exception {
+		String query = "EXPR<0> instanceof ID<0>; --> Object.prototype.toString.call(EXPR<0>) === '[object ID<0>]';";
+		String candidate = "myVar instanceof MyClass; --> Object.prototype.toString.call(myVar) === '[object MyClass]';";
+		assertFalse(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test77() throws Exception {
+		String query = "EXPR<0> = EXPR<1>; --> set(<...>);";
+		String candidate = "myObject.property = newValue; --> set(myObject, newValue);";
+		assertTrue(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test78() throws Exception {
+		String query = "EXPR<0>; --> void EXPR<0>;";
+		String candidate = "myFunction(); --> void myFunction();";
+		assertTrue(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test79() throws Exception {
+		String query = "EXPR<0> != null; --> EXPR<0> !== null && EXPR<0> !== undefined;";
+		String candidate = "myVar != null; --> myVar !== null && myVar !== undefined;";
+		assertTrue(App.runJunit_JavaScript(query, candidate));
+	}
+
+	@Test
+	public void test80() throws Exception {
+		String query = "EXPR<0> == null; --> EXPR<0> === null || EXPR<0> === undefined;";
+		String candidate = "myVar == null; --> myVar === null || myVar === undefined;";
+		assertTrue(App.runJunit_JavaScript(query, candidate));
+	}
+
 }
