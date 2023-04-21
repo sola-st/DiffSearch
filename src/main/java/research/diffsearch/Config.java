@@ -97,9 +97,11 @@ public class Config {
     public static int k_max = 10_000;
 
     /**
-     * The length of the feature vectors.
+     * The length of a single feature vector. We have two feature vectors (one for each kind of feature), so
+     this variable is the size of a single feature vector. When in the paper we refer to the paramether l,
+     we mean l = SINGLE_FEATURE_VECTOR_LENGTH * 2, so for l = 1000 (our default), we need SINGLE_FEATURE_VECTOR_LENGTH = 500.
      */
-    public static int SINGLE_FEATURE_VECTOR_LENGTH = 250;
+    public static int SINGLE_FEATURE_VECTOR_LENGTH = 500;
 
     /**
      * The number of bits per feature that are used for unary counting
