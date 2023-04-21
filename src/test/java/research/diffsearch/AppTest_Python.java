@@ -690,5 +690,147 @@ public class AppTest_Python extends TestCase {
         String candidate = "def foo(x: int) -> list[float]: --> def bar(x: int) -> list[float]:";
         assertTrue(App.runJunit_Python(query, candidate));
     }
+    
+     @Test
+    public void test81() throws Exception {
+        String query = "for ID<0> in EXPR<0>: --> for ID<0> in EXPR<0>:";
+        String candidate = "for i in range(10): --> for j in range(5):";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test82() throws Exception {
+        String query = "ID<0> in EXPR<0> --> ID<0> not in EXPR<0>";
+        String candidate = "x in [1, 2, 3]: --> y not in {4, 5, 6}:";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test83() throws Exception {
+        String query = "EXPR if ID else EXPR--> EXPR if ID else EXPR";
+        String candidate = "x if x > 0 else -x --> -x if x < 0 else x";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test84() throws Exception {
+        String query = "ID<0>: ID<1> = EXPR<0> --> ID<0> = EXPR<0>";
+        String candidate = "a: int = 5 --> a = 5";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test85() throws Exception {
+        String query = "EXPR<0> is None --> EXPR<0> is not None";
+        String candidate = "x is None --> x is not None";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test86() throws Exception {
+        String query = "ID<0>: ID<1> --> ID<1>: ID<0>";
+        String candidate = "a: int --> int: a";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test87() throws Exception {
+        String query = "not EXPR --> EXPR";
+        String candidate = "not (x > 5) --> x <= 5";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test88() throws Exception {
+        String query = "ID == EXPR --> ID != EXPR";
+        String candidate = "x == 5 --> y != 10";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test89() throws Exception {
+        String query = "not ID --> ID";
+        String candidate = "not (x > 5) --> (x <= 5)";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test90() throws Exception {
+        String query = "def ID(ID<0>: <...>) -> EXPR<0>: --> def ID(ID<0>: <...>) -> EXPR<0>:";
+        String candidate = "def foo(x: int) -> list[float]: --> def bar(x: int) -> list[float]:";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test91() throws Exception {
+        String query = "if EXPR:\n<...> --> if EXPR:\n<...>\npass";
+        String candidate = "if x>0:\nx=5 --> if x>0:\nx=5\npass";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test92() throws Exception {
+        String query = "ID binOP LT --> ID binOP LT";
+        String candidate = "if x<0: --> if x<=0:";
+
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test93() throws Exception {
+        String query = "ID == EXPR --> ID != EXPR";
+        String candidate = "age == 20 --> height != 180";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test94() throws Exception {
+        String query = "not ID --> ID";
+        String candidate = "not (x <= 10) --> (x > 10)";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test95() throws Exception {
+        String query = "def ID(ID<0>: <...>) -> EXPR<0>: --> def ID(ID<0>: <...>) -> EXPR<0>:";
+        String candidate = "def greet(name: str) -> str: --> def greet(person: str) -> str:";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test96() throws Exception {
+        String query = "if EXPR:\n<...> --> if EXPR:\n<...>\n<...>";
+        String candidate = "if x>5:\nprint('x is greater than 5') --> if x>5:\nprint('x is greater than 5')\nprint('That's great')";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test97() throws Exception {
+        String query = "ID binOP<0> LT --> ID binOP<0> LT";
+        String candidate = "if x>0: --> if x>=0:";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test98() throws Exception {
+        String query = "ID[INDEX] --> ID[INDEX]";
+        String candidate = "numbers[0] --> numbers[-1]";
+        assertFalse(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test99() throws Exception {
+        String query = "while EXPR:\n<...> --> while EXPR:\n<...>\n<...>";
+        String candidate = "while x>0:\nprint(x)\nx-=1 --> while x>0:\nprint(x)\nprint('Loop executed')";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
+
+    @Test
+    public void test100() throws Exception {
+        String query = "ID[LT] --> ID[LT]";
+        String candidate = "numbers[0] --> numbers[1]";
+        assertTrue(App.runJunit_Python(query, candidate));
+    }
 
 }
