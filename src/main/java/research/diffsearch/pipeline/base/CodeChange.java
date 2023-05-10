@@ -20,6 +20,10 @@ public class CodeChange {
     public String commit = "";
     public transient String hunkLines = "";
 
+    @SerializedName("cm")
+    public String commitMessage = "";
+
+
     @SerializedName("o")
     public String codeChangeOld;
     @SerializedName("n")
@@ -94,6 +98,17 @@ public class CodeChange {
         this.commit = commit;
         return this;
     }
+
+
+    public String getCommitMessage() {
+        return commitMessage;
+    }
+
+    public CodeChange setCommitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+    }
+
 
     public String getCommitUrl() {
         return format("https://github.com/{0}/commit/{1}#diff-{2}{3}{4}",

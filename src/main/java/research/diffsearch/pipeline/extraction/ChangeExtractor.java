@@ -28,6 +28,8 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
 
     // parsing properties
     private String commit;
+    private String commitMessage;
+    private List<String> workListcommitMessage;
     private String position;
     private int lineOld = 0;
     private int lineNew = 0;
@@ -42,6 +44,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     private String previousLine;
     private String lineBeforeCodeChange;
     private String jsonTree;
+    private boolean commitMessageFlag = false;
 
     private static final int MAX_LENGTH = 300;
 
@@ -66,6 +69,7 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
             // logger.info("Extracting code changes from {}", f.toString());
             workListOld = new ArrayList<>();
             workListNew = new ArrayList<>();
+            workListcommitMessage = new ArrayList<>();
             previousPrefix = ' ';
             projectName = f.getName().replace(".patch", "");
             writer = getWriter(pathOutput.getAbsolutePath() + "/" + f.getName() + ".cc");
@@ -103,6 +107,13 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         if (isCommitLine(line)) {
             commit = getCommit(line);
 
+
+        } else if (previousLine.startsWith("Date:")) {  // begins with "Date:
+            workListcommitMessage.clear();
+            commitMessageFlag = true;
+
+
+
         } else if (isOldFileNameLine(line)) {
             fileNameOld = getOldFileName(line);
 
@@ -137,10 +148,25 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
             if (previousPrefix == '+' || previousPrefix == '-') {
                 makeNewCodeChange();
             }
+
+
+            if (commitMessageFlag) {
+                if (line.length() > 4) {
+                       if (!line.substring(4).trim().isEmpty()) {
+                                workListcommitMessage.add(line.substring(4).trim());
+                       }
+                }
+            }
+
             lineOld++;
             lineNew++;
             previousPrefix = ' ';
         }
+
+        else if (line.startsWith("diff") && commitMessageFlag) {
+                commitMessageFlag = false;
+        }
+
     }
 
     private void parseLineNumbers() {
@@ -190,9 +216,24 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
                 .trim();
     }
 
+
+    private static String getCommitMessage(String line) {
+        return line
+                .replace("commit ", "")
+                .replaceAll("\\s\\(from .*\\)", "")
+                .trim();
+    }
+
+
     private static boolean isCommitLine(String line) {
         return line.length() > 7 && line.startsWith("commit ");
     }
+
+
+    private static boolean isCommitMessageLine(String line) {
+        return line.length() > 7 && line.startsWith("commit ");
+    }
+
 
     private int errors = 0;
 
@@ -202,6 +243,12 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
         codeChange.setProjectName(projectName);
         codeChange.setCommitLines(position);
         codeChange.setCommit(commit);
+
+        commitMessage = workListcommitMessage.stream()
+                .filter(not(String::isEmpty))
+                .collect(Collectors.joining("\n")).trim();
+        codeChange.setCommitMessage(commitMessage);
+
         if (!fileNameNew.equals(fileNameOld)) {
             codeChange.setFileNameNew(fileNameNew);
         }
