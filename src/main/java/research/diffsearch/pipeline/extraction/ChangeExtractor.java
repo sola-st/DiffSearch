@@ -102,69 +102,74 @@ public class ChangeExtractor implements Pipeline<File, File>, ProgrammingLanguag
     }
 
     private void parseLine() {
-        String trimmedLine = line.substring(1).trim();
-
-        if (isCommitLine(line)) {
-            commit = getCommit(line);
-
-
-        } else if (previousLine.startsWith("Date:")) {  // begins with "Date:
-            workListcommitMessage.clear();
-            commitMessageFlag = true;
-
-
-
-        } else if (isOldFileNameLine(line)) {
-            fileNameOld = getOldFileName(line);
-
-        } else if (isNewFileLine(line)) {
-            fileNameNew = getNewFileName(line);
-
-        } else if (isPositionLine(line)) {
-            position = getPosition(line);
-            parseLineNumbers();
-
-        } else if (isLineWithPrefix(line, '-')) {
-            if (previousPrefix == '+') {
-                makeNewCodeChange();
+        try{
+            String trimmedLine = line.substring(1).trim();
+    
+            if (isCommitLine(line)) {
+                commit = getCommit(line);
+    
+    
+            } else if (previousLine.startsWith("Date:")) {  // begins with "Date:
+                workListcommitMessage.clear();
+                commitMessageFlag = true;
+    
+    
+    
+            } else if (isOldFileNameLine(line)) {
+                fileNameOld = getOldFileName(line);
+    
+            } else if (isNewFileLine(line)) {
+                fileNameNew = getNewFileName(line);
+    
+            } else if (isPositionLine(line)) {
+                position = getPosition(line);
+                parseLineNumbers();
+    
+            } else if (isLineWithPrefix(line, '-')) {
+                if (previousPrefix == '+') {
+                    makeNewCodeChange();
+                    lineOld++;
+                    lineNew++;
+                }
+                if (previousPrefix == ' ') {
+                    lineBeforeCodeChange = previousLine.substring(1).trim();
+                }
+    
+                previousPrefix = '-';
+                workListOld.add(trimmedLine);
+    
+            } else if (isLineWithPrefix(line, '+')) {
+                if (previousPrefix == ' ') {
+                    lineBeforeCodeChange = previousLine.substring(1).trim();
+                }
+                previousPrefix = '+';
+                workListNew.add(trimmedLine);
+    
+            } else if (startsWithSpace(line)) {
+                if (previousPrefix == '+' || previousPrefix == '-') {
+                    makeNewCodeChange();
+                }
+    
+    
+                if (commitMessageFlag) {
+                    if (line.length() > 4) {
+                           if (!line.substring(4).trim().isEmpty()) {
+                                    workListcommitMessage.add(line.substring(4).trim());
+                           }
+                    }
+                }
+    
                 lineOld++;
                 lineNew++;
+                previousPrefix = ' ';
             }
-            if (previousPrefix == ' ') {
-                lineBeforeCodeChange = previousLine.substring(1).trim();
+    
+            else if (line.startsWith("diff") && commitMessageFlag) {
+                    commitMessageFlag = false;
             }
-
-            previousPrefix = '-';
-            workListOld.add(trimmedLine);
-
-        } else if (isLineWithPrefix(line, '+')) {
-            if (previousPrefix == ' ') {
-                lineBeforeCodeChange = previousLine.substring(1).trim();
-            }
-            previousPrefix = '+';
-            workListNew.add(trimmedLine);
-
-        } else if (startsWithSpace(line)) {
-            if (previousPrefix == '+' || previousPrefix == '-') {
-                makeNewCodeChange();
-            }
-
-
-            if (commitMessageFlag) {
-                if (line.length() > 4) {
-                       if (!line.substring(4).trim().isEmpty()) {
-                                workListcommitMessage.add(line.substring(4).trim());
-                       }
-                }
-            }
-
-            lineOld++;
-            lineNew++;
-            previousPrefix = ' ';
-        }
-
-        else if (line.startsWith("diff") && commitMessageFlag) {
-                commitMessageFlag = false;
+        } catch (Exception e) {
+            // Handle the exception
+            System.err.println("An error occurred: " + e.getMessage());
         }
 
     }
